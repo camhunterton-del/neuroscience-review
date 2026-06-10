@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>The Neuroscience Review</title>
+  <subtitle>Real brain research, made readable.</subtitle>
+  <link href="https://camhunterton-del.github.io/neuroscience-review/feed.xml" rel="self"/>
+  <link href="https://camhunterton-del.github.io/neuroscience-review/"/>
+  <id>https://camhunterton-del.github.io/neuroscience-review/</id>
+  <updated>2026-06-01T00:00:00Z</updated>
+  <author><name>Cameron Hunterton</name></author>
+  <entry>
+    <title>What is a neuron, really?</title>
+    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html"/>
+    <id>https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html</id>
+    <updated>2026-06-01T00:00:00Z</updated>
+    <summary>A neuron isn't just "a brain cell that sends signals." Here's what one actually is, built up from scratch.</summary>
+  </entry>
+  <entry>
+    <title>Dopamine doesn't do what you think it does.</title>
+    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/dopamine-doesnt-do-what-you-think.html"/>
+    <id>https://camhunterton-del.github.io/neuroscience-review/posts/dopamine-doesnt-do-what-you-think.html</id>
+    <updated>2026-06-01T00:00:00Z</updated>
+    <summary>Dopamine isn't really the "pleasure chemical." It's something stranger, and the popular misuse of the word has consequences.</summary>
+  </entry>
+</feed>

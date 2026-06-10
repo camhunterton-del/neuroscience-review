@@ -5,9 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>What is a neuron, really? — The Neuroscience Review</title>
   <meta name="description" content="A neuron isn't just 'a brain cell that sends signals.' Here's what one actually is — built up from scratch.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
+  <link rel="canonical" href="https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="What is a neuron, really?">
+  <meta property="og:description" content="A neuron isn't just 'a brain cell that sends signals.' Here's what one actually is — built up from scratch.">
+  <meta property="og:url" content="https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html">
+  <meta property="og:image" content="https://camhunterton-del.github.io/neuroscience-review/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What is a neuron, really?">
+  <meta name="twitter:description" content="A neuron isn't just 'a brain cell that sends signals.' Here's what one actually is — built up from scratch.">
+  <meta name="twitter:image" content="https://camhunterton-del.github.io/neuroscience-review/og-cover.png">
+  <meta property="article:published_time" content="2026-06-01">
+  <meta property="article:author" content="Cameron Hunterton">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"What is a neuron, really?","description":"A neuron isn't just 'a brain cell that sends signals.' Here's what one actually is — built up from scratch.","author":{"@type":"Person","name":"Cameron Hunterton","url":"https://camhunterton-del.github.io/neuroscience-review/about.html"},"publisher":{"@type":"Organization","name":"The Neuroscience Review"},"datePublished":"2026-06-01","dateModified":"2026-06-01","image":"https://camhunterton-del.github.io/neuroscience-review/og-cover.png","mainEntityOfPage":"https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html"}
+  </script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="site-header__inner">
       <a href="../index.html" class="site-logo">The Neuroscience Review</a>
@@ -15,11 +40,12 @@
         <a href="../index.html">Posts</a>
         <a href="../about.html">About</a>
         <a href="../index.html#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
       </nav>
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <article class="post">
       <header class="post-header">
         <div class="post-header__eyebrow">First principles</div>
@@ -29,10 +55,20 @@
           <span>June 1, 2026</span>
           <span>·</span>
           <span>7 min read</span>
+          <span>·</span>
+          <span class="byline">Cameron Hunterton</span>
         </div>
       </header>
 
       <div class="post-body">
+<aside class="callout callout--summary">
+  <span class="callout__label">Key takeaways</span>
+  <ul>
+    <li>A neuron is a cell built to be a <strong>junction</strong>: inputs arrive on dendrites, integrate in the soma, and one output leaves via the axon.</li>
+    <li>Its signal is an <strong>action potential</strong> &mdash; a ~1&nbsp;ms voltage spike &mdash; that becomes a chemical message at the <strong>synapse</strong>.</li>
+    <li>The human brain holds ~<strong>86 billion</strong> neurons and ~100 trillion synapses &mdash; yet how their firing produces thought is still unsolved.</li>
+  </ul>
+</aside>
         <p>If you're going to understand anything else about how the brain works — memory, perception, why caffeine makes you alert, why a stroke causes paralysis — you need a better picture of what a neuron actually is. Not the cartoon version from a high school textbook. The real one.</p>
 
         <p>So let's build it up from scratch.</p>
@@ -81,6 +117,13 @@
 
         <p>This electrical-then-chemical-then-electrical relay is the basic event of brain function. The brain is, at one level of description, a system that does this trick a hundred billion times a second.</p>
 
+        <aside class="cta cta--inline">
+          <p><strong>Enjoying this?</strong> Get one neuroscience deep-dive in your inbox each week.</p>
+          <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/BUTTONDOWN_USERNAME" method="post" target="_blank" onsubmit="if(this.action.indexOf('BUTTONDOWN_USERNAME')!==-1){event.preventDefault();alert('Newsletter signup is launching shortly — check back soon, or email ckh2127@columbia.edu to be added now.');}">
+            <input type="email" name="email" class="cta__input" placeholder="your@email.com" required aria-label="Email address">
+            <button type="submit" class="cta__button">Subscribe</button>
+          </form>
+        </aside>
         <h2>The scale</h2>
 
         <p>How many neurons are we talking about?</p>
@@ -105,6 +148,23 @@
 
         <p>A neuron is not just "a cell that sends signals." It's a junction. It's an electrical-chemical hybrid. It's one of nearly a hundred billion connected nodes performing real chemistry on millisecond timescales. The whole rest of the field is built on top of that picture. It's worth getting it right.</p>
       </div>
+      <footer class="post-end">
+        <div class="post-share">
+          <span class="post-share__label">Share</span>
+          <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fcamhunterton-del.github.io%2Fneuroscience-review%2Fposts%2Fwhat-is-a-neuron.html&text=What%20is%20a%20neuron%2C%20really%3F">X</a>
+          <a href="https://bsky.app/intent/compose?text=What%20is%20a%20neuron%2C%20really%3F%20https%3A%2F%2Fcamhunterton-del.github.io%2Fneuroscience-review%2Fposts%2Fwhat-is-a-neuron.html">Bluesky</a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fcamhunterton-del.github.io%2Fneuroscience-review%2Fposts%2Fwhat-is-a-neuron.html">LinkedIn</a>
+          <a href="mailto:?subject=What%20is%20a%20neuron%2C%20really%3F&body=https%3A%2F%2Fcamhunterton-del.github.io%2Fneuroscience-review%2Fposts%2Fwhat-is-a-neuron.html">Email</a>
+        </div>
+        <section class="post-sources">
+          <h2>Further reading</h2>
+          <ol>
+            <li>Kandel ER, Schwartz JH, Jessell TM, et al. <em>Principles of Neural Science</em>.</li>
+            <li>Azevedo FAC, et al. &ldquo;Equal numbers of neuronal and nonneuronal cells make the human brain an isometrically scaled-up primate brain.&rdquo; <em>Journal of Comparative Neurology</em>, 2009.</li>
+            <li>Herculano-Houzel S. &ldquo;The human brain in numbers: a linearly scaled-up primate brain.&rdquo; <em>Frontiers in Human Neuroscience</em>, 2009.</li>
+          </ol>
+        </section>
+      </footer>
     </article>
 
     <section class="cta">
