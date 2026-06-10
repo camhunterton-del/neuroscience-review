@@ -462,3 +462,4 @@ article.post {
 [data-theme="dark"] .cta__button{color:#16151a;}
 [data-theme="dark"] .post-body a{text-decoration-color:rgba(127,178,212,.4);}
 @media (max-width:600px){.theme-toggle{align-self:flex-start;}}
+.figure-credit{display:block;margin-top:.3rem;font-size:.78rem;color:var(--text-faint);}
