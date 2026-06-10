@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What does an fMRI actually measure? — The Neuroscience Review</title>
+  <meta name="description" content="When a headline says a brain region lit up, what was measured? Not thoughts, and not even electricity. Blood, indirectly, and a few seconds late.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
+  <link rel="canonical" href="https://camhunterton-del.github.io/neuroscience-review/posts/what-fmri-measures.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="What does an fMRI actually measure?">
+  <meta property="og:description" content="When a headline says a brain region lit up, what was measured? Not thoughts, and not even electricity. Blood, indirectly, and a few seconds late.">
+  <meta property="og:url" content="https://camhunterton-del.github.io/neuroscience-review/posts/what-fmri-measures.html">
+  <meta property="og:image" content="https://camhunterton-del.github.io/neuroscience-review/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What does an fMRI actually measure?">
+  <meta name="twitter:description" content="When a headline says a brain region lit up, what was measured? Not thoughts, and not even electricity. Blood, indirectly, and a few seconds late.">
+  <meta name="twitter:image" content="https://camhunterton-del.github.io/neuroscience-review/og-cover.png">
+  <meta property="article:published_time" content="2026-06-10">
+  <meta property="article:author" content="Cameron Hunterton">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"What does an fMRI actually measure?","description":"When a headline says a brain region lit up, what was measured? Not thoughts, and not even electricity. Blood, indirectly, and a few seconds late.","author":{"@type":"Person","name":"Cameron Hunterton","url":"https://camhunterton-del.github.io/neuroscience-review/about.html"},"publisher":{"@type":"Organization","name":"The Neuroscience Review"},"datePublished":"2026-06-10","dateModified":"2026-06-10","image":"https://camhunterton-del.github.io/neuroscience-review/og-cover.png","mainEntityOfPage":"https://camhunterton-del.github.io/neuroscience-review/posts/what-fmri-measures.html"}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="../index.html" class="site-logo">The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="../index.html">Posts</a>
+        <a href="../about.html">About</a>
+        <a href="../index.html#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="post">
+      <header class="post-header">
+        <div class="post-header__eyebrow">First principles</div>
+        <h1 class="post-header__title">What does an fMRI actually measure?</h1>
+        <p class="post-header__subtitle">When a headline says a brain region lit up, what was actually measured? Not thoughts, and not even electricity. Blood, measured indirectly, and a few seconds late.</p>
+        <div class="post-header__meta">
+          <span>June 10, 2026</span>
+          <span>·</span>
+          <span>8 min read</span>
+          <span>·</span>
+          <span class="byline">Cameron Hunterton</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+<aside class="callout callout--summary">
+  <span class="callout__label">Key takeaways</span>
+  <ul>
+    <li>An fMRI measures the <strong>BOLD signal</strong>, a change in blood oxygenation, not neurons firing. It is an indirect proxy for activity.</li>
+    <li>The signal is <strong>slow</strong> (it lags real activity by several seconds) and <strong>coarse</strong> (each voxel averages millions of neurons), so fMRI is good at <em>where</em>, not <em>when</em>.</li>
+    <li>The colorful blob is a <strong>thresholded statistical difference</strong> between two conditions, not a photo of the brain working. A dead salmon once "lit up" to prove the point.</li>
+  </ul>
+</aside>
+        <p>You have seen the pictures. A gray brain with a glowing blob of orange and yellow, under a headline like "scientists find the brain's love center," or "this is your brain on sugar." The blob comes from a functional MRI, and the standard caption is that the region lit up.</p>
+
+        <p>It is one of the most misunderstood images in science. An fMRI does not show thoughts, and it does not even show the electrical activity of neurons. It shows blood, measured indirectly, and a few seconds late. Once you see what is really being measured, those headlines read very differently.</p>
+
+        <h2>What the scanner is actually doing</h2>
+
+        <p>Start with the machine. An MRI scanner is a very large magnet. It works by lining up the hydrogen atoms in the water in your body, knocking them out of line with radio waves, and listening to the signal they give off as they settle back. Different tissues give off slightly different signals, which is how a regular MRI builds those detailed pictures of soft tissue.</p>
+
+        <p>Functional MRI uses the same magnet to track one specific thing over time, called the <strong>BOLD signal</strong>. BOLD stands for blood oxygen level dependent, and that name is the whole story. The scanner is not measuring neurons firing. It is measuring changes in the oxygen content of blood.</p>
+
+        <h2>BOLD, which is blood and not thoughts</h2>
+
+        <p>Here is the chain of events. When a patch of neurons gets more active, it needs more energy, so it uses more oxygen. You would expect the local oxygen to drop. Instead the brain overreacts and floods that area with fresh oxygen rich blood, more than the neurons actually used. So an active area ends up with a higher ratio of oxygenated to deoxygenated blood than a resting area.</p>
+
+        <p>That ratio is what the magnet can see. Oxygenated and deoxygenated hemoglobin have different magnetic properties, and deoxygenated hemoglobin distorts the magnetic field more. So when the fresh blood rushes in and the balance tips toward oxygenated blood, the local MRI signal rises a little. That tiny rise is the BOLD signal. The whole thing is a plumbing measurement. fMRI watches where the blood goes and treats that as a stand in for where the neurons were busy.</p>
+
+        <h2>Indirect, and slow</h2>
+
+        <p>Two things follow from this, and they are the source of most of the confusion.</p>
+
+        <p>First, it is indirect. The blood response is a proxy. It tracks neural activity reasonably well in most cases, which is why fMRI is useful at all, but it is one step removed. You are inferring the firing from the plumbing.</p>
+
+        <p>Second, it is slow. Neurons fire and reset in a few milliseconds. The blood response is sluggish by comparison. After a burst of neural activity the blood flow takes a second or two to even start changing, peaks around five or six seconds later, then takes several more seconds to fade. So fMRI is badly blurred in time. It cannot tell you the millisecond order in which things happened, only that, smeared over several seconds, an area got busier. It is blurry in space too, since each three dimensional pixel, called a voxel, averages over hundreds of thousands of neurons doing many different things.</p>
+
+        <aside class="cta cta--inline">
+          <p><strong>Enjoying this?</strong> Get one neuroscience deep-dive in your inbox each week.</p>
+          <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
+            <input type="email" name="email" class="cta__input" placeholder="your@email.com" required aria-label="Email address">
+            <button type="submit" class="cta__button">Subscribe</button>
+          </form>
+        </aside>
+
+        <h2>The blob is a difference, not a photograph</h2>
+
+        <p>This is the part the headlines get most wrong. The colorful blob is not a picture of the brain working. It is the output of a statistical comparison.</p>
+
+        <p>A typical study scans the brain over and over while a person does two things, say looking at faces and looking at houses. Almost the entire brain shows BOLD signal the whole time, because the whole brain is alive and using blood. So researchers do not look for where there is activity. They look for where the BOLD signal was reliably higher in one condition than the other, face trials minus house trials, and they only color in the voxels where that difference clears a statistical threshold. The orange blob means this spot showed a bigger blood flow change for faces than for houses, on average, across many trials. "Lit up" is shorthand for "won a statistical contest against another condition." Change the comparison and the blob moves.</p>
+
+        <p class="pull-quote">An fMRI does not show thoughts. It shows where the blood went, a few seconds late.</p>
+
+        <h2>The dead salmon</h2>
+
+        <p>How much can go wrong if you forget the statistics? In a now famous demonstration, a group of researchers led by Craig Bennett put a dead Atlantic salmon in an fMRI scanner. They showed the dead fish a series of photographs of people and asked it to judge the emotions on display. When they analyzed the data without the standard corrections, they found a small cluster of active voxels inside the dead salmon's brain.</p>
+
+        <p>The salmon was, of course, dead. The point was not that fish think. It was that an fMRI dataset has so many thousands of voxels that, by pure chance, some will look active in any comparison if you do not correct for all the tests you are running. The study won an Ig Nobel Prize and became a standard cautionary tale about false positives. Good fMRI work corrects for this. The lesson is that the picture is only as trustworthy as the statistics behind it.</p>
+
+        <h2>What it is good for, and what it is not</h2>
+
+        <p>None of this means fMRI is useless. It is genuinely powerful for one main thing, finding where in the brain a given process tends to involve more activity, averaged across many trials and often many people. It mapped the broad geography of vision, language, movement, and memory in living humans without surgery, which is remarkable.</p>
+
+        <p>What it is not is a mind reader, a lie detector, or a millisecond stopwatch. It cannot watch a single thought in real time. It cannot read out the content of what you are thinking, whatever the headlines say. And a region showing more blood flow during a task does not prove that region causes the behavior, only that it was along for the ride. Those are the claims to be skeptical of.</p>
+
+        <h2>Why this matters</h2>
+
+        <p>The next time you see a glowing brain under a headline about the neural basis of love, or political belief, or your phone addiction, you can translate it. What the scientists most likely found is that one small region showed a slightly larger blood flow difference between two conditions, in a signal that lags real activity by several seconds, averaged over millions of neurons and many people, and only after they drew a statistical line somewhere.</p>
+
+        <p>That is still real, and often interesting. But it is a long way from the brain lighting up with love. Knowing what the measurement actually is turns a magic picture back into what it really is, a clever, blurry, indirect map of blood. Worth keeping in mind every time one of these images shows up in your feed.</p>
+      </div>
+      <footer class="post-end">
+        <div class="post-share">
+          <span class="post-share__label">Share</span>
+          <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fcamhunterton-del.github.io%2Fneuroscience-review%2Fposts%2Fwhat-fmri-measures.html&text=What%20does%20an%20fMRI%20actually%20measure%3F">X</a>
+          <a href="https://bsky.app/intent/compose?text=What%20does%20an%20fMRI%20actually%20measure%3F%20https%3A%2F%2Fcamhunterton-del.github.io%2Fneuroscience-review%2Fposts%2Fwhat-fmri-measures.html">Bluesky</a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fcamhunterton-del.github.io%2Fneuroscience-review%2Fposts%2Fwhat-fmri-measures.html">LinkedIn</a>
+          <a href="mailto:?subject=What%20does%20an%20fMRI%20actually%20measure%3F&body=https%3A%2F%2Fcamhunterton-del.github.io%2Fneuroscience-review%2Fposts%2Fwhat-fmri-measures.html">Email</a>
+        </div>
+        <section class="post-sources">
+          <h2>Further reading</h2>
+          <ol>
+            <li>Ogawa S, Lee TM, Kay AR, Tank DW. &ldquo;Brain magnetic resonance imaging with contrast dependent on blood oxygenation.&rdquo; <em>PNAS</em>, 1990.</li>
+            <li>Logothetis NK, Pauls J, Augath M, Trinath T, Oeltermann A. &ldquo;Neurophysiological investigation of the basis of the fMRI signal.&rdquo; <em>Nature</em>, 2001.</li>
+            <li>Bennett CM, Baird AA, Miller MB, Wolford GL. &ldquo;Neural correlates of interspecies perspective taking in the post-mortem Atlantic Salmon.&rdquo; 2009 (the &ldquo;dead salmon&rdquo; study).</li>
+            <li>Poldrack RA, et al. &ldquo;Scanning the horizon: towards transparent and reproducible neuroimaging research.&rdquo; <em>Nature Reviews Neuroscience</em>, 2017.</li>
+          </ol>
+        </section>
+      </footer>
+    </article>
+
+    <section class="cta">
+      <h3>Get the next post in your inbox.</h3>
+      <p>One post a week. No fluff. Unsubscribe anytime.</p>
+      <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
+        <input type="email" name="email" class="cta__input" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit" class="cta__button">Subscribe</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p><a href="../index.html">Home</a></p>
+    </div>
+  </footer>
+</body>
+</html>
