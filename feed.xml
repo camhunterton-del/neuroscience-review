@@ -5,8 +5,15 @@
   <link href="https://camhunterton-del.github.io/neuroscience-review/feed.xml" rel="self"/>
   <link href="https://camhunterton-del.github.io/neuroscience-review/"/>
   <id>https://camhunterton-del.github.io/neuroscience-review/</id>
-  <updated>2026-06-01T00:00:00Z</updated>
+  <updated>2026-06-09T00:00:00Z</updated>
   <author><name>Cameron Hunterton</name></author>
+  <entry>
+    <title>How does memory actually work?</title>
+    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/how-memory-works.html"/>
+    <id>https://camhunterton-del.github.io/neuroscience-review/posts/how-memory-works.html</id>
+    <updated>2026-06-09T00:00:00Z</updated>
+    <summary>A memory is not a recording filed away in a drawer. It is a physical change in your neurons, rebuilt every time you remember.</summary>
+  </entry>
   <entry>
     <title>What is a neuron, really?</title>
     <link href="https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html"/>
