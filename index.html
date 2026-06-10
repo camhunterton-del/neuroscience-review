@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Neuroscience Review — Real brain research, made readable</title>
+  <meta name="description" content="Real neuroscience research, explained with the rigor of a journal and the readability of a Sunday paper.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-logo">The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="index.html">Posts</a>
+        <a href="about.html">About</a>
+        <a href="#subscribe">Subscribe</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__eyebrow">A neuroscience blog</div>
+      <h1 class="hero__title">Real brain research, made readable.</h1>
+      <p class="hero__lede">The rigor of a journal. The readability of a Sunday paper. For curious readers who want the actual science — not the click-baited version of it.</p>
+    </section>
+
+    <section>
+      <h2 class="section-heading">Recent posts</h2>
+      <ul class="post-list">
+        <li class="post-card">
+          <a href="posts/what-is-a-neuron.html">
+            <div class="post-card__meta">
+              <span class="post-card__meta-type">First principles</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>June 1, 2026</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>7 min read</span>
+            </div>
+            <h3 class="post-card__title">What is a neuron, really?</h3>
+            <p class="post-card__lede">Most people learned in school that a neuron is "a brain cell that sends signals." That's about as useful as describing a phone as "a thing that sends signals." Let's build it from scratch.</p>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="posts/dopamine-doesnt-do-what-you-think.html">
+            <div class="post-card__meta">
+              <span class="post-card__meta-type">Myth-busting</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>June 1, 2026</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>6 min read</span>
+            </div>
+            <h3 class="post-card__title">Dopamine doesn't do what you think it does.</h3>
+            <p class="post-card__lede">Dopamine isn't really the "pleasure chemical." It's something stranger and more interesting — and the popular misuse of the word has consequences.</p>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="cta" id="subscribe">
+      <h3>Get new posts in your inbox.</h3>
+      <p>One post a week. No fluff. Unsubscribe anytime.</p>
+      <form class="cta__form" onsubmit="event.preventDefault(); alert('Subscribe is not connected yet. Once you set up an email provider (Buttondown, ConvertKit, Mailchimp), point this form at it.');">
+        <input type="email" class="cta__input" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit" class="cta__button">Subscribe</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p><a href="about.html">About</a></p>
+    </div>
+  </footer>
+</body>
+</html>
