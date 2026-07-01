@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4a86e8" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#4a86e8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="720" height="440" fill="#ffffff"/>
+
+  <!-- brain silhouette (side view, schematic) -->
+  <ellipse cx="300" cy="230" rx="200" ry="120" fill="#f3eee4" stroke="#1b2a4a" stroke-width="2.2"/>
+  <!-- olfactory bulb (front) -->
+  <ellipse cx="118" cy="252" rx="34" ry="26" fill="#f3eee4" stroke="#1b2a4a" stroke-width="2.2"/>
+  <!-- cerebellum (back) -->
+  <ellipse cx="470" cy="278" rx="52" ry="48" fill="#f3eee4" stroke="#1b2a4a" stroke-width="2.2"/>
+  <path d="M432,260 q40,18 70,8 M430,282 q42,16 76,4 M436,302 q38,12 66,2" fill="none" stroke="#1b2a4a" stroke-width="1.1"/>
+  <!-- brainstem stub -->
+  <path d="M470,322 q12,40 -6,70 l-26,-6 q14,-34 6,-66 z" fill="#f3eee4" stroke="#1b2a4a" stroke-width="2.2"/>
+
+  <!-- hypothalamus region -->
+  <ellipse cx="300" cy="312" rx="76" ry="34" fill="#dfe6f2" stroke="#1b2a4a" stroke-width="1.2"/>
+  <text x="300" y="356" font-size="12.5" fill="#1b2a4a" text-anchor="middle">hypothalamus</text>
+
+  <!-- VMHvl -->
+  <ellipse cx="300" cy="312" rx="17" ry="13" fill="#e8743b" stroke="#7a2e0b" stroke-width="1.4"/>
+  <text x="300" y="316" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold">VMHvl</text>
+
+  <!-- optic fiber + light -->
+  <rect x="296" y="112" width="8" height="183" rx="2" fill="#5a5a5a" stroke="#333" stroke-width="0.8"/>
+  <circle cx="300" cy="300" r="34" fill="url(#glow)"/>
+  <text x="316" y="128" font-size="12.5" fill="#333">optic fiber + blue light</text>
+
+  <!-- outcome callouts -->
+  <g font-size="14">
+    <line x1="318" y1="306" x2="560" y2="208" stroke="#cc3a21" stroke-width="1.3"/>
+    <rect x="560" y="190" width="146" height="34" rx="6" fill="#fdecea" stroke="#cc3a21" stroke-width="1.3"/>
+    <text x="572" y="212" fill="#cc3a21" font-weight="bold">switch ON &#8594; attack</text>
+
+    <line x1="316" y1="320" x2="560" y2="270" stroke="#1b2a4a" stroke-width="1.3"/>
+    <rect x="560" y="252" width="146" height="34" rx="6" fill="#eef1f7" stroke="#1b2a4a" stroke-width="1.3"/>
+    <text x="572" y="274" fill="#1b2a4a" font-weight="bold">switch OFF &#8594; no fight</text>
+
+    <rect x="560" y="314" width="146" height="48" rx="6" fill="#f7eefb" stroke="#8e63ce" stroke-width="1.2"/>
+    <text x="572" y="334" fill="#5a3a86" font-size="12.5">same region also</text>
+    <text x="572" y="352" fill="#5a3a86" font-size="12.5">fires during mating</text>
+  </g>
+
+  <text x="20" y="424" font-size="11" fill="#666">Schematic of the mouse brain (side view), not to anatomical scale. VMHvl = ventrolateral ventromedial hypothalamus.</text>
+</svg>
