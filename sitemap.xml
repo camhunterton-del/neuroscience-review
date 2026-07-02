@@ -19,6 +19,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://camhunterton-del.github.io/neuroscience-review/authors.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://camhunterton-del.github.io/neuroscience-review/authors/cameron-hunterton.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://camhunterton-del.github.io/neuroscience-review/authors/audrey-drotos.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html</loc>
     <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  ============================================================
+  AUTHOR PAGE TEMPLATE — The Neuroscience Review
+  ============================================================
+  The leading underscore in the filename keeps this template out of the
+  published site (GitHub Pages / Jekyll ignores files that start with "_").
+
+  To add a new author:
+    1. Copy this file to authors/<slug>.html
+       <slug> is the name lowercased with spaces as hyphens.
+       e.g. "Audrey Drotos" -> authors/audrey-drotos.html
+    2. Replace every {{TOKEN}} below:
+         {{AUTHOR_NAME}}      full name, e.g. Audrey Drotos
+         {{AUTHOR_SLUG}}      file slug, e.g. audrey-drotos
+         {{AUTHOR_INITIALS}}  one or two letters for the avatar, e.g. AD
+         {{AUTHOR_ROLE}}      short role line, e.g. Guest contributor and auditory neuroscientist
+         {{AUTHOR_TAGLINE}}   one-line description used in meta tags
+         {{AUTHOR_BIO}}       one or more <p> paragraphs of bio
+         {{AUTHOR_POSTS}}     <li> entries for each post, or keep the empty-state note
+    3. Delete the <meta name="robots" content="noindex"> line so the live page can be indexed.
+    4. Add the author to authors.html (the index) and to sitemap.xml.
+    5. Remove this comment block from the finished page.
+
+  BYLINE CONVENTION
+    Every author has a page at authors/<slug>.html.
+    In each post's header meta, the byline links to that page:
+      <span class="byline"><a class="byline__link" href="../authors/<slug>.html" rel="author">{{AUTHOR_NAME}}</a></span>
+  ============================================================
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{AUTHOR_NAME}} — The Neuroscience Review</title>
+  <meta name="description" content="{{AUTHOR_TAGLINE}}">
+  <meta name="robots" content="noindex">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
+  <link rel="canonical" href="https://camhunterton-del.github.io/neuroscience-review/authors/{{AUTHOR_SLUG}}.html">
+  <meta property="og:type" content="profile">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="{{AUTHOR_NAME}} — The Neuroscience Review">
+  <meta property="og:description" content="{{AUTHOR_TAGLINE}}">
+  <meta property="og:url" content="https://camhunterton-del.github.io/neuroscience-review/authors/{{AUTHOR_SLUG}}.html">
+  <meta property="og:image" content="https://camhunterton-del.github.io/neuroscience-review/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{AUTHOR_NAME}} — The Neuroscience Review">
+  <meta name="twitter:description" content="{{AUTHOR_TAGLINE}}">
+  <meta name="twitter:image" content="https://camhunterton-del.github.io/neuroscience-review/og-cover.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"{{AUTHOR_NAME}}","url":"https://camhunterton-del.github.io/neuroscience-review/authors/{{AUTHOR_SLUG}}.html","description":"{{AUTHOR_TAGLINE}}","worksFor":{"@type":"Organization","name":"The Neuroscience Review","url":"https://camhunterton-del.github.io/neuroscience-review/"}}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="../index.html" class="site-logo">The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="../index.html">Posts</a>
+        <a href="../about.html">About</a>
+        <a href="../contribute.html">Write for us</a>
+        <a href="../index.html#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="author-profile">
+      <div class="author-avatar author-avatar--lg" aria-hidden="true">{{AUTHOR_INITIALS}}</div>
+      <div>
+        <div class="author-profile__eyebrow">Author</div>
+        <h1 class="author-profile__name">{{AUTHOR_NAME}}</h1>
+        <p class="author-profile__role">{{AUTHOR_ROLE}}</p>
+      </div>
+    </section>
+
+    <div class="author-bio">
+      {{AUTHOR_BIO}}
+    </div>
+
+    <section class="author-posts">
+      <h2>Posts by {{AUTHOR_NAME}}</h2>
+      <!-- If the author has published, replace the empty state with an <ol class="author-posts__list"> of entries:
+      <ol class="author-posts__list">
+        <li><a href="../posts/<slug>.html"><span class="author-posts__type">Paper breakdown</span> Post title here</a></li>
+      </ol>
+      -->
+      {{AUTHOR_POSTS}}
+    </section>
+
+    <section class="cta">
+      <h3>Get new posts in your inbox.</h3>
+      <p>One post a week. No fluff. Unsubscribe anytime.</p>
+      <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
+        <input type="email" name="email" class="cta__input" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit" class="cta__button">Subscribe</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p><a href="../index.html">Home</a> &middot; <a href="../authors.html">Authors</a></p>
+    </div>
+  </footer>
+</body>
+</html>
