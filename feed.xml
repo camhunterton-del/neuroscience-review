@@ -2,57 +2,57 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>The Neuroscience Review</title>
   <subtitle>Real brain research, made readable.</subtitle>
-  <link href="https://camhunterton-del.github.io/neuroscience-review/feed.xml" rel="self"/>
-  <link href="https://camhunterton-del.github.io/neuroscience-review/"/>
-  <id>https://camhunterton-del.github.io/neuroscience-review/</id>
+  <link href="https://theneuroreview.com/feed.xml" rel="self"/>
+  <link href="https://theneuroreview.com/"/>
+  <id>https://theneuroreview.com/</id>
   <updated>2026-07-01T00:00:00Z</updated>
   <author><name>Cameron Hunterton</name></author>
   <entry>
     <title>Scientists found an aggression switch in the mouse brain</title>
-    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/aggression-switch-in-the-brain.html"/>
-    <id>https://camhunterton-del.github.io/neuroscience-review/posts/aggression-switch-in-the-brain.html</id>
+    <link href="https://theneuroreview.com/posts/aggression-switch-in-the-brain.html"/>
+    <id>https://theneuroreview.com/posts/aggression-switch-in-the-brain.html</id>
     <updated>2026-07-01T00:00:00Z</updated>
     <summary>A 2011 study switched on a pinhead of neurons in the mouse hypothalamus and a calm male attacked almost anything. Here is how aggression got a physical address in the brain.</summary>
   </entry>
   <entry>
     <title>Why do you need to sleep?</title>
-    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/why-we-sleep.html"/>
-    <id>https://camhunterton-del.github.io/neuroscience-review/posts/why-we-sleep.html</id>
+    <link href="https://theneuroreview.com/posts/why-we-sleep.html"/>
+    <id>https://theneuroreview.com/posts/why-we-sleep.html</id>
     <updated>2026-06-24T00:00:00Z</updated>
     <summary>You spend a third of your life unconscious and you cannot skip it. For something that costly, sleep must be doing real work. Here is what the research says it is for.</summary>
   </entry>
   <entry>
     <title>Why can't most drugs reach your brain?</title>
-    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/the-blood-brain-barrier.html"/>
-    <id>https://camhunterton-del.github.io/neuroscience-review/posts/the-blood-brain-barrier.html</id>
+    <link href="https://theneuroreview.com/posts/the-blood-brain-barrier.html"/>
+    <id>https://theneuroreview.com/posts/the-blood-brain-barrier.html</id>
     <updated>2026-06-17T00:00:00Z</updated>
     <summary>You can swallow a pill and it reaches your whole body, but most drugs never reach your brain. The blood-brain barrier is why, and it is the hardest problem in brain medicine.</summary>
   </entry>
   <entry>
     <title>What does an fMRI actually measure?</title>
-    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/what-fmri-measures.html"/>
-    <id>https://camhunterton-del.github.io/neuroscience-review/posts/what-fmri-measures.html</id>
+    <link href="https://theneuroreview.com/posts/what-fmri-measures.html"/>
+    <id>https://theneuroreview.com/posts/what-fmri-measures.html</id>
     <updated>2026-06-10T00:00:00Z</updated>
     <summary>When a headline says a brain region lit up, what was measured? Not thoughts, and not even electricity. Blood, indirectly, and a few seconds late.</summary>
   </entry>
   <entry>
     <title>How does memory actually work?</title>
-    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/how-memory-works.html"/>
-    <id>https://camhunterton-del.github.io/neuroscience-review/posts/how-memory-works.html</id>
+    <link href="https://theneuroreview.com/posts/how-memory-works.html"/>
+    <id>https://theneuroreview.com/posts/how-memory-works.html</id>
     <updated>2026-06-09T00:00:00Z</updated>
     <summary>A memory is not a recording filed away in a drawer. It is a physical change in your neurons, rebuilt every time you remember.</summary>
   </entry>
   <entry>
     <title>What is a neuron, really?</title>
-    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html"/>
-    <id>https://camhunterton-del.github.io/neuroscience-review/posts/what-is-a-neuron.html</id>
+    <link href="https://theneuroreview.com/posts/what-is-a-neuron.html"/>
+    <id>https://theneuroreview.com/posts/what-is-a-neuron.html</id>
     <updated>2026-06-01T00:00:00Z</updated>
     <summary>A neuron isn't just "a brain cell that sends signals." Here's what one actually is, built up from scratch.</summary>
   </entry>
   <entry>
     <title>Dopamine doesn't do what you think it does.</title>
-    <link href="https://camhunterton-del.github.io/neuroscience-review/posts/dopamine-doesnt-do-what-you-think.html"/>
-    <id>https://camhunterton-del.github.io/neuroscience-review/posts/dopamine-doesnt-do-what-you-think.html</id>
+    <link href="https://theneuroreview.com/posts/dopamine-doesnt-do-what-you-think.html"/>
+    <id>https://theneuroreview.com/posts/dopamine-doesnt-do-what-you-think.html</id>
     <updated>2026-06-01T00:00:00Z</updated>
     <summary>Dopamine isn't really the "pleasure chemical." It's something stranger, and the popular misuse of the word has consequences.</summary>
   </entry>
