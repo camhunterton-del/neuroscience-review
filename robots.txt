@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://camhunterton-del.github.io/neuroscience-review/sitemap.xml
+Sitemap: https://theneuroreview.com/sitemap.xml
