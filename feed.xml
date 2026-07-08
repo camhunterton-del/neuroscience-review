@@ -5,8 +5,15 @@
   <link href="https://theneuroreview.com/feed.xml" rel="self"/>
   <link href="https://theneuroreview.com/"/>
   <id>https://theneuroreview.com/</id>
-  <updated>2026-07-01T00:00:00Z</updated>
+  <updated>2026-07-08T00:00:00Z</updated>
   <author><name>Cameron Hunterton</name></author>
+  <entry>
+    <title>Do the new Alzheimer's drugs actually work?</title>
+    <link href="https://theneuroreview.com/posts/do-the-new-alzheimers-drugs-work.html"/>
+    <id>https://theneuroreview.com/posts/do-the-new-alzheimers-drugs-work.html</id>
+    <updated>2026-07-08T00:00:00Z</updated>
+    <summary>A 2023 trial cleared amyloid plaque from people's brains with the drug donanemab and modestly slowed their decline. A breakdown of what that really bought, and what it cost.</summary>
+  </entry>
   <entry>
     <title>Scientists found an aggression switch in the mouse brain</title>
     <link href="https://theneuroreview.com/posts/aggression-switch-in-the-brain.html"/>
