@@ -169,28 +169,6 @@
       </footer>
     </article>
 
-    <div class="share">
-      <span class="share__label">Share</span>
-      <a class="share__link" id="share-bsky" target="_blank" rel="noopener">Bluesky</a>
-      <a class="share__link" id="share-x" target="_blank" rel="noopener">X</a>
-      <a class="share__link" id="share-email">Email</a>
-      <button class="share__link share__copy" type="button" id="share-copy">Copy link</button>
-    </div>
-    <script>
-    (function(){
-      var c=document.querySelector('link[rel="canonical"]');
-      var url=c?c.href:location.href;
-      var h=document.querySelector('.post-header__title');
-      var title=h?h.textContent.trim():document.title.split(' — ')[0].trim();
-      var eu=encodeURIComponent(url),et=encodeURIComponent(title);
-      var b=document.getElementById('share-bsky');if(b)b.href='https://bsky.app/intent/compose?text='+et+'%20'+eu;
-      var x=document.getElementById('share-x');if(x)x.href='https://twitter.com/intent/tweet?text='+et+'&url='+eu;
-      var m=document.getElementById('share-email');if(m)m.href='mailto:?subject='+et+'&body='+eu;
-      var k=document.getElementById('share-copy');if(k)k.addEventListener('click',function(){navigator.clipboard.writeText(url).then(function(){k.textContent='Copied';setTimeout(function(){k.textContent='Copy link';},1500);});});
-    })();
-    </script>
-
-
     <nav class="read-next" aria-label="Read next">
       <p class="read-next__label">Read next</p>
       <ul class="read-next__list">
