@@ -13,13 +13,17 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 const MODEL = process.env.NEWS_MODEL || 'claude-sonnet-5'
 const NEWS_FILE = 'news.html'
 const MAX_ITEMS_ON_PAGE = 40
-const MAX_CANDIDATES_TO_CHECK = 5
-const MAX_TO_PUBLISH = 5
+const MAX_CANDIDATES_TO_CHECK = 8
+const MAX_TO_PUBLISH = 4
+// Target: at least 2 items on weekdays, at least 1 on weekends, up to 4 total.
+// We scout a wide pool so there is usually enough that clears all four checks,
+// but we never publish filler to hit a quota, so the quality bar stays fixed.
 const WEB_TOOL = { type: 'web_search_20250305', name: 'web_search', max_uses: 5 }
 
 const now = new Date()
 const isoDate = now.toISOString().slice(0, 10)
 const niceDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+const targetMin = (now.getUTCDay() === 0 || now.getUTCDay() === 6) ? 1 : 2 // weekends 1, weekdays 2
 
 const esc = (s) => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -46,7 +50,7 @@ const page = fs.readFileSync(NEWS_FILE, 'utf8')
 const existingUrls = new Set([...page.matchAll(/news-item__meta[\s\S]*?href="([^"]+)"/g)].map((m) => m[1]))
 
 // --- 1. SCOUT ---
-const scoutPrompt = `You are scouting REAL, recent neuroscience and brain-science news for a rigorous plain-English publication. Today is ${niceDate}. Use web search to find up to 6 notable and genuinely real findings or reports published or covered in the last 3 to 4 days, from reputable sources only (peer-reviewed journals, university press offices, and established science outlets such as Nature, Science, Quanta, The Transmitter, STAT, Scientific American, New Scientist). Exclude tabloids, content farms, product or supplement marketing, and anything without a real working URL. Do not invent anything.
+const scoutPrompt = `You are scouting REAL, recent neuroscience and brain-science news for a rigorous plain-English publication. Today is ${niceDate}. Use web search to find up to 8 notable and genuinely real findings or reports published or covered in the last 3 to 4 days, from reputable sources only (peer-reviewed journals, university press offices, and established science outlets such as Nature, Science, Quanta, The Transmitter, STAT, Scientific American, New Scientist). Exclude tabloids, content farms, product or supplement marketing, and anything without a real working URL. Do not invent anything.
 Return ONLY a JSON array, each element {"headline":..., "sourceName":..., "url":..., "finding":"one to two sentence plain statement of what was actually found", "date":..., "isPreprint":true|false}. No prose outside the JSON.`
 
 let candidates = []
@@ -135,5 +139,6 @@ const combined = [...newArticles, ...existingArticles].slice(0, MAX_ITEMS_ON_PAG
 const rebuilt = before + '\n' + combined.join('\n\n') + '\n        ' + after
 fs.writeFileSync(NEWS_FILE, rebuilt)
 
+if (finalItems.length < targetMin) console.warn(`Note: published ${finalItems.length}, below today's target of ${targetMin}. Held the quality bar rather than adding filler.`)
 console.log(`Injected ${finalItems.length} new item(s); page now holds ${combined.length}.`)
 fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/stdout', `count=${finalItems.length}\n`)

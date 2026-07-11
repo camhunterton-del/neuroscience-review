@@ -1,0 +1,109 @@
+name: Publish depression post
+
+# Reliable replacement for the old session-based publish routine.
+# Fires on July 15, merges the staged branch into main, verifies it went live,
+# and notifies. Idempotent (no-op if already published). Manual dry-run mode
+# lets us confirm the merge is clean without publishing early.
+
+on:
+  schedule:
+    - cron: '13 13 15 7 *'   # July 15, 13:13 UTC (~9:13am ET)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Test the merge without publishing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: publish-depression
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Merge staged post branch into main
+        id: merge
+        run: |
+          set -e
+          BRANCH_REF="origin/post/serotonin-depression-v2"
+          POST="posts/depression-serotonin-shortage.html"
+          DRY="${{ github.event.inputs.dry_run }}"
+          git config user.name "neuro-publish-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git fetch origin post/serotonin-depression-v2
+
+          if [ -f "$POST" ]; then
+            echo "Post already published on main — nothing to do."
+            echo "result=already" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [ "$DRY" = "true" ]; then
+            if git merge --no-commit --no-ff "$BRANCH_REF"; then
+              git merge --abort || true
+              echo "DRY RUN: merge is clean and would publish successfully."
+              echo "result=dryok" >> $GITHUB_OUTPUT
+            else
+              git merge --abort || true
+              echo "DRY RUN: merge would CONFLICT — needs a re-sync before July 15."
+              echo "result=conflict" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+            exit 0
+          fi
+
+          if git merge --no-ff "$BRANCH_REF" -m "Publish: Depression probably isn't a serotonin shortage (scheduled)"; then
+            git push origin main
+            echo "result=merged" >> $GITHUB_OUTPUT
+          else
+            git merge --abort || true
+            echo "Merge conflict — did not publish."
+            echo "result=conflict" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Verify the post is live
+        if: steps.merge.outputs.result == 'merged'
+        run: |
+          sleep 120
+          url="https://theneuroreview.com/posts/depression-serotonin-shortage.html"
+          for i in 1 2 3 4 5; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 25 "$url")
+            echo "attempt $i: HTTP $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 20
+          done
+          echo "Post not live after merge."; exit 1
+
+      - name: Notify published
+        if: steps.merge.outputs.result == 'merged'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: '🟢 Depression post published',
+              body: 'The scheduled depression post merged to main and is live: https://theneuroreview.com/posts/depression-serotonin-shortage.html'
+            });
+
+      - name: Notify failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: '🔴 Depression post publish FAILED',
+              body: `The scheduled July 15 publish did not complete (merge conflict or deploy issue). It needs a manual publish.\n\nRun log: ${runUrl}`
+            });
