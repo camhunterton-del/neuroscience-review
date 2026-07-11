@@ -28,7 +28,7 @@ jobs:
         run: |
           BASE="https://theneuroreview.com"
           fail=0
-          for p in $(git ls-files '*.html' | grep -v '^404.html$'); do
+          for p in $(git ls-files '*.html' | grep -vE '(^404\.html$)|((^|/)_[^/]*\.html$)'); do
             ok=0; code=000
             for attempt in 1 2 3; do
               code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 25 "$BASE/$p")
@@ -86,5 +86,25 @@ jobs:
             } else {
               await github.rest.issues.create({
                 owner: context.repo.owner, repo: context.repo.repo, title, body
+              });
+            }
+
+      - name: Close alert issue when checks pass
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🔴 Site watchdog alert';
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo, state: 'open', per_page: 100
+            });
+            const existing = issues.find(i => i.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo, issue_number: existing.number,
+                body: 'Resolved — all watchdog checks passing again.'
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner, repo: context.repo.repo, issue_number: existing.number, state: 'closed'
               });
             }
