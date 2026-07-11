@@ -12,6 +12,10 @@ import sys
 
 bad = []
 for f in glob.glob("**/*.html", recursive=True):
+    # Skip underscore-prefixed template files (Jekyll never publishes them,
+    # and they carry intentional placeholder links like ../authors/<slug>.html).
+    if os.path.basename(f).startswith("_"):
+        continue
     d = os.path.dirname(f)
     with open(f, encoding="utf-8") as fh:
         html = fh.read()
