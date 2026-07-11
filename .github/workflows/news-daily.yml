@@ -1,0 +1,89 @@
+name: Daily news pipeline
+
+on:
+  schedule:
+    - cron: '43 13 * * *'   # daily ~9:43am ET (13:43 UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: news-daily
+
+jobs:
+  news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Skip if API key not configured yet
+        id: guard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY secret is not set — skipping. Add it in repo Settings to enable."
+            echo "ready=false" >> $GITHUB_OUTPUT
+          else
+            echo "ready=true" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.ready == 'true'
+        with:
+          node-version: '20'
+
+      - name: Install Anthropic SDK
+        if: steps.guard.outputs.ready == 'true'
+        run: npm install @anthropic-ai/sdk --no-save --silent
+
+      - name: Run pipeline
+        id: pipeline
+        if: steps.guard.outputs.ready == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node .github/scripts/news_pipeline.mjs
+
+      - name: Commit and push if news changed
+        id: commit
+        if: steps.guard.outputs.ready == 'true'
+        run: |
+          if git diff --quiet -- news.html; then
+            echo "No news changes."; echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            git config user.name "neuro-news-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add news.html
+            git commit -m "News feed auto-update ($(date -u +%Y-%m-%d))"
+            pushed=false
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push && { pushed=true; break; } || sleep 5
+            done
+            [ "$pushed" = "true" ] && echo "changed=true" >> $GITHUB_OUTPUT || { echo "push failed"; exit 1; }
+          fi
+
+      - name: Notify you to review
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🟢 News feed updated — please review';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              'The daily news pipeline just published new item(s) to the News page.',
+              '',
+              'Please glance over https://theneuroreview.com/news.html and reply here or tell Claude if anything looks off.',
+              '',
+              `Run log: ${runUrl}`
+            ].join('\n');
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo, state: 'open', per_page: 100
+            });
+            const existing = issues.find(i => i.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo, title, body });
+            }
