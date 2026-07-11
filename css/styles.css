@@ -542,6 +542,18 @@ article.post {
 .site-footer__credit a { color: inherit; text-decoration: underline; }
 
 /* ============================================
+   Unified card meta (2026-07): format kicker on its own line,
+   then one calm date · read · author line — no ragged divider wrapping
+   ============================================ */
+.post-card__meta {
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.55rem;
+}
+.post-card__meta-type { flex: 0 0 100%; margin-bottom: 0.05rem; }
+.post-card__meta-type + .post-card__meta-divider { display: none; }
+
+/* ============================================
    Read next + hero subscribe (2026-07)
    ============================================ */
 .read-next{max-width:66ch;margin:3rem auto 0;padding-top:1.75rem;border-top:1px solid var(--border);}
