@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="xryZr9HxnnHBCOn4i16SM44mxBw2DkDXEX8Cr-ZWjag" />
-  <title>The Neuroscience Review — Real brain research, made readable</title>
-  <meta name="description" content="Real neuroscience research, explained with the rigor of a journal and the readability of a Sunday paper.">
+  <title>Posts — The Neuroscience Review</title>
+  <meta name="description" content="Every explainer and paper breakdown from The Neuroscience Review, newest first.">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,40 +12,19 @@
   <!-- Theme (no flash of wrong theme) -->
   <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
   <link rel="stylesheet" href="css/styles.css">
-  <style>
-    .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; }
-    .section-head .section-heading { margin-bottom: 0; }
-    .section-head__more { font-family: var(--sans); font-size: 0.82rem; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; }
-    .section-head__more:hover { color: var(--accent-hover); }
-    .home-news { list-style: none; padding: 0; margin: 0; }
-    .home-news__item { padding: 0.95rem 0; border-top: 1px solid var(--border); }
-    .home-news__item:first-child { border-top: none; padding-top: 0; }
-    .home-news__headline { display: block; font-family: var(--serif); font-size: 1.16rem; line-height: 1.35; color: var(--text); text-decoration: none; margin-bottom: 0.3rem; font-weight: 600; }
-    .home-news__headline:hover { color: var(--accent); }
-    .home-news__meta { font-family: var(--sans); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); }
-    .home-column { background: var(--bg-alt); border-radius: 10px; padding: 1.8rem 1.9rem; margin: 3rem 0; }
-    .home-column__eyebrow { font-family: var(--sans); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem; }
-    .home-column h3 { font-family: var(--serif); font-size: 1.5rem; line-height: 1.25; margin-bottom: 0.6rem; }
-    .home-column p { color: var(--text-muted); margin-bottom: 0.9rem; }
-    .home-column a.section-head__more { font-size: 0.9rem; }
-    .home-section { margin: 3.2rem 0; }
-  </style>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
-  <link rel="canonical" href="https://theneuroreview.com/">
+  <link rel="canonical" href="https://theneuroreview.com/posts.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Neuroscience Review">
-  <meta property="og:title" content="The Neuroscience Review — Real brain research, made readable">
-  <meta property="og:description" content="Real neuroscience research, explained with the rigor of a journal and the readability of a Sunday paper.">
-  <meta property="og:url" content="https://theneuroreview.com/">
+  <meta property="og:title" content="Posts — The Neuroscience Review">
+  <meta property="og:description" content="Every explainer and paper breakdown from The Neuroscience Review, newest first.">
+  <meta property="og:url" content="https://theneuroreview.com/posts.html">
   <meta property="og:image" content="https://theneuroreview.com/og-cover.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Neuroscience Review — Real brain research, made readable">
-  <meta name="twitter:description" content="Real neuroscience research, explained with the rigor of a journal and the readability of a Sunday paper.">
+  <meta name="twitter:title" content="Posts — The Neuroscience Review">
+  <meta name="twitter:description" content="Every explainer and paper breakdown from The Neuroscience Review, newest first.">
   <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png">
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","name":"The Neuroscience Review","alternateName":"The Neuroscience Review — Real brain research, made readable","url":"https://theneuroreview.com/","description":"Real neuroscience research, explained with the rigor of a journal and the readability of a Sunday paper.","inLanguage":"en-US","publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/og-cover.png"}}}
-  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -59,30 +37,24 @@
         <a href="news.html">News</a>
         <a href="the-paper-that-hooked-me.html">Column</a>
         <a href="about.html">About</a>
-        <a href="#subscribe">Subscribe</a>
+        <a href="index.html#subscribe">Subscribe</a>
         <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="hero">
-      <div class="hero__eyebrow">A neuroscience blog</div>
-      <h1 class="hero__title">Real brain research, made readable.</h1>
-      <p class="hero__lede">The rigor of a journal. The readability of a Sunday paper. For curious readers who want the actual science, not the click-baited version of it.</p>
-      <form class="cta__form hero__subscribe" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
-        <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
-        <button type="submit" class="cta__button">Subscribe free</button>
-      </form>
-      <p class="hero__subscribe-note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
-    </section>
+    <article class="post">
+      <header class="post-header">
+        <div class="post-header__eyebrow">Posts</div>
+        <h1 class="post-header__title">Every post.</h1>
+        <p class="post-header__subtitle">Explainers and paper breakdowns, newest first.</p>
+      </header>
+    </article>
 
-    <section class="home-section">
-      <div class="section-head">
-        <h2 class="section-heading">Latest posts</h2>
-        <a class="section-head__more" href="posts.html">See all posts &rarr;</a>
-      </div>
+    <section>
       <ul class="post-list">
+        <!-- POSTS-LIST-START -->
         <li class="post-card">
           <a href="posts/do-the-new-alzheimers-drugs-work.html">
             <div class="post-card__thumb"><img src="img/photo-alzheimers.jpg" alt="" loading="lazy"></div>
@@ -138,6 +110,78 @@
           </a>
         </li>
         <li class="post-card">
+          <a href="posts/the-blood-brain-barrier.html">
+            <div class="post-card__thumb"><img src="img/photo-bbb.jpg" alt="" loading="lazy"></div>
+            <div class="post-card__body">
+              <div class="post-card__meta">
+              <span class="post-card__meta-type">First principles</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>June 17, 2026</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>8 min read</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>Cameron Hunterton</span>
+            </div>
+              <h3 class="post-card__title">Why can't most drugs reach your brain?</h3>
+              <p class="post-card__lede">You can swallow a pill and it reaches your whole body, but most drugs never reach your brain. The blood-brain barrier is why, and it's the hardest problem in brain medicine.</p>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="posts/what-fmri-measures.html">
+            <div class="post-card__thumb"><img src="img/photo-fmri.jpg" alt="" loading="lazy"></div>
+            <div class="post-card__body">
+              <div class="post-card__meta">
+              <span class="post-card__meta-type">First principles</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>June 10, 2026</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>8 min read</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>Cameron Hunterton</span>
+            </div>
+              <h3 class="post-card__title">What does an fMRI actually measure?</h3>
+              <p class="post-card__lede">When a headline says a brain region lit up, what was actually measured? Not thoughts, and not even electricity. Blood, indirectly, and a few seconds late.</p>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="posts/how-memory-works.html">
+            <div class="post-card__thumb"><img src="img/photo-memory.jpg" alt="" loading="lazy"></div>
+            <div class="post-card__body">
+              <div class="post-card__meta">
+              <span class="post-card__meta-type">First principles</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>June 9, 2026</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>9 min read</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>Cameron Hunterton</span>
+            </div>
+              <h3 class="post-card__title">How does memory actually work?</h3>
+              <p class="post-card__lede">A memory isn't a recording filed away in a drawer. It's a physical change in your neurons, and your brain rebuilds it every time you remember.</p>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="posts/what-is-a-neuron.html">
+            <div class="post-card__thumb"><img src="img/photo-neuron.jpg" alt="" loading="lazy"></div>
+            <div class="post-card__body">
+              <div class="post-card__meta">
+              <span class="post-card__meta-type">First principles</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>June 1, 2026</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>7 min read</span>
+              <span class="post-card__meta-divider">·</span>
+              <span>Cameron Hunterton</span>
+            </div>
+              <h3 class="post-card__title">What is a neuron, really?</h3>
+              <p class="post-card__lede">Most people learned in school that a neuron is "a brain cell that sends signals." That's about as useful as describing a phone as "a thing that sends signals." Let's build it from scratch.</p>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
           <a href="posts/dopamine-doesnt-do-what-you-think.html">
             <div class="post-card__thumb"><img src="img/photo-dopamine.jpg" alt="" loading="lazy"></div>
             <div class="post-card__body">
@@ -155,37 +199,8 @@
             </div>
           </a>
         </li>
+        <!-- POSTS-LIST-END -->
       </ul>
-    </section>
-
-    <section class="home-section">
-      <div class="section-head">
-        <h2 class="section-heading">Latest news</h2>
-        <a class="section-head__more" href="news.html">See all news &rarr;</a>
-      </div>
-      <ul class="home-news">
-        <!-- HOME-NEWS-START -->
-        <li class="home-news__item">
-          <a class="home-news__headline" href="https://www.nature.com/articles/s41467-026-69370-8" target="_blank" rel="noopener">A second pregnancy leaves its own mark on the brain</a>
-          <span class="home-news__meta">July 11, 2026 &middot; Nature Communications</span>
-        </li>
-        <li class="home-news__item">
-          <a class="home-news__headline" href="https://doi.org/10.1523/JNEUROSCI.2002-24.2026" target="_blank" rel="noopener">Astrocyte receptor loss disrupts how brain synapses form</a>
-          <span class="home-news__meta">July 11, 2026 &middot; Journal of Neuroscience</span>
-        </li>
-        <li class="home-news__item">
-          <a class="home-news__headline" href="https://doi.org/10.1523/JNEUROSCI.0420-26.2026" target="_blank" rel="noopener">A key nerve signal changes direction as young zebrafish grow up</a>
-          <span class="home-news__meta">July 11, 2026 &middot; Journal of Neuroscience</span>
-        </li>
-        <!-- HOME-NEWS-END -->
-      </ul>
-    </section>
-
-    <section class="home-column">
-      <div class="home-column__eyebrow">The column</div>
-      <h3>The Paper That Hooked Me</h3>
-      <p>A scientist takes the one paper that changed how they think and walks you through it in five plain questions. It is the most personal thing on the site.</p>
-      <a class="section-head__more" href="the-paper-that-hooked-me.html">Read the column &rarr;</a>
     </section>
 
     <section class="cta" id="subscribe">
@@ -201,9 +216,7 @@
   <footer class="site-footer">
     <div class="site-footer__inner">
       <p>&copy; 2026 The Neuroscience Review</p>
-      <p><a href="posts.html">Posts</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Write for us</a></p>
-      <p class="site-footer__credit">Neuron photo by <a href="https://commons.wikimedia.org/wiki/File:Cultured_Rat_Hippocampal_Neuron_(24327909026).jpg" target="_blank" rel="noopener">ZEISS Microscopy</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>.</p>
-      <p class="site-footer__credit">fMRI scan by <a href="https://commons.wikimedia.org/wiki/File:FMRI_BOLD_activation_in_an_emotional_Stroop_task.jpg" target="_blank" rel="noopener">Ovaysikia et al.</a>, <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>.</p>
+      <p><a href="index.html">Home</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Write for us</a></p>
     </div>
   </footer>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
