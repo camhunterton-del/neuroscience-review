@@ -46,16 +46,20 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node .github/scripts/news_pipeline.mjs
 
+      - name: Mirror newest news onto the homepage rail
+        if: steps.guard.outputs.ready == 'true'
+        run: node .github/scripts/sync_home_news.mjs
+
       - name: Commit and push if news changed
         id: commit
         if: steps.guard.outputs.ready == 'true'
         run: |
-          if git diff --quiet -- news.html; then
+          if git diff --quiet -- news.html index.html; then
             echo "No news changes."; echo "changed=false" >> $GITHUB_OUTPUT
           else
             git config user.name "neuro-news-bot"
             git config user.email "actions@users.noreply.github.com"
-            git add news.html
+            git add news.html index.html
             git commit -m "News feed auto-update ($(date -u +%Y-%m-%d))"
             pushed=false
             for i in 1 2 3; do
