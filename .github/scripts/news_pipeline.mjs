@@ -18,7 +18,7 @@ const MAX_TO_PUBLISH = 4
 // Target: at least 2 items on weekdays, at least 1 on weekends, up to 4 total.
 // We scout a wide pool so there is usually enough that clears all four checks,
 // but we never publish filler to hit a quota, so the quality bar stays fixed.
-const WEB_TOOL = { type: 'web_search_20250305', name: 'web_search', max_uses: 5 }
+// (web search tool is built inline in ask() so max_uses can vary per call)
 
 const now = new Date()
 const isoDate = now.toISOString().slice(0, 10)
@@ -35,14 +35,16 @@ function extractJson(text) {
   return JSON.parse(raw)
 }
 
-async function ask(prompt, { web = false, maxTokens = 1200 } = {}) {
+async function ask(prompt, { web = false, maxTokens = 1500, maxUses = 4 } = {}) {
   const msg = await client.messages.create({
     model: MODEL,
     max_tokens: maxTokens,
-    ...(web ? { tools: [WEB_TOOL] } : {}),
+    ...(web ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: maxUses }] } : {}),
     messages: [{ role: 'user', content: prompt }],
   })
-  return msg.content.filter((b) => b.type === 'text').map((b) => b.text).join('\n')
+  const text = msg.content.filter((b) => b.type === 'text').map((b) => b.text).join('\n')
+  if (!text) console.error(`empty text (stop_reason=${msg.stop_reason}, blocks=${msg.content.map((b) => b.type).join(',')})`)
+  return text
 }
 
 // --- read existing page + already-published URLs (avoid dupes) ---
@@ -55,7 +57,7 @@ Return ONLY a JSON array, each element {"headline":..., "sourceName":..., "url":
 
 let candidates = []
 try {
-  candidates = extractJson(await ask(scoutPrompt, { web: true, maxTokens: 3500 }))
+  candidates = extractJson(await ask(scoutPrompt, { web: true, maxTokens: 8000, maxUses: 6 }))
 } catch (e) {
   console.error('Scout failed:', e.message)
 }
@@ -70,18 +72,20 @@ candidates = candidates.filter((c) => {
 console.log(`Scouted ${candidates.length} fresh candidates`)
 
 // --- 2 + 3. CHECK (4 independent lenses) then CONVENE ---
+// Only the two lenses that must check against the live source use web search;
+// the other two are judgment calls on the claim itself (cheaper, faster, no bloat).
 const lenses = [
-  'SOURCE INTEGRITY. Inspect the source. Is it reputable and real with a working link, and a primary report or legitimate established outlet rather than a content farm or pure hype.',
-  'ACCURACY. Check the stated finding against what the source actually reports. Flag any misrepresentation, exaggeration, wrong numbers, or details that do not match.',
-  'HYPE AND OVERREACH. Look for causal overreach, animal-to-human overextension, cure or breakthrough language, or sensationalism the data does not support.',
-  'LIMITS AND CONTEXT. Is this a small, preliminary, or single study, and what does it not show. Fail only if it is too weak or preliminary to responsibly feature.',
+  { web: true, focus: 'SOURCE INTEGRITY. Inspect the source. Is it reputable and real with a working link, and a primary report or legitimate established outlet rather than a content farm or pure hype.' },
+  { web: true, focus: 'ACCURACY. Check the stated finding against what the source actually reports. Flag any misrepresentation, exaggeration, wrong numbers, or details that do not match.' },
+  { web: false, focus: 'HYPE AND OVERREACH. Look for causal overreach, animal-to-human overextension, cure or breakthrough language, or sensationalism the data does not support.' },
+  { web: false, focus: 'LIMITS AND CONTEXT. Is this a small, preliminary, or single study, and what does it not show. Fail only if it is too weak or preliminary to responsibly feature.' },
 ]
 
 const finalItems = []
 for (const c of candidates) {
   const checks = await Promise.all(lenses.map((lens) =>
-    ask(`You are one of four INDEPENDENT fact-checkers vetting a neuroscience news item before publication. Item headline "${c.headline}", source ${c.sourceName}, URL ${c.url}, stated finding "${c.finding}". YOUR LENS IS ${lens} Use web search to verify. Return ONLY JSON {"pass":true|false,"issues":[...],"note":"optional one-line honest caveat"}.`,
-      { web: true, maxTokens: 900 })
+    ask(`You are one of four INDEPENDENT fact-checkers vetting a neuroscience news item before publication. Item headline "${c.headline}", source ${c.sourceName}, URL ${c.url}, stated finding "${c.finding}". YOUR LENS IS ${lens.focus} ${lens.web ? 'Use web search to verify against the actual source.' : 'Judge from the claim itself.'} Return ONLY JSON {"pass":true|false,"issues":[...],"note":"optional one-line honest caveat"}.`,
+      { web: lens.web, maxTokens: lens.web ? 3000 : 1200, maxUses: 3 })
       .then((t) => extractJson(t))
       .catch((e) => ({ pass: false, issues: ['checker error: ' + e.message] })))
   )
@@ -90,7 +94,7 @@ for (const c of candidates) {
   try {
     decision = extractJson(await ask(
       `Four independent checkers reviewed this neuroscience news item. Item headline "${c.headline}", source ${c.sourceName} (${c.url}), stated finding "${c.finding}". Their verdicts as JSON: ${JSON.stringify(checks)}. Decide whether to publish to a rigorous, anti-hype plain-English news feed. Publish ONLY if all four passed with no serious issue. If publishing, write the final item in a plain warm voice with NO colons, NO semicolons, and NO dashes of any kind. Return ONLY JSON {"publish":true|false,"headline":"accurate, no hype","summary":"one to two sentences","caveat":"one line on what it does not show","sourceName":...,"sourceUrl":...,"date":"${niceDate} or the source date","reason":...}.`,
-      { maxTokens: 1200 }))
+      { maxTokens: 2000 }))
   } catch (e) {
     console.error('Convene failed for', c.headline, e.message)
     continue
