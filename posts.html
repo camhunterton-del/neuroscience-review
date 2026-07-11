@@ -12,6 +12,16 @@
   <!-- Theme (no flash of wrong theme) -->
   <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Archive treatment: the newest post reads as a full-width lead, the rest as the list.
+       CSS-only and :first-child-based, so it follows whatever post is newest and never
+       touches the auto-published list markup. */
+    .post-list .post-card:first-child { padding-top: 0; padding-bottom: 2.75rem; }
+    .post-list .post-card:first-child a { flex-direction: column; align-items: stretch; gap: 1.25rem; }
+    .post-list .post-card:first-child .post-card__thumb { width: 100%; flex: none; aspect-ratio: 16 / 9; border-radius: 12px; }
+    .post-list .post-card:first-child .post-card__title { font-size: clamp(1.9rem, 3.4vw, 2.5rem); line-height: 1.1; margin-top: 0.35rem; }
+    .post-list .post-card:first-child .post-card__lede { font-size: 1.16rem; max-width: 62ch; }
+  </style>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
   <link rel="canonical" href="https://theneuroreview.com/posts.html">
