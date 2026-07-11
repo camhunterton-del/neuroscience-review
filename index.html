@@ -14,22 +14,60 @@
   <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
   <link rel="stylesheet" href="css/styles.css">
   <style>
+    /* Home shell */
+    .home-wrap { max-width: 1000px; margin: 0 auto; }
+    .hero { max-width: 1000px; margin: 0.5rem auto 3.25rem; }
+    .hero__lede { max-width: 640px; }
+
+    /* Section head (left-aligned on the home hub) */
     .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; }
-    .section-head .section-heading { margin-bottom: 0; }
+    .section-head .section-heading { margin: 0; max-width: none; }
     .section-head__more { font-family: var(--sans); font-size: 0.82rem; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; }
     .section-head__more:hover { color: var(--accent-hover); }
+
+    /* Featured lead */
+    .home-block { margin: 0 0 2.75rem; }
+    .feature { display: grid; grid-template-columns: 1.05fr 1fr; gap: 2rem; align-items: center; text-decoration: none; color: inherit; }
+    .feature__media { aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #f6f5ef; }
+    .feature__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
+    .feature:hover .feature__media img { transform: scale(1.03); }
+    .feature__title { font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.35rem); font-weight: 600; line-height: 1.13; letter-spacing: -0.02em; margin: 0.45rem 0 0.55rem; transition: color .15s; }
+    .feature:hover .feature__title { color: var(--accent); }
+    .feature__lede { font-size: 1.08rem; line-height: 1.55; color: var(--text-muted); margin-bottom: 0.85rem; }
+    .feature__cue { font-family: var(--sans); font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+
+    /* Hub: main column + rail */
+    .home-hub { display: grid; grid-template-columns: 1fr 320px; gap: 3rem; margin: 0 0 1rem; align-items: start; }
+    .home-hub__rail { display: flex; flex-direction: column; gap: 2rem; }
+
+    /* Compact "more explainers" list */
+    .mini-list { list-style: none; margin: 0; padding: 0; }
+    .mini-card { display: flex; gap: 1rem; align-items: center; padding: 1.05rem 0; border-top: 1px solid var(--border); text-decoration: none; color: inherit; }
+    .mini-card:first-child { border-top: 0; padding-top: 0; }
+    .mini-card__thumb { display: block; flex: 0 0 88px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #f6f5ef; }
+    .mini-card__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mini-card__body { display: flex; flex-direction: column; min-width: 0; }
+    .mini-card__type { font-family: var(--sans); font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent); }
+    .mini-card__title { font-family: var(--serif); font-size: 1.14rem; font-weight: 600; line-height: 1.25; margin-top: 0.18rem; transition: color .15s; }
+    .mini-card:hover .mini-card__title { color: var(--accent); }
+
+    /* Rail: news list + column teaser */
     .home-news { list-style: none; padding: 0; margin: 0; }
-    .home-news__item { padding: 0.95rem 0; border-top: 1px solid var(--border); }
+    .home-news__item { padding: 0.85rem 0; border-top: 1px solid var(--border); }
     .home-news__item:first-child { border-top: none; padding-top: 0; }
-    .home-news__headline { display: block; font-family: var(--serif); font-size: 1.16rem; line-height: 1.35; color: var(--text); text-decoration: none; margin-bottom: 0.3rem; font-weight: 600; }
+    .home-news__headline { display: block; font-family: var(--serif); font-size: 1.02rem; line-height: 1.32; color: var(--text); text-decoration: none; margin-bottom: 0.28rem; font-weight: 600; }
     .home-news__headline:hover { color: var(--accent); }
-    .home-news__meta { font-family: var(--sans); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); }
-    .home-column { background: var(--bg-alt); border-radius: 10px; padding: 1.8rem 1.9rem; margin: 3rem 0; }
-    .home-column__eyebrow { font-family: var(--sans); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem; }
-    .home-column h3 { font-family: var(--serif); font-size: 1.5rem; line-height: 1.25; margin-bottom: 0.6rem; }
-    .home-column p { color: var(--text-muted); margin-bottom: 0.9rem; }
-    .home-column a.section-head__more { font-size: 0.9rem; }
-    .home-section { margin: 3.2rem 0; }
+    .home-news__meta { font-family: var(--sans); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); }
+    .home-column { background: var(--bg-alt); border-radius: 10px; padding: 1.4rem 1.5rem; margin: 0; }
+    .home-column__eyebrow { font-family: var(--sans); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.45rem; }
+    .home-column h3 { font-family: var(--serif); font-size: 1.3rem; line-height: 1.25; margin-bottom: 0.5rem; }
+    .home-column p { color: var(--text-muted); margin-bottom: 0.85rem; font-size: 0.98rem; }
+    .home-column a.section-head__more { font-size: 0.88rem; }
+
+    @media (max-width: 820px) {
+      .feature { grid-template-columns: 1fr; gap: 1.25rem; }
+      .home-hub { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
   </style>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
@@ -77,116 +115,127 @@
       <p class="hero__subscribe-note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
     </section>
 
-    <section class="home-section">
-      <div class="section-head">
-        <h2 class="section-heading">Latest posts</h2>
-        <a class="section-head__more" href="posts.html">See all posts &rarr;</a>
-      </div>
-      <ul class="post-list">
-        <li class="post-card">
-          <a href="posts/do-the-new-alzheimers-drugs-work.html">
-            <div class="post-card__thumb"><img src="img/photo-alzheimers.jpg" alt="" loading="lazy"></div>
-            <div class="post-card__body">
-              <div class="post-card__meta">
+    <div class="home-wrap">
+      <!-- Featured lead -->
+      <section class="home-block">
+        <div class="section-head">
+          <h2 class="section-heading">Featured</h2>
+          <a class="section-head__more" href="posts.html">All posts &rarr;</a>
+        </div>
+        <a class="feature" href="posts/do-the-new-alzheimers-drugs-work.html">
+          <div class="feature__media"><img src="img/photo-alzheimers.jpg" alt="" loading="lazy"></div>
+          <div class="feature__body">
+            <div class="post-card__meta">
               <span class="post-card__meta-type">Paper breakdown</span>
               <span class="post-card__meta-divider">·</span>
               <span>July 8, 2026</span>
               <span class="post-card__meta-divider">·</span>
               <span>9 min read</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>Cameron Hunterton</span>
             </div>
-              <h3 class="post-card__title">Do the new Alzheimer's drugs actually work?</h3>
-              <p class="post-card__lede">A landmark 2023 trial cleared amyloid plaque from people's brains with donanemab and slowed their decline. Here's what that really bought, and what it cost.</p>
-            </div>
-          </a>
-        </li>
-        <li class="post-card">
-          <a href="posts/aggression-switch-in-the-brain.html">
-            <div class="post-card__thumb"><img src="img/photo-aggression.jpg" alt="" loading="lazy"></div>
-            <div class="post-card__body">
-              <div class="post-card__meta">
-              <span class="post-card__meta-type">Paper breakdown</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>July 1, 2026</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>9 min read</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>Cameron Hunterton</span>
-            </div>
-              <h3 class="post-card__title">Scientists found an aggression switch in the mouse brain</h3>
-              <p class="post-card__lede">A 2011 study switched on a pinhead of neurons in the mouse hypothalamus and a calm male attacked almost anything. Here's how aggression got a physical address in the brain.</p>
-            </div>
-          </a>
-        </li>
-        <li class="post-card">
-          <a href="posts/why-we-sleep.html">
-            <div class="post-card__thumb"><img src="img/photo-sleep.jpg" alt="" loading="lazy"></div>
-            <div class="post-card__body">
-              <div class="post-card__meta">
-              <span class="post-card__meta-type">First principles</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>June 24, 2026</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>9 min read</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>Cameron Hunterton</span>
-            </div>
-              <h3 class="post-card__title">Why do you need to sleep?</h3>
-              <p class="post-card__lede">You spend a third of your life unconscious and you can't skip it. For something that costly, sleep must be doing real work. Here's what the research says it's for.</p>
-            </div>
-          </a>
-        </li>
-        <li class="post-card">
-          <a href="posts/dopamine-doesnt-do-what-you-think.html">
-            <div class="post-card__thumb"><img src="img/photo-dopamine.jpg" alt="" loading="lazy"></div>
-            <div class="post-card__body">
-              <div class="post-card__meta">
-              <span class="post-card__meta-type">Myth-busting</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>June 1, 2026</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>6 min read</span>
-              <span class="post-card__meta-divider">·</span>
-              <span>Cameron Hunterton</span>
-            </div>
-              <h3 class="post-card__title">Dopamine doesn't do what you think it does.</h3>
-              <p class="post-card__lede">Dopamine isn't really the "pleasure chemical." It's something stranger and more interesting, and the popular misuse of the word has consequences.</p>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </section>
+            <h3 class="feature__title">Do the new Alzheimer's drugs actually work?</h3>
+            <p class="feature__lede">A landmark 2023 trial cleared amyloid plaque from people's brains with donanemab and slowed their decline. Here's what that really bought, and what it cost.</p>
+            <span class="feature__cue">Read the breakdown &rarr;</span>
+          </div>
+        </a>
+      </section>
 
-    <section class="home-section">
-      <div class="section-head">
-        <h2 class="section-heading">Latest news</h2>
-        <a class="section-head__more" href="news.html">See all news &rarr;</a>
+      <!-- Hub: more explainers + rail -->
+      <div class="home-hub">
+        <section class="home-hub__main">
+          <div class="section-head">
+            <h2 class="section-heading">More explainers</h2>
+          </div>
+          <ul class="mini-list">
+            <li>
+              <a class="mini-card" href="posts/aggression-switch-in-the-brain.html">
+                <span class="mini-card__thumb"><img src="img/photo-aggression.jpg" alt="" loading="lazy"></span>
+                <span class="mini-card__body">
+                  <span class="mini-card__type">Paper breakdown</span>
+                  <span class="mini-card__title">Scientists found an aggression switch in the mouse brain</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="mini-card" href="posts/why-we-sleep.html">
+                <span class="mini-card__thumb"><img src="img/photo-sleep.jpg" alt="" loading="lazy"></span>
+                <span class="mini-card__body">
+                  <span class="mini-card__type">First principles</span>
+                  <span class="mini-card__title">Why do you need to sleep?</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="mini-card" href="posts/the-blood-brain-barrier.html">
+                <span class="mini-card__thumb"><img src="img/photo-bbb.jpg" alt="" loading="lazy"></span>
+                <span class="mini-card__body">
+                  <span class="mini-card__type">First principles</span>
+                  <span class="mini-card__title">Why can't most drugs reach your brain?</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="mini-card" href="posts/what-fmri-measures.html">
+                <span class="mini-card__thumb"><img src="img/photo-fmri.jpg" alt="" loading="lazy"></span>
+                <span class="mini-card__body">
+                  <span class="mini-card__type">First principles</span>
+                  <span class="mini-card__title">What does an fMRI actually measure?</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="mini-card" href="posts/how-memory-works.html">
+                <span class="mini-card__thumb"><img src="img/photo-memory.jpg" alt="" loading="lazy"></span>
+                <span class="mini-card__body">
+                  <span class="mini-card__type">First principles</span>
+                  <span class="mini-card__title">How does memory actually work?</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="mini-card" href="posts/what-is-a-neuron.html">
+                <span class="mini-card__thumb"><img src="img/photo-neuron.jpg" alt="" loading="lazy"></span>
+                <span class="mini-card__body">
+                  <span class="mini-card__type">First principles</span>
+                  <span class="mini-card__title">What is a neuron, really?</span>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <aside class="home-hub__rail">
+          <section>
+            <div class="section-head">
+              <h2 class="section-heading">Latest news</h2>
+              <a class="section-head__more" href="news.html">More &rarr;</a>
+            </div>
+            <ul class="home-news">
+              <!-- HOME-NEWS-START -->
+              <li class="home-news__item">
+                <a class="home-news__headline" href="https://www.nature.com/articles/s41467-026-69370-8" target="_blank" rel="noopener">A second pregnancy leaves its own mark on the brain</a>
+                <span class="home-news__meta">July 11, 2026 &middot; Nature Communications</span>
+              </li>
+              <li class="home-news__item">
+                <a class="home-news__headline" href="https://doi.org/10.1523/JNEUROSCI.2002-24.2026" target="_blank" rel="noopener">Astrocyte receptor loss disrupts how brain synapses form</a>
+                <span class="home-news__meta">July 11, 2026 &middot; Journal of Neuroscience</span>
+              </li>
+              <li class="home-news__item">
+                <a class="home-news__headline" href="https://doi.org/10.1523/JNEUROSCI.0420-26.2026" target="_blank" rel="noopener">A key nerve signal changes direction as young zebrafish grow up</a>
+                <span class="home-news__meta">July 11, 2026 &middot; Journal of Neuroscience</span>
+              </li>
+              <!-- HOME-NEWS-END -->
+            </ul>
+          </section>
+
+          <section class="home-column">
+            <div class="home-column__eyebrow">The column</div>
+            <h3>The Paper That Hooked Me</h3>
+            <p>A scientist takes the one paper that changed how they think and walks you through it in five plain questions &mdash; the most personal thing on the site.</p>
+            <a class="section-head__more" href="the-paper-that-hooked-me.html">Read the column &rarr;</a>
+          </section>
+        </aside>
       </div>
-      <ul class="home-news">
-        <!-- HOME-NEWS-START -->
-        <li class="home-news__item">
-          <a class="home-news__headline" href="https://www.nature.com/articles/s41467-026-69370-8" target="_blank" rel="noopener">A second pregnancy leaves its own mark on the brain</a>
-          <span class="home-news__meta">July 11, 2026 &middot; Nature Communications</span>
-        </li>
-        <li class="home-news__item">
-          <a class="home-news__headline" href="https://doi.org/10.1523/JNEUROSCI.2002-24.2026" target="_blank" rel="noopener">Astrocyte receptor loss disrupts how brain synapses form</a>
-          <span class="home-news__meta">July 11, 2026 &middot; Journal of Neuroscience</span>
-        </li>
-        <li class="home-news__item">
-          <a class="home-news__headline" href="https://doi.org/10.1523/JNEUROSCI.0420-26.2026" target="_blank" rel="noopener">A key nerve signal changes direction as young zebrafish grow up</a>
-          <span class="home-news__meta">July 11, 2026 &middot; Journal of Neuroscience</span>
-        </li>
-        <!-- HOME-NEWS-END -->
-      </ul>
-    </section>
-
-    <section class="home-column">
-      <div class="home-column__eyebrow">The column</div>
-      <h3>The Paper That Hooked Me</h3>
-      <p>A scientist takes the one paper that changed how they think and walks you through it in five plain questions. It is the most personal thing on the site.</p>
-      <a class="section-head__more" href="the-paper-that-hooked-me.html">Read the column &rarr;</a>
-    </section>
+    </div>
 
     <section class="cta" id="subscribe">
       <h3>Get one brain-science deep dive every Wednesday.</h3>
