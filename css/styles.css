@@ -571,7 +571,9 @@ article.post {
    ============================================ */
 .read-next{max-width:66ch;margin:3rem auto 0;padding-top:1.75rem;border-top:1px solid var(--border);}
 .read-next__label{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin:0 0 1.1rem;}
-.read-next__list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.read-next__list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;}
+/* Curated cross-format pathways: gracefully hold a pair or a trio; anchored Column jumps clear the sticky header */
+.hooked-entry{scroll-margin-top:5rem;}
 .read-next__link{display:block;height:100%;text-decoration:none;color:inherit;padding:1.1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);transition:border-color .15s;}
 .read-next__link:hover{border-color:var(--accent);}
 .read-next__type{display:block;font-family:var(--sans);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.35rem;}
