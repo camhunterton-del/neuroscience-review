@@ -22,7 +22,10 @@
     .news-item h3 a:hover { color: var(--accent); }
     .news-item p { margin-bottom: 0.5rem; }
     .news-item__caveat { color: var(--text-faint); font-size: 0.95rem; }
-    .news-note { color: var(--text-muted); font-size: 0.95rem; border-left: 3px solid var(--border); padding-left: 1rem; margin-bottom: 2.2rem; }
+    .news-item::after { content: ""; display: table; clear: both; }
+    .news-item__thumb { float: right; width: 150px; margin: 0.2rem 0 0.7rem 1.4rem; }
+    .news-item__thumb img { width: 150px; height: 100px; object-fit: cover; border-radius: 6px; display: block; }
+    @media (max-width: 640px) { .news-item__thumb { float: none; width: 100%; margin: 0 0 0.9rem; } .news-item__thumb img { width: 100%; height: 180px; } }
   </style>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
@@ -60,12 +63,10 @@
       <header class="post-header">
         <div class="post-header__eyebrow">News</div>
         <h1 class="post-header__title">Neuroscience News.</h1>
-        <p class="post-header__subtitle">Short notes on new brain research, updated often. Each one is checked against its source and links straight to the original, so you can go read it yourself.</p>
+        <p class="post-header__subtitle">Recent brain research, each note checked against its source and linked to the original.</p>
       </header>
 
       <div class="post-body">
-        <p class="news-note">These are brief, curated notes, not our long explainers. Every item is cross-checked against the primary source before it goes up. For the full hand-written pieces, see <a href="index.html">Posts</a>.</p>
-
         <!-- NEWS-FEED-START -->
         <article class="news-item">
           <p class="news-item__meta">July 11, 2026 &middot; via <a href="https://www.nature.com/articles/s41467-026-69370-8" target="_blank" rel="noopener">Nature Communications / Amsterdam UMC</a></p>
@@ -75,55 +76,61 @@
         </article>
 
         <article class="news-item">
+          <a class="news-item__thumb" href="https://www.thetransmitter.org/artificial-intelligence/mass-produced-science-is-coming-what-happens-to-scientists/" target="_blank" rel="noopener"><img src="https://www.thetransmitter.org/wp-content/uploads/2026/07/cropped-MassProduced-Science-models-harris-525.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
           <p class="news-item__meta">July 11, 2026 &middot; via <a href="https://www.thetransmitter.org/artificial-intelligence/mass-produced-science-is-coming-what-happens-to-scientists/" target="_blank" rel="noopener">The Transmitter</a></p>
           <h3><a href="https://www.thetransmitter.org/artificial-intelligence/mass-produced-science-is-coming-what-happens-to-scientists/" target="_blank" rel="noopener">UCL Scientist Says AI Tools Can Now Mine Open Neuroscience Data For Quick Answers</a></h3>
           <p>A UCL neuroscientist argues that AI agents combined with large open datasets from groups like the Allen Institute and International Brain Lab can already answer specific factual questions, such as whether neurons in a brain area respond to visual stimuli, by computing directly from the data instead of searching published papers.</p>
           <p class="news-item__caveat"><em>This is an opinion piece describing an emerging idea, not a study with tested accuracy rates or systematic evaluation of these AI agents.</em></p>
         </article>
 
-<article class="news-item">
+        <article class="news-item">
           <p class="news-item__meta">July 11, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.2002-24.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
           <h3><a href="https://doi.org/10.1523/JNEUROSCI.2002-24.2026" target="_blank" rel="noopener">Astrocyte Receptor Loss Disrupts How Brain Synapses Form</a></h3>
           <p>A new study in mice found that losing a receptor called TrkB.T1 on astrocytes disrupts the formation of glutamate releasing synapses and normal contacts between astrocytes and neurons. The findings point to a role for this receptor in wiring the developing brain.</p>
           <p class="news-item__caveat"><em>This is a single animal study and it does not show whether these changes affect behavior or learning or whether the same process happens in humans.</em></p>
         </article>
 
-<article class="news-item">
+        <article class="news-item">
           <p class="news-item__meta">July 11, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.0420-26.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
           <h3><a href="https://doi.org/10.1523/JNEUROSCI.0420-26.2026" target="_blank" rel="noopener">A key nerve signal changes direction as young zebrafish grow up</a></h3>
           <p>Researchers studying zebrafish found that a common electrical signal in motor neurons called the M current works one way early in development and then flips to work the opposite way as the nervous system matures.</p>
           <p class="news-item__caveat"><em>This finding comes from one study in zebrafish motor neurons so it does not show whether the same switch happens in other animals, other neuron types, or humans.</em></p>
         </article>
 
-<article class="news-item">
+        <article class="news-item">
+          <a class="news-item__thumb" href="https://www.fens.org/news-activities/news/could-acupuncture-to-the-ear-help-to-relieve-migraines" target="_blank" rel="noopener"><img src="https://www.fens.org/wp-content/uploads/2026/07/1-Week-to-go-1.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
           <p class="news-item__meta">July 10, 2026 &middot; via <a href="https://www.fens.org/news-activities/news/could-acupuncture-to-the-ear-help-to-relieve-migraines" target="_blank" rel="noopener">Federation of European Neuroscience Societies</a></p>
           <h3><a href="https://www.fens.org/news-activities/news/could-acupuncture-to-the-ear-help-to-relieve-migraines" target="_blank" rel="noopener">Ear acupuncture worked no better than a fake version for migraine</a></h3>
           <p>In a randomized trial of 68 women with chronic migraine, ear acupuncture eased pain and its impact on daily life after 30 days, but a fake placebo version helped just as much, so the real technique did not beat placebo.</p>
           <p class="news-item__caveat"><em>This is a small, preliminary conference result that is not yet peer reviewed, and because there was no untreated group the improvement could come from the placebo effect or from natural ups and downs in migraine.</em></p>
         </article>
 
-<article class="news-item">
+        <article class="news-item">
+          <a class="news-item__thumb" href="https://www.thetransmitter.org/social-behavior/from-friend-to-foe-how-the-brain-updates-feelings-toward-others/" target="_blank" rel="noopener"><img src="https://www.thetransmitter.org/wp-content/uploads/2026/07/cropped-525-social-mice-memory.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
           <p class="news-item__meta">July 9, 2026 &middot; via <a href="https://www.thetransmitter.org/social-behavior/from-friend-to-foe-how-the-brain-updates-feelings-toward-others/" target="_blank" rel="noopener">The Transmitter</a></p>
           <h3><a href="https://www.thetransmitter.org/social-behavior/from-friend-to-foe-how-the-brain-updates-feelings-toward-others/" target="_blank" rel="noopener">In mice, the brain updates feelings toward another animal without changing who it remembers</a></h3>
           <p>Memory neurons in the hippocampus held a steady record of another animal's identity while the strength of their links to the basolateral amygdala changed to update the emotional tag on that animal. This let a mouse switch from liking to disliking a familiar cagemate that had turned aggressive.</p>
           <p class="news-item__caveat"><em>This was a single study in mice that used artificial techniques to switch neurons on and off, so it does not show that human feelings work the same way or that the circuit change by itself drives the behavior.</em></p>
         </article>
 
-<article class="news-item">
+        <article class="news-item">
+          <a class="news-item__thumb" href="https://www.urmc.rochester.edu/news/story/new-platform-combines-precision-gene-targeting-with-brain-wide-delivery" target="_blank" rel="noopener"><img src="https://iprsoftwaremedia.com/366/files/20266/c5700408c31684461c35778fe1113b24/6a4d4ede3d6332f2a812c154_adenovirus_web/adenovirus_web_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
           <p class="news-item__meta">July 8, 2026 &middot; via <a href="https://www.urmc.rochester.edu/news/story/new-platform-combines-precision-gene-targeting-with-brain-wide-delivery" target="_blank" rel="noopener">University of Rochester Medical Center</a></p>
           <h3><a href="https://www.urmc.rochester.edu/news/story/new-platform-combines-precision-gene-targeting-with-brain-wide-delivery" target="_blank" rel="noopener">Gene therapy reached the whole mouse brain through the brain's own fluid system</a></h3>
           <p>Scientists engineered AAV viral vectors and injected them into the spinal fluid at the base of the brain, using the brain's glymphatic clearance system to carry the gene therapy throughout the brain while mostly sparing other organs. In mice carrying transplanted human glial cells, the vectors reached glial cells across the brain, which could point to a way past the barrier that normally keeps therapies out of the brain for diseases like multiple sclerosis and Huntington's.</p>
           <p class="news-item__caveat"><em>This is an early delivery proof of concept in mice carrying human cells, so it shows the method can reach brain cells but does not show that it treats any disease or that it works in the far larger human brain.</em></p>
         </article>
 
-<article class="news-item">
+        <article class="news-item">
+          <a class="news-item__thumb" href="https://www.thetransmitter.org/spectrum/diverse-autism-genes-derail-common-developmental-pathways/" target="_blank" rel="noopener"><img src="https://www.thetransmitter.org/wp-content/uploads/2026/07/cropped-525-cortical-development.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
           <p class="news-item__meta">July 8, 2026 &middot; via <a href="https://www.thetransmitter.org/spectrum/diverse-autism-genes-derail-common-developmental-pathways/" target="_blank" rel="noopener">The Transmitter</a></p>
           <h3><a href="https://www.thetransmitter.org/spectrum/diverse-autism-genes-derail-common-developmental-pathways/" target="_blank" rel="noopener">Different autism genes disrupt the same early brain development in mice</a></h3>
           <p>In 11 mouse models that each carried a different autism gene, the earliest brain changes looked strikingly alike, with neural stem cells maturing late and young neurons firing differently soon after birth. As the mice grew, their molecular signatures drifted apart, and by two weeks after birth about half of the gene activity changes were unique to each model.</p>
           <p class="news-item__caveat"><em>This is one study in mice and no treatment was tested, so it does not show that targeting these early pathways would prevent or treat autism in people.</em></p>
         </article>
 
-<article class="news-item">
+        <article class="news-item">
+          <a class="news-item__thumb" href="https://www.thetransmitter.org/learning-and-memory/completely-new-learning-mechanism-drives-navigation-in-fruit-flies/" target="_blank" rel="noopener"><img src="https://www.thetransmitter.org/wp-content/uploads/2026/07/cropped-525-social-fly-head-direction-circuit.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
           <p class="news-item__meta">December 2025 preprint &middot; via <a href="https://www.thetransmitter.org/learning-and-memory/completely-new-learning-mechanism-drives-navigation-in-fruit-flies/" target="_blank" rel="noopener">The Transmitter</a></p>
           <h3><a href="https://www.thetransmitter.org/learning-and-memory/completely-new-learning-mechanism-drives-navigation-in-fruit-flies/" target="_blank" rel="noopener">In fruit flies, a brain chemical helps anchor the internal compass to visual landmarks</a></h3>
           <p>Researchers found that in fruit flies the neuromodulator octopamine lets the brain tie its internal sense of direction to visual landmarks by weakening the inhibitory synapses between compass neurons and landmark responsive cells. The authors describe this as a previously unseen form of learning that works at inhibitory synapses.</p>

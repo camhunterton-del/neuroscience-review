@@ -47,6 +47,32 @@ async function ask(prompt, { web = false, maxTokens = 1500, maxUses = 4 } = {}) 
   return text
 }
 
+// Fetch the source page's own preview image (og:image / twitter:image). Returns
+// null on any failure, so items whose source has no shareable image stay text-only.
+async function ogImage(url) {
+  try {
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; TheNeuroReview/1.0; +https://theneuroreview.com)' },
+      redirect: 'follow',
+      signal: AbortSignal.timeout(20000),
+    })
+    if (!res.ok) return null
+    const html = await res.text()
+    const pats = [
+      /<meta[^>]+property=["']og:image(?::secure_url|:url)?["'][^>]*content=["']([^"']+)["']/i,
+      /<meta[^>]+content=["']([^"']+)["'][^>]*property=["']og:image["']/i,
+      /<meta[^>]+name=["']twitter:image(?::src)?["'][^>]*content=["']([^"']+)["']/i,
+    ]
+    for (const p of pats) {
+      const m = html.match(p)
+      if (m && /^https?:\/\//.test(m[1])) return m[1].replace(/&amp;/g, '&')
+    }
+    return null
+  } catch (e) {
+    return null
+  }
+}
+
 // --- read existing page + already-published URLs (avoid dupes) ---
 const page = fs.readFileSync(NEWS_FILE, 'utf8')
 const existingUrls = new Set([...page.matchAll(/news-item__meta[\s\S]*?href="([^"]+)"/g)].map((m) => m[1]))
@@ -114,11 +140,19 @@ if (finalItems.length === 0) {
   process.exit(0)
 }
 
+// Attach each item's source preview image (null if the source exposes none).
+for (const it of finalItems) {
+  it.image = await ogImage(it.sourceUrl)
+}
+
 // --- 4. INJECT into news.html (newest first, capped) ---
 function itemHtml(it) {
   const url = esc(it.sourceUrl)
+  const thumb = it.image
+    ? `\n          <a class="news-item__thumb" href="${url}" target="_blank" rel="noopener"><img src="${esc(it.image)}" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>`
+    : ''
   const caveat = it.caveat ? `\n          <p class="news-item__caveat"><em>${esc(it.caveat)}</em></p>` : ''
-  return `        <article class="news-item">
+  return `        <article class="news-item">${thumb}
           <p class="news-item__meta">${esc(it.date || niceDate)} &middot; via <a href="${url}" target="_blank" rel="noopener">${esc(it.sourceName)}</a></p>
           <h3><a href="${url}" target="_blank" rel="noopener">${esc(it.headline)}</a></h3>
           <p>${esc(it.summary)}</p>${caveat}
