@@ -122,6 +122,66 @@
 
         <p>The salmon was, of course, dead. The point wasn't that fish think. It was that an fMRI dataset has so many thousands of voxels that, by pure chance, some will look active in any comparison if you don't correct for all the tests you're running. The study won an Ig Nobel Prize and became a standard cautionary tale about false positives. Good fMRI work corrects for this. The lesson is that the picture is only as trustworthy as the statistics behind it.</p>
 
+        <style>
+          .labdemo { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 1.7rem 1.8rem; margin: 2.2rem 0; }
+          .labdemo__eyebrow { font-family: var(--sans); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent); margin-bottom: 0.9rem; }
+          .labdemo__lead { font-family: var(--sans); color: var(--text-muted); font-size: 0.95rem; line-height: 1.55; margin: 0 0 1.3rem; }
+          .voxel-grid { display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px; max-width: 440px; margin: 0 auto 1.2rem; }
+          .voxel-grid > i { display: block; aspect-ratio: 1; border-radius: 2px; background: var(--border); }
+          .voxel-controls { display: flex; flex-wrap: wrap; gap: 0.9rem 1.8rem; align-items: center; justify-content: center; font-family: var(--sans); font-size: 0.9rem; color: var(--text); }
+          .voxel-controls label { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+          .voxel-readout { font-family: var(--sans); font-size: 0.92rem; color: var(--text-muted); text-align: center; margin: 1.1rem auto 0; max-width: 34rem; min-height: 2.6em; line-height: 1.5; }
+          .voxel-readout strong { color: var(--text); }
+        </style>
+        <section class="labdemo" aria-label="An fMRI thresholding experiment">
+          <div class="labdemo__eyebrow">Try it yourself</div>
+          <p class="labdemo__lead">Here is a slice of "brain," 160 voxels. Almost all of it is random noise, with one small real signal hidden inside. Slide the threshold down and watch chance alone light voxels up, then turn on the correction and see what actually survives.</p>
+          <div class="voxel-grid" id="voxel-grid" aria-hidden="true"></div>
+          <div class="voxel-controls">
+            <label>More sensitive <input type="range" id="voxel-thresh" min="15" max="40" value="20" aria-label="Statistical threshold"> Stricter</label>
+            <label><input type="checkbox" id="voxel-correct"> Correct for chance</label>
+          </div>
+          <p class="voxel-readout" id="voxel-readout" aria-live="polite"></p>
+        </section>
+        <script>
+        (function(){
+          var grid = document.getElementById('voxel-grid');
+          if(!grid) return;
+          var COLS = 16, ROWS = 10, N = COLS * ROWS;
+          function g(){ var s = 0; for(var i=0;i<6;i++){ s += Math.random(); } return Math.abs((s - 3) * 1.8); }
+          function rc(r,c){ return r * COLS + c; }
+          var vals = [];
+          for(var i=0;i<N;i++){ vals.push(g()); }
+          var cluster = [rc(4,9), rc(4,10), rc(5,9), rc(5,10), rc(5,11), rc(6,10)];
+          var real = {};
+          cluster.forEach(function(idx){ vals[idx] = 4.6 + Math.random() * 1.0; real[idx] = 1; });
+          var cells = [];
+          for(var j=0;j<N;j++){ var e = document.createElement('i'); grid.appendChild(e); cells.push(e); }
+          var slider = document.getElementById('voxel-thresh');
+          var corr = document.getElementById('voxel-correct');
+          var readout = document.getElementById('voxel-readout');
+          function render(){
+            var t = slider.value / 10;
+            var eff = corr.checked ? t + 1.4 : t;
+            var active = 0, realActive = 0;
+            for(var k=0;k<N;k++){
+              if(vals[k] >= eff){
+                active++; if(real[k]) realActive++;
+                var inten = Math.min(1, (vals[k] - eff) / 2 + 0.45);
+                cells[k].style.background = 'rgba(232,134,59,' + inten.toFixed(2) + ')';
+              } else { cells[k].style.background = ''; }
+            }
+            var noiseActive = active - realActive;
+            var msg;
+            if(active === 0){ msg = 'Nothing clears the threshold. Slide left to raise the sensitivity.'; }
+            else if(corr.checked){ msg = '<strong>Corrected for chance.</strong> ' + active + ' voxel' + (active===1?'':'s') + ' survive' + (active===1?'s':'') + ', and ' + realActive + ' of them ' + (realActive===1?'is':'are') + ' the real signal. The chance noise is gone.'; }
+            else { msg = '<strong>' + active + ' voxels look active</strong>, but only ' + realActive + ' ' + (realActive===1?'is':'are') + ' real. The other ' + noiseActive + ' lit up by pure chance. This is exactly how a dead salmon &ldquo;activated.&rdquo;'; }
+            readout.innerHTML = msg;
+          }
+          slider.oninput = render; corr.onchange = render; render();
+        })();
+        </script>
+
         <h2>What it's good for, and what it isn't</h2>
 
         <p>None of this means fMRI is useless. It's genuinely powerful for one main thing, finding where in the brain a given process tends to involve more activity, averaged across many trials and often many people. It mapped the broad geography of vision, language, movement, and <a href="how-memory-works.html">memory</a> in living humans without surgery, which is remarkable.</p>
