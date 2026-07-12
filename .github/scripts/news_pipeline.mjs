@@ -136,6 +136,7 @@ for (const c of candidates) {
 
 if (finalItems.length === 0) {
   console.log('No items cleared all four checks today. Leaving the page unchanged.')
+  try { fs.writeFileSync('.github/news-latest.json', '[]') } catch (e) { /* non-fatal */ }
   fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/stdout', 'count=0\n')
   process.exit(0)
 }
@@ -176,6 +177,22 @@ const combined = [...newArticles, ...existingArticles].slice(0, MAX_ITEMS_ON_PAG
 
 const rebuilt = before + '\n' + combined.join('\n\n') + '\n        ' + after
 fs.writeFileSync(NEWS_FILE, rebuilt)
+
+// Hand today's new items to the social poster (Bluesky posts up to 2 of these).
+// This file is a transient handoff and is not committed.
+try {
+  fs.writeFileSync('.github/news-latest.json', JSON.stringify(finalItems.map((it) => ({
+    headline: it.headline,
+    summary: it.summary,
+    caveat: it.caveat || '',
+    sourceName: it.sourceName,
+    sourceUrl: it.sourceUrl,
+    date: it.date || niceDate,
+    image: it.image || null,
+  })), null, 2))
+} catch (e) {
+  console.error('Could not write news-latest.json:', e.message)
+}
 
 if (finalItems.length < targetMin) console.warn(`Note: published ${finalItems.length}, below today's target of ${targetMin}. Held the quality bar rather than adding filler.`)
 console.log(`Injected ${finalItems.length} new item(s); page now holds ${combined.length}.`)

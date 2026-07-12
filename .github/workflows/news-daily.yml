@@ -50,6 +50,13 @@ jobs:
         if: steps.guard.outputs.ready == 'true'
         run: node .github/scripts/sync_home_news.mjs
 
+      - name: Auto-post up to 2 new items to Bluesky
+        if: steps.guard.outputs.ready == 'true' && steps.pipeline.outputs.count != '0'
+        env:
+          BLUESKY_HANDLE: theneuroreview.bsky.social
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+        run: node .github/scripts/bluesky_post.mjs
+
       - name: Commit and push if news changed
         id: commit
         if: steps.guard.outputs.ready == 'true'
