@@ -130,6 +130,88 @@
 
         <p>The human side of this is a long line of work on false memory, much of it by Elizabeth Loftus. People can be led, through nothing more than the wording of a question, to confidently remember details that never happened, sometimes whole events. In one classic study, simply asking how fast two cars were going when they smashed into each other, rather than when they hit each other, led people to recall broken glass at a scene that had none. Memory is reconstructive. Every time you remember, you rebuild the event out of fragments, and the version you rebuild is colored by your current mood, your beliefs, and the way the question was put to you. This isn't a flaw in a few unreliable people. It's how memory works in everyone, and it's a big part of why a confident eyewitness can still be wrong.</p>
 
+        <p>You don't have to take my word for it. Here is that same reconstruction happening in your own head, in about a minute.</p>
+
+        <style>
+          .labdemo { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 1.7rem 1.8rem; margin: 2.2rem 0; }
+          .labdemo__eyebrow { font-family: var(--sans); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent); margin-bottom: 1rem; }
+          .labdemo__stage { min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+          .labdemo__stage p { font-family: var(--sans); color: var(--text); margin: 0 0 1.1rem; max-width: 34rem; line-height: 1.5; }
+          .labdemo__word { font-family: var(--serif); font-size: clamp(2rem, 7vw, 3rem); font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+          .labdemo__list { display: flex; flex-wrap: wrap; gap: 0.5rem 1.15rem; justify-content: center; font-family: var(--serif); font-size: 1.25rem; color: var(--text); }
+          .labdemo__row { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
+          .labdemo__btn { font-family: var(--sans); font-size: 0.95rem; font-weight: 600; border: 1px solid var(--accent); background: var(--accent); color: #fff; padding: 0.6rem 1.5rem; border-radius: 999px; cursor: pointer; }
+          .labdemo__btn:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+          .labdemo__btn--ghost { background: transparent; color: var(--accent); }
+          .labdemo__btn--ghost:hover { background: transparent; color: var(--accent-hover); }
+          [data-theme="dark"] .labdemo__btn:not(.labdemo__btn--ghost) { color: #16151a; }
+          .labdemo__result-head { font-family: var(--serif); font-size: 1.45rem; font-weight: 600; margin-bottom: 0.7rem; color: var(--text); line-height: 1.25; }
+          .labdemo__muted { color: var(--text-muted); font-size: 0.92rem; }
+        </style>
+        <section class="labdemo" aria-label="A small memory experiment">
+          <div class="labdemo__eyebrow">Try it yourself</div>
+          <div class="labdemo__stage" id="drm-stage" aria-live="polite"></div>
+        </section>
+        <script>
+        (function(){
+          var stage = document.getElementById('drm-stage');
+          if(!stage) return;
+          var study = ['bed','rest','awake','tired','dream','wake','snooze','blanket','doze','slumber','snore','nap'];
+          var test = [
+            {w:'bed', studied:true}, {w:'chair', studied:false}, {w:'sleep', lure:true},
+            {w:'tired', studied:true}, {w:'ocean', studied:false}, {w:'dream', studied:true}, {w:'pencil', studied:false}
+          ];
+          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var answers = {};
+          function set(html){ stage.innerHTML = html; }
+          function intro(){
+            set('<p>A quick experiment. Twelve words will flash by, one at a time. Just read them, do not write anything down. Then I will test what you remember.</p><button class="labdemo__btn" id="drm-start">Start</button>');
+            document.getElementById('drm-start').onclick = reduce ? studyStatic : studyFlash;
+          }
+          function studyFlash(){
+            var i = 0;
+            (function next(){
+              if(i >= study.length){ return distractor(); }
+              set('<div class="labdemo__word">'+study[i]+'</div>');
+              i++; setTimeout(next, 900);
+            })();
+          }
+          function studyStatic(){
+            set('<p class="labdemo__muted">Read these words, then continue.</p><div class="labdemo__list">'+study.map(function(w){return '<span>'+w+'</span>';}).join('')+'</div><div class="labdemo__row" style="margin-top:1.3rem"><button class="labdemo__btn" id="drm-done">I have read them</button></div>');
+            document.getElementById('drm-done').onclick = distractor;
+          }
+          function distractor(){
+            set('<p>Now a memory test. For each word, did it appear in the list you just saw?</p>');
+            setTimeout(function(){ ask(0); }, 1100);
+          }
+          function ask(n){
+            if(n >= test.length){ return result(); }
+            var t = test[n];
+            set('<p class="labdemo__muted">Did this word appear in the list?</p><div class="labdemo__word">'+t.w+'</div><div class="labdemo__row"><button class="labdemo__btn" data-a="yes">Yes, I saw it</button><button class="labdemo__btn labdemo__btn--ghost" data-a="no">No</button></div>');
+            var btns = stage.querySelectorAll('[data-a]');
+            for(var k=0;k<btns.length;k++){
+              btns[k].onclick = (function(t){ return function(){ answers[t.w] = this.getAttribute('data-a'); ask(n+1); }; })(t);
+            }
+          }
+          function result(){
+            var sawLure = answers['sleep'] === 'yes';
+            var hits = 0, studiedTotal = 0;
+            for(var j=0;j<test.length;j++){ if(test[j].studied){ studiedTotal++; if(answers[test[j].w]==='yes') hits++; } }
+            var head, body;
+            if(sawLure){
+              head = 'You remembered a word that was never there.';
+              body = 'You just said you saw <strong>sleep</strong> in the list. It never appeared. Every word pointed at sleep, so your brain stored the gist, the theme, and then reconstructed <em>sleep</em> as if you had actually seen it. That is a false memory, built in about a minute, and it felt exactly as real as the words that truly were there.';
+            } else {
+              head = 'You resisted the lure this time.';
+              body = 'You correctly said <strong>sleep</strong> was not in the list, even though every word pointed at it. Nicely done. Most people are fooled, and even those who answer no often report it felt familiar. That pull toward <em>sleep</em> is the same reconstruction at work, you just caught it.';
+            }
+            set('<div class="labdemo__result-head">'+head+'</div><p>'+body+'</p><p class="labdemo__muted">You correctly recalled '+hits+' of '+studiedTotal+' real words. This is a one-person version of a classic experiment (Roediger and McDermott, 1995), so treat it as a demonstration, not a measurement. The effect holds up across large groups.</p><div class="labdemo__row"><button class="labdemo__btn labdemo__btn--ghost" id="drm-again">Run it again</button></div>');
+            document.getElementById('drm-again').onclick = function(){ answers = {}; intro(); };
+          }
+          intro();
+        })();
+        </script>
+
         <h2>The honest caveats</h2>
 
         <p>As with the neuron, it's worth being clear about the edges of this story.</p>
@@ -173,6 +255,7 @@
             <li>Bliss TVP, Lomo T. &ldquo;<a href="https://doi.org/10.1113/jphysiol.1973.sp010273" target="_blank" rel="noopener">Long-lasting potentiation of synaptic transmission in the dentate area of the anaesthetized rabbit.</a>&rdquo; <em>Journal of Physiology</em>, 1973.</li>
             <li>Nader K, Schafe GE, LeDoux JE. &ldquo;<a href="https://doi.org/10.1038/35021052" target="_blank" rel="noopener">Fear memories require protein synthesis in the amygdala for reconsolidation after retrieval.</a>&rdquo; <em>Nature</em>, 2000.</li>
             <li>Loftus EF, Palmer JC. &ldquo;<a href="https://doi.org/10.1016/S0022-5371(74)80011-3" target="_blank" rel="noopener">Reconstruction of automobile destruction.</a>&rdquo; <em>Journal of Verbal Learning and Verbal Behavior</em>, 1974.</li>
+            <li>Roediger HL, McDermott KB. &ldquo;<a href="https://doi.org/10.1037/0278-7393.21.4.803" target="_blank" rel="noopener">Creating false memories: remembering words not presented in lists.</a>&rdquo; <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>, 1995.</li>
             <li>Liu X, Ramirez S, Pang PT, et al. &ldquo;<a href="https://doi.org/10.1038/nature11028" target="_blank" rel="noopener">Optogenetic stimulation of a hippocampal engram activates fear memory recall.</a>&rdquo; <em>Nature</em>, 2012.</li>
           </ol>
         </section>
