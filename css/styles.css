@@ -529,7 +529,7 @@ article.post {
 .post-card__thumb {
   flex: 0 0 168px;
   aspect-ratio: 4 / 3;
-  background: #f6f5ef;
+  background: var(--bg-alt);
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;

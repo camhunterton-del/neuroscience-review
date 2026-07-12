@@ -63,7 +63,11 @@ jobs:
           fi
 
           if git merge --no-ff "$BRANCH_REF" -m "Publish: Depression probably isn't a serotonin shortage (scheduled)"; then
-            git push origin main
+            pushed=false
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push origin main && { pushed=true; break; } || sleep 5
+            done
+            [ "$pushed" = "true" ] || { echo "push failed after retries"; echo "result=conflict" >> $GITHUB_OUTPUT; exit 1; }
             echo "result=merged" >> $GITHUB_OUTPUT
           else
             git merge --abort || true

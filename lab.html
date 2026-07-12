@@ -43,6 +43,7 @@
   </style>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://theneuroreview.com/lab.html">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Neuroscience Review">
   <meta property="og:title" content="The Lab">
@@ -51,6 +52,8 @@
   <meta property="og:image" content="https://theneuroreview.com/og-cover.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="The Lab">
+  <meta name="twitter:description" content="Small experiments you run on your own brain, right in the page.">
+  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png">
   <style>
     /* Lab: neuron-cluster experiments */
     .ai-field { width: 270px; height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
@@ -92,7 +95,7 @@
       </header>
 
       <div class="post-body">
-        <p class="lab-intro">Reading about the brain is one thing and feeling it work is another. Each of these is a quick, honest demonstration you can try yourself. Nothing is saved and nothing is graded. There is one to start, and more will join it as the writing grows.</p>
+        <p class="lab-intro">Reading about the brain is one thing and feeling it work is another. Each of these is a quick, honest demonstration you can try yourself. Nothing is saved and nothing is graded. There are a few to start, and more will join them as the writing grows.</p>
 
         <h2 class="lab-exp__title">The Stroop test</h2>
         <p class="lab-exp__note">One of the oldest demonstrations in psychology. It takes about a minute, and it measures something real about how your brain handles conflict.</p>
@@ -122,11 +125,11 @@
               <canvas class="lif-fi" id="lif-fi" width="680" height="90"></canvas>
             </div>
           </div>
-          <p class="labdemo__muted" style="margin-top:1rem">This is a leaky integrate and fire neuron, the textbook simplification. Below a certain push it just leaks back to rest and stays quiet. Above it, it fires a full spike and resets, and the harder you push the faster it fires. The spike size never changes, only the rate.</p>
+          <p class="labdemo__muted" style="margin-top:1rem">This is a leaky integrate and fire neuron, the textbook simplification. Below a certain push it settles at a low quiet level below threshold and never spikes. Above it, it fires a full spike and resets, and the harder you push the faster it fires. The spike size never changes, only the rate.</p>
         </section>
 
         <h2 class="lab-exp__title">Edges that aren't there</h2>
-        <p class="lab-exp__note">Lateral inhibition painting in shading the screen never showed.</p>
+        <p class="lab-exp__note">Lateral inhibition, painting in shading the screen never showed.</p>
         <section class="labdemo" aria-label="Edge-enhancement experiment">
           <p class="labdemo__eyebrow">Try it yourself</p>
           <div class="labdemo__stage" style="min-height:auto">

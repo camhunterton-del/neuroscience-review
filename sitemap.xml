@@ -84,4 +84,21 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://theneuroreview.com/posts.html</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://theneuroreview.com/news.html</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://theneuroreview.com/lab.html</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://theneuroreview.com/the-paper-that-hooked-me.html</loc>
+    <changefreq>weekly</changefreq>
+  </url>
 </urlset>

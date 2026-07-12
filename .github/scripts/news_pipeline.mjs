@@ -75,7 +75,8 @@ async function ogImage(url) {
 
 // --- read existing page + already-published URLs (avoid dupes) ---
 const page = fs.readFileSync(NEWS_FILE, 'utf8')
-const existingUrls = new Set([...page.matchAll(/news-item__meta[\s\S]*?href="([^"]+)"/g)].map((m) => m[1]))
+const normUrl = (u) => String(u || '').replace(/&amp;/g, '&').trim().toLowerCase()
+const existingUrls = new Set([...page.matchAll(/news-item__meta[\s\S]*?href="([^"]+)"/g)].map((m) => normUrl(m[1])))
 
 // --- 1. SCOUT ---
 const scoutPrompt = `You are scouting REAL, recent neuroscience and brain-science news for a rigorous plain-English publication. Today is ${niceDate}. Use web search to find up to 8 notable and genuinely real findings or reports published or covered in the last 3 to 4 days, from reputable sources only (peer-reviewed journals, university press offices, and established science outlets such as Nature, Science, Quanta, The Transmitter, STAT, Scientific American, New Scientist). Exclude tabloids, content farms, product or supplement marketing, and anything without a real working URL. Do not invent anything.
@@ -91,7 +92,7 @@ try {
 const seen = new Set()
 candidates = candidates.filter((c) => {
   const k = String(c.url || c.headline || '').trim().toLowerCase()
-  if (!k || seen.has(k) || existingUrls.has(c.url)) return false
+  if (!k || seen.has(k) || existingUrls.has(normUrl(c.url))) return false
   seen.add(k)
   return true
 }).slice(0, MAX_CANDIDATES_TO_CHECK)
@@ -150,12 +151,12 @@ for (const it of finalItems) {
 function itemHtml(it) {
   const url = esc(it.sourceUrl)
   const thumb = it.image
-    ? `\n          <a class="news-item__thumb" href="${url}" target="_blank" rel="noopener"><img src="${esc(it.image)}" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>`
+    ? `\n          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="${url}" target="_blank" rel="noopener"><img src="${esc(it.image)}" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>`
     : ''
   const caveat = it.caveat ? `\n          <p class="news-item__caveat"><em>${esc(it.caveat)}</em></p>` : ''
   return `        <article class="news-item">${thumb}
           <p class="news-item__meta">${esc(it.date || niceDate)} &middot; via <a href="${url}" target="_blank" rel="noopener">${esc(it.sourceName)}</a></p>
-          <h3><a href="${url}" target="_blank" rel="noopener">${esc(it.headline)}</a></h3>
+          <h2><a href="${url}" target="_blank" rel="noopener">${esc(it.headline)}</a></h2>
           <p>${esc(it.summary)}</p>${caveat}
         </article>`
 }

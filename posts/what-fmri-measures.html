@@ -154,7 +154,7 @@
           for(var i=0;i<N;i++){ vals.push(g()); }
           var cluster = [rc(4,9), rc(4,10), rc(5,9), rc(5,10), rc(5,11), rc(6,10)];
           var real = {};
-          cluster.forEach(function(idx){ vals[idx] = 4.6 + Math.random() * 1.0; real[idx] = 1; });
+          cluster.forEach(function(idx){ vals[idx] = 5.8 + Math.random() * 0.6; real[idx] = 1; });
           var cells = [];
           for(var j=0;j<N;j++){ var e = document.createElement('i'); grid.appendChild(e); cells.push(e); }
           var slider = document.getElementById('voxel-thresh');

@@ -28,7 +28,7 @@
     /* Featured lead */
     .home-block { margin: 0 0 2.75rem; }
     .feature { display: grid; grid-template-columns: 1.05fr 1fr; gap: 2rem; align-items: center; text-decoration: none; color: inherit; }
-    .feature__media { aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #f6f5ef; }
+    .feature__media { aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-alt); }
     .feature__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
     .feature:hover .feature__media img { transform: scale(1.03); }
     .feature__title { font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.35rem); font-weight: 600; line-height: 1.13; letter-spacing: -0.02em; margin: 0.45rem 0 0.55rem; transition: color .15s; }
@@ -44,7 +44,7 @@
     .mini-list { list-style: none; margin: 0; padding: 0; }
     .mini-card { display: flex; gap: 1rem; align-items: center; padding: 1.05rem 0; border-top: 1px solid var(--border); text-decoration: none; color: inherit; }
     .mini-card:first-child { border-top: 0; padding-top: 0; }
-    .mini-card__thumb { display: block; flex: 0 0 88px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #f6f5ef; }
+    .mini-card__thumb { display: block; flex: 0 0 88px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-alt); }
     .mini-card__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .mini-card__body { display: flex; flex-direction: column; min-width: 0; }
     .mini-card__type { font-family: var(--sans); font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent); }
@@ -230,7 +230,7 @@
           <section class="home-column">
             <div class="home-column__eyebrow">The column</div>
             <h3>The Paper That Hooked Me</h3>
-            <p>A scientist takes the one paper that changed how they think and walks you through it in five plain questions &mdash; the most personal thing on the site.</p>
+            <p>A scientist takes the one paper that changed how they think and walks you through it in five plain questions, the most personal thing on the site.</p>
             <a class="section-head__more" href="the-paper-that-hooked-me.html">Read the column &rarr;</a>
           </section>
         </aside>
