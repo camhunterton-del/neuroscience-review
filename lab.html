@@ -51,6 +51,20 @@
   <meta property="og:image" content="https://theneuroreview.com/og-cover.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="The Lab">
+  <style>
+    /* Lab: neuron-cluster experiments */
+    .ai-field { width: 270px; height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .ai-field--gray { background: #b9b9b9; }
+    .ai-dot { width: 12px; height: 12px; border-radius: 50%; background: #111; box-shadow: 0 0 0 3px rgba(255,255,255,.75); }
+    .lif-canvas { width: 100%; max-width: 34rem; height: 150px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; display: block; }
+    .lif-ctrls { width: 100%; max-width: 34rem; margin: 0.9rem auto 0; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); }
+    .lif-ctrls input[type=range] { width: 100%; accent-color: var(--accent); }
+    .lif-read { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text); }
+    .lif-fi { width: 100%; max-width: 34rem; height: 90px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; display: block; margin-top: 0.6rem; }
+    .chev-bands { display: flex; width: 100%; max-width: 32rem; height: 150px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    .chev-band { flex: 1; border: 0; padding: 0; cursor: pointer; }
+    .chev-band.is-sel { outline: 3px solid var(--accent); outline-offset: -3px; }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -74,7 +88,7 @@
       <header class="post-header">
         <div class="post-header__eyebrow">The Lab</div>
         <h1 class="post-header__title">The Lab.</h1>
-        <p class="post-header__subtitle">Small experiments you run on your own brain, right here in the page. More will appear as the review grows.</p>
+        <p class="post-header__subtitle">Small experiments you run on your own brain. A new one most weeks, paired with each new piece of writing.</p>
       </header>
 
       <div class="post-body">
@@ -86,6 +100,40 @@
         <section class="labdemo" aria-label="Stroop reaction-time experiment">
           <p class="labdemo__eyebrow">Try it yourself</p>
           <div class="labdemo__stage" id="stroop-stage"></div>
+        </section>
+
+        <h2 class="lab-exp__title">The afterimage</h2>
+        <p class="lab-exp__note">The color-coding cells in your visual system adapt, and you can feel it on a blank gray field.</p>
+        <section class="labdemo" aria-label="Afterimage experiment">
+          <p class="labdemo__eyebrow">Try it yourself</p>
+          <div class="labdemo__stage" id="ai-stage"></div>
+        </section>
+
+        <h2 class="lab-exp__title">Drive a neuron to threshold</h2>
+        <p class="lab-exp__note">A leaky integrate and fire model. Push it and watch the rate change, never the size.</p>
+        <section class="labdemo" aria-label="Integrate-and-fire neuron experiment">
+          <p class="labdemo__eyebrow">Try it yourself</p>
+          <div class="labdemo__stage" style="min-height:auto">
+            <canvas class="lif-canvas" id="lif-trace" width="680" height="150"></canvas>
+            <div class="lif-ctrls">
+              <div class="lif-read"><span>Injected current</span><span><strong id="lif-drive">8</strong> &middot; firing at <strong id="lif-rate">0</strong> Hz</span></div>
+              <input type="range" id="lif-current" min="0" max="30" value="8" step="1" aria-label="Injected current">
+              <div class="labdemo__progress" style="text-align:center">Your f-I curve, each dot is a rate you produced</div>
+              <canvas class="lif-fi" id="lif-fi" width="680" height="90"></canvas>
+            </div>
+          </div>
+          <p class="labdemo__muted" style="margin-top:1rem">This is a leaky integrate and fire neuron, the textbook simplification. Below a certain push it just leaks back to rest and stays quiet. Above it, it fires a full spike and resets, and the harder you push the faster it fires. The spike size never changes, only the rate.</p>
+        </section>
+
+        <h2 class="lab-exp__title">Edges that aren't there</h2>
+        <p class="lab-exp__note">Lateral inhibition painting in shading the screen never showed.</p>
+        <section class="labdemo" aria-label="Edge-enhancement experiment">
+          <p class="labdemo__eyebrow">Try it yourself</p>
+          <div class="labdemo__stage" style="min-height:auto">
+            <p style="margin-bottom:0.8rem">Each band below is one flat, uniform gray. But each looks darker on its bright edge and brighter on its dark edge. Click any band to check its true color.</p>
+            <div class="chev-bands" id="chev-bands"></div>
+            <p class="labdemo__muted" id="chev-readout" style="margin-top:1rem">Click a band and the demo will read its actual pixel color back to you.</p>
+          </div>
         </section>
 
         <p class="labdemo__muted">More experiments are on the way, each one paired with the ideas it brings to life.</p>
@@ -194,6 +242,78 @@
   }
 
   intro();
+})();
+</script>
+
+<script>
+// The afterimage (opponent-color adaptation)
+(function(){
+  var stage = document.getElementById('ai-stage'); if(!stage) return;
+  var COLORS = { red:{fill:'#e11d1d',after:'cyan'}, green:{fill:'#12b012',after:'magenta'}, blue:{fill:'#1636e0',after:'yellow'} };
+  function intro(){
+    stage.innerHTML = '<p>Pick a color, lock your eyes on the dark dot in the middle, and do not look away until the countdown ends. Then the color vanishes and you keep staring at the same spot.</p>'
+      + '<div class="labdemo__row"><button class="key__btn" data-c="red">Red</button><button class="key__btn" data-c="green">Green</button><button class="key__btn" data-c="blue">Blue</button></div>';
+    stage.querySelectorAll('[data-c]').forEach(function(b){ b.addEventListener('click', function(){ run(b.getAttribute('data-c')); }); });
+  }
+  function run(c){
+    stage.innerHTML = '<div class="ai-field" style="background:'+COLORS[c].fill+'"><span class="ai-dot"></span></div><div class="labdemo__progress" style="margin-top:0.9rem" id="ai-count">Keep staring at the dot . . . 15</div>';
+    var n = 15, cnt = document.getElementById('ai-count');
+    var iv = setInterval(function(){ n--; cnt.textContent = 'Keep staring at the dot . . . ' + n; if(n<=0){ clearInterval(iv); reveal(c); } }, 1000);
+  }
+  function reveal(c){
+    stage.innerHTML = '<div class="ai-field ai-field--gray"><span class="ai-dot"></span></div>'
+      + '<p class="labdemo__muted" style="margin-top:1rem">Keep looking at the dot. That ' + COLORS[c].after + ' glow is not on the screen. The cells that report ' + c + ' adapted while you stared, so on a plain gray field the opposing signal wins for a few seconds.</p>'
+      + '<div class="labdemo__row" style="margin-top:1rem"><button class="labdemo__btn labdemo__btn--ghost" id="ai-again">Try another color</button></div>';
+    document.getElementById('ai-again').addEventListener('click', intro);
+  }
+  intro();
+})();
+
+// Drive a neuron to threshold (leaky integrate-and-fire)
+(function(){
+  var canvas = document.getElementById('lif-trace'); if(!canvas) return;
+  var ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+  var EL = -70, VT = -55, VR = -72, VSPIKE = 20, tau = 14;
+  var V = EL, buf = [], spikes = [], t = 0;
+  for(var i=0;i<W;i++) buf.push(EL);
+  var slider = document.getElementById('lif-current');
+  var rateEl = document.getElementById('lif-rate'), driveEl = document.getElementById('lif-drive');
+  var fi = document.getElementById('lif-fi'), fctx = fi.getContext('2d'), fpts = [], lastFi = 0;
+  function acc(){ return (getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#2d5d7b').trim(); }
+  function vY(v){ var lo = EL - 8, hi = VSPIKE + 6; return H - (v - lo) / (hi - lo) * H; }
+  function step(ts){
+    var I = parseFloat(slider.value); driveEl.textContent = I.toFixed(0);
+    for(var k=0;k<10;k++){ var dt = 0.5; V += ((-(V - EL) + I) / tau) * dt; if(V >= VT){ V = VSPIKE; spikes.push(t); } buf.push(V); if(buf.length > W) buf.shift(); if(V >= VSPIKE) V = VR; t += dt; }
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(150,150,150,.55)'; ctx.setLineDash([5,4]); ctx.beginPath(); ctx.moveTo(0, vY(VT)); ctx.lineTo(W, vY(VT)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = acc(); ctx.lineWidth = 2; ctx.beginPath();
+    for(var x=0;x<buf.length;x++){ var y = vY(buf[x]); x === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); }
+    ctx.stroke();
+    var rate = spikes.filter(function(s){ return s > t - 1000; }).length; rateEl.textContent = rate;
+    if(spikes.length > 4000) spikes = spikes.slice(-2000);
+    if(ts - lastFi > 700){ lastFi = ts; fpts.push({ I:I, rate:rate }); if(fpts.length > 240) fpts.shift(); drawFi(); }
+    requestAnimationFrame(step);
+  }
+  function drawFi(){
+    fctx.clearRect(0,0,fi.width,fi.height); fctx.fillStyle = acc();
+    fpts.forEach(function(p){ var x = p.I / 30 * fi.width, y = fi.height - (Math.min(p.rate,90) / 90 * fi.height); fctx.beginPath(); fctx.arc(x, y, 2.2, 0, 7); fctx.fill(); });
+  }
+  requestAnimationFrame(step);
+})();
+
+// Edges that aren't there (lateral inhibition / edge enhancement)
+(function(){
+  var wrap = document.getElementById('chev-bands'); if(!wrap) return;
+  var readout = document.getElementById('chev-readout');
+  [48,84,120,156,192,224].forEach(function(v){
+    var b = document.createElement('button'); b.className = 'chev-band'; b.style.background = 'rgb('+v+','+v+','+v+')';
+    b.setAttribute('aria-label', 'Gray band, value ' + v);
+    b.addEventListener('click', function(){
+      wrap.querySelectorAll('.chev-band').forEach(function(x){ x.classList.remove('is-sel'); }); b.classList.add('is-sel');
+      readout.innerHTML = 'This whole band is <strong>rgb(' + v + ', ' + v + ', ' + v + ')</strong> from edge to edge, perfectly flat. The darker seam on its bright side and the lighter seam on its dark side are not in the pixels. Your visual system exaggerates every edge to sharpen it, and here it paints in shading the screen never showed.';
+    });
+    wrap.appendChild(b);
+  });
 })();
 </script>
 </body>
