@@ -77,6 +77,17 @@ body {
   transition: color 0.15s;
 }
 .site-nav a:hover { color: var(--accent); }
+.site-nav a.site-nav__cta {
+  color: #fff;
+  background: var(--accent);
+  padding: 0.4rem 1.05rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: background 0.15s, color 0.15s;
+}
+.site-nav a.site-nav__cta:hover { color: #fff; background: var(--accent-hover); }
+[data-theme="dark"] .site-nav a.site-nav__cta { color: #16151a; }
+[data-theme="dark"] .site-nav a.site-nav__cta:hover { color: #16151a; }
 
 main { padding: 3rem 1.5rem 4rem; }
 
