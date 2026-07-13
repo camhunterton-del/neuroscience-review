@@ -174,7 +174,16 @@ const existingBlock = page.slice(startIdx + START.length, endIdx)
 // existing article blocks, oldest kept but capped
 const existingArticles = existingBlock.split(/(?=<article class="news-item">)/).map((s) => s.trim()).filter(Boolean)
 const newArticles = finalItems.map(itemHtml)
-const combined = [...newArticles, ...existingArticles].slice(0, MAX_ITEMS_ON_PAGE)
+// Keep the whole feed in date order, newest first, so displayed dates never jump around.
+// (Sort is stable, so same-date items keep new-before-existing order.)
+const articleTime = (html) => {
+  const m = html.match(/news-item__meta[^>]*>\s*([A-Za-z]+ \d{1,2}, \d{4})/)
+  const t = m ? new Date(m[1]).getTime() : NaN
+  return Number.isNaN(t) ? -Infinity : t
+}
+const combined = [...newArticles, ...existingArticles]
+  .sort((a, b) => articleTime(b) - articleTime(a))
+  .slice(0, MAX_ITEMS_ON_PAGE)
 
 const rebuilt = before + '\n' + combined.join('\n\n') + '\n        ' + after
 fs.writeFileSync(NEWS_FILE, rebuilt)
