@@ -60,6 +60,9 @@ jobs:
       - name: Internal links and assets resolve
         run: python3 .github/scripts/check_internal_links.py
 
+      - name: News feed reads newest-first
+        run: python3 .github/scripts/check_news_order.py
+
       - name: Open or update alert issue on failure
         if: failure()
         uses: actions/github-script@v7
@@ -73,7 +76,7 @@ jobs:
               `- Trigger: **${context.eventName}**`,
               `- Run log: ${runUrl}`,
               '',
-              'Open the run log and look for the step marked with a red X (page down, missing homepage content, HTTPS not enforced, or a broken internal link).'
+              'Open the run log and look for the step marked with a red X (page down, missing homepage content, HTTPS not enforced, a broken internal link, or the News feed out of date order).'
             ].join('\n');
             const { data: issues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner, repo: context.repo.repo, state: 'open', per_page: 100
