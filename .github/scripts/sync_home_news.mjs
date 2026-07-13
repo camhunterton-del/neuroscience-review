@@ -30,8 +30,8 @@ try {
     .filter((s) => s.startsWith('<article class="news-item">'))
 
   const items = articles.slice(0, COUNT).map((art) => {
-    const url = (art.match(/<h3><a href="([^"]+)"/) || [])[1] || ''
-    const headline = (art.match(/<h3><a [^>]*>([\s\S]*?)<\/a><\/h3>/) || [])[1] || ''
+    const url = (art.match(/<h[23]><a href="([^"]+)"/) || [])[1] || ''
+    const headline = (art.match(/<h[23]><a [^>]*>([\s\S]*?)<\/a><\/h[23]>/) || [])[1] || ''
     const meta = (art.match(/news-item__meta">([\s\S]*?)<\/p>/) || [])[1] || ''
     const date = (meta.split('&middot;')[0] || '').trim()
     const source = ((meta.match(/>([^<]+)<\/a>/) || [])[1] || '').split('/')[0].trim()
