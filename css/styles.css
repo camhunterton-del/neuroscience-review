@@ -58,12 +58,21 @@ body {
 }
 
 .site-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-family: var(--serif);
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
   text-decoration: none;
   letter-spacing: -0.01em;
+}
+.site-logo__mark {
+  flex: none;
+  width: 1.5em;
+  height: 1.5em;
+  color: var(--accent);
 }
 .site-logo:hover { color: var(--accent); }
 
