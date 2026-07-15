@@ -15,9 +15,12 @@
   <link rel="stylesheet" href="css/styles.css">
   <style>
     /* Home shell */
-    .home-wrap { max-width: 1000px; margin: 0 auto; }
-    .hero { max-width: 1000px; margin: 0.5rem auto 3.25rem; }
-    .hero__lede { max-width: 640px; }
+    .home-wrap { max-width: 1200px; margin: 0 auto; }
+    /* Front-page top: hero on the left, live news pulled up on the right */
+    .home-top { display: grid; grid-template-columns: 1.55fr 1fr; gap: 3rem; align-items: start; margin: 1.25rem 0 3.25rem; }
+    .home-top__rail { border-left: 1px solid var(--border); padding-left: 2rem; }
+    .hero { margin: 0; }
+    .hero__lede { max-width: 36ch; }
 
     /* Section head (left-aligned on the home hub) */
     .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; }
@@ -65,6 +68,9 @@
     .home-column a.section-head__more { font-size: 0.88rem; }
 
     @media (max-width: 820px) {
+      .home-top { grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+      .home-top__rail { border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+      .hero__lede { max-width: none; }
       .feature { grid-template-columns: 1fr; gap: 1.25rem; }
       .home-hub { grid-template-columns: 1fr; gap: 2.5rem; }
     }
@@ -104,18 +110,42 @@
   </header>
 
   <main id="main">
-    <section class="hero">
-      <div class="hero__eyebrow">A neuroscience blog</div>
-      <h1 class="hero__title">Real brain research, made readable.</h1>
-      <p class="hero__lede">The rigor of a journal. The readability of a Sunday paper. For curious readers who want the actual science, not the click-baited version of it.</p>
-      <form class="cta__form hero__subscribe" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
-        <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
-        <button type="submit" class="cta__button">Subscribe free</button>
-      </form>
-      <p class="hero__subscribe-note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
-    </section>
-
     <div class="home-wrap">
+      <div class="home-top">
+        <section class="hero">
+          <div class="hero__eyebrow">A neuroscience blog</div>
+          <h1 class="hero__title">Real brain research, made readable.</h1>
+          <p class="hero__lede">The rigor of a journal. The readability of a Sunday paper. For curious readers who want the actual science, not the click-baited version of it.</p>
+          <form class="cta__form hero__subscribe" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
+            <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
+            <button type="submit" class="cta__button">Subscribe free</button>
+          </form>
+          <p class="hero__subscribe-note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+        </section>
+        <aside class="home-top__rail">
+          <div class="section-head">
+            <h2 class="section-heading">Latest news</h2>
+            <a class="section-head__more" href="news.html">More &rarr;</a>
+          </div>
+          <ul class="home-news">
+            <!-- HOME-NEWS-START -->
+            <li class="home-news__item">
+              <a class="home-news__headline" href="https://news.mit.edu/2026/how-visual-learning-happens-in-the-brain-0714" target="_blank" rel="noopener">Learning to Spot New Objects Slightly Reshapes Visual Brain Activity</a>
+              <span class="home-news__meta">July 15, 2026 &middot; MIT News (McGovern Institute)</span>
+            </li>
+            <li class="home-news__item">
+              <a class="home-news__headline" href="https://news.mit.edu/2026/separating-logic-and-language-0708" target="_blank" rel="noopener">Logical reasoning may not need the brain's language centers, MIT study finds</a>
+              <span class="home-news__meta">July 15, 2026 &middot; MIT News (McGovern Institute for Brain Research)</span>
+            </li>
+            <li class="home-news__item">
+              <a class="home-news__headline" href="https://www.sciencedaily.com/releases/2026/07/260710003529.htm" target="_blank" rel="noopener">Yale Scientists Find Two Proteins That May Help Parkinson's Spread In The Brain</a>
+              <span class="home-news__meta">July 13, 2026 &middot; ScienceDaily (Yale School of Medicine)</span>
+            </li>
+            <!-- HOME-NEWS-END -->
+          </ul>
+        </aside>
+      </div>
+
       <!-- Featured lead -->
       <section class="home-block">
         <div class="section-head">
@@ -146,15 +176,6 @@
             <h2 class="section-heading">Keep reading</h2>
           </div>
           <ul class="mini-list">
-            <li>
-              <a class="mini-card" href="posts/do-the-new-alzheimers-drugs-work.html">
-                <span class="mini-card__thumb"><img src="img/photo-alzheimers.jpg" alt="" loading="lazy"></span>
-                <span class="mini-card__body">
-                  <span class="mini-card__type">Paper breakdown</span>
-                  <span class="mini-card__title">Do the new Alzheimer's drugs actually work?</span>
-                </span>
-              </a>
-            </li>
             <li>
               <a class="mini-card" href="posts/aggression-switch-in-the-brain.html">
                 <span class="mini-card__thumb"><img src="img/photo-aggression.jpg" alt="" loading="lazy"></span>
@@ -213,29 +234,6 @@
         </section>
 
         <aside class="home-hub__rail">
-          <section>
-            <div class="section-head">
-              <h2 class="section-heading">Latest news</h2>
-              <a class="section-head__more" href="news.html">More &rarr;</a>
-            </div>
-            <ul class="home-news">
-              <!-- HOME-NEWS-START -->
-              <li class="home-news__item">
-                <a class="home-news__headline" href="https://news.mit.edu/2026/how-visual-learning-happens-in-the-brain-0714" target="_blank" rel="noopener">Learning to Spot New Objects Slightly Reshapes Visual Brain Activity</a>
-                <span class="home-news__meta">July 15, 2026 &middot; MIT News (McGovern Institute</span>
-              </li>
-              <li class="home-news__item">
-                <a class="home-news__headline" href="https://news.mit.edu/2026/separating-logic-and-language-0708" target="_blank" rel="noopener">Logical reasoning may not need the brain's language centers, MIT study finds</a>
-                <span class="home-news__meta">July 15, 2026 &middot; MIT News (McGovern Institute for Brain Research)</span>
-              </li>
-              <li class="home-news__item">
-                <a class="home-news__headline" href="https://www.sciencedaily.com/releases/2026/07/260710003529.htm" target="_blank" rel="noopener">Yale Scientists Find Two Proteins That May Help Parkinson's Spread In The Brain</a>
-                <span class="home-news__meta">July 13, 2026 &middot; ScienceDaily (Yale School of Medicine)</span>
-              </li>
-              <!-- HOME-NEWS-END -->
-            </ul>
-          </section>
-
           <section class="home-column">
             <div class="home-column__eyebrow">The column</div>
             <h3>The Paper That Hooked Me</h3>
@@ -259,7 +257,7 @@
   <footer class="site-footer">
     <div class="site-footer__inner">
       <p>&copy; 2026 The Neuroscience Review</p>
-      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="the-paper-that-hooked-me.html">Column</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Write for us</a></p>
+      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="the-paper-that-hooked-me.html">Column</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
       <p class="site-footer__credit">Neuron photo by <a href="https://commons.wikimedia.org/wiki/File:Cultured_Rat_Hippocampal_Neuron_(24327909026).jpg" target="_blank" rel="noopener">ZEISS Microscopy</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>.</p>
       <p class="site-footer__credit">fMRI scan by <a href="https://commons.wikimedia.org/wiki/File:FMRI_BOLD_activation_in_an_emotional_Stroop_task.jpg" target="_blank" rel="noopener">Ovaysikia et al.</a>, <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>.</p>
     </div>

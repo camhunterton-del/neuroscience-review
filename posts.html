@@ -13,14 +13,11 @@
   <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    /* Archive treatment: the newest post reads as a full-width lead, the rest as the list.
-       CSS-only and :first-child-based, so it follows whatever post is newest and never
-       touches the auto-published list markup. */
-    .post-list .post-card:first-child { padding-top: 0; padding-bottom: 2.75rem; }
-    .post-list .post-card:first-child a { flex-direction: column; align-items: stretch; gap: 1.25rem; }
-    .post-list .post-card:first-child .post-card__thumb { width: 100%; flex: none; aspect-ratio: 16 / 9; border-radius: 12px; }
-    .post-list .post-card:first-child .post-card__title { font-size: clamp(1.9rem, 3.4vw, 2.5rem); line-height: 1.1; margin-top: 0.35rem; }
-    .post-list .post-card:first-child .post-card__lede { font-size: 1.16rem; max-width: 62ch; }
+    /* Compact archive: a dense, scannable list so several posts show above the fold,
+       instead of one oversized lead image eating the whole screen. */
+    .post-list { max-width: 860px; }
+    .post-card { padding: 1.6rem 0; }
+    .post-card:first-child { padding-top: 0.2rem; }
   </style>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
@@ -244,7 +241,7 @@
   <footer class="site-footer">
     <div class="site-footer__inner">
       <p>&copy; 2026 The Neuroscience Review</p>
-      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="the-paper-that-hooked-me.html">Column</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Write for us</a></p>
+      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="the-paper-that-hooked-me.html">Column</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
     </div>
   </footer>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
