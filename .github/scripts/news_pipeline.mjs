@@ -14,14 +14,17 @@ const MODEL = process.env.NEWS_MODEL || 'claude-sonnet-5'
 const NEWS_FILE = 'news.html'
 const MAX_ITEMS_ON_PAGE = 40
 const MAX_CANDIDATES_TO_CHECK = 10
-const MAX_TO_PUBLISH = 4
-const MAX_SCOUT_ROUNDS = 3
-// Target: at least 2 items on weekdays, at least 1 on weekends, up to 4 total.
-// We scout a wide pool so there is usually enough that clears all four checks.
-// If a round does not yield the target, we scout AGAIN (wider window, excluding
-// what we already weighed) up to MAX_SCOUT_ROUNDS, so the feed still hits its
-// daily floor. We never publish filler to hit a quota, so the quality bar stays
-// fixed no matter how many rounds it takes.
+const MAX_TO_PUBLISH = 3
+const MAX_SCOUT_ROUNDS = 8
+// Goal: at least 1 item every day, up to 3. We keep scouting in rounds, each
+// round searching a WIDER time window than the last (a few days, then a couple
+// weeks, then a month-plus) and excluding what we already weighed, and we keep
+// going until we reach 3 or the search is genuinely exhausted (two straight
+// rounds surface nothing new). The round cap is only a runaway safety valve so
+// one run cannot loop forever — NOT a belief that neuroscience news runs out;
+// the window rolls forward every day, so there is always fresh material. The one
+// thing we never do is lower the four-check bar to force a post: on the rare day
+// nothing real clears even a month-wide search, publishing nothing beats hype.
 // (web search tool is built inline in ask() so max_uses can vary per call)
 
 const now = new Date()
@@ -84,10 +87,14 @@ const existingUrls = new Set([...page.matchAll(/news-item__meta[\s\S]*?href="([^
 
 // --- 1. SCOUT (one round; called repeatedly until the feed hits its floor) ---
 const seen = new Set() // every url/headline we have already weighed this run
+function windowForRound(round) {
+  if (round <= 1) return 'published or covered in the last 3 to 4 days'
+  if (round <= 3) return 'published or covered in the last 7 to 10 days'
+  if (round <= 5) return 'published or covered in the last 2 to 3 weeks'
+  return 'published or covered in the last 4 to 6 weeks'
+}
 async function scoutRound(round) {
-  const windowText = round === 1
-    ? 'published or covered in the last 3 to 4 days'
-    : 'published or covered in the last 7 to 10 days'
+  const windowText = windowForRound(round)
   const already = [...seen].slice(-40)
   const excludeText = already.length
     ? ` Do NOT return any of these already-considered items, by URL or by headline: ${already.join(' | ')}.`
@@ -137,13 +144,21 @@ async function vet(c) {
   }
 }
 
-// Scout + vet in rounds. Keep scouting a fresh (wider) batch until we reach the
-// day's target or run out of rounds, so a single weak batch never leaves the
-// feed empty. Only items that clear all four checks are ever published.
+// Scout + vet in rounds. Keep scouting a fresh, ever-wider batch and keep going
+// until we have up to MAX_TO_PUBLISH, or two straight rounds turn up nothing new
+// (the space is exhausted). A single weak batch can never leave the feed empty:
+// if the last few days are thin, later rounds widen to weeks and then a month.
+// Only items that clear all four checks are ever published.
 const finalItems = []
-for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < targetMin; round++) {
+let emptyStreak = 0
+for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < MAX_TO_PUBLISH; round++) {
   const candidates = await scoutRound(round)
-  if (candidates.length === 0) { if (round === 1) continue; else break }
+  if (candidates.length === 0) {
+    emptyStreak += 1
+    if (emptyStreak >= 2) { console.log('Two rounds in a row surfaced nothing new; stopping the search.'); break }
+    continue
+  }
+  emptyStreak = 0
   for (const c of candidates) {
     if (finalItems.length >= MAX_TO_PUBLISH) break
     const decision = await vet(c)
@@ -154,8 +169,8 @@ for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < targetMin; 
       console.log('SKIP:', c.headline, '-', decision && decision.reason)
     }
   }
-  if (finalItems.length < targetMin && round < MAX_SCOUT_ROUNDS) {
-    console.log(`Round ${round} left us at ${finalItems.length}/${targetMin}; scouting a wider round.`)
+  if (finalItems.length === 0 && round < MAX_SCOUT_ROUNDS) {
+    console.log(`Round ${round}: still nothing cleared; widening the window and going again.`)
   }
 }
 
