@@ -260,6 +260,23 @@ article.post {
   gap: 1rem;
 }
 
+/* Section/index pages (Posts, Lab, Column, About...) use a compact hero so the
+   page title does not fill the screen before any content shows. Individual
+   essays keep the full-size .post-header for their article headline. */
+.post-header--compact {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.3rem;
+}
+.post-header--compact .post-header__eyebrow { margin-bottom: 0.6rem; }
+.post-header--compact .post-header__title {
+  font-size: clamp(1.7rem, 3.2vw, 2.1rem);
+  margin-bottom: 0.55rem;
+}
+.post-header--compact .post-header__subtitle {
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
 /* Post body */
 .post-body p,
 .post-body ul,
