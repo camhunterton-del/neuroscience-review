@@ -26,6 +26,11 @@
     .news-item__thumb { float: right; width: 150px; margin: 0.2rem 0 0.7rem 1.4rem; }
     .news-item__thumb img { width: 150px; height: 100px; object-fit: cover; border-radius: 6px; display: block; }
     @media (max-width: 640px) { .news-item__thumb { float: none; width: 100%; margin: 0 0 0.9rem; } .news-item__thumb img { width: 100%; height: 180px; } }
+    /* Compact news header: a single label + line, then straight into the feed */
+    .news-hero { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; padding-top: 0.4rem; margin-bottom: 1.4rem; padding-bottom: 1.3rem; border-bottom: 1px solid var(--border); }
+    .news-hero__label { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin: 0; line-height: 1.4; }
+    .news-hero__sub { font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--text-muted); line-height: 1.5; margin: 0; }
+    @media (max-width: 640px) { .news-hero__sub { font-size: 0.95rem; } }
   </style>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
@@ -49,7 +54,7 @@
       <nav class="site-nav">
         <a href="index.html">Home</a>
         <a href="posts.html">Posts</a>
-        <a href="news.html">News</a>
+        <a aria-current="page" href="news.html">News</a>
         <a href="lab.html">Lab</a>
         <a href="the-paper-that-hooked-me.html">Column</a>
         <a class="site-nav__cta" href="index.html#subscribe">Subscribe</a>
@@ -60,10 +65,9 @@
 
   <main id="main">
     <article class="post">
-      <header class="post-header">
-        <div class="post-header__eyebrow">News</div>
-        <h1 class="post-header__title">Neuroscience News.</h1>
-        <p class="post-header__subtitle">Recent brain research, each note checked against its source and linked to the original.</p>
+      <header class="news-hero">
+        <h1 class="news-hero__label">News</h1>
+        <p class="news-hero__sub">Recent brain research, each note checked against its source and linked to the original.</p>
       </header>
 
       <div class="post-body">
