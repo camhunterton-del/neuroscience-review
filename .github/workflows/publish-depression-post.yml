@@ -6,8 +6,12 @@ name: Publish depression post
 # lets us confirm the merge is clean without publishing early.
 
 on:
-  schedule:
-    - cron: '13 13 15 7 *'   # July 15, 13:13 UTC (~9:13am ET)
+  # PAUSED 2026-07-14 (Cameron): holding this post so it is not the first piece
+  # a wave of new readers sees. Re-enable by uncommenting the cron below, or
+  # publish on demand any time via workflow_dispatch (Run workflow) once we
+  # decide it is the right moment.
+  # schedule:
+  #   - cron: '13 13 15 7 *'   # July 15, 13:13 UTC (~9:13am ET)
   workflow_dispatch:
     inputs:
       dry_run:
