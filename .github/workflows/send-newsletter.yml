@@ -1,0 +1,92 @@
+name: Send newsletter
+
+# Emails the newest published post to Buttondown subscribers.
+# - Manual runs default to "draft" (safe: creates a Buttondown draft, sends nothing).
+# - The weekly schedule runs in "send" mode and is idempotent (never re-sends a post
+#   that already went out), so it is hands-off once the API key secret is set.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'draft (create a draft, no send) | send (email all subscribers) | preview (log only)'
+        required: true
+        default: 'draft'
+        type: choice
+        options: [draft, send, preview]
+      slug:
+        description: 'Post slug to send (leave blank for the newest post)'
+        required: false
+        default: ''
+  schedule:
+    - cron: '0 16 * * 3'   # Wednesdays 16:00 UTC (12pm ET), after the morning publish
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: send-newsletter
+
+jobs:
+  newsletter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Skip if API key not configured yet
+        id: guard
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+        run: |
+          if [ -z "$BUTTONDOWN_API_KEY" ]; then
+            echo "BUTTONDOWN_API_KEY secret is not set — skipping. Add it to enable the newsletter."
+            echo "ready=false" >> $GITHUB_OUTPUT
+          else
+            echo "ready=true" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.ready == 'true'
+        with:
+          node-version: '20'
+
+      - name: Send / draft the newsletter
+        id: run
+        if: steps.guard.outputs.ready == 'true'
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          # schedule runs have no inputs -> default to send; manual runs use the chosen mode/slug
+          NEWSLETTER_MODE: ${{ github.event.inputs.mode || 'send' }}
+          POST_SLUG: ${{ github.event.inputs.slug || '' }}
+        run: node .github/scripts/send_newsletter.mjs | tee run.log
+
+      - name: Notify you the newsletter went out
+        if: steps.guard.outputs.ready == 'true' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let log = '';
+            try { log = fs.readFileSync('run.log', 'utf8'); } catch (e) {}
+            if (log.includes('SKIP:')) { core.info('Nothing new to send this week.'); return; }
+            const title = '📧 Weekly newsletter sent';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              'The weekly newsletter just emailed the newest post to your Buttondown subscribers.',
+              '',
+              '```',
+              log.trim(),
+              '```',
+              '',
+              `Run log: ${runUrl}`,
+            ].join('\n');
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo, state: 'open', per_page: 100
+            });
+            const existing = issues.find(i => i.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo, title, body });
+            }
