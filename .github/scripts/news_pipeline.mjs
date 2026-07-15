@@ -13,11 +13,15 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 const MODEL = process.env.NEWS_MODEL || 'claude-sonnet-5'
 const NEWS_FILE = 'news.html'
 const MAX_ITEMS_ON_PAGE = 40
-const MAX_CANDIDATES_TO_CHECK = 8
+const MAX_CANDIDATES_TO_CHECK = 10
 const MAX_TO_PUBLISH = 4
+const MAX_SCOUT_ROUNDS = 3
 // Target: at least 2 items on weekdays, at least 1 on weekends, up to 4 total.
-// We scout a wide pool so there is usually enough that clears all four checks,
-// but we never publish filler to hit a quota, so the quality bar stays fixed.
+// We scout a wide pool so there is usually enough that clears all four checks.
+// If a round does not yield the target, we scout AGAIN (wider window, excluding
+// what we already weighed) up to MAX_SCOUT_ROUNDS, so the feed still hits its
+// daily floor. We never publish filler to hit a quota, so the quality bar stays
+// fixed no matter how many rounds it takes.
 // (web search tool is built inline in ask() so max_uses can vary per call)
 
 const now = new Date()
@@ -78,25 +82,33 @@ const page = fs.readFileSync(NEWS_FILE, 'utf8')
 const normUrl = (u) => String(u || '').replace(/&amp;/g, '&').trim().toLowerCase()
 const existingUrls = new Set([...page.matchAll(/news-item__meta[\s\S]*?href="([^"]+)"/g)].map((m) => normUrl(m[1])))
 
-// --- 1. SCOUT ---
-const scoutPrompt = `You are scouting REAL, recent neuroscience and brain-science news for a rigorous plain-English publication. Today is ${niceDate}. Use web search to find up to 8 notable and genuinely real findings or reports published or covered in the last 3 to 4 days, from reputable sources only (peer-reviewed journals, university press offices, and established science outlets such as Nature, Science, Quanta, The Transmitter, STAT, Scientific American, New Scientist). Exclude tabloids, content farms, product or supplement marketing, and anything without a real working URL. Do not invent anything.
+// --- 1. SCOUT (one round; called repeatedly until the feed hits its floor) ---
+const seen = new Set() // every url/headline we have already weighed this run
+async function scoutRound(round) {
+  const windowText = round === 1
+    ? 'published or covered in the last 3 to 4 days'
+    : 'published or covered in the last 7 to 10 days'
+  const already = [...seen].slice(-40)
+  const excludeText = already.length
+    ? ` Do NOT return any of these already-considered items, by URL or by headline: ${already.join(' | ')}.`
+    : ''
+  const scoutPrompt = `You are scouting REAL, recent neuroscience and brain-science news for a rigorous plain-English publication. Today is ${niceDate}. Use web search to find up to 10 notable and genuinely real findings or reports ${windowText}, from reputable sources only (peer-reviewed journals, university press offices, and established science outlets such as Nature, Science, Quanta, The Transmitter, STAT, Scientific American, New Scientist). Exclude tabloids, content farms, product or supplement marketing, and anything without a real working URL. Do not invent anything.${excludeText}
 Return ONLY a JSON array, each element {"headline":..., "sourceName":..., "url":..., "finding":"one to two sentence plain statement of what was actually found", "date":..., "isPreprint":true|false}. No prose outside the JSON.`
-
-let candidates = []
-try {
-  candidates = extractJson(await ask(scoutPrompt, { web: true, maxTokens: 8000, maxUses: 6 }))
-} catch (e) {
-  console.error('Scout failed:', e.message)
+  let batch = []
+  try {
+    batch = extractJson(await ask(scoutPrompt, { web: true, maxTokens: 8000, maxUses: 6 }))
+  } catch (e) {
+    console.error(`Scout round ${round} failed:`, e.message)
+  }
+  const fresh = (Array.isArray(batch) ? batch : []).filter((c) => {
+    const k = String(c.url || c.headline || '').trim().toLowerCase()
+    if (!k || seen.has(k) || existingUrls.has(normUrl(c.url))) return false
+    seen.add(k)
+    return true
+  }).slice(0, MAX_CANDIDATES_TO_CHECK)
+  console.log(`Scout round ${round}: ${fresh.length} fresh candidates`)
+  return fresh
 }
-// dedupe within batch + against the live page
-const seen = new Set()
-candidates = candidates.filter((c) => {
-  const k = String(c.url || c.headline || '').trim().toLowerCase()
-  if (!k || seen.has(k) || existingUrls.has(normUrl(c.url))) return false
-  seen.add(k)
-  return true
-}).slice(0, MAX_CANDIDATES_TO_CHECK)
-console.log(`Scouted ${candidates.length} fresh candidates`)
 
 // --- 2 + 3. CHECK (4 independent lenses) then CONVENE ---
 // Only the two lenses that must check against the live source use web search;
@@ -108,31 +120,43 @@ const lenses = [
   { web: false, focus: 'LIMITS AND CONTEXT. Is this a small, preliminary, or single study, and what does it not show. Fail only if it is too weak or preliminary to responsibly feature.' },
 ]
 
-const finalItems = []
-for (const c of candidates) {
+async function vet(c) {
   const checks = await Promise.all(lenses.map((lens) =>
     ask(`You are one of four INDEPENDENT fact-checkers vetting a neuroscience news item before publication. Item headline "${c.headline}", source ${c.sourceName}, URL ${c.url}, stated finding "${c.finding}". YOUR LENS IS ${lens.focus} ${lens.web ? 'Use web search to verify against the actual source.' : 'Judge from the claim itself.'} Return ONLY JSON {"pass":true|false,"issues":[...],"note":"optional one-line honest caveat"}.`,
       { web: lens.web, maxTokens: lens.web ? 3000 : 1200, maxUses: 3 })
       .then((t) => extractJson(t))
       .catch((e) => ({ pass: false, issues: ['checker error: ' + e.message] })))
   )
-
-  let decision
   try {
-    decision = extractJson(await ask(
+    return extractJson(await ask(
       `Four independent checkers reviewed this neuroscience news item. Item headline "${c.headline}", source ${c.sourceName} (${c.url}), stated finding "${c.finding}". Their verdicts as JSON: ${JSON.stringify(checks)}. Decide whether to publish to a rigorous, anti-hype plain-English news feed. Publish ONLY if all four passed with no serious issue. If publishing, write the final item in a plain warm voice with NO colons, NO semicolons, and NO dashes of any kind. Return ONLY JSON {"publish":true|false,"headline":"accurate, no hype","summary":"one to two sentences","caveat":"one line on what it does not show","sourceName":...,"sourceUrl":...,"date":"${niceDate} or the source date","reason":...}.`,
       { maxTokens: 2000 }))
   } catch (e) {
     console.error('Convene failed for', c.headline, e.message)
-    continue
+    return null
   }
-  if (decision && decision.publish) {
-    finalItems.push(decision)
-    console.log('PUBLISH:', decision.headline)
-  } else {
-    console.log('SKIP:', c.headline, '-', decision && decision.reason)
+}
+
+// Scout + vet in rounds. Keep scouting a fresh (wider) batch until we reach the
+// day's target or run out of rounds, so a single weak batch never leaves the
+// feed empty. Only items that clear all four checks are ever published.
+const finalItems = []
+for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < targetMin; round++) {
+  const candidates = await scoutRound(round)
+  if (candidates.length === 0) { if (round === 1) continue; else break }
+  for (const c of candidates) {
+    if (finalItems.length >= MAX_TO_PUBLISH) break
+    const decision = await vet(c)
+    if (decision && decision.publish) {
+      finalItems.push(decision)
+      console.log('PUBLISH:', decision.headline)
+    } else {
+      console.log('SKIP:', c.headline, '-', decision && decision.reason)
+    }
   }
-  if (finalItems.length >= MAX_TO_PUBLISH) break
+  if (finalItems.length < targetMin && round < MAX_SCOUT_ROUNDS) {
+    console.log(`Round ${round} left us at ${finalItems.length}/${targetMin}; scouting a wider round.`)
+  }
 }
 
 if (finalItems.length === 0) {
