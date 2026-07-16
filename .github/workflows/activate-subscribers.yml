@@ -1,0 +1,35 @@
+name: Activate unactivated subscribers
+
+# Manual utility. Flips "unactivated" Buttondown subscribers to "regular" via the
+# API (the dashboard refuses this). Defaults to preview (lists only, changes
+# nothing). Run with mode=activate to actually flip them.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'preview (list only) | activate (flip unactivated -> regular)'
+        required: true
+        default: 'preview'
+        type: choice
+        options: [preview, activate]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: activate-subscribers
+
+jobs:
+  flip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          FLIP_MODE: ${{ github.event.inputs.mode }}
+        run: node .github/scripts/flip_unactivated.mjs
