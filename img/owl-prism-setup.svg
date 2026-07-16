@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-label="Diagram: a barn owl in prism goggles hears a mouse straight ahead but sees it shifted 23 degrees to the side">
+  <rect x="0" y="0" width="720" height="400" rx="10" fill="#f7f6f3"/>
+
+  <g font-family="Inter, system-ui, -apple-system, sans-serif">
+
+    <!-- Title -->
+    <text x="360" y="30" text-anchor="middle" font-size="19" font-weight="600" fill="#2b2a27">Prism goggles shift what the owl sees</text>
+
+    <!-- ===== Sightlines: single shared vertex at the owl's brow (250,298) ===== -->
+    <!-- Ears / true = straight ahead (vertical, solid, dark neutral) -->
+    <line x1="250" y1="298" x2="250" y2="104" stroke="#4a4843" stroke-width="2.6"/>
+    <!-- Eyes / prism = 23 degrees off straight-ahead (dashed blue) -->
+    <line x1="250" y1="298" x2="330" y2="111" stroke="#2d5d7b" stroke-width="2.6" stroke-dasharray="7 5"/>
+
+    <!-- 23 degree arc, centered on the shared vertex, spanning the gap -->
+    <path d="M250 230 A 70 70 0 0 1 277.3 235.6" fill="none" stroke="#2d5d7b" stroke-width="1.6"/>
+    <text x="272" y="210" text-anchor="middle" font-size="13" font-weight="600" fill="#2d5d7b">23&#176;</text>
+
+    <!-- ===== Real mouse (solid gray) at the true / ears endpoint ===== -->
+    <g transform="translate(250,90)" fill="#6b6862">
+      <ellipse cx="0" cy="0" rx="20" ry="12"/>
+      <circle cx="-17" cy="-3" r="9"/>
+      <circle cx="-21" cy="-11" r="5"/>
+      <circle cx="-21" cy="-4" r="1.6" fill="#f7f6f3"/>
+      <path d="M19 3 Q 40 4 41 -8" fill="none" stroke="#6b6862" stroke-width="2.2" stroke-linecap="round"/>
+    </g>
+    <!-- Ghost mouse (dashed blue outline) at the eyes / prism endpoint -->
+    <g transform="translate(335,107)" fill="none" stroke="#2d5d7b" stroke-width="2" stroke-dasharray="5 4" opacity="0.9">
+      <ellipse cx="0" cy="0" rx="20" ry="12"/>
+      <circle cx="-17" cy="-3" r="9"/>
+      <circle cx="-21" cy="-11" r="5"/>
+      <path d="M19 3 Q 40 4 41 -8" stroke-linecap="round"/>
+    </g>
+
+    <!-- Endpoint labels -->
+    <text x="250" y="56" text-anchor="middle" font-size="14" font-weight="500" fill="#55524c">Ears hear it here</text>
+    <text x="250" y="72" text-anchor="middle" font-size="12" font-weight="400" fill="#8a877f">straight ahead &#183; the truth</text>
+
+    <text x="384" y="96" text-anchor="start" font-size="14" font-weight="500" fill="#2d5d7b">Eyes see it here</text>
+    <text x="384" y="112" text-anchor="start" font-size="12" font-weight="400" fill="#5f8299">shifted by the prisms</text>
+
+    <!-- ===== Barn owl in prism goggles (frontal, heart-shaped facial disc) ===== -->
+    <!-- facial disc -->
+    <path d="M250 300
+             C 250 288, 230 281, 216 281
+             C 196 281, 186 300, 189 319
+             C 192 347, 221 369, 250 386
+             C 279 369, 308 347, 311 319
+             C 314 300, 304 281, 284 281
+             C 270 281, 250 288, 250 300 Z"
+          fill="#efe9df" stroke="#c2bbad" stroke-width="2.5"/>
+    <!-- inner disc contour -->
+    <path d="M250 312 C 250 304, 236 300, 226 301 C 210 303, 204 316, 207 330 C 210 350, 230 364, 250 376 C 270 364, 290 350, 293 330 C 296 316, 290 303, 274 301 C 264 300, 250 304, 250 312 Z"
+          fill="none" stroke="#d8d1c2" stroke-width="1.4"/>
+
+    <!-- pupils (dark, drawn first so tinted lens sits over them) -->
+    <circle cx="228" cy="322" r="8" fill="#2b2a27"/>
+    <circle cx="272" cy="322" r="8" fill="#2b2a27"/>
+    <!-- tinted lenses over the eyes -->
+    <rect x="208" y="306" width="40" height="33" rx="10" fill="#bcd6e8" fill-opacity="0.42"/>
+    <rect x="252" y="306" width="40" height="33" rx="10" fill="#bcd6e8" fill-opacity="0.42"/>
+    <!-- goggle frames -->
+    <rect x="208" y="306" width="40" height="33" rx="10" fill="none" stroke="#2d5d7b" stroke-width="2.4"/>
+    <rect x="252" y="306" width="40" height="33" rx="10" fill="none" stroke="#2d5d7b" stroke-width="2.4"/>
+    <!-- bridge across the beak -->
+    <path d="M248 320 Q 250 315 252 320" fill="none" stroke="#2d5d7b" stroke-width="2.4"/>
+    <!-- temple stems to the disc rim -->
+    <line x1="208" y1="318" x2="192" y2="313" stroke="#2d5d7b" stroke-width="2.2"/>
+    <line x1="292" y1="318" x2="308" y2="313" stroke="#2d5d7b" stroke-width="2.2"/>
+
+    <!-- beak -->
+    <path d="M250 340 L 244 351 Q 250 356 256 351 Z" fill="#c9a86b" stroke="#a98a4f" stroke-width="1"/>
+
+    <!-- ===== Tie-breaker note (the conflict, stated once) ===== -->
+    <text x="46" y="168" font-size="13.5" font-style="italic" fill="#55524c">One mouse.</text>
+    <text x="46" y="188" font-size="13.5" font-style="italic" fill="#55524c">Ears say straight ahead,</text>
+    <text x="46" y="208" font-size="13.5" font-style="italic" fill="#55524c">eyes say 23&#176; over.</text>
+    <text x="46" y="232" font-size="13.5" font-weight="600" fill="#2d5d7b">Which does the brain believe?</text>
+
+  </g>
+</svg>
