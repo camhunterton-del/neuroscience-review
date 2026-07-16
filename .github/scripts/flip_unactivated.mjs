@@ -31,8 +31,11 @@ if (!all.length) { console.error('No subscribers returned — check the API key 
 // 2. detect the status field name and find the unactivated ones
 const keys = Object.keys(all[0]);
 const TF = keys.includes('type') ? 'type' : (keys.includes('subscriber_type') ? 'subscriber_type' : null);
+const EF = keys.includes('email') ? 'email' : (keys.includes('email_address') ? 'email_address' : null);
 if (!TF) { console.error(`Could not find a status field. Fields: ${keys.join(', ')}`); process.exit(1); }
-console.log(`Status field: "${TF}". Distribution:`);
+console.log(`Fields: ${keys.join(', ')}`);
+console.log(`Status field "${TF}", email field "${EF}", has id: ${keys.includes('id')}`);
+console.log(`Distribution:`);
 const dist = {};
 for (const s of all) dist[s[TF]] = (dist[s[TF]] || 0) + 1;
 console.log('  ' + Object.entries(dist).map(([k, v]) => `${k}=${v}`).join(', '));
@@ -42,19 +45,19 @@ console.log(`\nUnactivated to flip: ${unact.length}`);
 
 if (MODE !== 'activate') {
   console.log('MODE=preview — nothing changed. Re-run with FLIP_MODE=activate to flip these to regular.');
-  unact.forEach((s) => console.log(`  - ${s.email}`));
+  unact.forEach((s) => console.log(`  - ${s[EF]} (id ${s.id ? 'yes' : 'MISSING'})`));
   process.exit(0);
 }
 
-// 3. flip each unactivated -> regular
+// 3. flip each unactivated -> regular (target by id, the canonical identifier)
 let ok = 0, fail = 0;
 for (const s of unact) {
-  const ref = encodeURIComponent(s.id || s.email);
+  const ref = encodeURIComponent(s.id || s[EF]);
   const r = await fetch(`${API}/subscribers/${ref}`, {
     method: 'PATCH', headers: H, body: JSON.stringify({ [TF]: 'regular' }),
   });
-  if (r.ok) { ok++; console.log(`  OK  ${s.email}`); }
-  else { fail++; console.error(`  FAIL ${s.email}: ${r.status} ${(await r.text()).slice(0, 200)}`); }
+  if (r.ok) { ok++; console.log(`  OK  ${s[EF]}`); }
+  else { fail++; console.error(`  FAIL ${s[EF]}: ${r.status} ${(await r.text()).slice(0, 200)}`); }
 }
 console.log(`\nRESULT: activated ${ok}/${unact.length} (${fail} failed).`);
 if (fail) process.exit(1);
