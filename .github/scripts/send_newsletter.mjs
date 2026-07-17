@@ -126,9 +126,11 @@ const body = [
   '',
   `**[Read this on the web →](${SITE}/posts/${slug}.html)**`,
   '',
-  'You are getting this because you subscribed to The Neuroscience Review. One brain-science deep dive every Wednesday, no hype.',
+  'Best,  \nCameron  \nFounder and Editor  \nThe Neuroscience Review',
   '',
-  'Cameron, Founder and Editor',
+  '---',
+  '',
+  '*You are getting this because you subscribed to The Neuroscience Review. One brain-science deep dive every Wednesday, no hype.*',
 ].join('\n');
 
 // ---------- output ----------
