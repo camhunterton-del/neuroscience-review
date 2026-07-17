@@ -128,8 +128,7 @@ const body = [
   '',
   'You are getting this because you subscribed to The Neuroscience Review. One brain-science deep dive every Wednesday, no hype.',
   '',
-  'Cameron',
-  'Founder and Editor',
+  'Cameron, Founder and Editor',
 ].join('\n');
 
 // ---------- output ----------
@@ -156,13 +155,24 @@ if (MODE === 'send') {
 }
 
 const status = MODE === 'send' ? 'about_to_send' : 'draft';
-const res = await fetch('https://api.buttondown.com/v1/emails', {
-  method: 'POST',
-  headers: { 'Authorization': `Token ${API_KEY}`, 'Content-Type': 'application/json' },
-  body: JSON.stringify({ subject: title, body, status }),
-});
+const HDR = { 'Authorization': `Token ${API_KEY}`, 'Content-Type': 'application/json' };
+
+// In draft mode, update an existing draft with the same subject instead of duplicating it.
+let existingDraftId = null;
+if (MODE === 'draft') {
+  const list = await fetch('https://api.buttondown.com/v1/emails?ordering=-creation_date', { headers: HDR });
+  if (list.ok) {
+    const { results = [] } = await list.json();
+    const m = results.find((e) => (e.subject || '').trim() === title && (e.status || '') === 'draft');
+    if (m) existingDraftId = m.id;
+  }
+}
+
+const res = existingDraftId
+  ? await fetch(`https://api.buttondown.com/v1/emails/${existingDraftId}`, { method: 'PATCH', headers: HDR, body: JSON.stringify({ subject: title, body }) })
+  : await fetch('https://api.buttondown.com/v1/emails', { method: 'POST', headers: HDR, body: JSON.stringify({ subject: title, body, status }) });
 const text = await res.text();
 if (!res.ok) { console.error(`Buttondown API error ${res.status}: ${text}`); process.exit(1); }
 const data = JSON.parse(text);
-console.log(`OK: "${title}" -> ${status === 'draft' ? 'DRAFT created (not sent)' : 'QUEUED TO SEND to subscribers'} (id ${data.id})`);
+console.log(`OK: "${title}" -> ${existingDraftId ? 'DRAFT updated' : (status === 'draft' ? 'DRAFT created (not sent)' : 'QUEUED TO SEND to subscribers')} (id ${data.id})`);
 console.log(`Review at https://buttondown.com/emails`);
