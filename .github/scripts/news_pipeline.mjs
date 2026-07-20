@@ -59,7 +59,10 @@ async function ask(prompt, { web = false, maxTokens = 1500, maxUses = 4 } = {}) 
 async function ogImage(url) {
   try {
     const res = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; TheNeuroReview/1.0; +https://theneuroreview.com)' },
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; TheNeuroReview/1.0; +https://theneuroreview.com)',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
       redirect: 'follow',
       signal: AbortSignal.timeout(20000),
     })
@@ -100,7 +103,7 @@ async function scoutRound(round) {
     ? ` Do NOT return any of these already-considered items, by URL or by headline: ${already.join(' | ')}.`
     : ''
   const scoutPrompt = `You are scouting REAL, recent neuroscience and brain-science news for a rigorous plain-English publication. Today is ${niceDate}. Use web search to find up to 10 notable and genuinely real findings or reports ${windowText}, from reputable sources only (peer-reviewed journals, university press offices, and established science outlets such as Nature, Science, Quanta, The Transmitter, STAT, Scientific American, New Scientist). Exclude tabloids, content farms, product or supplement marketing, and anything without a real working URL. Do not invent anything.${excludeText}
-Return ONLY a JSON array, each element {"headline":..., "sourceName":..., "url":..., "finding":"one to two sentence plain statement of what was actually found", "date":..., "isPreprint":true|false}. No prose outside the JSON.`
+Return ONLY a JSON array, each element {"headline":..., "sourceName":..., "url":..., "imageUrl":"a public, non-paywalled page covering this SAME story (a press release, a ScienceDaily item, or a university news page) that is likely to have a share image — repeat the main url if you have no better one", "finding":"one to two sentence plain statement of what was actually found", "date":..., "isPreprint":true|false}. No prose outside the JSON.`
   let batch = []
   try {
     batch = extractJson(await ask(scoutPrompt, { web: true, maxTokens: 8000, maxUses: 6 }))
@@ -163,6 +166,7 @@ for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < MAX_TO_PUBL
     if (finalItems.length >= MAX_TO_PUBLISH) break
     const decision = await vet(c)
     if (decision && decision.publish) {
+      decision.imageUrl = c.imageUrl || null // public coverage page for the image fallback
       finalItems.push(decision)
       console.log('PUBLISH:', decision.headline)
     } else {
@@ -181,9 +185,16 @@ if (finalItems.length === 0) {
   process.exit(0)
 }
 
-// Attach each item's source preview image (null if the source exposes none).
+// Attach each item's source preview image. Try the primary source first; if it
+// blocks us or exposes none (common with paywalled journals like The Lancet, which
+// returns 403 to fetches), fall back to a public coverage page (press release /
+// ScienceDaily / university news) for the share image. Same mechanism either way:
+// only the publisher's own og:image, and the card still links to the primary source.
 for (const it of finalItems) {
   it.image = await ogImage(it.sourceUrl)
+  if (!it.image && it.imageUrl && normUrl(it.imageUrl) !== normUrl(it.sourceUrl)) {
+    it.image = await ogImage(it.imageUrl)
+  }
 }
 
 // --- 4. INJECT into news.html (newest first, capped) ---
