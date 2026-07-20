@@ -87,6 +87,27 @@ async function ogImage(url) {
 const page = fs.readFileSync(NEWS_FILE, 'utf8')
 const normUrl = (u) => String(u || '').replace(/&amp;/g, '&').trim().toLowerCase()
 const existingUrls = new Set([...page.matchAll(/news-item__meta[\s\S]*?href="([^"]+)"/g)].map((m) => normUrl(m[1])))
+const existingHeadlines = [...page.matchAll(/<h2><a[^>]*>([^<]+)<\/a><\/h2>/g)].map((m) => m[1])
+
+// Near-duplicate guard: the same study often gets covered by several outlets on
+// different days (different URLs), so URL-dedup alone lets it re-post (this is how
+// one dementia study landed on the feed three times). Compare headlines by their
+// significant words; if a strong majority of the shorter headline's key words are
+// already in an existing one, treat it as the same story and skip it.
+const STOP = new Set('study studies finds find found large small global first shows show could would research researchers scientists scientist people human humans brain neural about across after over with from have been more most into their they when what which some also than that this using used other may can new'.split(' '))
+const keyTokens = (s) => new Set(String(s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length >= 4 && !STOP.has(w)))
+function nearDup(headline, list) {
+  const a = keyTokens(headline)
+  if (a.size < 2) return false
+  for (const h of list) {
+    const b = keyTokens(h)
+    if (b.size < 2) continue
+    let inter = 0
+    for (const w of a) if (b.has(w)) inter++
+    if (inter / Math.min(a.size, b.size) >= 0.6) return true
+  }
+  return false
+}
 
 // --- 1. SCOUT (one round; called repeatedly until the feed hits its floor) ---
 const seen = new Set() // every url/headline we have already weighed this run
@@ -113,6 +134,7 @@ Return ONLY a JSON array, each element {"headline":..., "sourceName":..., "url":
   const fresh = (Array.isArray(batch) ? batch : []).filter((c) => {
     const k = String(c.url || c.headline || '').trim().toLowerCase()
     if (!k || seen.has(k) || existingUrls.has(normUrl(c.url))) return false
+    if (nearDup(c.headline, existingHeadlines)) { console.log('skip near-dup of a card already on the feed:', c.headline); return false }
     seen.add(k)
     return true
   }).slice(0, MAX_CANDIDATES_TO_CHECK)
@@ -166,6 +188,10 @@ for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < MAX_TO_PUBL
     if (finalItems.length >= MAX_TO_PUBLISH) break
     const decision = await vet(c)
     if (decision && decision.publish) {
+      if (nearDup(decision.headline, [...existingHeadlines, ...finalItems.map((f) => f.headline)])) {
+        console.log('SKIP (near-dup of an existing or already-chosen item):', decision.headline)
+        continue
+      }
       decision.imageUrl = c.imageUrl || null // public coverage page for the image fallback
       finalItems.push(decision)
       console.log('PUBLISH:', decision.headline)
