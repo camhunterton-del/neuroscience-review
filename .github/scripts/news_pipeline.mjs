@@ -216,11 +216,18 @@ if (finalItems.length === 0) {
 // returns 403 to fetches), fall back to a public coverage page (press release /
 // ScienceDaily / university news) for the share image. Same mechanism either way:
 // only the publisher's own og:image, and the card still links to the primary source.
+// Cards render the thumb at 150x100, so ask hosts for a smaller variant than
+// full-res where the URL scheme allows. Safe: if a smaller variant 404s, the
+// <img onerror> handler already drops the thumbnail.
+const shrinkImage = (url) => url
+  .replace(/(media\.springernature\.com\/)m\d+(\/)/, '$1m312$2')
+  .replace(/([?&]w=)(\d{3,})/, (_, p) => p + '400')
 for (const it of finalItems) {
   it.image = await ogImage(it.sourceUrl)
   if (!it.image && it.imageUrl && normUrl(it.imageUrl) !== normUrl(it.sourceUrl)) {
     it.image = await ogImage(it.imageUrl)
   }
+  if (it.image) it.image = shrinkImage(it.image)
 }
 
 // --- 4. INJECT into news.html (newest first, capped) ---
