@@ -9,7 +9,7 @@
 //
 // Safe by design: default is preview, and "draft" never sends. Only "send" mails people.
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -71,10 +71,17 @@ function toMarkdown(bodyHtml) {
   while ((m = blockRe.exec(h)) !== null) {
     if (m[1] !== undefined) { // figure
       const fig = m[1];
-      const src = (fig.match(/<img[^>]*\bsrc="([^"]*)"/i) || [])[1] || '';
+      let src = (fig.match(/<img[^>]*\bsrc="([^"]*)"/i) || [])[1] || '';
       const alt = (fig.match(/<img[^>]*\balt="([^"]*)"/i) || [])[1] || '';
       const cap = inline((fig.match(/<figcaption>([\s\S]*?)<\/figcaption>/i) || [])[1] || '');
-      // email clients don't render SVG; include only raster images
+      // Email clients don't render SVG. If an SVG figure has a same-named PNG in
+      // the repo, use the PNG; otherwise drop the image (raster only) so no broken
+      // figure ships, and the caption still carries the point.
+      if (/\.svg(\?|$)/i.test(src)) {
+        const pngRel = src.replace(/\.svg(\?|$)/i, '.png$1');
+        const localPng = join(ROOT, pngRel.replace(/^(\.\.\/)+/, ''));
+        src = existsSync(localPng) ? pngRel : '';
+      }
       if (/\.(jpe?g|png|gif|webp)(\?|$)/i.test(src)) out.push(`![${decode(alt)}](${absolutize(src)})`);
       if (cap) out.push(`*${cap}*`);
     } else if (m[2] !== undefined) { // callout
