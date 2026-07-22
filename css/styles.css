@@ -232,7 +232,8 @@ article.post {
 .reading-shell > article.post { max-width: none; margin: 0; }
 .reading-sidebar {
   position: sticky;
-  top: 5.5rem;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
@@ -250,7 +251,7 @@ article.post {
 .reading-sidebar__links a:hover { color: var(--accent); }
 @media (max-width: 900px) {
   .reading-shell { grid-template-columns: 1fr; gap: 2.25rem; max-width: var(--content-width); }
-  .reading-sidebar { position: static; }
+  .reading-sidebar { position: static; transform: none; }
 }
 
 .post-header {
