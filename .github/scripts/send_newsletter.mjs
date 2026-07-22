@@ -158,6 +158,10 @@ if (MODE === 'send') {
 
 const status = MODE === 'send' ? 'about_to_send' : 'draft';
 const HDR = { 'Authorization': `Token ${API_KEY}`, 'Content-Type': 'application/json' };
+// Buttondown requires this one-time-per-key confirmation header to actually send
+// (create an email with status about_to_send); without it the API returns 400
+// "sending_requires_confirmation". Harmless on draft requests, so only add on send.
+const CREATE_HDR = status === 'about_to_send' ? { ...HDR, 'X-Buttondown-Live-Dangerously': 'true' } : HDR;
 
 // In draft mode, update an existing draft with the same subject instead of duplicating it.
 let existingDraftId = null;
@@ -172,7 +176,7 @@ if (MODE === 'draft') {
 
 const res = existingDraftId
   ? await fetch(`https://api.buttondown.com/v1/emails/${existingDraftId}`, { method: 'PATCH', headers: HDR, body: JSON.stringify({ subject: title, body }) })
-  : await fetch('https://api.buttondown.com/v1/emails', { method: 'POST', headers: HDR, body: JSON.stringify({ subject: title, body, status }) });
+  : await fetch('https://api.buttondown.com/v1/emails', { method: 'POST', headers: CREATE_HDR, body: JSON.stringify({ subject: title, body, status }) });
 const text = await res.text();
 if (!res.ok) { console.error(`Buttondown API error ${res.status}: ${text}`); process.exit(1); }
 const data = JSON.parse(text);
