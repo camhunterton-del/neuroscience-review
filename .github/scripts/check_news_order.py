@@ -48,7 +48,14 @@ def main():
         print(f"Could not fetch news.html ({e}); skipping order check.")
         return 0
 
-    dates = [datetime.strptime(d, "%B %d, %Y") for d in META_DATE.findall(news)]
+    dates = []
+    for d in META_DATE.findall(news):
+        for fmt in ("%B %d, %Y", "%b %d, %Y"):
+            try:
+                dates.append(datetime.strptime(d, fmt))
+                break
+            except ValueError:
+                continue
     if not dates:
         print("No dated news items found; skipping order check.")
         return 0

@@ -208,8 +208,9 @@
   }
 
   function answer(chosen){
-    var t = trials[idx];
     var rt = performance.now() - shownAt;
+    if(rt < 120){ return; } // ignore impossibly-fast taps carried over from the previous trial (a double-click)
+    var t = trials[idx];
     results.push({congruent:t.congruent, rt:rt, correct: chosen === t.inkName});
     idx++;
     nextTrial();
@@ -221,6 +222,14 @@
     var scored = results.slice(1).filter(function(r){ return r.rt <= 4000; });
     var con = scored.filter(function(r){return r.congruent && r.correct;}).map(function(r){return r.rt;});
     var inc = scored.filter(function(r){return !r.congruent && r.correct;}).map(function(r){return r.rt;});
+    if(!con.length || !inc.length){
+      stage.innerHTML =
+        '<div class="labdemo__result-head">Not enough clean trials to compare this round.</div>'+
+        '<p class="labdemo__muted">Too many trials were skipped, missed, or off the scale to give a fair read. Run it again and try to answer every one.</p>'+
+        '<div class="labdemo__row" style="margin-top:1.2rem"><button class="labdemo__btn labdemo__btn--ghost" id="stroop-again">Run it again</button></div>';
+      document.getElementById('stroop-again').addEventListener('click', function(){ buildTrials(); idx=0; results=[]; nextTrial(); });
+      return;
+    }
     var errors = results.filter(function(r){return !r.correct;}).length;
     var mCon = Math.round(median(con));
     var mInc = Math.round(median(inc));
@@ -296,13 +305,16 @@
     var rate = spikes.filter(function(s){ return s > t - 1000; }).length; rateEl.textContent = rate;
     if(spikes.length > 4000) spikes = spikes.slice(-2000);
     if(ts - lastFi > 700){ lastFi = ts; fpts.push({ I:I, rate:rate }); if(fpts.length > 240) fpts.shift(); drawFi(); }
-    requestAnimationFrame(step);
   }
   function drawFi(){
     fctx.clearRect(0,0,fi.width,fi.height); fctx.fillStyle = acc();
     fpts.forEach(function(p){ var x = p.I / 30 * fi.width, y = fi.height - (Math.min(p.rate,90) / 90 * fi.height); fctx.beginPath(); fctx.arc(x, y, 2.2, 0, 7); fctx.fill(); });
   }
-  requestAnimationFrame(step);
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  function loop(ts){ step(ts); if(!reduce.matches) requestAnimationFrame(loop); }
+  function seedStatic(){ for(var s=0;s<150;s++){ step(s*16); } }
+  if(reduce.matches){ seedStatic(); slider.addEventListener('input', seedStatic); }
+  else { requestAnimationFrame(loop); }
 })();
 
 // Edges that aren't there (lateral inhibition / edge enhancement)

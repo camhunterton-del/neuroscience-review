@@ -86,25 +86,32 @@ async function ogImage(url) {
 // --- read existing page + already-published URLs (avoid dupes) ---
 const page = fs.readFileSync(NEWS_FILE, 'utf8')
 const normUrl = (u) => String(u || '').replace(/&amp;/g, '&').trim().toLowerCase()
-const existingUrls = new Set([...page.matchAll(/news-item__meta[\s\S]*?href="([^"]+)"/g)].map((m) => normUrl(m[1])))
-const existingHeadlines = [...page.matchAll(/<h2><a[^>]*>([^<]+)<\/a><\/h2>/g)].map((m) => m[1])
+const existingUrls = new Set([...page.matchAll(/<p class="news-item__meta">[\s\S]*?href="([^"]+)"/g)].map((m) => normUrl(m[1])))
+const existingHeadlines = [...page.matchAll(/<h[23]><a[^>]*>([^<]+)<\/a><\/h[23]>/g)].map((m) => m[1])
 
 // Near-duplicate guard: the same study often gets covered by several outlets on
 // different days (different URLs), so URL-dedup alone lets it re-post (this is how
 // one dementia study landed on the feed three times). Compare headlines by their
 // significant words; if a strong majority of the shorter headline's key words are
 // already in an existing one, treat it as the same story and skip it.
-const STOP = new Set('study studies finds find found large small global first shows show could would research researchers scientists scientist people human humans brain neural about across after over with from have been more most into their they when what which some also than that this using used other may can new'.split(' '))
+// STOP holds only GENERIC report words. Topic/subject nouns (brain, dementia,
+// pregnancy, parkinson, human...) are deliberately KEPT so they carry the
+// same-study signal — stripping "brain" is what let a pregnancy study repost.
+const STOP = new Set('study studies finds find found large small global first shows show suggests suggest reveals reveal could would may might research report reports about across after over with from have been more most into their they when what which some also than that this using used other can new says say according scientists scientist researchers'.split(' '))
 const keyTokens = (s) => new Set(String(s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length >= 4 && !STOP.has(w)))
+// A candidate is a near-duplicate only when it shares at least THREE significant
+// words with an existing headline AND half of the smaller set. The absolute
+// floor of 3 avoids over-blocking short/distinct headlines that happen to share
+// one or two words, while the trimmed STOP list keeps the real same-study signal.
 function nearDup(headline, list) {
   const a = keyTokens(headline)
-  if (a.size < 2) return false
+  if (a.size < 3) return false
   for (const h of list) {
     const b = keyTokens(h)
-    if (b.size < 2) continue
+    if (b.size < 3) continue
     let inter = 0
     for (const w of a) if (b.has(w)) inter++
-    if (inter / Math.min(a.size, b.size) >= 0.6) return true
+    if (inter >= 3 && inter / Math.min(a.size, b.size) >= 0.5) return true
   }
   return false
 }
@@ -193,6 +200,14 @@ for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < MAX_TO_PUBL
         continue
       }
       decision.imageUrl = c.imageUrl || null // public coverage page for the image fallback
+      // Normalize the date to "Month DD, YYYY" so the feed's date-sort (which only
+      // reads that format) can never bury a card that the model dated as ISO etc.
+      if (decision.date) {
+        const parsed = new Date(decision.date)
+        decision.date = Number.isNaN(parsed.getTime())
+          ? niceDate
+          : parsed.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+      }
       finalItems.push(decision)
       console.log('PUBLISH:', decision.headline)
     } else {
@@ -221,7 +236,7 @@ if (finalItems.length === 0) {
 // <img onerror> handler already drops the thumbnail.
 const shrinkImage = (url) => url
   .replace(/(media\.springernature\.com\/)m\d+(\/)/, '$1m312$2')
-  .replace(/([?&]w=)(\d{3,})/, (_, p) => p + '400')
+  .replace(/([?&]w=)(\d{3,})/, (m, p, n) => (+n > 400 ? p + '400' : m))
 for (const it of finalItems) {
   it.image = await ogImage(it.sourceUrl)
   if (!it.image && it.imageUrl && normUrl(it.imageUrl) !== normUrl(it.sourceUrl)) {
@@ -267,6 +282,7 @@ const articleTime = (html) => {
 const combined = [...newArticles, ...existingArticles]
   .sort((a, b) => articleTime(b) - articleTime(a))
   .slice(0, MAX_ITEMS_ON_PAGE)
+  .map((s) => s.replace(/^\s*/, '        ')) // uniform 8-space indent on every <article> line
 
 const rebuilt = before + '\n' + combined.join('\n\n') + '\n        ' + after
 fs.writeFileSync(NEWS_FILE, rebuilt)

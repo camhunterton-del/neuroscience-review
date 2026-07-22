@@ -29,7 +29,7 @@
   <meta property="article:published_time" content="2026-06-10">
   <meta property="article:author" content="Cameron Hunterton">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BlogPosting","headline":"What does an fMRI actually measure?","description":"When a headline says a brain region lit up, what was measured? Not thoughts, and not even electricity. Blood, indirectly, and a few seconds late.","author":{"@type":"Person","name":"Cameron Hunterton","url":"https://theneuroreview.com/about.html"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}},"datePublished":"2026-06-10","dateModified":"2026-06-10","image":"https://theneuroreview.com/img/photo-fmri.jpg","mainEntityOfPage":"https://theneuroreview.com/posts/what-fmri-measures.html"}
+  {"@context":"https://schema.org","@type":"BlogPosting","headline":"What does an fMRI actually measure?","description":"When a headline says a brain region lit up, what was measured? Not thoughts, and not even electricity. Blood, indirectly, and a few seconds late.","author":{"@type":"Person","name":"Cameron Hunterton","url":"https://theneuroreview.com/authors/cameron-hunterton.html"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}},"datePublished":"2026-06-10","dateModified":"2026-06-10","image":"https://theneuroreview.com/img/photo-fmri.jpg","mainEntityOfPage":"https://theneuroreview.com/posts/what-fmri-measures.html"}
   </script>
 </head>
 <body>
@@ -67,7 +67,7 @@
 
       <div class="post-body">
         <figure>
-          <img src="../img/photo-fmri.jpg" alt="A clinical MRI scanner, the machine used for functional MRI" loading="lazy" width="760" height="506">
+          <img src="../img/photo-fmri.jpg" alt="A clinical MRI scanner, the machine used for functional MRI" loading="lazy" width="886" height="655">
           <figcaption>The machine behind the headlines. Functional MRI uses a scanner like this to track blood flow, not neural activity directly. <span class="figure-credit">U.S. Navy, public domain.</span></figcaption>
         </figure>
 <aside class="callout callout--summary">
@@ -176,7 +176,8 @@
             var noiseActive = active - realActive;
             var msg;
             if(active === 0){ msg = 'Nothing clears the threshold. Slide left to raise the sensitivity.'; }
-            else if(corr.checked){ msg = '<strong>Corrected for chance.</strong> ' + active + ' voxel' + (active===1?'':'s') + ' survive' + (active===1?'s':'') + ', and ' + realActive + ' of them ' + (realActive===1?'is':'are') + ' the real signal. The chance noise is gone.'; }
+            else if(corr.checked){ msg = '<strong>Corrected for chance.</strong> ' + active + ' voxel' + (active===1?'':'s') + ' survive' + (active===1?'s':'') + ', and ' + realActive + ' of them ' + (realActive===1?'is':'are') + ' the real signal. ' + (noiseActive===0 ? 'The chance noise is gone.' : (noiseActive + ' chance voxel' + (noiseActive===1?'':'s') + ' still slip' + (noiseActive===1?'s':'') + ' through, far fewer than without the correction.')); }
+            else if(noiseActive === 0){ msg = '<strong>' + active + ' voxel' + (active===1?'':'s') + ' look' + (active===1?'s':'') + ' active</strong>, and at this strict a threshold ' + (realActive===1?'it is':'they are') + ' all real signal. No chance voxels survive this cutoff.'; }
             else { msg = '<strong>' + active + ' voxels look active</strong>, but only ' + realActive + ' ' + (realActive===1?'is':'are') + ' real. The other ' + noiseActive + ' lit up by pure chance. This is exactly how a dead salmon &ldquo;activated.&rdquo;'; }
             readout.innerHTML = msg;
           }

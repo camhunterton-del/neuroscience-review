@@ -34,7 +34,7 @@ try {
     const headline = (art.match(/<h[23]><a [^>]*>([\s\S]*?)<\/a><\/h[23]>/) || [])[1] || ''
     const meta = (art.match(/news-item__meta">([\s\S]*?)<\/p>/) || [])[1] || ''
     const date = (meta.split('&middot;')[0] || '').trim()
-    const source = ((meta.match(/>([^<]+)<\/a>/) || [])[1] || '').split('/')[0].trim()
+    const source = ((meta.match(/>([^<]+)<\/a>/) || [])[1] || '').trim()
     return { url, headline, date, source }
   }).filter((it) => it.url && it.headline)
 
