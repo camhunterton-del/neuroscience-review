@@ -33,6 +33,17 @@
     @media (max-width: 640px) { .news-hero__sub { font-size: 0.95rem; } }
     /* Wider feed so the news column fills more of the page */
     article.post { max-width: 840px; }
+    /* Topic filter chips + load-more, so the feed opens compact instead of endless */
+    .news-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.7rem; }
+    .news-chip { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: color .15s, border-color .15s, background .15s; }
+    .news-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .news-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .news-chip__count { opacity: 0.65; margin-left: 0.35rem; font-weight: 500; }
+    .news-item[hidden] { display: none; }
+    .news-empty { color: var(--text-muted); font-style: italic; padding: 1.4rem 0; }
+    .news-more { margin: 1.9rem 0 0; text-align: center; }
+    .news-more__btn { font-family: var(--sans); font-size: 0.88rem; font-weight: 600; padding: 0.7rem 1.7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-alt); color: var(--text); cursor: pointer; transition: color .15s, border-color .15s; }
+    .news-more__btn:hover { border-color: var(--accent); color: var(--accent); }
   </style>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -72,6 +83,8 @@
         <h1 class="news-hero__label">News</h1>
         <p class="news-hero__sub">Recent brain research, each note checked against its source and linked to the original.</p>
       </header>
+
+      <div class="news-filter" id="news-filter" role="group" aria-label="Filter news by topic"></div>
 
       <div class="post-body">
         <!-- NEWS-FEED-START -->
@@ -285,7 +298,9 @@
           <p class="news-item__caveat"><em>This is a single December 2025 preprint done only in fruit flies that has not been peer reviewed or replicated, and it does not show the same mechanism works in mammals or people.</em></p>
         </article>
         <!-- NEWS-FEED-END -->
+        <p class="news-empty" id="news-empty" hidden>No items in this topic yet.</p>
       </div>
+      <div class="news-more" id="news-more" hidden><button class="news-more__btn" id="news-more-btn" type="button">Load more</button></div>
     </article>
 
     <section class="cta" id="subscribe">
@@ -304,6 +319,59 @@
       <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="the-paper-that-hooked-me.html">Column</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
     </div>
   </footer>
+  <script>
+  // Topic filter + load-more for the news feed. Classifies each card by keyword
+  // (works on existing and future auto-generated items, no pipeline change), shows
+  // a compact first page, and reveals more on demand so the feed never doom-scrolls.
+  (function(){
+    var feed = [].slice.call(document.querySelectorAll('.news-item'));
+    var bar = document.getElementById('news-filter');
+    if(!feed.length || !bar) return;
+    var CATS = [
+      ['Disease & clinic', /dementia|alzheimer|parkinson|depress|migraine|autism|epilep|stroke|disorder|clinical|\btrial\b|\bdrug\b|therap|patient|disease|tumor|cancer|schizophren/i],
+      ['Methods & tech', /fmri|\bmri\b|\beeg\b|\bmeg\b|\bai\b|machine learning|deep learning|imaging|dataset|algorithm|brain.computer|decode|gene therapy|computational|simulation|model/i],
+      ['Senses', /vision|visual|hearing|auditory|smell|taste|touch|percept|sensory|\bpain\b|\bsound\b|\bsight\b|retina|cochlea|\bear\b/i],
+      ['Memory & learning', /memory|memories|learning|\blearn|recall|forget|plasticity|critical period|\bhabit|navigation/i],
+      ['Mind & behavior', /behavio|emotion|decision|social|sleep|\bfear\b|reward|addiction|conscious|cognit|language|reasoning|motivat|stress|anxiety|feeling/i],
+      ['Cells & circuits', /neuron|synap|circuit|astrocyte|glia|receptor|protein|\bgene\b|cortex|hippocamp|amygdala|dopamine|serotonin|gaba|molecul|axon|compass|octopamine/i]
+    ];
+    function classify(t){ for(var i=0;i<CATS.length;i++){ if(CATS[i][1].test(t)) return CATS[i][0]; } return 'More'; }
+    var counts = {};
+    feed.forEach(function(el){ var c = classify(el.textContent); el.setAttribute('data-cat', c); counts[c] = (counts[c]||0)+1; });
+    var chipNames = ['All'].concat(CATS.map(function(x){return x[0];}).filter(function(c){return counts[c];}));
+    if(counts['More']) chipNames.push('More');
+    var PAGE = 10, active = 'All', shown = PAGE;
+    var moreWrap = document.getElementById('news-more'), moreBtn = document.getElementById('news-more-btn');
+    var emptyMsg = document.getElementById('news-empty');
+    chipNames.forEach(function(c){
+      var b = document.createElement('button');
+      b.className = 'news-chip'; b.type = 'button';
+      b.setAttribute('aria-pressed', c === 'All' ? 'true' : 'false');
+      var n = c === 'All' ? feed.length : counts[c];
+      b.innerHTML = c + ' <span class="news-chip__count">' + n + '</span>';
+      b.addEventListener('click', function(){
+        active = c; shown = PAGE;
+        bar.querySelectorAll('.news-chip').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true');
+        render();
+      });
+      bar.appendChild(b);
+    });
+    function render(){
+      var matched = 0, visible = 0;
+      feed.forEach(function(el){
+        var inCat = active === 'All' || el.getAttribute('data-cat') === active;
+        if(inCat && visible < shown){ el.hidden = false; visible++; matched++; }
+        else if(inCat){ el.hidden = true; matched++; }
+        else { el.hidden = true; }
+      });
+      if(emptyMsg) emptyMsg.hidden = matched > 0;
+      if(moreWrap) moreWrap.hidden = visible >= matched;
+    }
+    if(moreBtn) moreBtn.addEventListener('click', function(){ shown += PAGE; render(); });
+    render();
+  })();
+  </script>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
