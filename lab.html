@@ -18,6 +18,14 @@
     .lab-intro { font-family: var(--serif); font-size: 1.15rem; color: var(--text-muted); max-width: 40rem; margin: 0 0 2.4rem; line-height: 1.55; }
     .lab-exp__title { font-family: var(--serif); font-size: 1.7rem; font-weight: 600; margin: 0 0 0.4rem; color: var(--text); }
     .lab-exp__note { font-family: var(--sans); color: var(--text-muted); max-width: 40rem; margin: 0 0 0.4rem; }
+    /* Jump index so the page never becomes a mile-long scroll as experiments grow */
+    .lab-index { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 1rem; margin: 0 0 3rem; }
+    .lab-index a.lab-index__card, .lab-index a.lab-index__card:hover { text-decoration: none; }
+    .lab-index__card { display: block; border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; text-decoration: none; color: inherit; transition: border-color .15s, transform .15s; }
+    .lab-index__card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .lab-index__title { font-family: var(--serif); font-size: 1.12rem; font-weight: 600; color: var(--text); margin: 0 0 0.3rem; line-height: 1.25; }
+    .lab-index__note { font-family: var(--sans); font-size: 0.85rem; color: var(--text-muted); line-height: 1.45; margin: 0; }
+    .lab-index__card:hover .lab-index__title { color: var(--accent); }
     .labdemo { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 1.7rem 1.8rem; margin: 1.4rem 0 2.6rem; }
     .labdemo__eyebrow { font-family: var(--sans); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent); margin-bottom: 1rem; }
     .labdemo__stage { min-height: 230px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
@@ -97,6 +105,8 @@
 
       <div class="post-body">
         <p class="lab-intro">Reading about the brain is one thing and feeling it work is another. Each of these is a quick, honest demonstration you can try yourself. Nothing is saved and nothing is graded. There are four to start, and more will join them as the writing grows.</p>
+
+        <nav class="lab-index" id="lab-index" aria-label="Jump to an experiment"></nav>
 
         <h2 class="lab-exp__title">The Stroop test</h2>
         <p class="lab-exp__note">First run in 1935, one of the oldest demonstrations in psychology. It takes about a minute, and it measures how much your brain slows down when the word and the ink disagree.</p>
@@ -329,6 +339,27 @@
       readout.innerHTML = 'This whole band is <strong>rgb(' + v + ', ' + v + ', ' + v + ')</strong> from edge to edge, perfectly flat. The darker seam on its bright side and the lighter seam on its dark side are not in the pixels. Your visual system exaggerates every edge to sharpen it, and here it paints in shading the screen never showed.';
     });
     wrap.appendChild(b);
+  });
+})();
+</script>
+<script>
+// Build the "jump to an experiment" index from the section titles, so the page
+// stays scannable and jump-navigable no matter how many experiments get added.
+(function(){
+  var index = document.getElementById('lab-index');
+  if(!index) return;
+  var titles = [].slice.call(document.querySelectorAll('.lab-exp__title'));
+  if(!titles.length){ index.remove(); return; }
+  titles.forEach(function(h){
+    var slug = (h.textContent || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    if(!h.id) h.id = slug || ('exp-' + Math.random().toString(36).slice(2,7));
+    var noteEl = h.nextElementSibling;
+    var note = (noteEl && noteEl.classList.contains('lab-exp__note')) ? noteEl.textContent.trim() : '';
+    if(note.length > 96) note = note.slice(0, 93).replace(/\s+\S*$/, '') + '…';
+    var a = document.createElement('a');
+    a.className = 'lab-index__card'; a.href = '#' + h.id;
+    a.innerHTML = '<p class="lab-index__title">' + h.textContent + '</p>' + (note ? '<p class="lab-index__note">' + note + '</p>' : '');
+    index.appendChild(a);
   });
 })();
 </script>
