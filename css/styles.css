@@ -536,6 +536,11 @@ article.post {
 .post-sources h2{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin:0 0 1rem;}
 .post-sources ol{padding-left:1.25rem;}
 .post-sources li{font-family:var(--sans);font-size:.9rem;line-height:1.5;color:var(--text-muted);margin-bottom:.6rem;}
+/* "Where to help" — a subtle end-of-post link to a vetted research charity (disease posts only). Pure outbound, no money touches the site. */
+.post-help{border:1px solid var(--border);border-radius:10px;padding:1.15rem 1.3rem;margin:2.6rem 0 0;font-family:var(--sans);background:var(--bg-alt);}
+.post-help__label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.45rem;}
+.post-help p{font-size:.94rem;line-height:1.55;color:var(--text-muted);margin:0;}
+.post-help a{color:var(--accent);font-weight:600;}
 .byline{color:var(--text-muted);}
 [data-theme="dark"]{--bg:#16151a;--bg-alt:#1f1e25;--text:#e9e7e0;--text-muted:#a8a69e;--text-faint:#9a988f;--accent:#7fb2d4;--accent-hover:#a3c9e3;--border:#2e2c35;}
 [data-theme="dark"] .site-header{background:rgba(22,21,26,.9);}
