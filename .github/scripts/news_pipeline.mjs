@@ -85,7 +85,7 @@ async function ogImage(url) {
 
 // --- read existing page + already-published URLs (avoid dupes) ---
 const page = fs.readFileSync(NEWS_FILE, 'utf8')
-const normUrl = (u) => String(u || '').replace(/&amp;/g, '&').trim().toLowerCase()
+const normUrl = (u) => String(u || '').replace(/&amp;/g, '&').trim().toLowerCase().replace(/#.*$/, '').replace(/\/+$/, '')
 const existingUrls = new Set([...page.matchAll(/<p class="news-item__meta">[\s\S]*?href="([^"]+)"/g)].map((m) => normUrl(m[1])))
 const existingHeadlines = [...page.matchAll(/<h[23]><a[^>]*>([^<]+)<\/a><\/h[23]>/g)].map((m) => m[1])
 
@@ -197,6 +197,14 @@ for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < MAX_TO_PUBL
     if (decision && decision.publish) {
       if (nearDup(decision.headline, [...existingHeadlines, ...finalItems.map((f) => f.headline)])) {
         console.log('SKIP (near-dup of an existing or already-chosen item):', decision.headline)
+        continue
+      }
+      // Same-URL guard: two items can share a source URL under different headlines
+      // (the headline near-dup check above can miss that), so also dedup by URL
+      // against both the live page and everything chosen this run.
+      const durl = normUrl(decision.sourceUrl || c.url)
+      if (durl && (existingUrls.has(durl) || finalItems.some((f) => normUrl(f.sourceUrl) === durl))) {
+        console.log('SKIP (same source URL as an existing or already-chosen item):', decision.headline)
         continue
       }
       decision.imageUrl = c.imageUrl || null // public coverage page for the image fallback
