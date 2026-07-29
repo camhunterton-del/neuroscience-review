@@ -486,6 +486,7 @@ article.post {
   text-decoration: none;
 }
 .site-footer a:hover { text-decoration: underline; }
+.site-footer__follow { flex-basis: 100%; order: 3; margin-top: 0.4rem; padding-top: 0.9rem; border-top: 1px solid var(--border); color: var(--text-faint); }
 
 /* Responsive */
 @media (max-width: 600px) {
