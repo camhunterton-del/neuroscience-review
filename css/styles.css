@@ -219,15 +219,12 @@ article.post {
   margin: 0 auto;
 }
 
-/* Reading pages: keep the text a comfortable column, but flank it with a sidebar
-   so the wider frame is used without stretching the prose to unreadable line lengths. */
+/* Reading pages: a single calm column, centered on the page like Quanta,
+   Knowable and The Transmitter. The prose measure is held by .post-body (66ch);
+   the header and figures share the same centered frame. */
 .reading-shell {
-  display: grid;
-  grid-template-columns: minmax(0, var(--content-width)) 296px;
-  gap: 3.25rem;
-  max-width: 1040px;
+  max-width: var(--content-width);
   margin: 0 auto;
-  align-items: start;
 }
 .reading-shell > article.post { max-width: none; margin: 0; }
 .reading-sidebar {
@@ -533,6 +530,10 @@ article.post {
 .post-share__label{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint);}
 .post-share a{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--accent);text-decoration:none;}
 .post-share a:hover{text-decoration:underline;}
+.post-share--top{margin:1.4rem 0 0;}
+.post-share__copy{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;}
+.post-share__copy:hover{text-decoration:underline;}
+.post-share__copy.is-copied{color:var(--text-muted);}
 .post-sources h2{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin:0 0 1rem;}
 .post-sources ol{padding-left:1.25rem;}
 .post-sources li{font-family:var(--sans);font-size:.9rem;line-height:1.5;color:var(--text-muted);margin-bottom:.6rem;}
@@ -659,10 +660,13 @@ article.post {
 .read-next__list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;}
 /* Curated cross-format pathways: gracefully hold a pair or a trio; anchored Column jumps clear the sticky header */
 .hooked-entry{scroll-margin-top:5rem;}
-.read-next__link{display:block;height:100%;text-decoration:none;color:inherit;padding:1.1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-alt);transition:border-color .15s;}
+.read-next__link{display:flex;flex-direction:column;height:100%;text-decoration:none;color:inherit;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-alt);transition:border-color .15s;}
 .read-next__link:hover{border-color:var(--accent);}
+.read-next__thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--border);}
+.read-next__body{padding:1rem 1.15rem 1.15rem;}
 .read-next__type{display:block;font-family:var(--sans);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.35rem;}
-.read-next__title{font-family:var(--serif);font-size:1.15rem;font-weight:600;line-height:1.25;color:var(--text);transition:color .15s;}
+.read-next__title{display:block;font-family:var(--serif);font-size:1.15rem;font-weight:600;line-height:1.25;color:var(--text);transition:color .15s;}
+.read-next__meta{display:block;font-family:var(--sans);font-size:.78rem;color:var(--text-muted);margin-top:.55rem;}
 .read-next__link:hover .read-next__title{color:var(--accent);}
 .hero__subscribe{margin:1.75rem 0 0;max-width:440px;}
 .hero__subscribe-note{font-family:var(--sans);font-size:.85rem;color:var(--text-faint);margin:.7rem 0 0;}
