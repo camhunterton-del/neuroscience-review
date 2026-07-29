@@ -33,6 +33,7 @@
   </script>
 </head>
 <body>
+  <div class="reading-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="site-header__inner">
@@ -75,7 +76,7 @@
 
       <div class="post-body">
         <figure>
-          <img src="../img/serotonin-molecule.png" alt="The skeletal chemical structure of the serotonin molecule" loading="lazy" width="1200" height="750">
+          <img src="../img/serotonin-molecule.png" alt="The skeletal chemical structure of the serotonin molecule" width="1200" height="750">
           <figcaption>Serotonin. The molecule at the center of a story that was simpler than the truth. <span class="figure-credit">Chemical structure, public domain.</span></figcaption>
         </figure>
 <aside class="callout callout--summary">
@@ -199,7 +200,7 @@
 
         <aside class="post-help">
           <span class="post-help__label">If you need support</span>
-          <p>If you're struggling or thinking about suicide, help is available. In the US you can call or text 988 any time to reach the Suicide and Crisis Lifeline. Anywhere else, <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a> lists free and confidential services in your country.</p>
+          <p>If depression or anxiety is weighing on you, help is available. In the US you can call the SAMHSA National Helpline at 1-800-662-4357 any time, free and confidential, for support and a referral to care. Anywhere else, <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a> lists free and confidential services in your country.</p>
         </aside>
 
         <p>For another brain chemical buried under the same kind of myth, see why <a href="dopamine-doesnt-do-what-you-think.html">dopamine doesn't do what you think it does</a>.</p>
@@ -295,5 +296,30 @@
   })();
   </script>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
+  <script>
+  /* Reading-progress bar: fill from the top of the article to the end of the
+     prose (.post-body), so it reads 100% when the reader finishes reading. */
+  (function(){
+    var bar=document.querySelector('.reading-progress');
+    var art=document.querySelector('article.post');
+    var body=document.querySelector('.post-body');
+    if(!bar||!art||!body)return;
+    var ticking=false;
+    function calc(){
+      ticking=false;
+      var y=window.pageYOffset||document.documentElement.scrollTop;
+      var start=art.getBoundingClientRect().top+y;
+      var end=body.getBoundingClientRect().bottom+y;
+      var span=end-start-window.innerHeight;
+      var p=span>0?(y-start)/span:0;
+      if(p<0){p=0;}else if(p>1){p=1;}
+      bar.style.transform='scaleX('+p+')';
+    }
+    function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(calc);}}
+    window.addEventListener('scroll',onScroll,{passive:true});
+    window.addEventListener('resize',onScroll,{passive:true});
+    calc();
+  })();
+  </script>
 </body>
 </html>

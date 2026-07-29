@@ -46,6 +46,7 @@
   </script>
 </head>
 <body>
+  <div class="reading-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="site-header__inner">
@@ -88,7 +89,7 @@
 
       <div class="post-body">
         <figure>
-          <img src="../img/neuron-diagram.svg" alt="Labeled diagram of a neuron showing dendrites, soma, axon, myelin sheath, and axon terminals" loading="lazy" width="819" height="596">
+          <img src="../img/neuron-diagram.svg" alt="Labeled diagram of a neuron showing dendrites, soma, axon, myelin sheath, and axon terminals" width="819" height="596">
           <figcaption>The anatomy of a single neuron. Dendrites gather signals, the soma adds them up, and the axon carries the output to the next cell. <span class="figure-credit">Mariana Ruiz Villarreal, public domain.</span></figcaption>
         </figure>
 <aside class="callout callout--summary">
@@ -292,5 +293,30 @@
   else { requestAnimationFrame(loop); }
 })();
 </script>
+  <script>
+  /* Reading-progress bar: fill from the top of the article to the end of the
+     prose (.post-body), so it reads 100% when the reader finishes reading. */
+  (function(){
+    var bar=document.querySelector('.reading-progress');
+    var art=document.querySelector('article.post');
+    var body=document.querySelector('.post-body');
+    if(!bar||!art||!body)return;
+    var ticking=false;
+    function calc(){
+      ticking=false;
+      var y=window.pageYOffset||document.documentElement.scrollTop;
+      var start=art.getBoundingClientRect().top+y;
+      var end=body.getBoundingClientRect().bottom+y;
+      var span=end-start-window.innerHeight;
+      var p=span>0?(y-start)/span:0;
+      if(p<0){p=0;}else if(p>1){p=1;}
+      bar.style.transform='scaleX('+p+')';
+    }
+    function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(calc);}}
+    window.addEventListener('scroll',onScroll,{passive:true});
+    window.addEventListener('resize',onScroll,{passive:true});
+    calc();
+  })();
+  </script>
 </body>
 </html>

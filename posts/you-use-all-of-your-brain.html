@@ -33,6 +33,7 @@
   </script>
 </head>
 <body>
+  <div class="reading-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="site-header__inner">
@@ -75,7 +76,7 @@
 
       <div class="post-body">
         <figure>
-          <img src="../img/whole-brain-fmri.jpg" alt="A colorful functional MRI visualization of a whole human brain, with activity mapped in many colors across the entire surface" loading="lazy" width="1000" height="718">
+          <img src="../img/whole-brain-fmri.jpg" alt="A colorful functional MRI visualization of a whole human brain, with activity mapped in many colors across the entire surface" width="1000" height="718">
           <figcaption>A whole-brain fMRI visualization. Across a normal day, activity reaches essentially all of it, not a dormant nine tenths. <span class="figure-credit">NIH Image Gallery, <a href="https://creativecommons.org/publicdomain/mark/1.0/">Public Domain</a>.</span></figcaption>
         </figure>
         <aside class="callout callout--summary">
@@ -211,5 +212,30 @@
   (function(){var b=document.querySelector('.post-share__copy');if(!b)return;b.addEventListener('click',function(){var u=b.getAttribute('data-url');var done=function(){var t=b.getAttribute('data-label')||'Copy link';b.textContent='Link copied';b.classList.add('is-copied');setTimeout(function(){b.textContent=t;b.classList.remove('is-copied');},1600);};b.setAttribute('data-label','Copy link');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,done);}else{done();}});})();
   </script>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
+  <script>
+  /* Reading-progress bar: fill from the top of the article to the end of the
+     prose (.post-body), so it reads 100% when the reader finishes reading. */
+  (function(){
+    var bar=document.querySelector('.reading-progress');
+    var art=document.querySelector('article.post');
+    var body=document.querySelector('.post-body');
+    if(!bar||!art||!body)return;
+    var ticking=false;
+    function calc(){
+      ticking=false;
+      var y=window.pageYOffset||document.documentElement.scrollTop;
+      var start=art.getBoundingClientRect().top+y;
+      var end=body.getBoundingClientRect().bottom+y;
+      var span=end-start-window.innerHeight;
+      var p=span>0?(y-start)/span:0;
+      if(p<0){p=0;}else if(p>1){p=1;}
+      bar.style.transform='scaleX('+p+')';
+    }
+    function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(calc);}}
+    window.addEventListener('scroll',onScroll,{passive:true});
+    window.addEventListener('resize',onScroll,{passive:true});
+    calc();
+  })();
+  </script>
 </body>
 </html>
