@@ -63,6 +63,14 @@
           <span>·</span>
           <span class="byline"><a class="byline__link" href="../authors/cameron-hunterton.html" rel="author">Cameron Hunterton</a></span>
         </div>
+        <div class="post-share post-share--top">
+          <span class="post-share__label">Share</span>
+          <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fwhat-fmri-measures.html&text=What%20does%20an%20fMRI%20actually%20measure%3F" target="_blank" rel="noopener">X</a>
+          <a href="https://bsky.app/intent/compose?text=What%20does%20an%20fMRI%20actually%20measure%3F%20https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fwhat-fmri-measures.html" target="_blank" rel="noopener">Bluesky</a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fwhat-fmri-measures.html" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="mailto:?subject=What%20does%20an%20fMRI%20actually%20measure%3F&body=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fwhat-fmri-measures.html">Email</a>
+          <button type="button" class="post-share__copy" data-url="https://theneuroreview.com/posts/what-fmri-measures.html">Copy link</button>
+        </div>
       </header>
 
       <div class="post-body">
@@ -251,6 +259,9 @@
       <p><a href="../index.html">Home</a> &middot; <a href="../posts.html">Posts</a> &middot; <a href="../news.html">News</a> &middot; <a href="../lab.html">Lab</a> &middot; <a href="../the-paper-that-hooked-me.html">Column</a> &middot; <a href="../about.html">About</a> &middot; <a href="../contribute.html">Submissions</a></p>
     </div>
   </footer>
+  <script>
+  (function(){var b=document.querySelector('.post-share__copy');if(!b)return;b.addEventListener('click',function(){var u=b.getAttribute('data-url');var done=function(){var t=b.getAttribute('data-label')||'Copy link';b.textContent='Link copied';b.classList.add('is-copied');setTimeout(function(){b.textContent=t;b.classList.remove('is-copied');},1600);};b.setAttribute('data-label','Copy link');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,done);}else{done();}});})();
+  </script>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
