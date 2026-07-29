@@ -127,9 +127,49 @@
 
         <p>So the serotonin climbs almost at once, and the benefit arrives weeks behind it. Whatever does the healing, it isn't the fast part. It's something slower that the extra serotonin sets in motion.</p>
 
-        <figure>
-          <img src="../img/antidepressant-timeline.png" alt="A line chart. Serotonin in the synapse spikes within a day of the first dose and stays high, while how much better you feel stays flat for a week then climbs slowly, reaching high only by about week six." loading="lazy" width="1500" height="908">
-          <figcaption>The six week gap. Serotonin in the synapse jumps within hours of the first dose. How much better you feel builds over weeks. That distance between the two curves is the clue that raising serotonin is not, by itself, the cure.</figcaption>
+        <figure class="txchart">
+          <div class="txchart__card">
+            <div class="txchart__head">
+              <p class="txchart__title">The six week gap</p>
+              <p class="txchart__sub">Serotonin rises in hours. The benefit takes weeks. Drag to see the distance between them.</p>
+            </div>
+            <svg class="txchart__svg" viewBox="0 0 760 412" role="img" aria-label="Interactive chart. Serotonin reaches full within a day and stays there, while how much better you feel climbs slowly over about six weeks.">
+              <!-- axes -->
+              <line x1="80" y1="110" x2="80" y2="372" stroke="#c9c4ba" stroke-width="1.5"/>
+              <line x1="80" y1="372" x2="712" y2="372" stroke="#c9c4ba" stroke-width="1.5"/>
+              <text x="72" y="122" font-size="12" fill="#8a8880" text-anchor="end">high</text>
+              <text x="72" y="368" font-size="12" fill="#8a8880" text-anchor="end">none</text>
+              <g font-size="12.5" fill="#6a6a62" text-anchor="middle" font-family="Inter, sans-serif">
+                <line x1="104" y1="372" x2="104" y2="378" stroke="#c9c4ba" stroke-width="1.5"/><text x="104" y="396">Day 1</text>
+                <line x1="303" y1="372" x2="303" y2="378" stroke="#c9c4ba" stroke-width="1.5"/><text x="303" y="396">Week 2</text>
+                <line x1="502" y1="372" x2="502" y2="378" stroke="#c9c4ba" stroke-width="1.5"/><text x="502" y="396">Week 4</text>
+                <line x1="701" y1="372" x2="701" y2="378" stroke="#c9c4ba" stroke-width="1.5"/><text x="701" y="396">Week 6</text>
+              </g>
+              <!-- gap band -->
+              <polygon points="104.0,179.2 109.0,171.6 114.0,165.9 118.9,161.6 123.9,158.3 128.9,155.8 133.8,153.9 138.8,152.5 143.8,151.4 148.8,150.6 153.8,149.9 158.7,149.5 163.7,149.1 168.7,148.8 173.6,148.6 178.6,148.5 183.6,148.4 188.6,148.3 193.6,148.2 198.5,148.2 203.5,148.1 208.5,148.1 213.4,148.1 218.4,148.1 223.4,148.0 228.4,148.0 233.3,148.0 238.3,148.0 243.3,148.0 248.3,148.0 253.2,148.0 258.2,148.0 263.2,148.0 268.2,148.0 273.1,148.0 278.1,148.0 283.1,148.0 288.1,148.0 293.0,148.0 298.0,148.0 303.0,148.0 308.0,148.0 313.0,148.0 317.9,148.0 322.9,148.0 327.9,148.0 332.9,148.0 337.8,148.0 342.8,148.0 347.8,148.0 352.8,148.0 357.7,148.0 362.7,148.0 367.7,148.0 372.7,148.0 377.6,148.0 382.6,148.0 387.6,148.0 392.6,148.0 397.5,148.0 402.5,148.0 407.5,148.0 412.4,148.0 417.4,148.0 422.4,148.0 427.4,148.0 432.3,148.0 437.3,148.0 442.3,148.0 447.3,148.0 452.2,148.0 457.2,148.0 462.2,148.0 467.2,148.0 472.2,148.0 477.1,148.0 482.1,148.0 487.1,148.0 492.1,148.0 497.0,148.0 502.0,148.0 507.0,148.0 511.9,148.0 516.9,148.0 521.9,148.0 526.9,148.0 531.8,148.0 536.8,148.0 541.8,148.0 546.8,148.0 551.8,148.0 556.7,148.0 561.7,148.0 566.7,148.0 571.7,148.0 576.6,148.0 581.6,148.0 586.6,148.0 591.5,148.0 596.5,148.0 601.5,148.0 606.5,148.0 611.5,148.0 616.4,148.0 621.4,148.0 626.4,148.0 631.4,148.0 636.3,148.0 641.3,148.0 646.3,148.0 651.2,148.0 656.2,148.0 661.2,148.0 666.2,148.0 671.1,148.0 676.1,148.0 681.1,148.0 686.1,148.0 691.1,148.0 696.0,148.0 701.0,148.0 701.0,179.0 696.0,179.3 691.1,179.6 686.1,179.9 681.1,180.3 676.1,180.6 671.1,181.0 666.2,181.4 661.2,181.8 656.2,182.3 651.2,182.8 646.3,183.3 641.3,183.8 636.3,184.3 631.4,184.9 626.4,185.5 621.4,186.2 616.4,186.9 611.5,187.6 606.5,188.3 601.5,189.1 596.5,189.9 591.5,190.8 586.6,191.7 581.6,192.7 576.6,193.7 571.7,194.8 566.7,195.9 561.7,197.0 556.7,198.2 551.8,199.5 546.8,200.8 541.8,202.2 536.8,203.6 531.8,205.1 526.9,206.7 521.9,208.3 516.9,210.0 511.9,211.8 507.0,213.6 502.0,215.4 497.0,217.4 492.1,219.4 487.1,221.4 482.1,223.6 477.1,225.8 472.2,228.0 467.2,230.3 462.2,232.7 457.2,235.1 452.2,237.6 447.3,240.1 442.3,242.7 437.3,245.3 432.3,247.9 427.4,250.6 422.4,253.3 417.4,256.1 412.4,258.8 407.5,261.6 402.5,264.4 397.5,267.3 392.6,270.1 387.6,272.9 382.6,275.7 377.6,278.5 372.7,281.3 367.7,284.1 362.7,286.8 357.7,289.6 352.8,292.2 347.8,294.9 342.8,297.5 337.8,300.1 332.9,302.6 327.9,305.1 322.9,307.5 317.9,309.9 313.0,312.2 308.0,314.4 303.0,316.6 298.0,318.7 293.0,320.8 288.1,322.8 283.1,324.7 278.1,326.6 273.1,328.4 268.2,330.2 263.2,331.8 258.2,333.5 253.2,335.0 248.3,336.5 243.3,338.0 238.3,339.3 233.3,340.7 228.4,341.9 223.4,343.1 218.4,344.3 213.4,345.4 208.5,346.5 203.5,347.5 198.5,348.4 193.6,349.3 188.6,350.2 183.6,351.0 178.6,351.8 173.6,352.6 168.7,353.3 163.7,354.0 158.7,354.6 153.8,355.2 148.8,355.8 143.8,356.4 138.8,356.9 133.8,357.4 128.9,357.9 123.9,358.3 118.9,358.7 114.0,359.1 109.0,359.5 104.0,359.9" fill="#b7936a" fill-opacity="0.13"/>
+              <!-- curves -->
+              <polyline points="104.0,359.9 109.0,359.5 114.0,359.1 118.9,358.7 123.9,358.3 128.9,357.9 133.8,357.4 138.8,356.9 143.8,356.4 148.8,355.8 153.8,355.2 158.7,354.6 163.7,354.0 168.7,353.3 173.6,352.6 178.6,351.8 183.6,351.0 188.6,350.2 193.6,349.3 198.5,348.4 203.5,347.5 208.5,346.5 213.4,345.4 218.4,344.3 223.4,343.1 228.4,341.9 233.3,340.7 238.3,339.3 243.3,338.0 248.3,336.5 253.2,335.0 258.2,333.5 263.2,331.8 268.2,330.2 273.1,328.4 278.1,326.6 283.1,324.7 288.1,322.8 293.0,320.8 298.0,318.7 303.0,316.6 308.0,314.4 313.0,312.2 317.9,309.9 322.9,307.5 327.9,305.1 332.9,302.6 337.8,300.1 342.8,297.5 347.8,294.9 352.8,292.2 357.7,289.6 362.7,286.8 367.7,284.1 372.7,281.3 377.6,278.5 382.6,275.7 387.6,272.9 392.6,270.1 397.5,267.3 402.5,264.4 407.5,261.6 412.4,258.8 417.4,256.1 422.4,253.3 427.4,250.6 432.3,247.9 437.3,245.3 442.3,242.7 447.3,240.1 452.2,237.6 457.2,235.1 462.2,232.7 467.2,230.3 472.2,228.0 477.1,225.8 482.1,223.6 487.1,221.4 492.1,219.4 497.0,217.4 502.0,215.4 507.0,213.6 511.9,211.8 516.9,210.0 521.9,208.3 526.9,206.7 531.8,205.1 536.8,203.6 541.8,202.2 546.8,200.8 551.8,199.5 556.7,198.2 561.7,197.0 566.7,195.9 571.7,194.8 576.6,193.7 581.6,192.7 586.6,191.7 591.5,190.8 596.5,189.9 601.5,189.1 606.5,188.3 611.5,187.6 616.4,186.9 621.4,186.2 626.4,185.5 631.4,184.9 636.3,184.3 641.3,183.8 646.3,183.3 651.2,182.8 656.2,182.3 661.2,181.8 666.2,181.4 671.1,181.0 676.1,180.6 681.1,180.3 686.1,179.9 691.1,179.6 696.0,179.3 701.0,179.0" fill="none" stroke="#d98a3d" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="104.0,179.2 109.0,171.6 114.0,165.9 118.9,161.6 123.9,158.3 128.9,155.8 133.8,153.9 138.8,152.5 143.8,151.4 148.8,150.6 153.8,149.9 158.7,149.5 163.7,149.1 168.7,148.8 173.6,148.6 178.6,148.5 183.6,148.4 188.6,148.3 193.6,148.2 198.5,148.2 203.5,148.1 208.5,148.1 213.4,148.1 218.4,148.1 223.4,148.0 228.4,148.0 233.3,148.0 238.3,148.0 243.3,148.0 248.3,148.0 253.2,148.0 258.2,148.0 263.2,148.0 268.2,148.0 273.1,148.0 278.1,148.0 283.1,148.0 288.1,148.0 293.0,148.0 298.0,148.0 303.0,148.0 308.0,148.0 313.0,148.0 317.9,148.0 322.9,148.0 327.9,148.0 332.9,148.0 337.8,148.0 342.8,148.0 347.8,148.0 352.8,148.0 357.7,148.0 362.7,148.0 367.7,148.0 372.7,148.0 377.6,148.0 382.6,148.0 387.6,148.0 392.6,148.0 397.5,148.0 402.5,148.0 407.5,148.0 412.4,148.0 417.4,148.0 422.4,148.0 427.4,148.0 432.3,148.0 437.3,148.0 442.3,148.0 447.3,148.0 452.2,148.0 457.2,148.0 462.2,148.0 467.2,148.0 472.2,148.0 477.1,148.0 482.1,148.0 487.1,148.0 492.1,148.0 497.0,148.0 502.0,148.0 507.0,148.0 511.9,148.0 516.9,148.0 521.9,148.0 526.9,148.0 531.8,148.0 536.8,148.0 541.8,148.0 546.8,148.0 551.8,148.0 556.7,148.0 561.7,148.0 566.7,148.0 571.7,148.0 576.6,148.0 581.6,148.0 586.6,148.0 591.5,148.0 596.5,148.0 601.5,148.0 606.5,148.0 611.5,148.0 616.4,148.0 621.4,148.0 626.4,148.0 631.4,148.0 636.3,148.0 641.3,148.0 646.3,148.0 651.2,148.0 656.2,148.0 661.2,148.0 666.2,148.0 671.1,148.0 676.1,148.0 681.1,148.0 686.1,148.0 691.1,148.0 696.0,148.0 701.0,148.0" fill="none" stroke="#2f7ca6" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- labels -->
+              <circle cx="150" cy="120" r="4.5" fill="#2f7ca6"/><text x="162" y="125" font-size="14.5" font-weight="600" fill="#2f7ca6" font-family="Inter, sans-serif">Serotonin in the synapse</text>
+              <circle cx="505" cy="322" r="4.5" fill="#d98a3d"/><text x="517" y="327" font-size="14.5" font-weight="600" fill="#d98a3d" font-family="Inter, sans-serif">How much better you feel</text>
+              <!-- playhead -->
+              <g id="txHead">
+                <line id="txLine" x1="104" y1="106" x2="104" y2="372" stroke="#8a8880" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <circle id="txDotBen" cx="104" cy="359.5" r="6.5" fill="#d98a3d" stroke="#f7f5f0" stroke-width="2"/>
+                <circle id="txDotSero" cx="104" cy="178.5" r="6.5" fill="#2f7ca6" stroke="#f7f5f0" stroke-width="2"/>
+              </g>
+            </svg>
+            <div class="txchart__readout" aria-live="polite">
+              <div class="txchart__stat"><span class="txchart__k">When</span><span class="txchart__v" id="txWhen">Day 1</span></div>
+              <div class="txchart__stat"><span class="txchart__k"><i class="txchart__sw txchart__sw--sero"></i>Serotonin</span><span class="txchart__v" id="txSero">86%</span></div>
+              <div class="txchart__stat"><span class="txchart__k"><i class="txchart__sw txchart__sw--ben"></i>You feel</span><span class="txchart__v" id="txBen">3%</span></div>
+              <div class="txchart__stat txchart__stat--gap"><span class="txchart__k">The gap</span><span class="txchart__v" id="txGap">83 pts</span></div>
+            </div>
+            <label class="txchart__control"><span class="txchart__control-label">Weeks since the first dose</span>
+              <input type="range" id="txRange" min="0" max="6" step="0.05" value="0" aria-label="Weeks since the first dose"></label>
+          </div>
+          <figcaption>The six week gap, hands on. Serotonin in the synapse is essentially maxed within a day of the first dose. How much better you feel builds over weeks. That distance between the two curves is the clue that raising serotonin is not, by itself, the cure.</figcaption>
         </figure>
 
         <h2>So how do they actually work?</h2>
@@ -231,6 +271,28 @@
   </footer>
   <script>
   (function(){var b=document.querySelector('.post-share__copy');if(!b)return;b.addEventListener('click',function(){var u=b.getAttribute('data-url');var done=function(){var t=b.getAttribute('data-label')||'Copy link';b.textContent='Link copied';b.classList.add('is-copied');setTimeout(function(){b.textContent=t;b.classList.remove('is-copied');},1600);};b.setAttribute('data-label','Copy link');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,done);}else{done();}});})();
+  </script>
+  <script>
+  (function(){
+    var r=document.getElementById('txRange');if(!r)return;
+    var X0=104,X6=701,Y0=366,Yh=148;
+    function xOf(t){return X0+(X6-X0)/6*t;}
+    function yOf(p){return Y0-(Y0-Yh)/100*p;}
+    function sero(t){return Math.min(100,100*(1-Math.exp(-(t+0.35)/0.18)));}
+    function ben(t){return 88/(1+Math.exp(-(t-2.9)/0.85));}
+    var line=document.getElementById('txLine'),ds=document.getElementById('txDotSero'),db=document.getElementById('txDotBen');
+    var when=document.getElementById('txWhen'),vs=document.getElementById('txSero'),vb=document.getElementById('txBen'),vg=document.getElementById('txGap');
+    function upd(){
+      var t=parseFloat(r.value),x=xOf(t),sp=sero(t),bp=ben(t);
+      line.setAttribute('x1',x);line.setAttribute('x2',x);
+      ds.setAttribute('cx',x);ds.setAttribute('cy',yOf(sp));
+      db.setAttribute('cx',x);db.setAttribute('cy',yOf(bp));
+      when.textContent = t<1 ? 'Day '+Math.max(1,Math.round(t*7)) : 'Week '+t.toFixed(1);
+      vs.textContent=Math.round(sp)+'%';vb.textContent=Math.round(bp)+'%';
+      vg.textContent=Math.round(sp-bp)+' pts';
+    }
+    r.addEventListener('input',upd);upd();
+  })();
   </script>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

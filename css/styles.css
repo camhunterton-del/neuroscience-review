@@ -672,3 +672,23 @@ article.post {
 .hero__subscribe{margin:1.75rem 0 0;max-width:440px;}
 .hero__subscribe-note{font-family:var(--sans);font-size:.85rem;color:var(--text-faint);margin:.7rem 0 0;}
 @media (max-width:600px){.read-next__list{grid-template-columns:1fr;}}
+
+/* Interactive figure: the six-week gap (#27). Card stays light in both themes, like the static figures. */
+.txchart{margin:2.5rem 0;}
+.txchart__card{background:#f7f5f0;border:1px solid #e6e1d6;border-radius:10px;padding:1.4rem 1.5rem 1.5rem;}
+.txchart__title{font-family:var(--sans);font-size:1.05rem;font-weight:700;color:#24303a;margin:0;}
+.txchart__sub{font-family:var(--sans);font-size:.9rem;color:#6a6a62;margin:.25rem 0 0;line-height:1.45;}
+.txchart__svg{width:100%;height:auto;display:block;margin:.5rem 0 .2rem;touch-action:none;}
+.txchart__readout{display:flex;flex-wrap:wrap;gap:.5rem 1.6rem;padding:.7rem 0 0;border-top:1px solid #e6e1d6;margin-top:.5rem;}
+.txchart__stat{display:flex;flex-direction:column;gap:.12rem;}
+.txchart__k{font-family:var(--sans);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#8a8880;display:flex;align-items:center;gap:.35rem;}
+.txchart__v{font-family:var(--sans);font-size:1.18rem;font-weight:700;color:#24303a;font-variant-numeric:tabular-nums;line-height:1.1;}
+.txchart__stat--gap .txchart__v{color:#b7793d;}
+.txchart__sw{width:.7rem;height:.7rem;border-radius:2px;display:inline-block;}
+.txchart__sw--sero{background:#2f7ca6;}
+.txchart__sw--ben{background:#d98a3d;}
+.txchart__control{display:block;margin-top:1.1rem;}
+.txchart__control-label{display:block;font-family:var(--sans);font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#8a8880;margin-bottom:.45rem;}
+.txchart__control input[type=range]{width:100%;accent-color:#2f7ca6;height:1.5rem;cursor:pointer;}
+.txchart__control input[type=range]:focus-visible{outline:2px solid #2f7ca6;outline-offset:3px;}
+@media (max-width:520px){.txchart__card{padding:1.1rem;}.txchart__readout{gap:.5rem 1.1rem;}.txchart__v{font-size:1.05rem;}}
