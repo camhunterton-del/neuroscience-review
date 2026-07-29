@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="Inter, -apple-system, sans-serif">
+  <rect x="0" y="0" width="760" height="460" fill="#f7f5f0"/>
+
+  <!-- title -->
+  <text x="80" y="48" font-size="21" font-weight="700" fill="#24303a">The six week gap</text>
+  <text x="80" y="72" font-size="14.5" fill="#6a6a62">Serotonin rises in hours. The benefit takes weeks.</text>
+
+  <!-- axes -->
+  <line x1="80" y1="110" x2="80" y2="372" stroke="#c9c4ba" stroke-width="1.5"/>
+  <line x1="80" y1="372" x2="712" y2="372" stroke="#c9c4ba" stroke-width="1.5"/>
+
+  <!-- y axis hint -->
+  <text x="72" y="122" font-size="12" fill="#8a8880" text-anchor="end">high</text>
+  <text x="72" y="368" font-size="12" fill="#8a8880" text-anchor="end">none</text>
+
+  <!-- x ticks -->
+  <g font-size="12.5" fill="#6a6a62" text-anchor="middle">
+    <line x1="104" y1="372" x2="104" y2="378" stroke="#c9c4ba" stroke-width="1.5"/>
+    <text x="104" y="396">Day 1</text>
+    <line x1="303" y1="372" x2="303" y2="378" stroke="#c9c4ba" stroke-width="1.5"/>
+    <text x="303" y="396">Week 2</text>
+    <line x1="502" y1="372" x2="502" y2="378" stroke="#c9c4ba" stroke-width="1.5"/>
+    <text x="502" y="396">Week 4</text>
+    <line x1="701" y1="372" x2="701" y2="378" stroke="#c9c4ba" stroke-width="1.5"/>
+    <text x="701" y="396">Week 6</text>
+  </g>
+
+  <!-- the gap: shaded band between the two curves -->
+  <path d="M 104 366 L 113 365 C 119 362, 122 210, 125 158 C 127 149, 133 148, 148 148 L 701 148
+           L 701 156 C 662 164, 604 186, 522 238 C 425 298, 320 344, 225 358 C 195 364, 155 366, 104 366 Z"
+        fill="#b7936a" fill-opacity="0.12" stroke="none"/>
+
+  <!-- serotonin curve: near-vertical wall at Day 1, then flat-high plateau -->
+  <path d="M 104 366 L 113 365 C 119 362, 122 210, 125 158 C 127 149, 133 148, 148 148 L 701 148"
+        fill="none" stroke="#2f7ca6" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- benefit curve: flat, faint late-week-1 lift, then S-climb to just below the plateau -->
+  <path d="M 104 366 C 155 366, 195 364, 225 358 C 320 344, 425 298, 522 238 C 604 186, 662 164, 701 156"
+        fill="none" stroke="#d98a3d" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- gap marker: double-headed arrow at Week 2 spanning orange up to blue -->
+  <line x1="303" y1="169" x2="303" y2="321" stroke="#8a8880" stroke-width="1.5"/>
+  <path d="M 303 155 L 307.6 170 L 298.4 170 Z" fill="#8a8880"/>
+  <path d="M 303 335 L 307.6 320 L 298.4 320 Z" fill="#8a8880"/>
+  <text x="315" y="252" font-size="13" fill="#6a6a62" font-style="italic">the gap is the puzzle</text>
+
+  <!-- curve labels -->
+  <circle cx="150" cy="120" r="4.5" fill="#2f7ca6"/>
+  <text x="162" y="125" font-size="14.5" font-weight="600" fill="#2f7ca6">Serotonin in the synapse</text>
+
+  <circle cx="505" cy="322" r="4.5" fill="#d98a3d"/>
+  <text x="517" y="327" font-size="14.5" font-weight="600" fill="#d98a3d">How much better you feel</text>
+</svg>

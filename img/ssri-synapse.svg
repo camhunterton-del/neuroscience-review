@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" font-family="Inter, -apple-system, sans-serif">
+  <rect x="0" y="0" width="760" height="500" fill="#f7f5f0"/>
+
+  <!-- title -->
+  <text x="70" y="40" font-size="21" font-weight="700" fill="#24303a">The reuptake block</text>
+  <text x="70" y="64" font-size="14.5" fill="#6a6a62">An SSRI jams the pump that clears serotonin, so it lingers in the gap.</text>
+
+  <!-- presynaptic neuron -->
+  <rect x="64" y="90" width="632" height="100" rx="22" fill="#dbe4ee" stroke="#8aa3bd" stroke-width="2"/>
+  <text x="410" y="146" font-size="15" font-weight="600" fill="#4a6079" text-anchor="middle">Presynaptic neuron</text>
+
+  <!-- postsynaptic neuron -->
+  <rect x="64" y="378" width="632" height="100" rx="22" fill="#e7dcc9" stroke="#bda981" stroke-width="2"/>
+  <text x="380" y="452" font-size="15" font-weight="600" fill="#7a6a48" text-anchor="middle">Postsynaptic neuron</text>
+
+  <!-- ============ RECEPTORS on the postsynaptic membrane (cool cups opening up) ============ -->
+  <g fill="none" stroke="#6f8798" stroke-width="4" stroke-linecap="round">
+    <path d="M 278 354 Q 300 388 322 354"/>
+    <path d="M 438 354 Q 460 388 482 354"/>
+    <path d="M 578 354 Q 600 388 622 354"/>
+  </g>
+  <!-- serotonin docked in two receptors -->
+  <circle cx="460" cy="361" r="8.5" fill="#d98a3d"/>
+  <circle cx="600" cy="361" r="8.5" fill="#d98a3d"/>
+
+  <!-- ============ FREE SEROTONIN in the cleft (surplus) ============ -->
+  <g fill="#d98a3d">
+    <circle cx="300" cy="238" r="8.5"/>
+    <circle cx="362" cy="300" r="8.5"/>
+    <circle cx="420" cy="240" r="8.5"/>
+    <circle cx="480" cy="296" r="8.5"/>
+    <circle cx="540" cy="238" r="8.5"/>
+    <circle cx="598" cy="298" r="8.5"/>
+    <circle cx="430" cy="344" r="8.5"/>
+    <circle cx="652" cy="258" r="8.5"/>
+  </g>
+
+  <!-- ============ REUPTAKE PUMP (transporter) straddling the presynaptic membrane ============ -->
+  <rect x="176" y="146" width="54" height="99" rx="15" fill="#93a2b2" stroke="#6f8296" stroke-width="2"/>
+  <rect x="195" y="156" width="16" height="68" rx="7" fill="#eef2f6"/>
+
+  <!-- SSRI plug jamming the cleft-facing mouth of the pump (the cause) -->
+  <rect x="185" y="224" width="36" height="26" rx="10" fill="#bf5a4f" stroke="#9c443b" stroke-width="2"/>
+
+  <!-- blocked reuptake arrow: bold grey up-arrow, crossed with a single red X (the effect) -->
+  <g stroke="#8a8880" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="203" y1="322" x2="203" y2="266"/>
+    <path d="M 193 278 L 203 266 L 213 278"/>
+  </g>
+  <g stroke="#bf5a4f" stroke-width="4" stroke-linecap="round">
+    <line x1="190" y1="305" x2="216" y2="283"/>
+    <line x1="190" y1="283" x2="216" y2="305"/>
+  </g>
+
+  <!-- two serotonin molecules turned back at the blocked mouth (why the surplus lingers) -->
+  <circle cx="180" cy="322" r="8.5" fill="#d98a3d"/>
+  <circle cx="226" cy="322" r="8.5" fill="#d98a3d"/>
+
+  <!-- ============ LABELS with tidy leaders ============ -->
+  <g font-size="14" font-weight="600">
+    <!-- serotonin legend -->
+    <circle cx="630" cy="212" r="7.5" fill="#d98a3d"/>
+    <text x="643" y="217" fill="#b5722a">Serotonin</text>
+
+    <!-- reuptake pump -->
+    <line x1="160" y1="248" x2="176" y2="210" stroke="#b7b2a8" stroke-width="1.4"/>
+    <text x="72" y="250" fill="#5c6b7a">The reuptake</text>
+    <text x="72" y="268" fill="#5c6b7a">pump</text>
+
+    <!-- SSRI -->
+    <line x1="248" y1="206" x2="221" y2="234" stroke="#bf5a4f" stroke-width="1.4"/>
+    <text x="252" y="210" fill="#a4483d">SSRI jams it shut</text>
+
+    <!-- receptors -->
+    <line x1="600" y1="336" x2="600" y2="351" stroke="#b7b2a8" stroke-width="1.4"/>
+    <text x="575" y="329" fill="#6a6a62" text-anchor="middle">Receptors catch the surplus</text>
+  </g>
+</svg>
