@@ -439,8 +439,10 @@ article.post {
   color: var(--text);
 }
 .cta__input:focus {
-  outline: none;
   border-color: var(--accent);
+}
+.cta__input:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .cta__button {

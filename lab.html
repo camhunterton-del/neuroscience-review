@@ -102,7 +102,7 @@
 
     /* ---------- editorial grid ---------- */
     .lab-bench .bench-grid-wrap{ padding:clamp(1.4rem,4vw,2.4rem) 0 clamp(2.4rem,5vw,3.4rem); }
-    .lab-bench .bench-section-kicker{ font-family:var(--mono); font-size:.74rem; letter-spacing:.18em; text-transform:uppercase; color:var(--teal); margin:0 0 1.3rem; padding-bottom:.9rem; border-bottom:1px solid var(--line); }
+    .lab-bench .bench-section-kicker{ font-family:var(--mono); font-size:.74rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:var(--teal); margin:0 0 1.3rem; padding-bottom:.9rem; border-bottom:1px solid var(--line); }
     .lab-bench .bench-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(1rem,2.5vw,1.6rem); }
     .lab-bench .demo-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:clamp(1.2rem,2.6vw,1.8rem); position:relative; transition:transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease; }
     .lab-bench .demo-card--wide{ grid-column:1 / -1; }
@@ -189,7 +189,7 @@
       .lab-bench .bench-featured__inner{ grid-template-columns:1fr; }
     }
     @media (max-width:720px){
-      .lab-bench .bench-grid{ grid-template-columns:1fr; }
+      .lab-bench .bench-grid{ grid-template-columns:minmax(0,1fr); }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -213,6 +213,12 @@
     .lab-bench .bench-grid > [class^="d-"] canvas,
     .lab-bench .bench-grid > [class^="d-"] svg,
     .lab-bench .bench-grid > [class^="d-"] img{ max-width:100%; }
+    /* mobile fit (audit 2026-07-29): keep every demo card and its media inside
+       narrow phone viewports so nothing is clipped by the bench overflow guard */
+    .lab-bench .demo-card, .lab-bench .labdemo, .lab-bench .labdemo__stage{ min-width:0; }
+    .lab-bench .demo-card canvas,
+    .lab-bench .demo-card svg,
+    .lab-bench .demo-card img{ max-width:100%; height:auto; }
     .lab-bench .bench-group + .bench-group{ margin-top:clamp(2.2rem,5.5vw,3.4rem); }
 
     /* ---- motion-aftereffect ---- */
@@ -1135,7 +1141,7 @@
   display:flex; gap:clamp(1rem,3vw,1.5rem); flex-wrap:wrap;
   align-items:flex-start; margin-top:1.3rem;
 }
-.d-hopfield__gridwrap{flex:0 0 auto;}
+.d-hopfield__gridwrap{flex:0 1 auto; min-width:0; max-width:100%;}
 .d-hopfield__gridcap{
   font-family:var(--mono); font-size:.7rem; letter-spacing:.05em;
   color:var(--faint); margin:.55rem 0 0; text-align:center; max-width:300px;
@@ -2005,7 +2011,6 @@
       <div class="bench-inner bench-featured__inner reveal">
         <div class="bench-featured__meta">
           <p class="bench-tab">This week on the bench</p>
-          <p class="bench-featured__date">Week of June 1, 2026</p>
           <h2 class="bench-featured__title">Drive a neuron to threshold</h2>
           <p class="bench-featured__note">The same neuron from the hero, now yours to push. It is a leaky integrate and fire model, the textbook simplification. Below a certain drive it sits quiet. Above it, the rate climbs, but the spike size never does.</p>
           <a class="bench-read" href="posts/what-is-a-neuron.html">Read the piece <span aria-hidden="true">&rarr;</span></a>
@@ -2036,7 +2041,7 @@
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
       <div class="bench-group">
-        <p class="bench-section-kicker">Perception and illusions</p>
+        <h2 class="bench-section-kicker">Perception and illusions</h2>
         <div class="bench-grid">
 
           <article class="demo-card demo-card--wide reveal">
@@ -2157,7 +2162,7 @@
 
           <article class="d-blind-spot">
             <p class="bs-kicker">The optic disc</p>
-            <h2 class="bs-title">Your blind spot</h2>
+            <h3 class="bs-title">Your blind spot</h3>
             <p class="bs-note">Where the optic nerve leaves each eye there are no photoreceptors, so a small patch of your vision is truly blank. Cover one eye, lock the other on the +, and slide the dot outward until it drops into that hole. Then swap it for a line or a speckled field and watch your brain paper over the gap.</p>
           
             <ol class="bs-steps">
@@ -2253,7 +2258,7 @@
           <div class="d-stereogram">
             <article class="card" aria-label="The random-dot stereogram experiment">
               <p class="kicker">Stereopsis</p>
-              <h2 class="title">The random-dot stereogram</h2>
+              <h3 class="title">The random-dot stereogram</h3>
               <p class="note">Two fields of dots. Each eye on its own sees only noise, but the two views differ by a small sideways shift inside one hidden region, and your brain turns that shift into depth. Let your eyes relax past the screen until a shape lifts out. If free fusing will not click, switch to the red and cyan view.</p>
           
               <div class="stage">
@@ -2379,7 +2384,7 @@
         </div>
       </div>
       <div class="bench-group">
-        <p class="bench-section-kicker">Neurons and synapses</p>
+        <h2 class="bench-section-kicker">Neurons and synapses</h2>
         <div class="bench-grid">
 
           <section class="d-ssri-synapse demo-card--wide" aria-labelledby="ssri-synapse-title">
@@ -2532,7 +2537,7 @@
 
           <article class="d-dendritic">
               <p class="d-dendritic__kicker">Dendritic summation</p>
-              <h1 class="d-dendritic__title">A democracy of inputs</h1>
+              <h3 class="d-dendritic__title">A democracy of inputs</h3>
               <p class="d-dendritic__note">One excitatory input nudges the neuron but cannot fire it. Switch on a second and fire them at the same moment, or one just after another, and the nudges add up until they cross the line and the neuron spikes. Switch on the inhibitory input and it pushes back down, so a single veto can cancel the vote. It is a simplified model, not a recording.</p>
           
               <section class="d-dendritic__stage" aria-label="Excitatory and inhibitory inputs summing at a model neuron.">
@@ -2568,7 +2573,7 @@
 
           <article class="d-ltp">
               <p class="d-ltp__kicker">Hebbian plasticity</p>
-              <h1 class="d-ltp__title">A memory forming</h1>
+              <h3 class="d-ltp__title">A memory forming</h3>
               <p class="d-ltp__note">Send a weak input on its own and the neuron barely stirs. Pair that same input with the neuron a few times, the synapse strengthens and holds, and now the weak input alone sets off a spike. A second input you never pair does not change at all. It is a simplified model, not a recording.</p>
           
               <section class="d-ltp__stage" aria-label="Long-term potentiation model">
@@ -2626,7 +2631,7 @@
         </div>
       </div>
       <div class="bench-group">
-        <p class="bench-section-kicker">Signals and rhythms</p>
+        <h2 class="bench-section-kicker">Signals and rhythms</h2>
         <div class="bench-grid">
 
           <article class="d-brain-waves demo-card--wide" aria-labelledby="brain-waves-title">
@@ -2726,7 +2731,7 @@
 
           <article class="d-synchrony demo-card--wide">
               <p class="d-synchrony__kicker">Coupled oscillators</p>
-              <h1 class="d-synchrony__title">Synchrony and binding</h1>
+              <h3 class="d-synchrony__title">Synchrony and binding</h3>
               <p class="d-synchrony__note">Twenty-four units, each blinking at its own slightly different pace, so at first the ring is a mess. Raise the coupling and let them feel each other, and they slide into one shared beat. Neuroscientists think a pull like this is how far-apart cells lock together into the rhythms tied to attention and to binding the parts of a scene into one thing.</p>
           
               <section class="d-synchrony__stage" aria-label="A ring of coupled oscillators. Raising the coupling slider pulls them into synchrony.">
@@ -2759,13 +2764,13 @@
         </div>
       </div>
       <div class="bench-group">
-        <p class="bench-section-kicker">Memory and decision</p>
+        <h2 class="bench-section-kicker">Memory and decision</h2>
         <div class="bench-grid">
 
           <article class="d-drift-diffusion demo-card--wide" aria-labelledby="drift-diffusion-title">
           
             <p class="dd-kicker">Evidence to a bound</p>
-            <h2 class="dd-title" id="drift-diffusion-title">A decision, accumulating</h2>
+            <h3 class="dd-title" id="drift-diffusion-title">A decision, accumulating</h3>
             <p class="dd-note">A field of dots drifts left or right and you call the direction. The bar next to it is a model that adds up the same noisy motion until it reaches a threshold, and where you set that threshold is what trades speed against mistakes.</p>
           
             <div class="dd-stage">
@@ -2953,7 +2958,7 @@
         </div>
       </div>
       <div class="bench-group">
-        <p class="bench-section-kicker">Maps and methods</p>
+        <h2 class="bench-section-kicker">Maps and methods</h2>
         <div class="bench-grid">
 
           <article class="d-place-grid">
@@ -3043,7 +3048,7 @@
 
           <section class="d-fmri-bold demo-card--wide" aria-label="What fMRI measures, an interactive model of the BOLD signal">
             <p class="fb-kicker">The BOLD signal</p>
-            <h2 class="fb-title">What fMRI measures</h2>
+            <h3 class="fb-title">What fMRI measures</h3>
             <p class="fb-note">Click to fire a neural spike. The spike is instant, but the thing fMRI actually reads, the blood-oxygen response, oozes up to its peak about 5 seconds later and slowly falls. Then move the noise and threshold sliders and watch the same blob light up or vanish.</p>
           
             <div class="fb-plotwrap">
@@ -3106,7 +3111,7 @@
 
           <article class="d-owl demo-card--wide">
               <p class="d-owl__kicker">Sound localization</p>
-              <h1 class="d-owl__title">The barn owl map of space</h1>
+              <h3 class="d-owl__title">The barn owl map of space</h3>
               <p class="d-owl__note">A barn owl strikes in the dark by ear. Drag the mouse around and watch two tiny differences do the work. The sound reaches the near ear a hair sooner, which fixes the left to right angle, and its lopsided ears make it a touch louder above or below, which fixes the height. Together they light up one spot on a built-in map of space. Then put prism goggles on the owl and watch that map slowly slide to a new home.</p>
           
               <section class="d-owl__stage" aria-label="Drag the prey around the owl to see how timing and loudness differences at the two ears locate it.">
