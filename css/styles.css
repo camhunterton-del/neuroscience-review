@@ -535,6 +535,11 @@ article.post {
 .post-share__copy{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;}
 .post-share__copy:hover{text-decoration:underline;}
 .post-share__copy.is-copied{color:var(--text-muted);}
+.post-share__native,.post-share__story{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;}
+.post-share__native:hover,.post-share__story:hover{text-decoration:underline;}
+.post-share__native{display:none;}
+.post-share--top.has-native .post-share__net{display:none;}
+.post-share--top.has-native .post-share__native{display:inline;}
 .post-sources h2{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin:0 0 1rem;}
 .post-sources ol{padding-left:1.25rem;}
 .post-sources li{font-family:var(--sans);font-size:.9rem;line-height:1.5;color:var(--text-muted);margin-bottom:.6rem;}

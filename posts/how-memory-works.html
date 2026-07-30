@@ -66,11 +66,14 @@
         </div>
         <div class="post-share post-share--top">
           <span class="post-share__label">Share</span>
-          <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html&text=How%20does%20memory%20actually%20work%3F" target="_blank" rel="noopener">X</a>
-          <a href="https://bsky.app/intent/compose?text=How%20does%20memory%20actually%20work%3F%20https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html" target="_blank" rel="noopener">Bluesky</a>
-          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="mailto:?subject=How%20does%20memory%20actually%20work%3F&body=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html">Email</a>
+          <a class="post-share__net" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html&text=How%20does%20memory%20actually%20work%3F" target="_blank" rel="noopener">X</a>
+          <a class="post-share__net" href="https://bsky.app/intent/compose?text=How%20does%20memory%20actually%20work%3F%20https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html" target="_blank" rel="noopener">Bluesky</a>
+          <a class="post-share__net" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="post-share__net" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html" target="_blank" rel="noopener">Facebook</a>
+          <a class="post-share__net" href="mailto:?subject=How%20does%20memory%20actually%20work%3F&body=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html">Email</a>
           <button type="button" class="post-share__copy" data-url="https://theneuroreview.com/posts/how-memory-works.html">Copy link</button>
+          <button type="button" class="post-share__story">Story card</button>
+          <button type="button" class="post-share__native" aria-label="More sharing options">More…</button>
         </div>
       </header>
 
@@ -301,6 +304,63 @@
   </footer>
   <script>
   (function(){var b=document.querySelector('.post-share__copy');if(!b)return;b.addEventListener('click',function(){var u=b.getAttribute('data-url');var done=function(){var t=b.getAttribute('data-label')||'Copy link';b.textContent='Link copied';b.classList.add('is-copied');setTimeout(function(){b.textContent=t;b.classList.remove('is-copied');},1600);};b.setAttribute('data-label','Copy link');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,done);}else{done();}});})();
+  </script>
+  <script>
+  (function(){
+    var row=document.querySelector('.post-share--top'); if(!row) return;
+    var cn=document.querySelector('link[rel=canonical]'); var url=cn?cn.href:location.href;
+    var tEl=document.querySelector('.post-header__title'); var title=tEl?tEl.textContent.trim():document.title;
+    var eEl=document.querySelector('.post-header__eyebrow'); var eyebrow=eEl?eEl.textContent.trim():'';
+    var bEl=document.querySelector('.byline__link'); var author=bEl?bEl.textContent.trim():'Cameron Hunterton';
+    var oEl=document.querySelector('meta[property="og:image"]'); var imgUrl=oEl?oEl.getAttribute('content'):'';
+    // adaptive: on a phone viewport with a share sheet, collapse the per-network links
+    // into "More"; on desktop keep the full row of links.
+    var ns=row.querySelector('.post-share__native');
+    if(ns && navigator.share){ ns.addEventListener('click',function(){ navigator.share({title:title,url:url}).catch(function(){}); }); }
+    var mq=window.matchMedia?matchMedia('(max-width:640px)'):null;
+    function applyRow(){ if(mq&&mq.matches&&navigator.share){ row.classList.add('has-native'); } else { row.classList.remove('has-native'); } }
+    if(mq){ applyRow(); if(mq.addEventListener)mq.addEventListener('change',applyRow); else if(mq.addListener)mq.addListener(applyRow); }
+    // ---- branded Instagram story card ----
+    function mark(x,cx,cy,r,c){ var p=[[-0.62,-0.75],[-0.28,-1.0],[0.78,-0.72],[0.56,0.78],[-0.66,0.62]]; x.strokeStyle=c; x.lineWidth=r*0.14; x.lineCap='round'; p.forEach(function(q){x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+q[0]*r,cy+q[1]*r);x.stroke();}); x.fillStyle=c; p.forEach(function(q){x.beginPath();x.arc(cx+q[0]*r,cy+q[1]*r,r*0.15,0,7);x.fill();}); x.beginPath();x.arc(cx,cy,r*0.34,0,7);x.fill(); }
+    function wrap(x,t,m){ var w=t.split(' '),L=[],l=''; for(var i=0;i<w.length;i++){var s=l?l+' '+w[i]:w[i]; if(x.measureText(s).width>m&&l){L.push(l);l=w[i];}else l=s;} if(l)L.push(l); return L; }
+    function cover(x,img,dx,dy,dw,dh){ var ir=img.width/img.height,br=dw/dh,sw,sh,sx,sy; if(ir>br){sh=img.height;sw=sh*br;sx=(img.width-sw)/2;sy=0;}else{sw=img.width;sh=sw/br;sx=0;sy=(img.height-sh)/2;} x.save();x.beginPath();x.rect(dx,dy,dw,dh);x.clip();x.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);x.restore(); }
+    function paint(cv,img){
+      var x=cv.getContext('2d'),W=1080,H=1920,PAPER='#fbfaf5',INK='#1a1a1c',TEAL='#2d5d7b',MUT='#6b6b66';
+      x.fillStyle=PAPER;x.fillRect(0,0,W,H); x.strokeStyle='rgba(45,93,123,.25)';x.lineWidth=3;x.strokeRect(46,46,W-92,H-92); x.fillStyle=TEAL;x.fillRect(46,46,W-92,10);
+      mark(x,130,210,48,TEAL); x.fillStyle=INK;x.textAlign='left';x.textBaseline='middle';x.font='600 36px Newsreader,Georgia,serif';x.fillText('The Neuroscience Review',196,210);
+      var ix=100,iy=300,iw=W-200,ih=720; x.fillStyle='#f0efe8';x.fillRect(ix,iy,iw,ih); if(img&&img.naturalWidth){cover(x,img,ix,iy,iw,ih);} x.strokeStyle=TEAL;x.lineWidth=3;x.strokeRect(ix,iy,iw,ih);
+      x.fillStyle=TEAL;x.textBaseline='alphabetic';x.font='700 28px Inter,sans-serif'; var eb=(eyebrow||'').toUpperCase(),ex=100,ey=iy+ih+82; for(var i=0;i<eb.length;i++){x.fillText(eb[i],ex,ey);ex+=x.measureText(eb[i]).width+7;}
+      // headline: clamp to 4 lines by shrinking the face if needed
+      var fs=74; x.font='600 '+fs+'px Newsreader,Georgia,serif'; var ls=wrap(x,title,W-200);
+      while(ls.length>4 && fs>48){ fs-=6; x.font='600 '+fs+'px Newsreader,Georgia,serif'; ls=wrap(x,title,W-200); }
+      x.fillStyle=INK; var adv=Math.round(fs*1.22), ly=ey+Math.round(fs*1.25);
+      for(var j=0;j<ls.length;j++){ x.fillText(ls[j],100,ly); ly+=adv; }
+      // bottom group anchored to the footer (no mid-card gap)
+      x.strokeStyle=TEAL;x.lineWidth=5;x.beginPath();x.moveTo(100,H-248);x.lineTo(230,H-248);x.stroke();
+      x.fillStyle=MUT;x.font='500 34px Inter,sans-serif';x.fillText('By '+author,100,H-186);
+      x.fillStyle=TEAL;x.font='600 38px Inter,sans-serif';x.fillText('theneuroreview.com',100,H-120);
+      x.fillStyle=MUT;x.font='400 28px Inter,sans-serif';x.fillText('Real brain research, made readable.',100,H-74);
+    }
+    function makeCard(cb){
+      var cv=document.createElement('canvas');cv.width=1080;cv.height=1920;
+      var settled=false, to;
+      var go=function(img){ if(settled)return; settled=true; if(to)clearTimeout(to); (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(function(){ try{paint(cv,img);}catch(e){} cb(cv); }); };
+      if(imgUrl){ var im=new Image();im.crossOrigin='anonymous';im.onload=function(){go(im);};im.onerror=function(){go(null);};im.src=imgUrl; to=setTimeout(function(){ go(null); },8000); } else { go(null); }
+    }
+    function download(blob){ var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neuroscience-review-story.png';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href);},2000); }
+    var sc=row.querySelector('.post-share__story');
+    if(sc){ sc.addEventListener('click',function(){
+      if(sc.disabled) return; var old=sc.textContent; sc.disabled=true; sc.textContent='Building…';
+      var done=function(){ sc.textContent=old; sc.disabled=false; };
+      try{ makeCard(function(cv){
+        try{ cv.toBlob(function(blob){ done(); if(!blob)return;
+          var file=new File([blob],'neuroscience-review-story.png',{type:'image/png'});
+          if(navigator.canShare&&navigator.canShare({files:[file]})){ navigator.share({files:[file],title:title}).catch(function(err){ if(err&&err.name==='AbortError')return; download(blob); }); }
+          else { download(blob); }
+        },'image/png'); }catch(e){ done(); }
+      }); }catch(e){ done(); }
+    }); }
+  })();
   </script>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
   <script>
