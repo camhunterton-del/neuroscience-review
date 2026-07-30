@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Stroop test | The Neuroscience Review</title>
+  <meta name="description" content="Take the Stroop test in your browser. Name the ink color while your brain wants to read the word, then measure the Stroop effect in your own milliseconds.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    /* ---------- tool page layout (matches the site's centered reading column) ---------- */
+    .tool-page{ max-width: var(--content-width); margin: 0 auto; padding: clamp(2rem,5vw,3.75rem) 1.5rem 0; }
+    .tool-page .post-header{ margin-bottom: 1.6rem; }
+    .tool-explain{ margin: 2.4rem 0 0; }
+    .tool-explain h2{ font-family:var(--serif); font-size:1.5rem; font-weight:600; letter-spacing:-0.01em; margin-bottom:0.7rem; }
+    .tool-explain p{ font-family:var(--serif); color:var(--text-muted); font-size:1.05rem; line-height:1.6; margin-bottom:1rem; }
+    .tool-cite{ font-family:var(--sans); font-size:0.82rem; color:var(--text-faint); border-top:1px solid var(--border); padding-top:0.9rem; margin-top:0.4rem; }
+    .tool-links{ font-family:var(--sans); font-size:0.95rem; text-align:center; margin:2.6rem 0 0; color:var(--text-muted); }
+    .tool-links a{ color:var(--accent); font-weight:600; text-decoration:none; }
+    .tool-links a:hover{ color:var(--accent-hover); text-decoration:underline; }
+
+    /* ---------- the four ink vars the Stroop demo JS reads off documentElement ---------- */
+    :root{ --ink-red:#e0685c; --ink-blue:#6fa8d6; --ink-green:#5fb37f; --ink-orange:#e0a25a; }
+
+    /* ---------- bench tokens, scoped so they cannot touch the rest of the page ---------- */
+    .lab-bench{
+      --teal:#37cbb6; --teal-bright:#5fe0cd; --teal-dim:#1f6f64;
+      --panel:#101a18; --panel2:#152622; --line:rgba(120,170,155,.16);
+      --ink:#e6f0ea; --soft:#93a8a0; --faint:#7c8f86;
+      --mono: ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+      margin: 2.2rem 0 0;
+    }
+    /* dark instrument panel so the light ink words read clearly in either theme */
+    .stroop-instrument{ background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--teal-dim); border-radius:14px; padding:clamp(1.4rem,3.5vw,2.2rem); }
+
+    /* ---------- carried-over Stroop demo styling from the Lab, unchanged ---------- */
+    .lab-bench .labdemo{ background:transparent; border:0; border-radius:0; padding:0; margin:0; min-width:0; }
+    .lab-bench .labdemo__stage{ min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; min-width:0; }
+    .lab-bench .labdemo__stage p{ font-family:var(--sans); color:var(--ink); margin:0 0 1.1rem; max-width:34rem; line-height:1.5; }
+    .lab-bench .labdemo__word{ font-family:var(--sans); font-weight:700; font-size:clamp(2.6rem,11vw,4.2rem); letter-spacing:.01em; line-height:1; margin:.4rem 0 1.6rem; text-transform:uppercase; }
+    .lab-bench .labdemo__progress{ font-family:var(--mono); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); margin-bottom:.2rem; }
+    .lab-bench .labdemo__row{ display:flex; gap:.7rem; flex-wrap:wrap; justify-content:center; }
+    .lab-bench .labdemo__btn{ font-family:var(--sans); font-size:.95rem; font-weight:600; border:1px solid var(--teal); background:var(--teal); color:#052723; padding:.6rem 1.5rem; border-radius:999px; cursor:pointer; transition:background .15s, border-color .15s; }
+    .lab-bench .labdemo__btn:hover{ background:var(--teal-bright); border-color:var(--teal-bright); }
+    .lab-bench .labdemo__btn--ghost{ background:transparent; color:var(--teal); }
+    .lab-bench .labdemo__btn--ghost:hover{ background:transparent; color:var(--teal-bright); }
+    .lab-bench .key{ display:flex; gap:.55rem; flex-wrap:wrap; justify-content:center; }
+    .lab-bench .key__btn{ font-family:var(--sans); font-size:1rem; font-weight:700; border:2px solid var(--line); background:var(--panel2); color:var(--ink); padding:.55rem 1.35rem; border-radius:10px; cursor:pointer; min-width:96px; transition:border-color .15s; }
+    .lab-bench .key__btn:hover{ border-color:var(--teal); }
+    .lab-bench .labdemo__result-head{ font-family:var(--serif); font-size:1.45rem; font-weight:600; margin-bottom:.9rem; color:#eaf4f0; line-height:1.25; }
+    .lab-bench .bars{ width:100%; max-width:26rem; margin:.4rem auto 1.1rem; text-align:left; }
+    .lab-bench .bar__lab{ font-family:var(--mono); font-size:.82rem; color:var(--soft); margin:.7rem 0 .25rem; display:flex; justify-content:space-between; font-variant-numeric:tabular-nums; }
+    .lab-bench .bar__track{ height:16px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+    .lab-bench .bar__fill{ height:100%; border-radius:8px; }
+    .lab-bench .labdemo__muted{ font-family:var(--sans); color:var(--soft); font-size:.92rem; max-width:34rem; }
+    .lab-bench .labdemo__cite{ font-family:var(--mono); font-size:.76rem; color:var(--faint); margin-top:1rem; border-top:1px solid var(--line); padding-top:.9rem; }
+    .lab-bench button:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; border-radius:4px; }
+  </style>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
+  <link rel="canonical" href="https://theneuroreview.com/tools/stroop-test.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="The Stroop test">
+  <meta property="og:description" content="Take the Stroop test in your browser. Name the ink color while your brain wants to read the word, then measure the Stroop effect in your own milliseconds.">
+  <meta property="og:url" content="https://theneuroreview.com/tools/stroop-test.html">
+  <meta property="og:image" content="https://theneuroreview.com/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Stroop test">
+  <meta name="twitter:description" content="Take the Stroop test in your browser. Name the ink color while your brain wants to read the word, then measure the Stroop effect in your own milliseconds.">
+  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"The Stroop test","description":"An interactive Stroop test that measures how much your brain slows down when a color word and its ink disagree.","url":"https://theneuroreview.com/tools/stroop-test.html","inLanguage":"en-US","isPartOf":{"@type":"WebSite","name":"The Neuroscience Review","url":"https://theneuroreview.com/"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}}}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="../index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="../index.html">Home</a>
+        <a href="../posts.html">Posts</a>
+        <a href="../news.html">News</a>
+        <a aria-current="page" href="../lab.html">Lab</a>
+        <a href="../the-paper-that-hooked-me.html">Column</a>
+        <a class="site-nav__cta" href="#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="tool-page">
+      <header class="post-header">
+        <div class="post-header__eyebrow">The Lab &middot; Reaction time since 1935</div>
+        <h1 class="post-header__title">The Stroop test</h1>
+        <p class="post-header__subtitle">The Stroop test is one of the oldest experiments in psychology. You see color words printed in colored ink, and your job is to name the ink color as fast as you can while ignoring what the word spells. When the word and the ink disagree most people slow down, and that gap is the Stroop effect.</p>
+      </header>
+
+      <div class="lab-bench">
+        <div class="stroop-instrument">
+          <section class="labdemo" aria-label="Stroop reaction-time experiment">
+            <div class="labdemo__stage" id="stroop-stage"></div>
+          </section>
+        </div>
+      </div>
+
+      <section class="tool-explain">
+        <h2>What your result means</h2>
+        <p>The gap between your two speeds is a measure of how automatic reading has become for you. Reading is so overlearned that your brain does it whether you want to or not, so when the ink fights the word you have to hold back that reflex and let the slower, deliberate part of you name the color instead. Overriding a reflex takes time, and that extra time is what the test just measured in your own milliseconds.</p>
+        <p>This is a single run on one person, not a controlled study, so treat your number as a demonstration rather than a diagnosis. The effect was first described by John Ridley Stroop in 1935, and psychologists have used versions of it ever since to probe attention and cognitive control.</p>
+        <p class="tool-cite">Stroop, J. R. (1935). Studies of interference in serial verbal reactions. Journal of Experimental Psychology, 18(6), pages 643 to 662.</p>
+      </section>
+
+      <p class="tool-links"><a href="../lab.html">Explore the full Lab</a> &middot; <a href="../index.html">Back to The Neuroscience Review</a></p>
+    </div>
+
+    <section class="cta" id="subscribe">
+      <h3>Get one brain-science deep dive every Wednesday.</h3>
+      <p>Real research, written to be read. No hype, no fluff, unsubscribe anytime.</p>
+      <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
+        <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit" class="cta__button">Subscribe</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
+      <p><a href="../index.html">Home</a> &middot; <a href="../posts.html">Posts</a> &middot; <a href="../news.html">News</a> &middot; <a href="../lab.html">Lab</a> &middot; <a href="../the-paper-that-hooked-me.html">Column</a> &middot; <a href="../about.html">About</a> &middot; <a href="../contribute.html">Submissions</a></p>
+    </div>
+  </footer>
+
+  <!-- ============ Stroop test (carried over from the Lab, unchanged logic) ============ -->
+  <script>
+  (function(){
+    var stage = document.getElementById('stroop-stage');
+    var COLORS = [
+      {name:'RED', var:'--ink-red'},
+      {name:'BLUE', var:'--ink-blue'},
+      {name:'GREEN', var:'--ink-green'},
+      {name:'ORANGE', var:'--ink-orange'}
+    ];
+    var N = 20;
+    var trials = [], idx = 0, shownAt = 0, results = [];
+
+    function ink(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+    function shuffle(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+    function buildTrials(){
+      trials = [];
+      for(var i=0;i<N;i++){
+        var congruent = i % 2 === 0;
+        var wordIdx = Math.floor(Math.random()*COLORS.length);
+        var inkIdx = wordIdx;
+        if(!congruent){ do { inkIdx = Math.floor(Math.random()*COLORS.length); } while(inkIdx === wordIdx); }
+        trials.push({word:COLORS[wordIdx].name, inkName:COLORS[inkIdx].name, inkVar:COLORS[inkIdx].var, congruent:congruent});
+      }
+      shuffle(trials);
+    }
+
+    function intro(){
+      stage.innerHTML =
+        '<p>You are about to see color words, one at a time. Each word is printed in a colored ink. '+
+        'Your job is to click the <strong>ink color</strong>, and ignore what the word says. '+
+        'Go as fast as you can without guessing.</p>'+
+        '<div class="labdemo__row"><button class="labdemo__btn" id="stroop-start">Start &middot; 20 quick trials</button></div>';
+      document.getElementById('stroop-start').addEventListener('click', function(){ buildTrials(); idx=0; results=[]; nextTrial(); });
+    }
+
+    function nextTrial(){
+      if(idx >= trials.length){ return showResult(); }
+      var t = trials[idx];
+      stage.innerHTML =
+        '<div class="labdemo__progress">Trial '+(idx+1)+' of '+N+'</div>'+
+        '<div class="labdemo__word" id="stroop-word" style="color:'+ink(t.inkVar)+'">'+t.word+'</div>'+
+        '<div class="labdemo__progress" style="margin-bottom:0.6rem">Click the ink color</div>'+
+        '<div class="key" id="stroop-keys"></div>';
+      var keys = document.getElementById('stroop-keys');
+      COLORS.forEach(function(c){
+        var b = document.createElement('button');
+        b.className = 'key__btn';
+        b.textContent = c.name.charAt(0) + c.name.slice(1).toLowerCase();
+        b.addEventListener('click', function(){ answer(c.name); });
+        keys.appendChild(b);
+      });
+      shownAt = performance.now();
+    }
+
+    function answer(chosen){
+      var rt = performance.now() - shownAt;
+      if(rt < 120){ return; } // ignore impossibly-fast taps carried over from the previous trial (a double-click)
+      var t = trials[idx];
+      results.push({congruent:t.congruent, rt:rt, correct: chosen === t.inkName});
+      idx++;
+      nextTrial();
+    }
+
+    function median(arr){ if(!arr.length) return 0; var s=arr.slice().sort(function(a,b){return a-b;}); var m=Math.floor(s.length/2); return s.length%2 ? s[m] : (s[m-1]+s[m])/2; }
+
+    function showResult(){
+      var scored = results.slice(1).filter(function(r){ return r.rt <= 4000; });
+      var con = scored.filter(function(r){return r.congruent && r.correct;}).map(function(r){return r.rt;});
+      var inc = scored.filter(function(r){return !r.congruent && r.correct;}).map(function(r){return r.rt;});
+      if(!con.length || !inc.length){
+        stage.innerHTML =
+          '<div class="labdemo__result-head">Not enough clean trials to compare this round.</div>'+
+          '<p class="labdemo__muted">Too many trials were skipped, missed, or off the scale to give a fair read. Run it again and try to answer every one.</p>'+
+          '<div class="labdemo__row" style="margin-top:1.2rem"><button class="labdemo__btn labdemo__btn--ghost" id="stroop-again">Run it again</button></div>';
+        document.getElementById('stroop-again').addEventListener('click', function(){ buildTrials(); idx=0; results=[]; nextTrial(); });
+        return;
+      }
+      var errors = results.filter(function(r){return !r.correct;}).length;
+      var mCon = Math.round(median(con));
+      var mInc = Math.round(median(inc));
+      var delta = mInc - mCon;
+      var maxRt = Math.max(mCon, mInc, 1);
+      var headline;
+      if(delta > 40){ headline = 'You were about <strong>'+delta+' ms slower</strong> when the word fought the ink.'; }
+      else if(delta > 0){ headline = 'You slowed down a little, about '+delta+' ms, when the word fought the ink.'; }
+      else { headline = 'Your two speeds came out nearly even this round.'; }
+      stage.innerHTML =
+        '<div class="labdemo__result-head">'+headline+'</div>'+
+        '<div class="bars">'+
+          '<div class="bar__lab"><span>Word matched the ink</span><span>'+mCon+' ms</span></div>'+
+          '<div class="bar__track"><div class="bar__fill" style="width:'+Math.round(mCon/maxRt*100)+'%;background:var(--ink-green)"></div></div>'+
+          '<div class="bar__lab"><span>Word fought the ink</span><span>'+mInc+' ms</span></div>'+
+          '<div class="bar__track"><div class="bar__fill" style="width:'+Math.round(mInc/maxRt*100)+'%;background:var(--ink-red)"></div></div>'+
+        '</div>'+
+        '<p class="labdemo__muted">That gap is the <strong>Stroop effect</strong>. Reading is so overlearned that your brain does it automatically, whether you want it to or not. When the word says one color and the ink is another, you have to hold back the reflex to read and let the slower, deliberate part of you name the color instead. Overriding a reflex takes time, and here you can measure it in your own milliseconds.</p>'+
+        (errors ? '<p class="labdemo__muted" style="margin-top:0.6rem">You slipped on '+errors+' of '+N+' trials, which is exactly the reflex winning.</p>' : '')+
+        '<div class="labdemo__row" style="margin-top:1.2rem"><button class="labdemo__btn labdemo__btn--ghost" id="stroop-again">Run it again</button></div>'+
+        '<p class="labdemo__cite">This is your own single run, not a study. The effect was first described by John Ridley Stroop in 1935.</p>';
+      document.getElementById('stroop-again').addEventListener('click', function(){ buildTrials(); idx=0; results=[]; nextTrial(); });
+    }
+
+    intro();
+  })();
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

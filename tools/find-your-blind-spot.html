@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find your blind spot | The Neuroscience Review</title>
+  <meta name="description" content="A quick blind spot test you run in the page. Cover one eye, stare at the cross, and watch the dot vanish where your optic nerve leaves the retina. Free, honest, no sign-up.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    /* --- tool page layout --- */
+    .tool-shell { max-width: 720px; margin: 0 auto; }
+    .tool-header { text-align: center; margin-bottom: 2.25rem; }
+    .tool-header .post-header__eyebrow { margin-bottom: 0.85rem; }
+    .tool-header .post-header__title { margin-bottom: 1.1rem; }
+    .tool-intro { font-size: 1.14rem; line-height: 1.6; color: var(--text-muted); max-width: 58ch; margin: 0 auto; }
+    .tool-demo-wrap { display: flex; justify-content: center; margin: 2.25rem 0 0; }
+    .tool-science { max-width: 62ch; margin: 3rem auto 0; }
+    .tool-science h2 { font-family: var(--serif); font-size: 1.55rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 0.85rem; }
+    .tool-science p { font-size: 1.05rem; line-height: 1.62; color: var(--text); margin-bottom: 1.05rem; }
+    .tool-cite { font-family: var(--sans); font-size: 0.85rem; line-height: 1.55; color: var(--text-faint); border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 0.5rem; }
+    .tool-cite a { color: var(--text-muted); }
+    .tool-more { text-align: center; font-family: var(--sans); font-size: 0.98rem; color: var(--text-muted); margin: 2.75rem auto 0; }
+    .tool-more a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .tool-more a:hover { color: var(--accent-hover); }
+
+    /* ---- blind-spot (transplanted from the Lab, scoped to .d-blind-spot) ---- */
+.d-blind-spot, .d-blind-spot *{ box-sizing:border-box; }
+.d-blind-spot{
+    --bs-teal:#37cbb6; --bs-teal-bright:#5fe0cd; --bs-teal-dim:#1f6f64;
+    --bs-amber:#ec7f4c;
+    --bs-panel:#101a18; --bs-panel2:#152622; --bs-stage:#0a1211;
+    --bs-line:rgba(120,170,155,.16); --bs-ink:#e6f0ea;
+    --bs-soft:#93a8a0; --bs-faint:#7c8f86;
+    --bs-serif:"Newsreader",Georgia,"Times New Roman",serif;
+    --bs-sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --bs-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    width:100%; max-width:720px;
+    background:var(--bs-panel);
+    border:1px solid var(--bs-line);
+    border-radius:14px;
+    padding:clamp(1.2rem,3.4vw,1.9rem);
+    color:var(--bs-ink);
+    font-family:var(--bs-sans);
+  }
+.d-blind-spot .bs-kicker{
+    font-family:var(--bs-mono); font-size:.72rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--bs-teal); margin:0 0 .55rem;
+  }
+.d-blind-spot .bs-title{
+    font-family:var(--bs-serif); font-weight:600; line-height:1.12;
+    font-size:clamp(1.5rem,3.4vw,1.95rem); color:#eaf4f0; margin:0;
+  }
+.d-blind-spot .bs-note{
+    font-family:var(--bs-serif); color:var(--bs-soft); max-width:56ch;
+    margin:.85rem 0 0; font-size:1.04rem; line-height:1.5;
+  }
+.d-blind-spot .bs-steps{
+    display:flex; flex-wrap:wrap; gap:.4rem .5rem;
+    list-style:none; margin:1rem 0 0; padding:0;
+  }
+.d-blind-spot .bs-steps li{
+    font-family:var(--bs-mono); font-size:.74rem; color:var(--bs-soft);
+    background:var(--bs-panel2); border:1px solid var(--bs-line);
+    border-radius:999px; padding:.32rem .7rem; display:flex; align-items:center; gap:.4rem;
+  }
+.d-blind-spot .bs-steps li b{ color:var(--bs-teal); font-weight:600; }
+.d-blind-spot .bs-stage-wrap{
+    position:relative; margin:1.1rem 0 0;
+    background:var(--bs-stage);
+    border:1px solid var(--bs-line); border-radius:10px; overflow:hidden;
+    touch-action:pan-y;
+  }
+.d-blind-spot .bs-stage-wrap svg{ display:block; width:100%; height:auto; }
+.d-blind-spot .bs-eyehint{
+    position:absolute; left:12px; top:10px;
+    font-family:var(--bs-mono); font-size:.7rem; letter-spacing:.02em;
+    color:var(--bs-faint); pointer-events:none;
+  }
+.d-blind-spot .bs-readout{
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem 1rem;
+    margin:1rem 0 0; padding:.85rem 1rem;
+    background:var(--bs-panel2); border:1px solid var(--bs-line); border-radius:10px;
+  }
+.d-blind-spot .bs-read-main{
+    font-family:var(--bs-mono); font-size:1.02rem; color:var(--bs-soft);
+    font-variant-numeric:tabular-nums;
+  }
+.d-blind-spot .bs-read-main b{ color:var(--bs-teal); font-weight:600; font-size:1.35rem; }
+.d-blind-spot .bs-status{
+    font-family:var(--bs-mono); font-size:.74rem; letter-spacing:.03em;
+    padding:.22rem .6rem; border-radius:999px;
+    border:1px solid var(--bs-line); color:var(--bs-faint);
+    display:inline-flex; align-items:center; gap:.4rem;
+  }
+.d-blind-spot .bs-status::before{
+    content:""; width:7px; height:7px; border-radius:50%;
+    background:var(--bs-faint); flex:none;
+  }
+.d-blind-spot .bs-status.is-in{ color:var(--bs-teal); border-color:var(--bs-teal-dim); }
+.d-blind-spot .bs-status.is-in::before{ background:var(--bs-teal); }
+.d-blind-spot .bs-read-sub{
+    flex-basis:100%; font-family:var(--bs-mono); font-size:.76rem;
+    color:var(--bs-faint); font-variant-numeric:tabular-nums; margin-top:.15rem;
+  }
+.d-blind-spot .bs-mark-read{
+    flex-basis:100%; font-family:var(--bs-mono); font-size:.8rem;
+    color:var(--bs-amber); font-variant-numeric:tabular-nums;
+    margin-top:.35rem; display:flex; align-items:center; gap:.45rem;
+  }
+.d-blind-spot .bs-mark-read::before{
+    content:""; width:9px; height:9px; border-radius:2px;
+    background:var(--bs-amber); flex:none;
+  }
+.d-blind-spot .bs-mark-read[hidden]{ display:none; }
+.d-blind-spot .bs-controls{ margin:1rem 0 0; display:flex; flex-direction:column; gap:1rem; }
+.d-blind-spot .bs-field label.bs-flabel{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:var(--bs-mono); font-size:.8rem; color:var(--bs-soft);
+    margin:0 0 .4rem; font-variant-numeric:tabular-nums;
+  }
+.d-blind-spot .bs-field label.bs-flabel span:last-child{ color:var(--bs-ink); }
+.d-blind-spot input[type=range]{
+    -webkit-appearance:none; appearance:none; width:100%; height:22px;
+    background:transparent; cursor:pointer; margin:0; touch-action:pan-y;
+  }
+.d-blind-spot input[type=range]::-webkit-slider-runnable-track{
+    height:5px; border-radius:3px;
+    background:linear-gradient(90deg,var(--bs-teal-dim),var(--bs-panel2));
+    border:1px solid var(--bs-line);
+  }
+.d-blind-spot input[type=range]::-moz-range-track{
+    height:5px; border-radius:3px; background:var(--bs-panel2); border:1px solid var(--bs-line);
+  }
+.d-blind-spot input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%;
+    background:var(--bs-teal); border:2px solid #06110f; margin-top:-8px;
+  }
+.d-blind-spot input[type=range]::-moz-range-thumb{
+    width:18px; height:18px; border-radius:50%; background:var(--bs-teal); border:2px solid #06110f;
+  }
+.d-blind-spot .bs-seg-row{ display:flex; flex-wrap:wrap; gap:.9rem 1.4rem; }
+.d-blind-spot .bs-seg{ display:flex; flex-direction:column; gap:.4rem; }
+.d-blind-spot .bs-seg > span.bs-seglab{
+    font-family:var(--bs-mono); font-size:.72rem; letter-spacing:.04em;
+    text-transform:uppercase; color:var(--bs-faint);
+  }
+.d-blind-spot .bs-seg-btns{ display:inline-flex; border:1px solid var(--bs-line); border-radius:9px; overflow:hidden; }
+.d-blind-spot .bs-seg-btns button{
+    font-family:var(--bs-sans); font-size:.86rem; font-weight:500;
+    background:var(--bs-panel2); color:var(--bs-soft);
+    border:0; border-right:1px solid var(--bs-line); padding:.5rem .85rem;
+    cursor:pointer; touch-action:manipulation; transition:background .15s,color .15s;
+  }
+.d-blind-spot .bs-seg-btns button:last-child{ border-right:0; }
+.d-blind-spot .bs-seg-btns button[aria-pressed="true"]{ background:var(--bs-teal); color:#052723; font-weight:600; }
+.d-blind-spot .bs-seg-btns button:hover{ color:var(--bs-ink); }
+.d-blind-spot .bs-seg-btns button[aria-pressed="true"]:hover{ color:#052723; }
+.d-blind-spot .bs-actions{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:.2rem; }
+.d-blind-spot .bs-btn{
+    font-family:var(--bs-sans); font-size:.9rem; font-weight:600;
+    border:1px solid var(--bs-teal); background:var(--bs-teal); color:#052723;
+    padding:.55rem 1.2rem; border-radius:999px; cursor:pointer;
+    touch-action:manipulation; transition:background .15s,border-color .15s;
+  }
+.d-blind-spot .bs-btn:hover{ background:var(--bs-teal-bright); border-color:var(--bs-teal-bright); }
+.d-blind-spot .bs-btn--ghost{ background:transparent; color:var(--bs-teal); }
+.d-blind-spot .bs-btn--ghost:hover{ background:transparent; color:var(--bs-teal-bright); }
+.d-blind-spot .bs-limits{
+    font-family:var(--bs-sans); font-size:.86rem; line-height:1.5;
+    color:var(--bs-soft); margin:1.2rem 0 0; max-width:62ch;
+  }
+.d-blind-spot .bs-limits b{ color:var(--bs-ink); font-weight:600; }
+.d-blind-spot .bs-cite{
+    font-family:var(--bs-mono); font-size:.72rem; line-height:1.5; color:var(--bs-faint);
+    margin:1.1rem 0 0; border-top:1px solid var(--bs-line); padding-top:.85rem;
+  }
+.d-blind-spot a:focus-visible,
+  .d-blind-spot button:focus-visible,
+  .d-blind-spot input:focus-visible{
+    outline:2px solid var(--bs-teal); outline-offset:3px; border-radius:6px;
+  }
+@media (prefers-reduced-motion: reduce){
+    .d-blind-spot *{ transition:none !important; }
+  }
+@media (max-width:520px){
+    .d-blind-spot .bs-readout{ flex-direction:column; align-items:flex-start; gap:.35rem; }
+  }
+  </style>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
+  <link rel="canonical" href="https://theneuroreview.com/tools/find-your-blind-spot.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="Find your blind spot">
+  <meta property="og:description" content="A quick blind spot test you run in the page. Cover one eye, stare at the cross, and watch the dot vanish where your optic nerve leaves the retina.">
+  <meta property="og:url" content="https://theneuroreview.com/tools/find-your-blind-spot.html">
+  <meta property="og:image" content="https://theneuroreview.com/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Find your blind spot">
+  <meta name="twitter:description" content="A quick blind spot test you run in the page. Cover one eye, stare at the cross, and watch the dot vanish where your optic nerve leaves the retina.">
+  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Find your blind spot","description":"A quick blind spot test you run in the page. Cover one eye, stare at the cross, and slide the dot until it drops into the gap where your optic nerve leaves the retina.","url":"https://theneuroreview.com/tools/find-your-blind-spot.html","inLanguage":"en-US","isPartOf":{"@type":"WebSite","name":"The Neuroscience Review","url":"https://theneuroreview.com/"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}}}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="../index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="../index.html">Home</a>
+        <a href="../posts.html">Posts</a>
+        <a href="../news.html">News</a>
+        <a href="../lab.html">Lab</a>
+        <a href="../the-paper-that-hooked-me.html">Column</a>
+        <a class="site-nav__cta" href="#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="tool-shell">
+      <header class="tool-header">
+        <div class="post-header__eyebrow">The Lab · Try it yourself</div>
+        <h1 class="post-header__title">Find your blind spot</h1>
+        <p class="tool-intro">Every eye has a spot where it truly cannot see. It sits where the optic nerve leaves the retina, so there are no light-sensing cells there and nothing that lands on it ever registers. This test finds yours in about a minute. Cover one eye, lock the other on the cross, and slide the dot outward until it drops into the gap your brain normally hides from you.</p>
+      </header>
+
+      <div class="tool-demo-wrap">
+        <article class="d-blind-spot">
+          <p class="bs-kicker">The optic disc</p>
+          <h2 class="bs-title">Your blind spot</h2>
+          <p class="bs-note">Where the optic nerve leaves each eye there are no photoreceptors, so a small patch of your vision is truly blank. Cover one eye, lock the other on the +, and slide the dot outward until it drops into that hole. Then swap it for a line or a speckled field and watch your brain paper over the gap.</p>
+
+          <ol class="bs-steps">
+            <li><b>1</b> cover one eye</li>
+            <li><b>2</b> stare hard at the +</li>
+            <li><b>3</b> slide until the dot is gone</li>
+          </ol>
+
+          <div class="bs-stage-wrap">
+            <div class="bs-eyehint" id="blind-spot-eyehint">right eye open · stare at the +</div>
+            <svg id="blind-spot-stage" viewBox="0 0 660 300" role="img"
+                 aria-label="A dark field with a fixation cross on the left and a movable target on the right. Cover your left eye and stare at the cross while sliding the target.">
+
+              <g stroke="#cfe0d9" stroke-width="2.5" stroke-linecap="round">
+                <line x1="40" y1="150" x2="62" y2="150"/><line x1="51" y1="139" x2="51" y2="161"/>
+              </g>
+              <circle cx="470" cy="150" r="9" fill="#eef4f1"/>
+            </svg>
+          </div>
+
+          <div class="bs-readout">
+            <span class="bs-read-main">the dot sits about <b id="blind-spot-angle">12</b>&deg; to the side</span>
+            <span class="bs-status" id="blind-spot-status">keep sliding</span>
+            <span class="bs-read-sub" id="blind-spot-sub">on-screen gap 9.6 cm &middot; sitting about 45 cm away</span>
+            <span class="bs-mark-read" id="blind-spot-markread" hidden aria-live="polite"></span>
+          </div>
+
+          <div class="bs-controls">
+            <div class="bs-field">
+              <label class="bs-flabel" for="blind-spot-sep">
+                <span>How far the dot is from the +</span><span id="blind-spot-sep-val">9.6 cm</span>
+              </label>
+              <input type="range" id="blind-spot-sep" min="0" max="180" value="96" step="1"
+                     aria-label="How far the dot is from the cross, in millimetres on screen">
+            </div>
+            <div class="bs-field">
+              <label class="bs-flabel" for="blind-spot-dist">
+                <span>How far you are sitting from the screen</span><span id="blind-spot-dist-val">45 cm</span>
+              </label>
+              <input type="range" id="blind-spot-dist" min="20" max="70" value="45" step="1"
+                     aria-label="How far you sit from the screen, in centimetres">
+            </div>
+
+            <div class="bs-seg-row">
+              <div class="bs-seg">
+                <span class="bs-seglab">What to show</span>
+                <div class="bs-seg-btns" id="blind-spot-mode" role="group" aria-label="What to show in the blind spot">
+                  <button type="button" data-mode="dot" aria-pressed="true">A dot</button>
+                  <button type="button" data-mode="line" aria-pressed="false">A line with a gap</button>
+                  <button type="button" data-mode="field" aria-pressed="false">A speckled field</button>
+                </div>
+              </div>
+              <div class="bs-seg">
+                <span class="bs-seglab">Which eye is covered</span>
+                <div class="bs-seg-btns" id="blind-spot-eye" role="group" aria-label="Which eye you have covered">
+                  <button type="button" data-eye="left" aria-pressed="true">Left eye</button>
+                  <button type="button" data-eye="right" aria-pressed="false">Right eye</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="bs-actions">
+              <button type="button" class="bs-btn" id="blind-spot-mark">The dot just vanished</button>
+              <button type="button" class="bs-btn bs-btn--ghost" id="blind-spot-reset">Reset</button>
+            </div>
+          </div>
+
+          <p class="bs-limits">
+            <b>What this can and can't do.</b> You need two eyes with one covered, so it will not work with both open. It can't print your exact angle either. Where your blind spot lands depends on your screen and how far you sit, and it shifts a little from person to person, so the degrees here are a guide drawn from the on-screen geometry, not a measurement of your eye. And notice the screen never actually removes the gap. What fills it back in is you.
+          </p>
+
+          <p class="bs-cite">
+            Based on Edme Mariotte's 1668 discovery of the blind spot, the point where the optic nerve exits the retina and there are no rods or cones. It sits roughly 15&deg; to the side of where you look and spans about 5&deg;. The seamless completion is filling-in by the visual brain. Your own single run, n = 1, not a clinical test.
+          </p>
+        </article>
+      </div>
+
+      <section class="tool-science">
+        <h2>The science of your blind spot</h2>
+        <p>The blind spot is the <strong>optic disc</strong>, the roughly 1.5 millimetre patch at the back of each eye where about a million nerve fibers gather and leave as the optic nerve. Because that patch carries wiring instead of photoreceptors, any image that falls on it is simply not recorded. You have one in each eye, off to the outer side of center, and you go through life never noticing either of them.</p>
+        <p>The reason you never notice is that the brain quietly completes the missing patch with whatever surrounds it, an effect called <strong>filling-in</strong>. In the test above you can watch it happen. Slide a plain dot into the gap and it disappears, but replace it with a continuous line or a speckled field and the brain paints the texture straight across the hole, so the gap looks seamless even though the eye sent nothing. The French physicist Edme Mariotte first described the blind spot in 1668, and the filling-in that hides it has been studied carefully since.</p>
+        <p class="tool-cite">Ramachandran, V. S., &amp; Gregory, R. L. (1991). Perceptual filling in of artificially induced scotomas in human vision. <em>Nature</em>, 350(6320), 699&ndash;702. <a href="https://doi.org/10.1038/350699a0" target="_blank" rel="noopener">doi.org/10.1038/350699a0</a></p>
+      </section>
+
+      <p class="tool-more">Built at <a href="../lab.html">The Lab</a>, where you run quick experiments on your own brain right in the page. Or head back to the <a href="../index.html">homepage</a>.</p>
+    </div>
+
+    <section class="cta" id="subscribe">
+      <h3>Get one brain-science deep dive every Wednesday.</h3>
+      <p>Real research, written to be read. No hype, no fluff, unsubscribe anytime.</p>
+      <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
+        <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit" class="cta__button">Subscribe</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
+      <p><a href="../index.html">Home</a> &middot; <a href="../posts.html">Posts</a> &middot; <a href="../news.html">News</a> &middot; <a href="../lab.html">Lab</a> &middot; <a href="../the-paper-that-hooked-me.html">Column</a> &middot; <a href="../about.html">About</a> &middot; <a href="../contribute.html">Submissions</a></p>
+    </div>
+  </footer>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
+  <!-- demo: blind-spot (transplanted from the Lab) -->
+  <script>
+(function(){
+  var svg = document.getElementById('blind-spot-stage');
+  if(!svg) return;
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var PX_PER_CM = 96/2.54;           // CSS reference pixels per centimetre
+  var H = 300;                        // stage height in user units (== css px at width:100%)
+  var CROSS_MARGIN = 52, EDGE_PAD = 22, DOT_R = 9, HOLE_R = 15;
+
+  var sep = document.getElementById('blind-spot-sep');
+  var dist = document.getElementById('blind-spot-dist');
+  var sepVal = document.getElementById('blind-spot-sep-val');
+  var distVal = document.getElementById('blind-spot-dist-val');
+  var angleEl = document.getElementById('blind-spot-angle');
+  var subEl = document.getElementById('blind-spot-sub');
+  var statusEl = document.getElementById('blind-spot-status');
+  var markRead = document.getElementById('blind-spot-markread');
+  var markBtn = document.getElementById('blind-spot-mark');
+  var resetBtn = document.getElementById('blind-spot-reset');
+  var eyeHint = document.getElementById('blind-spot-eyehint');
+  var modeWrap = document.getElementById('blind-spot-mode');
+  var eyeWrap = document.getElementById('blind-spot-eye');
+
+  var mode = 'dot';       // dot | line | field
+  var eye = 'left';       // covered eye: left -> right eye open, dot to the right
+  var marked = null;      // {angle, x}
+  var W = 660;            // live stage width in px
+  var speckleCache = null, speckleKey = '';
+
+  function geom(){
+    var dir = (eye === 'left') ? 1 : -1;           // +1 dot to the right, -1 to the left
+    var crossX = (dir === 1) ? CROSS_MARGIN : W - CROSS_MARGIN;
+    var maxSepPx = (W - EDGE_PAD - DOT_R) - CROSS_MARGIN; // room from cross to far edge
+    if(maxSepPx < 40) maxSepPx = 40;
+    return { dir:dir, crossX:crossX, cy:H/2, maxSepPx:maxSepPx };
+  }
+
+  // clamp the millimetre slider so the dot always fits on the current stage
+  function clampSlider(){
+    var g = geom();
+    var maxMm = Math.floor(g.maxSepPx / PX_PER_CM * 10);
+    sep.max = maxMm;
+    if(+sep.value > maxMm) sep.value = maxMm;
+  }
+
+  function angleAt(px){                              // px offset from cross -> degrees
+    var cm = px / PX_PER_CM;
+    return Math.atan(cm / (+dist.value)) * 180 / Math.PI;
+  }
+  function pxAtAngle(deg){                           // degrees -> px offset from cross
+    return (+dist.value) * Math.tan(deg * Math.PI/180) * PX_PER_CM;
+  }
+
+  function el(name, attrs){
+    var n = document.createElementNS(SVGNS, name);
+    for(var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+
+  function buildSpeckles(g){
+    var key = W + 'x' + eye;
+    if(speckleCache && speckleKey === key) return speckleCache.cloneNode(true);
+    var grp = el('g', {});
+    var step = 22, r = 1.7;
+    for(var y = 22; y <= H - 22; y += step){
+      var rowOff = ((Math.round(y/step)) % 2) ? step/2 : 0;
+      for(var x = EDGE_PAD + rowOff; x <= W - EDGE_PAD; x += step){
+        grp.appendChild(el('circle', {cx:x, cy:y, r:r, fill:'#6f8a80'}));
+      }
+    }
+    speckleCache = grp; speckleKey = key;
+    return grp.cloneNode(true);
+  }
+
+  function drawCross(g){
+    var s = 12;
+    var grp = el('g', {stroke:'#cfe0d9', 'stroke-width':2.5, 'stroke-linecap':'round'});
+    grp.appendChild(el('line', {x1:g.crossX - s, y1:g.cy, x2:g.crossX + s, y2:g.cy}));
+    grp.appendChild(el('line', {x1:g.crossX, y1:g.cy - s, x2:g.crossX, y2:g.cy + s}));
+    return grp;
+  }
+
+  function draw(){
+    var g = geom();
+    // reduced-motion has no effect here since nothing animates; every change is a redraw
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+    var sepPx = Math.min(+sep.value/10 * PX_PER_CM, g.maxSepPx);
+    var targetX = g.crossX + g.dir * sepPx;
+    var deg = angleAt(sepPx);
+    var inBand = deg >= 12 && deg <= 18;
+
+    // --- typical blind-spot bracket along the top edge (out of central vision) ---
+    var bxLo = g.crossX + g.dir * Math.min(pxAtAngle(12), g.maxSepPx);
+    var bxHi = g.crossX + g.dir * Math.min(pxAtAngle(18), g.maxSepPx);
+    var brOpacity = inBand ? 1 : 0.5;
+    var brCol = inBand ? '#5fe0cd' : '#37cbb6';
+    var bracket = el('g', {opacity:brOpacity});
+    bracket.appendChild(el('line', {x1:bxLo, y1:12, x2:bxHi, y2:12, stroke:brCol, 'stroke-width':2, 'stroke-linecap':'round'}));
+    bracket.appendChild(el('line', {x1:bxLo, y1:9, x2:bxLo, y2:18, stroke:brCol, 'stroke-width':2}));
+    bracket.appendChild(el('line', {x1:bxHi, y1:9, x2:bxHi, y2:18, stroke:brCol, 'stroke-width':2}));
+    var lbl = el('text', {x:(bxLo+bxHi)/2, y:30, fill:brCol, 'text-anchor':'middle',
+      'font-family':'ui-monospace,Menlo,monospace', 'font-size':11, opacity:brOpacity});
+    lbl.textContent = 'typical zone ~15°';
+    bracket.appendChild(lbl);
+    svg.appendChild(bracket);
+
+    // --- the stimulus ---
+    if(mode === 'field'){
+      svg.appendChild(buildSpeckles(g));
+      // a blank disc (the hole) that the brain will fill in
+      svg.appendChild(el('circle', {cx:targetX, cy:g.cy, r:HOLE_R, fill:'#0a1211'}));
+      svg.appendChild(el('circle', {cx:targetX, cy:g.cy, r:HOLE_R, fill:'none',
+        stroke:'rgba(120,170,155,.25)', 'stroke-width':1}));
+    } else if(mode === 'line'){
+      var gap = 30, y = g.cy;
+      var loX = EDGE_PAD, hiX = W - EDGE_PAD;
+      svg.appendChild(el('line', {x1:loX, y1:y, x2:targetX - gap/2, y2:y,
+        stroke:'#d7e4de', 'stroke-width':3, 'stroke-linecap':'round'}));
+      svg.appendChild(el('line', {x1:targetX + gap/2, y1:y, x2:hiX, y2:y,
+        stroke:'#d7e4de', 'stroke-width':3, 'stroke-linecap':'round'}));
+    } else {
+      svg.appendChild(el('circle', {cx:targetX, cy:g.cy, r:DOT_R, fill:'#eef4f1'}));
+    }
+
+    // --- fixation cross always on top ---
+    svg.appendChild(drawCross(g));
+
+    // --- a recorded mark, if any (amber = discrete event) ---
+    if(marked){
+      var mx = g.crossX + g.dir * Math.min(marked.px, g.maxSepPx);
+      var mk = el('g', {});
+      mk.appendChild(el('line', {x1:mx, y1:H-6, x2:mx, y2:H-26, stroke:'#ec7f4c', 'stroke-width':2, 'stroke-linecap':'round'}));
+      mk.appendChild(el('circle', {cx:mx, cy:H-30, r:3, fill:'#ec7f4c'}));
+      svg.appendChild(mk);
+    }
+
+    // --- readouts ---
+    var cm = (sepPx / PX_PER_CM);
+    angleEl.textContent = Math.round(deg);
+    sepVal.textContent = cm.toFixed(1) + ' cm';
+    distVal.textContent = (+dist.value) + ' cm';
+    subEl.textContent = 'on-screen gap ' + cm.toFixed(1) + ' cm · sitting about ' + (+dist.value) + ' cm away';
+    if(inBand){
+      statusEl.textContent = 'in the typical blind-spot range';
+      statusEl.classList.add('is-in');
+    } else if(deg < 12){
+      statusEl.textContent = 'not far enough out yet';
+      statusEl.classList.remove('is-in');
+    } else {
+      statusEl.textContent = 'past most blind spots';
+      statusEl.classList.remove('is-in');
+    }
+  }
+
+  // keep the mark button label honest to the current mode
+  function syncMarkLabel(){
+    markBtn.textContent = (mode === 'dot') ? 'The dot just vanished' : 'The gap just filled in';
+  }
+
+  function doMark(){
+    var g = geom();
+    var sepPx = Math.min(+sep.value/10 * PX_PER_CM, g.maxSepPx);
+    marked = { px:sepPx, angle:angleAt(sepPx) };
+    var verb = (mode === 'dot') ? 'lost the dot' : 'saw the gap close';
+    markRead.hidden = false;
+    markRead.textContent = 'Marked, you ' + verb + ' around ' + Math.round(marked.angle) + '° to the side.';
+    draw();
+  }
+
+  function reset(){
+    marked = null;
+    markRead.hidden = true;
+    sep.value = 96; dist.value = 45;
+    setMode('dot'); setEye('left');
+    clampSlider();
+    draw();
+  }
+
+  function setMode(m){
+    mode = m;
+    [].forEach.call(modeWrap.querySelectorAll('button'), function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-mode') === m ? 'true' : 'false');
+    });
+    syncMarkLabel();
+    draw();
+  }
+  function setEye(e){
+    eye = e;
+    [].forEach.call(eyeWrap.querySelectorAll('button'), function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-eye') === e ? 'true' : 'false');
+    });
+    eyeHint.textContent = (e === 'left') ? 'right eye open · stare at the +' : 'left eye open · stare at the +';
+    draw();
+  }
+
+  // measure the live stage width so the centimetre + angle math is honest (1 user unit = 1 css px)
+  function measure(){
+    var w = svg.clientWidth || svg.parentNode.clientWidth || 660;
+    W = Math.round(w);
+    clampSlider();
+    draw();
+  }
+
+  sep.addEventListener('input', draw);
+  dist.addEventListener('input', draw);
+  markBtn.addEventListener('click', doMark);
+  resetBtn.addEventListener('click', reset);
+  modeWrap.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(b) setMode(b.getAttribute('data-mode'));
+  });
+  eyeWrap.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(b) setEye(b.getAttribute('data-eye'));
+  });
+
+  if('ResizeObserver' in window){
+    var ro = new ResizeObserver(function(){ measure(); });
+    ro.observe(svg.parentNode);
+  }
+  window.addEventListener('resize', measure);
+
+  // first paint after layout settles so clientWidth is real
+  requestAnimationFrame(function(){ measure(); });
+  measure();
+})();
+  </script>
+</body>
+</html>

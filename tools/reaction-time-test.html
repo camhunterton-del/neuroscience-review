@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reaction time test | The Neuroscience Review</title>
+  <meta name="description" content="A simple visual reaction time test you run on yourself. Wait for green, react as fast as you can, and see your median time next to typical values.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .tool-shell { max-width: var(--content-width); margin: 0 auto; }
+    .rt-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.7rem 1.6rem 1.9rem;
+      margin: 2.4rem auto;
+      max-width: 34rem;
+    }
+    .rt-card__eyebrow {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--accent);
+      margin-bottom: 0.9rem;
+      text-align: center;
+    }
+    .rt-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      width: 100%;
+      min-height: 220px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      cursor: pointer;
+      text-align: center;
+      padding: 1.6rem;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .rt-stage:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .rt-stage__big { font-size: 1.75rem; font-weight: 700; line-height: 1.15; }
+    .rt-stage__sub { font-size: 0.96rem; font-weight: 500; opacity: 0.92; max-width: 26rem; }
+    .rt-stage--waiting { background: #b23b3b; border-color: #b23b3b; color: #fff; }
+    .rt-stage--ready { background: #2e9e5b; border-color: #2e9e5b; color: #fff; }
+    .rt-stage--toosoon { background: #b9822e; border-color: #b9822e; color: #fff; }
+    .rt-stage--trial, .rt-stage--done { background: var(--bg); border-color: var(--accent); color: var(--text); }
+    .rt-progress {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      text-align: center;
+      margin-top: 0.95rem;
+      min-height: 1.1rem;
+    }
+    .rt-hint {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 0.7rem;
+      line-height: 1.5;
+    }
+    .rt-result {
+      margin-top: 1.15rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.15rem;
+      text-align: center;
+    }
+    .rt-result__num {
+      font-family: var(--serif);
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .rt-result__unit { font-family: var(--sans); font-size: 1rem; font-weight: 600; color: var(--text-muted); }
+    .rt-result__compare {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      color: var(--text);
+      margin: 0.75rem auto 0;
+      line-height: 1.5;
+      max-width: 30rem;
+    }
+    .rt-result__list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      margin: 0.95rem 0 0;
+      padding: 0;
+    }
+    .rt-result__list li {
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.2rem 0.7rem;
+    }
+    .tool-links {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      text-align: center;
+      color: var(--text-muted);
+      margin-top: 2.5rem;
+    }
+    .tool-links a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .tool-links a:hover { color: var(--accent-hover); text-decoration: underline; }
+    @media (prefers-reduced-motion: no-preference) {
+      .rt-stage { transition: transform .12s ease, box-shadow .12s ease; }
+      .rt-stage:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rt-stage { transition: none; }
+    }
+  </style>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
+  <link rel="canonical" href="https://theneuroreview.com/tools/reaction-time-test.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="Reaction time test">
+  <meta property="og:description" content="A simple visual reaction time test you run on yourself. Wait for green, react as fast as you can, and see your median time next to typical values.">
+  <meta property="og:url" content="https://theneuroreview.com/tools/reaction-time-test.html">
+  <meta property="og:image" content="https://theneuroreview.com/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reaction time test">
+  <meta name="twitter:description" content="A simple visual reaction time test you run on yourself. Wait for green, react as fast as you can, and see your median time next to typical values.">
+  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Reaction time test","url":"https://theneuroreview.com/tools/reaction-time-test.html","applicationCategory":"EducationalApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","description":"A simple visual reaction time test you run on yourself in the browser.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}}}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="../index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="../index.html">Home</a>
+        <a href="../posts.html">Posts</a>
+        <a href="../news.html">News</a>
+        <a aria-current="page" href="../lab.html">Lab</a>
+        <a href="../the-paper-that-hooked-me.html">Column</a>
+        <a class="site-nav__cta" href="#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="tool-shell">
+    <article class="post">
+      <header class="post-header">
+        <div class="post-header__eyebrow">From the Lab</div>
+        <h1 class="post-header__title">Reaction time test</h1>
+        <p class="post-header__subtitle">How fast can you actually react to something you see? This is a simple visual reaction time test you run on yourself. Wait for the panel to turn green, react as fast as you can, and after five tries it shows your median time next to typical values.</p>
+      </header>
+
+      <div class="post-body">
+        <p>Reaction time is one of the few things about your own nervous system you can measure in a few seconds without any equipment. The catch is that a browser can only measure it roughly, so treat your number as a way to race yourself and your friends rather than a lab result.</p>
+
+        <div class="rt-card" role="group" aria-label="Reaction time test">
+          <div class="rt-card__eyebrow">Interactive</div>
+          <button type="button" class="rt-stage rt-stage--idle" id="rtStage" aria-describedby="rtHint">
+            <span class="rt-stage__big" id="rtBig">Start</span>
+            <span class="rt-stage__sub" id="rtSub" aria-live="assertive">Click the panel or press space to begin</span>
+          </button>
+          <p class="rt-progress" id="rtProgress" aria-live="polite">Ready when you are</p>
+          <div class="rt-result" id="rtResult" hidden aria-live="polite"></div>
+          <p class="rt-hint" id="rtHint">You will do 5 trials. Wait for green, then click, tap, or press space. If you go before green it counts as a false start and you redo that trial.</p>
+        </div>
+
+        <h2>The science</h2>
+
+        <p>What this test measures is the whole loop from your eyes to your hand. Light hits your retina, the signal runs back to your visual cortex, your brain decides it is time to move, and a command travels down to the muscles in your finger. Studies of college-age adults put the accepted figure for simple visual reaction time at about 190 milliseconds for a flash of light. On an everyday laptop or phone it usually runs higher, somewhere around 200 to 270 milliseconds, so that is the range this test compares you against.</p>
+
+        <p>Here is the honest caveat. A browser test also folds in the time your screen takes to draw the color and the time your keyboard or touchscreen takes to register the press, and both of those vary from device to device. So read your number as a relative score against your own runs and against friends on the same setup, not as a clinical measurement of your nervous system.</p>
+
+        <p>Reference. Aditya Jain, Ramta Bansal, Avnish Kumar, and K. D. Singh. A comparative study of visual and auditory reaction times on the basis of gender and physical activity levels of medical first year students. International Journal of Applied and Basic Medical Research, 2015, volume 5, issue 2, pages 124 to 127. <a href="https://doi.org/10.4103/2229-516X.157168" target="_blank" rel="noopener">Read it here</a>.</p>
+
+        <p class="tool-links">Built for The Neuroscience Review by Cameron Hunterton, who studies neuroscience at Columbia. Want more interactives like this one? Visit the <a href="../lab.html">full Lab</a> or head back to the <a href="../index.html">homepage</a>.</p>
+      </div>
+    </article>
+
+    <section class="cta" id="subscribe">
+      <h3>Get one brain-science deep dive every Wednesday.</h3>
+      <p>Real research, written to be read. No hype, no fluff, unsubscribe anytime.</p>
+      <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
+        <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit" class="cta__button">Subscribe</button>
+      </form>
+    </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
+      <p><a href="../index.html">Home</a> &middot; <a href="../posts.html">Posts</a> &middot; <a href="../news.html">News</a> &middot; <a href="../lab.html">Lab</a> &middot; <a href="../the-paper-that-hooked-me.html">Column</a> &middot; <a href="../about.html">About</a> &middot; <a href="../contribute.html">Submissions</a></p>
+      <p class="site-footer__credit">Neuron photo by <a href="https://commons.wikimedia.org/wiki/File:Cultured_Rat_Hippocampal_Neuron_(24327909026).jpg" target="_blank" rel="noopener">ZEISS Microscopy</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>.</p>
+      <p class="site-footer__credit">fMRI scan by <a href="https://commons.wikimedia.org/wiki/File:FMRI_BOLD_activation_in_an_emotional_Stroop_task.jpg" target="_blank" rel="noopener">Ovaysikia et al.</a>, <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>.</p>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    var stage = document.getElementById('rtStage');
+    var big = document.getElementById('rtBig');
+    var sub = document.getElementById('rtSub');
+    var progress = document.getElementById('rtProgress');
+    var result = document.getElementById('rtResult');
+    if (!stage) return;
+
+    var TRIALS = 5;
+    var LOW = 200, HIGH = 270;
+    var state = 'idle';
+    var times = [];
+    var readyAt = 0;
+    var timer = null;
+
+    function setStage(mod){ stage.className = 'rt-stage rt-stage--' + mod; }
+    function rand(min, max){ return min + Math.random() * (max - min); }
+
+    function beginTest(){
+      times = [];
+      result.hidden = true;
+      result.innerHTML = '';
+      startTrial();
+    }
+
+    function startTrial(){
+      state = 'waiting';
+      setStage('waiting');
+      big.textContent = 'Wait for green';
+      sub.textContent = 'Do not click yet';
+      progress.textContent = 'Trial ' + (times.length + 1) + ' of ' + TRIALS;
+      clearTimeout(timer);
+      timer = setTimeout(goGreen, rand(1500, 3500));
+    }
+
+    function goGreen(){
+      state = 'ready';
+      setStage('ready');
+      big.textContent = 'React now';
+      sub.textContent = 'Click, tap, or press space';
+      readyAt = performance.now();
+    }
+
+    function falseStart(){
+      clearTimeout(timer);
+      state = 'toosoon';
+      setStage('toosoon');
+      big.textContent = 'Too soon';
+      sub.textContent = 'You went before green. Click or press space to redo this trial.';
+    }
+
+    function record(){
+      var rt = Math.round(performance.now() - readyAt);
+      times.push(rt);
+      if (times.length >= TRIALS){ finish(); return; }
+      state = 'trialdone';
+      setStage('trial');
+      big.textContent = rt + ' ms';
+      sub.textContent = 'Nice. Click or press space for the next trial.';
+      progress.textContent = times.length + ' of ' + TRIALS + ' trials done';
+    }
+
+    function median(arr){
+      var s = arr.slice().sort(function(a, b){ return a - b; });
+      var m = Math.floor(s.length / 2);
+      return s.length % 2 ? s[m] : Math.round((s[m - 1] + s[m]) / 2);
+    }
+
+    function compareLine(med){
+      if (med < LOW){
+        return 'That is quicker than the usual ' + LOW + ' to ' + HIGH + ' millisecond range for a browser test. Nicely done.';
+      }
+      if (med <= HIGH){
+        return 'That sits right in the usual ' + LOW + ' to ' + HIGH + ' millisecond range for simple visual reaction time.';
+      }
+      return 'That is a little above the usual ' + LOW + ' to ' + HIGH + ' millisecond range, which is common on a laptop or phone where the screen and the click both add a bit of delay.';
+    }
+
+    function finish(){
+      state = 'done';
+      setStage('done');
+      var med = median(times);
+      big.textContent = 'Done';
+      sub.textContent = 'Click or press space to run it again.';
+      progress.textContent = TRIALS + ' of ' + TRIALS + ' trials done';
+      var items = times.map(function(t){ return '<li>' + t + ' ms</li>'; }).join('');
+      result.innerHTML =
+        '<div class="rt-result__num">' + med + ' <span class="rt-result__unit">ms median</span></div>' +
+        '<p class="rt-result__compare">' + compareLine(med) + '</p>' +
+        '<ul class="rt-result__list">' + items + '</ul>';
+      result.hidden = false;
+    }
+
+    function handleAction(){
+      switch (state){
+        case 'idle': beginTest(); break;
+        case 'waiting': falseStart(); break;
+        case 'ready': record(); break;
+        case 'toosoon': startTrial(); break;
+        case 'trialdone': startTrial(); break;
+        case 'done': beginTest(); break;
+      }
+    }
+
+    stage.addEventListener('click', function(){ handleAction(); });
+    document.addEventListener('keydown', function(e){
+      if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar'){
+        var el = document.activeElement;
+        if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) return;
+        e.preventDefault();
+        handleAction();
+      }
+    });
+  })();
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
