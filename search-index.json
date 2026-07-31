@@ -1,0 +1,134 @@
+[
+  {
+    "title": "How can one drug treat both depression and anxiety?",
+    "url": "posts/how-one-drug-treats-depression-and-anxiety.html",
+    "category": "First principles",
+    "excerpt": "The same SSRI is a first choice for depression and for panic, social anxiety, and OCD. That one fact strains the chemical imbalance story."
+  },
+  {
+    "title": "What happens when you put prism glasses on a barn owl?",
+    "url": "posts/barn-owl-prism-experiment.html",
+    "category": "Paper breakdown",
+    "excerpt": "Fit a young owl with prisms that shift its world sideways and the map of sound in its brain quietly slides over to match."
+  },
+  {
+    "title": "Do the new Alzheimer's drugs actually work?",
+    "url": "posts/do-the-new-alzheimers-drugs-work.html",
+    "category": "Paper breakdown",
+    "excerpt": "A 2023 trial cleared amyloid plaque from people's brains with the drug donanemab and modestly slowed their decline. What that bought, and what it cost."
+  },
+  {
+    "title": "Scientists found an aggression switch in the mouse brain.",
+    "url": "posts/aggression-switch-in-the-brain.html",
+    "category": "Paper breakdown",
+    "excerpt": "In a 2011 study, switching on a pinhead of neurons in the mouse hypothalamus made a calm male attack almost anything in front of it."
+  },
+  {
+    "title": "You use all of your brain.",
+    "url": "posts/you-use-all-of-your-brain.html",
+    "category": "Myth-busting",
+    "excerpt": "The idea that ninety percent of your brain sits idle, waiting to be unlocked, is one of the most popular myths about the mind. It is wrong."
+  },
+  {
+    "title": "Dopamine doesn't do what you think it does.",
+    "url": "posts/dopamine-doesnt-do-what-you-think.html",
+    "category": "Myth-busting",
+    "excerpt": "Dopamine is not the brain's pleasure chemical. It signals reward prediction error, the gap between what you expected and what actually happened."
+  },
+  {
+    "title": "What is a neuron, really?",
+    "url": "posts/what-is-a-neuron.html",
+    "category": "First principles",
+    "excerpt": "A neuron is not just a brain cell that sends signals. Build the real one from scratch and the rest of the brain starts to make sense."
+  },
+  {
+    "title": "How does memory actually work?",
+    "url": "posts/how-memory-works.html",
+    "category": "First principles",
+    "excerpt": "A memory is not a recording filed away in a drawer. It is a physical change in your neurons, rebuilt every time you remember."
+  },
+  {
+    "title": "Why do you need to sleep?",
+    "url": "posts/why-we-sleep.html",
+    "category": "First principles",
+    "excerpt": "You spend a third of your life unconscious and you cannot skip it. For something that costly, sleep must be doing real work."
+  },
+  {
+    "title": "Why can't most drugs reach your brain?",
+    "url": "posts/the-blood-brain-barrier.html",
+    "category": "First principles",
+    "excerpt": "You can swallow a pill and it reaches your whole body, yet most drugs never reach your brain. The blood-brain barrier is why."
+  },
+  {
+    "title": "What does an fMRI actually measure?",
+    "url": "posts/what-fmri-measures.html",
+    "category": "First principles",
+    "excerpt": "When a headline says a brain region lit up, what was measured? Not thoughts, and not even electricity. Blood, measured indirectly, and a few seconds late."
+  },
+  {
+    "title": "Brain myths that won't die",
+    "url": "brain-myths.html",
+    "category": "Myth-busting",
+    "excerpt": "Eight ideas about the brain that feel true, get repeated everywhere, and fall apart the moment you check them against the research."
+  },
+  {
+    "title": "The Lab",
+    "url": "lab.html",
+    "category": "The Lab",
+    "excerpt": "Small experiments you run on your own brain, right in the page. Quick, honest demonstrations of how the mind actually works."
+  },
+  {
+    "title": "Find your blind spot",
+    "url": "tools/find-your-blind-spot.html",
+    "category": "The Lab",
+    "excerpt": "A quick blind spot test you run in the page. Cover one eye, stare at the cross, and watch the dot vanish where the optic nerve leaves the retina."
+  },
+  {
+    "title": "The Stroop test",
+    "url": "tools/stroop-test.html",
+    "category": "The Lab",
+    "excerpt": "Take the Stroop test in your browser. Name the ink color while your brain wants to read the word, then measure the Stroop effect in your own milliseconds."
+  },
+  {
+    "title": "Reaction time test",
+    "url": "tools/reaction-time-test.html",
+    "category": "The Lab",
+    "excerpt": "A simple visual reaction time test you run on yourself. Wait for green, react as fast as you can, and see your median time next to typical values."
+  },
+  {
+    "title": "Start here",
+    "url": "start-here.html",
+    "category": "Start here",
+    "excerpt": "New to The Neuroscience Review? Real brain research in plain English, every claim sourced, nothing oversold, each post fact-checked. Four great first reads."
+  },
+  {
+    "title": "Neuroscience News",
+    "url": "news.html",
+    "category": "News",
+    "excerpt": "Short, fact-checked notes on new neuroscience, updated often. Each one links straight to the original study or report."
+  },
+  {
+    "title": "How we fact-check",
+    "url": "trust.html",
+    "category": "How we work",
+    "excerpt": "How every piece here is checked against primary sources before it publishes, and how corrections are logged openly with the date and what changed."
+  },
+  {
+    "title": "The Paper That Hooked Me",
+    "url": "the-paper-that-hooked-me.html",
+    "category": "Column",
+    "excerpt": "A scientist takes the one paper that changed how they think and walks you through it in five plain questions, the most personal thing on the site."
+  },
+  {
+    "title": "About The Neuroscience Review",
+    "url": "about.html",
+    "category": "About",
+    "excerpt": "What this publication is, who writes it, and the standard every piece is held to before it goes live."
+  },
+  {
+    "title": "Write for The Neuroscience Review",
+    "url": "contribute.html",
+    "category": "Submissions",
+    "excerpt": "How to pitch a piece and be considered for a byline, and what we look for before we say yes."
+  }
+]

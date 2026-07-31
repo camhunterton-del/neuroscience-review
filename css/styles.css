@@ -780,3 +780,13 @@ article.post {
     word-break: break-all;
   }
 }
+
+
+/* trust-cluster (#34 fact-checked note, #37 cite-this) */
+.post-header__factcheck { color: var(--accent); text-decoration: none; }
+.post-header__factcheck:hover { text-decoration: underline; }
+.cite-this { margin: 2.25rem 0 0; padding: 1.15rem 1.3rem; background: var(--bg-alt); border-radius: 8px; }
+.cite-this__label { font-family: var(--sans); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 0 0 0.5rem; }
+.cite-this__text { font-family: var(--sans); font-size: 0.86rem; line-height: 1.55; color: var(--text-muted); margin: 0 0 0.8rem; word-break: break-word; }
+.cite-this__copy { font-family: var(--sans); font-size: 0.82rem; font-weight: 600; color: var(--accent); background: none; border: 1px solid var(--border); border-radius: 6px; padding: 0.42rem 0.95rem; cursor: pointer; transition: border-color .15s; }
+.cite-this__copy:hover { border-color: var(--accent); }

@@ -2439,7 +2439,7 @@
                 </div>
                 <div class="dss-read">
                   <span class="dss-read__lab">Typical level</span>
-                  <span class="dss-read__val" id="ssri-synapse-typical">2.6</span>
+                  <span class="dss-read__val" id="ssri-synapse-typical">7.4</span>
                   <span class="dss-read__sub">where it settles</span>
                 </div>
               </div>
@@ -6007,13 +6007,13 @@
      fraction of transporters, which lowers k, so serotonin clears slower and
      the steady level rises. The steady level is exactly influx / k, so the
      dashed prediction line and the live count share one formula. */
-  var SPAWN = 10;       // serotonin released per pulse
+  var SPAWN = 28;       // serotonin released per pulse (tuned up so the cleft reads as populated, not near-empty; counts are relative to the model)
   var RINT  = 0.5;      // seconds between pulses (tonic firing ~2 Hz)
   var KT    = 7.0;      // clearance rate constant from transporters, per second
   var KD    = 0.6;      // diffusion escape, per second, always present
-  var NTRANS = 8, NRECEP = 6, CAP = 80;
+  var NTRANS = 8, NRECEP = 6, CAP = 110;
   var INFLUX = SPAWN / RINT;                 // molecules per second entering
-  var MAXY = 30;                             // trace y-axis ceiling
+  var MAXY = 50;                             // trace y-axis ceiling (headroom above the ~44 post-pulse peak at full dose)
   var plugOrder = [3,5,1,7,0,6,2,4];         // fixed order plugs appear in
 
   // occupancy calibrated so a full standard dose (100) blocks ~80% of SERT,
@@ -6068,14 +6068,17 @@
   }
 
   function release(){
-    var sx = geo.w/2 + (Math.random()-0.5)*geo.w*0.14;
-    var sy = geo.presynY + 5;
-    flashes.push({ x:sx, y:sy, life:0, max:0.3 });
     var room = CAP - particles.length;
     var n = Math.min(SPAWN, room);
+    var innerW = geo.w - 2*geo.padX;
+    var sy = geo.presynY + 5;
+    // serotonin is released all along the terminal's active zone, not from one
+    // spot, so the whole cleft fills instead of piling into a single center clump
+    var f, fx;
+    for(f=0; f<2; f++){ fx = geo.padX + innerW*(0.18 + 0.64*Math.random()); flashes.push({ x:fx, y:sy, life:0, max:0.3 }); }
     for(var i=0;i<n;i++){
-      particles.push({ x: sx + (Math.random()-0.5)*24, y: sy + Math.random()*6,
-                       vx:(Math.random()-0.5)*40, vy: 20 + Math.random()*40 });
+      particles.push({ x: geo.padX + Math.random()*innerW, y: sy + Math.random()*8,
+                       vx:(Math.random()-0.5)*50, vy: 24 + Math.random()*46 });
     }
   }
 
@@ -6096,7 +6099,7 @@
     for(var pi=particles.length-1; pi>=0; pi--){
       var p = particles[pi];
       p.vx += (Math.random()-0.5)*220*dt;
-      p.vy += (Math.random()-0.5)*220*dt + 8*dt;
+      p.vy += (Math.random()-0.5)*220*dt + 18*dt;   // gentle drift toward the postsynaptic side, so serotonin forms a gradient across the gap
       p.vx *= 0.90; p.vy *= 0.90;
       p.x += p.vx*dt; p.y += p.vy*dt;
       if(p.x < geo.padX){ p.x = geo.padX; p.vx = Math.abs(p.vx); }
