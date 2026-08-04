@@ -799,3 +799,42 @@ article.post {
 .cta .cta__fine { font-family: var(--sans); font-size: 0.8rem; margin: 1rem auto 0; }
 .cta__fine a, .post-disclaimer a, .submission-note a { color: var(--accent); }
 .cta__fine a:hover, .post-disclaimer a:hover, .submission-note a:hover { color: var(--accent-hover); }
+
+
+/* ============================================
+   Post data figures (paper-breakdown format)
+   Hand-authored inline SVG that follows the site's theme
+   variables. No build step, no library, no network. Colors
+   come from the fig-* classes, so figures re-theme in light
+   and dark automatically. See css vars on :root / [data-theme].
+   ============================================ */
+.post-body figure.post-figure { margin: 2.5rem auto; }
+.post-figure svg { display: block; width: 100%; height: auto; font-family: var(--sans); }
+/* semantic roles -> theme vars (var() can't live in an SVG fill="" attribute) */
+.post-figure .fig-accent-s   { stroke: var(--accent); fill: none; }
+.post-figure .fig-ink-s      { stroke: var(--text);   fill: none; }
+.post-figure .fig-grid       { stroke: var(--border); fill: none; }
+.post-figure .fig-muted-t    { fill: var(--text-muted); }
+.post-figure .fig-accent-t   { fill: var(--accent); }
+.post-figure .fig-ink-t      { fill: var(--text); }
+.post-figure .fig-accent-fill{ fill: var(--accent); }
+
+/* ============================================
+   Paper-breakdown rigor: verbatim source quotes + a
+   "true vs decoded" exhibit for showing real model output.
+   ============================================ */
+.paper-quote { margin: 2.1rem auto; padding: 0.15rem 0 0.15rem 1.2rem; border-left: 3px solid var(--accent); font-family: var(--serif); font-style: italic; font-size: 1.16rem; line-height: 1.5; color: var(--text); max-width: 60ch; }
+.paper-quote p { margin: 0 0 0.5rem; }
+.paper-quote cite { display: block; margin-top: 0.5rem; font-family: var(--sans); font-style: normal; font-size: 0.82rem; color: var(--text-muted); }
+.paper-quote cite a { color: var(--text-muted); }
+
+.decode-demo__card { border: 1px solid var(--border); border-radius: 10px; background: var(--bg-alt); padding: 0.5rem 1.2rem; font-family: var(--sans); }
+.decode-demo__row { padding: 0.7rem 0; border-bottom: 1px solid var(--border); }
+.decode-demo__row:last-child { border-bottom: 0; }
+.decode-demo__line { display: grid; grid-template-columns: 4.7rem 1fr; gap: 0.7rem; font-size: 0.95rem; line-height: 1.5; }
+.decode-demo__line + .decode-demo__line { margin-top: 0.15rem; }
+.decode-demo__k { color: var(--text-faint); font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding-top: 0.25rem; }
+.decode-demo__true { color: var(--text-muted); }
+.decode-demo__out { color: var(--text); }
+.decode-demo__err { color: #c0392b; font-weight: 600; }
+[data-theme="dark"] .decode-demo__err { color: #ec9b8f; }
