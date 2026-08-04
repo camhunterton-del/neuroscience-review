@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Commons — The Neuroscience Review</title>
+  <meta name="description" content="A shared space for short notes from the field. Conference recaps, what you're working on, the questions you can't stop thinking about. Submitted and approved.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
+  <link rel="canonical" href="https://theneuroreview.com/commons.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="The Commons — The Neuroscience Review">
+  <meta property="og:description" content="A shared space for short notes from the field. Submitted and approved.">
+  <meta property="og:url" content="https://theneuroreview.com/commons.html">
+  <meta property="og:image" content="https://theneuroreview.com/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Commons — The Neuroscience Review">
+  <meta name="twitter:description" content="A shared space for short notes from the field. Submitted and approved.">
+  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png">
+  <style>
+    .commons-intro { max-width: 720px; margin: 0 auto; }
+    .commons-feed { max-width: 1040px; margin: 3rem auto 0; }
+    .commons-feed__head { font-family: var(--sans); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; margin-bottom: 1.5rem; }
+    .commons-preview-note { font-family: var(--sans); font-size: 0.82rem; color: var(--text-muted); text-align: center; margin: 0 0 1.5rem; font-style: italic; }
+    .commons-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; list-style: none; padding: 0; margin: 0; }
+    .commons-note { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.6rem; display: flex; flex-direction: column; }
+    .commons-note__meta { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--sans); margin-bottom: 0.7rem; gap: 1rem; }
+    .commons-note__tag { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); white-space: nowrap; }
+    .commons-note__date { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
+    .commons-note__title { font-family: var(--serif); font-size: 1.28rem; line-height: 1.25; margin: 0 0 0.55rem; }
+    .commons-note__body { color: var(--text); line-height: 1.6; margin: 0 0 1rem; }
+    .commons-note__byline { font-family: var(--sans); font-size: 0.85rem; color: var(--text-muted); margin-top: auto; }
+    .commons-soon { max-width: 640px; margin: 0 auto; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; text-align: center; --ic: var(--accent); --icoat: #9dbccd; --ipaper: #fbfaf5; --iflask: #eef3f6; --ibub: #ffffff; --iglow: #9dbccd; }
+    [data-theme="dark"] .commons-soon { --icoat: #3d5c70; --ipaper: #22262e; --iflask: #272c35; --ibub: #cfe3f0; --iglow: #2c4a5f; }
+    .commons-soon__prog { height: 6px; background: var(--bg-alt); }
+    .commons-soon__prog i { display: block; height: 100%; width: 64%; background: var(--accent); border-radius: 0 3px 3px 0; }
+    .commons-soon__inner { padding: 2rem 2rem 2.75rem; }
+    .commons-soon__scene { width: 260px; max-width: 100%; height: auto; margin: 0 auto 0.4rem; display: block; }
+    .commons-soon__title { font-family: var(--serif); font-size: 1.55rem; margin: 0.4rem 0 0.85rem; }
+    .commons-soon__text { color: var(--text-muted); line-height: 1.65; margin: 0 auto 1.75rem; max-width: 52ch; }
+    .commons-soon__button { display: inline-block; font-family: var(--sans); font-weight: 600; font-size: 0.9rem; background: var(--accent); color: #fff; padding: 0.75rem 1.6rem; border-radius: 8px; text-decoration: none; }
+    .commons-soon__button:hover { opacity: 0.92; }
+    [data-theme="dark"] .commons-soon__button { color: #16151a; }
+    @media (prefers-reduced-motion: reduce) { .commons-soon__prog i { transition: none; } }
+    @media (max-width: 760px) { .commons-list { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="posts.html">Posts</a>
+        <a href="news.html">News</a>
+        <a href="lab.html">Lab</a>
+        <a href="commons.html">The Commons</a>
+        <a class="site-nav__cta" href="index.html#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="commons-intro">
+      <header class="post-header post-header--compact">
+        <div class="post-header__eyebrow">The Commons</div>
+        <h1 class="post-header__title">The Commons.</h1>
+        <p class="post-header__subtitle">A shared space for the people who love this stuff. Short notes from the field. What you're working on, what you saw at a conference, the question you can't stop thinking about.</p>
+      </header>
+
+      <div class="post-body">
+        <p>The essays here are careful, edited, and slow. The Commons is the opposite. It's a place for the quick stuff, a paragraph or two from someone in or around neuroscience, passing along something worth knowing. A talk that stuck with you. A method you're excited about. A finding you're still chewing on.</p>
+
+        <p>Anyone in the field or learning it can take part, students included. Every note is read and approved before it goes up, so the bar isn't your credentials. It's that the note is real, clear, and worth a reader's minute.</p>
+
+        <h2>What a note looks like</h2>
+        <p>Short. A title, a few sentences, your name and where you are. No sources to format, no essay to write, no code to touch. If you can explain it to a curious friend in a paragraph, it belongs here.</p>
+
+        <h2>How to take part</h2>
+        <p>Email your note to <a href="mailto:theneuroreview@gmail.com?subject=Commons">theneuroreview@gmail.com</a> with the subject "Commons," and one line about who you are. We read every one, and if it's a fit, it goes up with your name on it. That's the whole process.</p>
+        <p class="submission-note">Notes are moderated before they appear. By sending one you agree to our <a href="terms.html">submission terms</a>.</p>
+      </div>
+    </div>
+
+    <section class="commons-feed">
+      <div class="commons-feed__head">Field notes</div>
+      <!-- LAUNCH: real notes drop in here as a <ul class="commons-list"> of <li><article class="commons-note">…</article></li> above this block; swap "Coming soon" for the live invite. -->
+      <div class="commons-soon">
+        <div class="commons-soon__prog" aria-hidden="true"><i></i></div>
+        <div class="commons-soon__inner">
+          <svg class="commons-soon__scene" viewBox="0 0 210 150" aria-hidden="true">
+            <ellipse cx="105" cy="94" rx="84" ry="42" fill="var(--iglow)" opacity=".26"/>
+            <ellipse cx="105" cy="123" rx="80" ry="6.5" fill="var(--ic)" opacity=".16"/>
+            <path d="M105 90 C 97 66, 101 48, 105 40" fill="none" stroke="var(--ic)" stroke-width="1.3" stroke-dasharray="2 4" opacity=".38" stroke-linecap="round"/>
+            <circle r="2.5" fill="var(--ic)">
+              <animateMotion dur="8s" repeatCount="indefinite" keyPoints="0;0;1;1" keyTimes="0;.42;.54;1" calcMode="spline" keySplines="0 0 1 1;.3 0 .2 1;0 0 1 1" path="M105 90 C 97 66, 101 48, 105 40"/>
+              <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;.42;.5;.56;1" dur="8s" repeatCount="indefinite"/>
+            </circle>
+            <g transform="translate(105,32)"><g>
+              <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4.6s" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" repeatCount="indefinite"/>
+              <circle r="6" fill="var(--iglow)" opacity="0"><animate attributeName="opacity" values="0;0;.55;0" keyTimes="0;.52;.58;.78" dur="8s" repeatCount="indefinite"/><animate attributeName="r" values="6;6;14;18" keyTimes="0;.52;.58;.78" dur="8s" repeatCount="indefinite"/></circle>
+              <g><animateTransform attributeName="transform" type="scale" additive="sum" values="1;1;1.15;1" keyTimes="0;.53;.6;.72" dur="8s" calcMode="spline" keySplines="0 0 1 1;.2 .8 .3 1;.4 0 .6 1" repeatCount="indefinite"/>
+                <g stroke="var(--ic)" stroke-width="2" stroke-linecap="round" fill="none"><path d="M0 0 L-13 -10"/><path d="M0 0 L-5 -16"/><path d="M0 0 L13 -11"/><path d="M0 0 L10 13"/><path d="M0 0 L-10 11"/></g>
+                <g fill="var(--ic)"><circle cx="-13" cy="-10" r="2.1"/><circle cx="-5" cy="-16" r="2.1"/><circle cx="13" cy="-11" r="2.1"/><circle cx="10" cy="13" r="2.1"/><circle cx="-10" cy="11" r="2.1"/><circle cx="0" cy="0" r="5"/></g>
+              </g>
+            </g></g>
+            <g><animateTransform attributeName="transform" type="translate" values="0 0;0 .7;0 0" dur="5.4s" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" repeatCount="indefinite"/>
+              <circle cx="58" cy="65" r="13" fill="var(--ic)"/><path d="M38 120 Q38 78 58 78 Q78 78 78 120 Z" fill="var(--icoat)"/>
+              <path d="M50 80 L58 92 L66 80" fill="none" stroke="var(--ic)" stroke-width="2.2" stroke-linejoin="round"/><line x1="58" y1="92" x2="58" y2="120" stroke="var(--ic)" stroke-width="1.5" opacity=".4"/>
+            </g>
+            <g><animateTransform attributeName="transform" type="translate" values="0 0;0 .7;0 0" dur="5.4s" begin="-2.7s" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" repeatCount="indefinite"/>
+              <circle cx="152" cy="65" r="13" fill="var(--ic)"/><path d="M132 120 Q132 78 152 78 Q172 78 172 120 Z" fill="var(--icoat)"/>
+              <path d="M144 80 L152 92 L160 80" fill="none" stroke="var(--ic)" stroke-width="2.2" stroke-linejoin="round"/><line x1="152" y1="92" x2="152" y2="120" stroke="var(--ic)" stroke-width="1.5" opacity=".4"/>
+            </g>
+            <g transform="rotate(-5 105 106)">
+              <rect x="84" y="92" width="42" height="28" rx="2.5" fill="var(--ipaper)" stroke="var(--ic)" stroke-width="2.4"/>
+              <g stroke="var(--ic)" stroke-width=".5" opacity=".16"><line x1="84" y1="99" x2="126" y2="99"/><line x1="84" y1="106" x2="126" y2="106"/><line x1="84" y1="113" x2="126" y2="113"/><line x1="98" y1="92" x2="98" y2="120"/><line x1="112" y1="92" x2="112" y2="120"/></g>
+              <line x1="90" y1="99" y2="99" x2="90" stroke="var(--ic)" stroke-width="2" opacity=".6" stroke-linecap="round"><animate attributeName="x2" values="90;90;120;120;90" keyTimes="0;.06;.2;.97;1" dur="8s" calcMode="spline" keySplines="0 0 1 1;.16 1 .3 1;0 0 1 1;0 0 1 1" repeatCount="indefinite"/></line>
+              <line x1="90" y1="106" y2="106" x2="90" stroke="var(--ic)" stroke-width="2" opacity=".6" stroke-linecap="round"><animate attributeName="x2" values="90;90;114;114;90" keyTimes="0;.16;.3;.97;1" dur="8s" calcMode="spline" keySplines="0 0 1 1;.16 1 .3 1;0 0 1 1;0 0 1 1" repeatCount="indefinite"/></line>
+              <path d="M90 113 q4 -4 8 0 t8 0 t8 0" fill="none" stroke="var(--ic)" stroke-width="2" opacity=".6" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"><animate attributeName="stroke-dashoffset" values="100;100;0;0;100" keyTimes="0;.28;.42;.97;1" dur="8s" calcMode="spline" keySplines="0 0 1 1;.16 1 .3 1;0 0 1 1;0 0 1 1" repeatCount="indefinite"/></path>
+            </g>
+            <g transform="translate(29,95)">
+              <path d="M9 -3 q-4 -6 1 -12 q3 -4 0 -9" fill="none" stroke="var(--ic)" stroke-width="1.5" opacity=".38" stroke-linecap="round"><animate attributeName="opacity" values="0;.42;0" dur="3.4s" calcMode="spline" keySplines=".4 0 .6 1;.4 0 .6 1" repeatCount="indefinite"/></path>
+              <path d="M6 0 v7 l-6.5 14 a3.6 3.6 0 0 0 3 5 h15 a3.6 3.6 0 0 0 3 -5 l-6.5 -14 v-7 Z" fill="var(--iflask)" stroke="var(--ic)" stroke-width="2.3" stroke-linejoin="round"/>
+              <line x1="3" y1="0" x2="17" y2="0" stroke="var(--ic)" stroke-width="2.3" stroke-linecap="round"/>
+              <path d="M2 18 h18 l1.4 3 a3.6 3.6 0 0 1 -3 5 h-15 a3.6 3.6 0 0 1 -3 -5 Z" fill="var(--ic)" opacity=".72"/>
+              <circle cx="8" cy="20" r="1.4" fill="var(--ibub)"><animate attributeName="cy" values="23;13;13" keyTimes="0;.7;1" dur="2.7s" calcMode="spline" keySplines=".3 0 .3 1;0 0 1 1" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;0" dur="2.7s" repeatCount="indefinite"/></circle>
+              <circle cx="12" cy="20" r="1.1" fill="var(--ibub)"><animate attributeName="cy" values="24;12;12" keyTimes="0;.7;1" dur="2.7s" begin="1.2s" calcMode="spline" keySplines=".3 0 .3 1;0 0 1 1" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;0" dur="2.7s" begin="1.2s" repeatCount="indefinite"/></circle>
+            </g>
+          </svg>
+          <h2 class="commons-soon__title">Coming soon.</h2>
+          <p class="commons-soon__text">We're building The Commons, a space for short notes from the field. The first ones go up shortly.</p>
+          <a class="commons-soon__button" href="mailto:theneuroreview@gmail.com?subject=Commons">Send a note for the launch</a>
+        </div>
+      </div>
+    </section>
+    <script>(function(){try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){var s=document.querySelector('.commons-soon__scene');if(s&&s.pauseAnimations){s.setCurrentTime(3.7);s.pauseAnimations();}}}catch(e){}})();</script>
+
+    <section class="cta">
+      <h3>Get new posts in your inbox.</h3>
+      <p>One post a week. No fluff. Unsubscribe anytime.</p>
+      <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
+        <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit" class="cta__button">Subscribe</button>
+      </form>
+      <p class="cta__fine">We use your email only to send the newsletter (via Buttondown) and never share it. <a href="privacy.html">Privacy</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="commons.html">The Commons</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
+      <p><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a> &middot; <a href="disclaimer.html">Disclaimer</a></p>
+    </div>
+  </footer>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
