@@ -89,6 +89,27 @@
       <div class="post-body">
         <!-- NEWS-FEED-START -->
         <article class="news-item">
+          <p class="news-item__meta">August 3, 2026 &middot; via <a href="https://neurosciencenews.com/internal-rhythm-sleep-auditory-neuroscience-31170/" target="_blank" rel="noopener">Neuroscience News / Current Biology (University of Lausanne)</a></p>
+          <h2><a href="https://neurosciencenews.com/internal-rhythm-sleep-auditory-neuroscience-31170/" target="_blank" rel="noopener">During REM Sleep, the Brain Turns Down Outside Sounds and Turns Up the Heartbeat</a></h2>
+          <p>In 25 adults recorded with high density EEG across two nights, the brain's response to external sounds weakened as REM sleep deepened, while its response to each heartbeat grew stronger. The authors describe it as the sleeping brain shifting its attention from the outside world to the body.</p>
+          <p class="news-item__caveat"><em>This measured the brain's electrical responses in healthy sleepers, not what a person consciously hears, and it does not show why the shift happens.</em></p>
+        </article>
+
+        <article class="news-item">
+          <p class="news-item__meta">August 3, 2026 &middot; via <a href="https://neurosciencenews.com/internal-music-decoded-neuroscience-31169/" target="_blank" rel="noopener">Neuroscience News / eNeuro (Seoul National University)</a></p>
+          <h2><a href="https://neurosciencenews.com/internal-music-decoded-neuroscience-31169/" target="_blank" rel="noopener">Researchers Rebuilt the Rough Melody of a Song People Only Imagined, From Brain Signals</a></h2>
+          <p>In 10 epilepsy patients who already had electrodes on the surface of the brain for seizure monitoring, researchers decoded signals that track relative pitch, the do re mi of a tune, and used them to reconstruct the rough melody each person was silently imagining.</p>
+          <p class="news-item__caveat"><em>This used electrodes placed inside the skull in a small group of patients, so it is an early proof of concept, not a device that could read imagined music from outside the head.</em></p>
+        </article>
+
+        <article class="news-item">
+          <p class="news-item__meta">August 3, 2026 &middot; via <a href="https://neurosciencenews.com/orexin-neurons-motivation-31173/" target="_blank" rel="noopener">Neuroscience News (Nagoya University)</a></p>
+          <h2><a href="https://neurosciencenews.com/orexin-neurons-motivation-31173/" target="_blank" rel="noopener">In Rats, a Group of Orexin Neurons Set How Much Effort the Animal Would Put In</a></h2>
+          <p>Researchers found that the activity of orexin neurons in the rat brain rose with how much effort a task demanded. Silencing these neurons lowered how hard the animals would work for a reward, while pushing the neurons above their normal activity did not make the animals try any harder.</p>
+          <p class="news-item__caveat"><em>This was done in rats using genetic tools, so it does not directly show how motivation works in people.</em></p>
+        </article>
+
+        <article class="news-item">
           <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.nature.com/neuro/" target="_blank" rel="noopener"><img src="https://media.springernature.com/lw630/nature-cms/uploads/cms/pages/5247/top_item_image/NN_cover_hero_JUL26-952a67d04b91dabad6f93955e93b1973.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
           <p class="news-item__meta">August 1, 2026 &middot; via <a href="https://www.nature.com/neuro/" target="_blank" rel="noopener">Nature Neuroscience</a></p>
           <h2><a href="https://www.nature.com/neuro/" target="_blank" rel="noopener">Large study finds brain scan biomarkers for psychiatric disorders rarely hold up across sites</a></h2>
@@ -474,7 +495,7 @@
       b.className = 'news-chip'; b.type = 'button';
       b.setAttribute('aria-pressed', c === 'All' ? 'true' : 'false');
       var n = c === 'All' ? feed.length : counts[c];
-      b.innerHTML = c + ' <span class="news-chip__count">' + n + '</span>';
+      b.textContent = c;
       b.addEventListener('click', function(){
         active = c; shown = PAGE;
         bar.querySelectorAll('.news-chip').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
