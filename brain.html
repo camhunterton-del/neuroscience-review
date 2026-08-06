@@ -4,46 +4,92 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Explore the Brain — The Neuroscience Review</title>
-  <meta name="description" content="An interactive 3D brain. Spin it, zoom in, and click a region to see what it does, in plain English.">
+  <meta name="description" content="An interactive 3D brain. Spin it, zoom in, explode it, and click a region to see what it does, in plain English.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
   <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="canonical" href="https://theneuroreview.com/brain.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Neuroscience Review">
   <meta property="og:title" content="Explore the Brain — The Neuroscience Review">
-  <meta property="og:description" content="An interactive 3D brain. Spin it, zoom in, and click a region to see what it does, in plain English.">
+  <meta property="og:description" content="An interactive 3D brain. Spin it, zoom in, explode it, and click a region to see what it does, in plain English.">
+  <meta property="og:image" content="https://theneuroreview.com/img/brain-preview.png">
   <style>
-    .brain-hero{ max-width:1200px; margin:0 auto; padding:2.4rem 1.2rem 0.6rem; }
-    .brain-hero__kicker{ font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .5rem; }
-    .brain-hero h1{ font-family:var(--serif,Newsreader); font-weight:600; font-size:clamp(2rem,4.4vw,3rem); line-height:1.08; margin:0 0 .5rem; }
-    .brain-hero__sub{ font-family:var(--serif,Newsreader); color:var(--text-faint,#5b5b57); font-size:1.1rem; max-width:60ch; margin:0; }
-    .brain-explorer{ max-width:1200px; margin:1.2rem auto 0; padding:0 1.2rem; display:grid; grid-template-columns:1fr; gap:1.1rem; }
-    @media(min-width:900px){ .brain-explorer{ grid-template-columns:minmax(0,1.75fr) minmax(280px,1fr); align-items:stretch; } }
-    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; background:radial-gradient(120% 120% at 50% 18%, #1c2733 0%, #10161d 62%, #0b0f14 100%); min-height:440px; }
-    @media(min-width:900px){ .brain-stage{ min-height:560px; } }
-    #brain-canvas{ position:absolute; inset:0; }
-    #brain-canvas canvas{ display:block; width:100%!important; height:100%!important; touch-action:none; }
-    .brain-loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#c8d4de; font-family:var(--sans,Inter); font-size:.95rem; letter-spacing:.02em; background:transparent; pointer-events:none; }
-    .brain-hint{ position:absolute; left:0; right:0; bottom:.7rem; text-align:center; margin:0; color:#8aa0b3; font-family:var(--sans,Inter); font-size:.76rem; letter-spacing:.04em; pointer-events:none; }
-    .brain-info{ border:1px solid var(--border,#dcd7cd); border-radius:16px; background:var(--bg-alt,#faf7f1); padding:1.4rem 1.5rem; min-height:200px; }
-    .brain-info__label{ font-family:var(--sans,Inter); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .3rem; }
-    .brain-info h2{ font-family:var(--serif,Newsreader); font-weight:600; font-size:1.5rem; margin:0 0 .7rem; line-height:1.15; }
-    .brain-info p{ font-family:var(--serif,Newsreader); color:var(--text,#26251f); font-size:1.04rem; line-height:1.55; margin:0 0 .9rem; }
-    .brain-info__default{ color:var(--text-faint,#5b5b57)!important; }
-    .brain-info__more{ font-family:var(--sans,Inter); font-size:.9rem; font-weight:600; color:var(--accent,#2f6f8f); text-decoration:none; }
-    .brain-info__more:hover{ text-decoration:underline; }
-    .brain-chips{ max-width:1200px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-wrap:wrap; gap:.5rem; }
-    .brain-chip{ font-family:var(--sans,Inter); font-size:.86rem; font-weight:500; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:999px; padding:.42rem .95rem; cursor:pointer; transition:background .15s ease, border-color .15s ease, color .15s ease; }
+    #main{ --brain-glass:rgba(250,247,241,.92); --brain-glass-bd:var(--border,#dcd7cd); --brain-glass-fg:var(--text,#26251f); --brain-glass-mut:var(--text-faint,#6f6a61); }
+    [data-theme="dark"] #main{ --brain-glass:rgba(16,22,30,.82); --brain-glass-bd:rgba(120,150,170,.28); --brain-glass-fg:#eef6f2; --brain-glass-mut:#9fb1bf; }
+    .brain-hero{ max-width:1200px; margin:0 auto; padding:2.4rem 1.2rem 0.4rem; }
+    .brain-hero__kicker{ display:inline-flex; align-items:center; gap:.7rem; font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .55rem; }
+    .brain-hero__kicker::after{ content:""; width:2.2rem; height:1px; background:var(--accent,#2f6f8f); opacity:.5; }
+    .brain-hero h1{ font-family:var(--serif,Newsreader); font-weight:600; font-size:clamp(2rem,4.4vw,3rem); line-height:1.06; letter-spacing:-.015em; margin:0 0 .5rem; }
+    .brain-hero__sub{ font-family:var(--serif,Newsreader); color:var(--text-faint,#5b5b57); font-size:1.1rem; max-width:62ch; margin:0; }
+
+    .brain-chips{ max-width:1200px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.55rem; }
+    .brain-chip-row{ display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; }
+    .brain-chip-row__label{ font-family:var(--sans,Inter); font-size:.66rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-faint,#7a756c); margin-right:.15rem; min-width:4.2rem; }
+    .brain-chip{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.85rem; font-weight:500; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:999px; padding:.4rem .85rem; cursor:pointer; transition:background .15s, border-color .15s, color .15s; }
     .brain-chip:hover{ border-color:var(--accent,#2f6f8f); }
-    .brain-chip.is-active{ background:var(--accent,#2f6f8f); border-color:var(--accent,#2f6f8f); color:#fff; }
-    .brain-chip--reset{ font-weight:600; }
+    .brain-chip__dot{ width:.72rem; height:.72rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.18) inset; }
+    .brain-chip.is-active{ color:#fff; border-color:transparent; }
+    .brain-chip:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
+
+    .brain-explorer{ max-width:1200px; margin:1.1rem auto 0; padding:0 1.2rem; display:grid; grid-template-columns:1fr; gap:1.1rem; }
+    @media(min-width:900px){ .brain-explorer{ grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr); align-items:start; } }
+    .brain-main{ display:flex; flex-direction:column; gap:.7rem; min-width:0; }
+    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:460px;
+      background:radial-gradient(120% 120% at 50% 20%, #ffffff 0%, #eef1f4 38%, #e2e7ec 70%, #d6dce2 100%); }
+    .brain-stage::before{ content:""; position:absolute; inset:0; background:radial-gradient(60% 45% at 50% 42%, rgba(47,111,143,.14), transparent 70%); pointer-events:none; }
+    [data-theme="dark"] .brain-stage{ background:radial-gradient(120% 120% at 50% 18%, #1c2836 0%, #121a23 60%, #0a0e13 100%); }
+    [data-theme="dark"] .brain-stage::before{ background:radial-gradient(58% 44% at 50% 40%, rgba(70,150,190,.22), transparent 72%); }
+    @media(min-width:900px){ .brain-stage{ min-height:580px; } }
+    #brain-canvas{ position:absolute; inset:0; }
+    #brain-canvas canvas{ display:block; width:100%!important; height:100%!important; touch-action:none; outline:none; }
+    #brain-canvas canvas:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:-2px; }
+    .brain-loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.95rem; letter-spacing:.02em; pointer-events:none; text-align:center; padding:1.5rem; }
+    .brain-fallback{ position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:1.5rem; text-align:center; }
+    .brain-fallback img{ max-width:min(80%,420px); height:auto; filter:drop-shadow(0 14px 30px rgba(0,0,0,.4)); }
+    .brain-fallback p{ font-family:var(--sans,Inter); font-size:.9rem; color:var(--brain-glass-mut); margin:0; max-width:40ch; }
+    .brain-hint{ position:absolute; left:0; right:0; bottom:.7rem; text-align:center; margin:0; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.03em; pointer-events:none; opacity:.9; }
+    .brain-tooltip{ position:absolute; z-index:6; pointer-events:none; transform:translate(-50%,-140%); background:var(--brain-glass); color:var(--brain-glass-fg); font-family:var(--sans,Inter); font-size:.78rem; font-weight:500; padding:.28rem .58rem; border-radius:7px; border:1px solid var(--brain-glass-bd); white-space:nowrap; opacity:0; transition:opacity .12s; backdrop-filter:blur(6px); }
+
+    .brain-legend{ position:absolute; left:.7rem; bottom:.7rem; z-index:5; display:flex; flex-direction:column; gap:.2rem; padding:.5rem .6rem; border-radius:11px; background:var(--brain-glass); border:1px solid var(--brain-glass-bd); backdrop-filter:blur(8px); max-width:46%; }
+    .brain-legend__title{ font-family:var(--sans,Inter); font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--brain-glass-mut); margin:0 0 .15rem; }
+    .brain-legend button{ display:flex; align-items:center; gap:.45rem; background:none; border:0; padding:.12rem .1rem; cursor:pointer; font-family:var(--sans,Inter); font-size:.76rem; color:var(--brain-glass-fg); text-align:left; border-radius:5px; }
+    .brain-legend button:hover{ color:var(--accent,#2f6f8f); }
+    .brain-legend__sw{ width:.72rem; height:.72rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.2) inset; }
+    @media(max-width:520px){ .brain-legend{ display:none; } }
+
+    .brain-toolbar{ display:flex; flex-wrap:wrap; align-items:center; gap:.55rem .8rem; padding:.2rem .1rem; }
+    .brain-tool{ display:inline-flex; align-items:center; gap:.4rem; font-family:var(--sans,Inter); font-size:.8rem; font-weight:600; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:8px; padding:.4rem .7rem; cursor:pointer; transition:border-color .15s, background .15s, color .15s; }
+    .brain-tool:hover{ border-color:var(--accent,#2f6f8f); }
+    .brain-tool[aria-pressed="true"]{ background:var(--accent,#2f6f8f); border-color:var(--accent,#2f6f8f); color:#fff; }
+    .brain-tool:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
+    .brain-slider{ display:inline-flex; align-items:center; gap:.5rem; font-family:var(--sans,Inter); font-size:.72rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint,#7a756c); }
+    .brain-slider input[type=range]{ width:118px; accent-color:var(--accent,#2f6f8f); cursor:pointer; }
+    .brain-toolbar__spacer{ flex:1 1 auto; }
+
+    .brain-info{ border:1px solid var(--border,#dcd7cd); border-radius:16px; background:var(--bg-alt,#faf7f1); padding:1.4rem 1.5rem; min-height:220px; position:relative; overflow:hidden; }
+    .brain-info__bar{ position:absolute; left:0; top:0; bottom:0; width:4px; background:transparent; transition:background .2s; }
+    .brain-info__eyebrow{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.66rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .4rem; }
+    .brain-info__dot{ width:.66rem; height:.66rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.15) inset; }
+    .brain-info h2{ font-family:var(--serif,Newsreader); font-weight:600; font-size:1.6rem; margin:0 0 .2rem; line-height:1.14; }
+    .brain-info__tag{ font-family:var(--sans,Inter); font-size:.82rem; color:var(--text-faint,#6f6a61); margin:0 0 .8rem; font-style:italic; }
+    .brain-info p{ font-family:var(--serif,Newsreader); color:var(--text,#26251f); font-size:1.03rem; line-height:1.55; margin:0 0 .9rem; }
+    .brain-info__wgw{ border-left:2px solid var(--brain-glass-bd); padding-left:.8rem; }
+    .brain-info__wgw-label{ display:block; font-family:var(--sans,Inter); font-size:.64rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint,#6f6a61); margin-bottom:.2rem; }
+    .brain-info__default{ color:var(--text-faint,#5b5b57)!important; }
+    .brain-info__links{ display:flex; flex-wrap:wrap; gap:.4rem 1.1rem; align-items:center; margin-top:.2rem; }
+    .brain-info__more{ display:inline-flex; align-items:center; gap:.3rem; font-family:var(--sans,Inter); font-size:.88rem; font-weight:600; color:var(--accent,#2f6f8f); text-decoration:none; }
+    .brain-info__more:hover{ text-decoration:underline; }
+    .brain-info__src{ font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
+    .brain-info__src a{ color:inherit; }
+
     .brain-credit{ max-width:1200px; margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
     .brain-credit a{ color:inherit; }
+    @media (prefers-reduced-motion: reduce){ .brain-tooltip{ transition:none; } }
   </style>
 </head>
 <body>
@@ -66,23 +112,42 @@
     <section class="brain-hero">
       <p class="brain-hero__kicker">The Lab</p>
       <h1>Explore the brain</h1>
-      <p class="brain-hero__sub">Spin it, zoom in, and click a region to see what it does, in plain English.</p>
+      <p class="brain-hero__sub">Spin it, zoom in, and click a region to see what it does, in plain English. Slide it apart to see the deep structures, or turn on x-ray to see straight through the cortex.</p>
     </section>
 
     <div class="brain-chips" id="brain-chips" role="group" aria-label="Jump to a brain region"></div>
 
     <section class="brain-explorer" aria-label="Interactive 3D brain">
-      <div class="brain-stage">
-        <div id="brain-canvas"></div>
-        <div id="brain-loading" class="brain-loading">Loading the brain&hellip;</div>
-        <p class="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a region</p>
+      <div class="brain-main">
+        <div class="brain-stage">
+          <div id="brain-canvas"></div>
+          <div class="brain-legend" id="brain-legend" aria-label="Lobe colour key"></div>
+          <div id="brain-tooltip" class="brain-tooltip" role="status" aria-live="off"></div>
+          <div id="brain-loading" class="brain-loading">Loading the brain&hellip;</div>
+          <div id="brain-fallback" class="brain-fallback">
+            <img src="img/brain-preview.png" alt="A detailed 3D anatomical brain">
+            <p id="brain-fallback-msg">Your browser could not start 3D graphics. You can still read about each region using the buttons above.</p>
+          </div>
+          <p class="brain-hint" id="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a region</p>
+        </div>
+        <div class="brain-toolbar" id="brain-toolbar" role="toolbar" aria-label="Brain view controls">
+          <button class="brain-tool" id="tool-xray" type="button" aria-pressed="false" title="See through the cortex to the deep structures">X-ray</button>
+          <label class="brain-slider">Explode
+            <input type="range" id="tool-explode" min="0" max="100" value="0" aria-label="Explode view amount">
+          </label>
+          <button class="brain-tool" id="tool-tour" type="button" aria-pressed="false" title="Step through every region">Take the tour</button>
+          <span class="brain-toolbar__spacer"></span>
+          <button class="brain-tool" id="tool-snapshot" type="button" title="Download this view as an image">Snapshot</button>
+          <button class="brain-tool" id="tool-reset" type="button" title="Back to the whole brain">Reset</button>
+        </div>
       </div>
-      <aside class="brain-info" id="brain-info">
-        <p class="brain-info__default">Click any part of the brain to learn what it does.</p>
+      <aside class="brain-info" id="brain-info" aria-live="polite">
+        <span class="brain-info__bar" id="brain-info-bar"></span>
+        <p class="brain-info__default">Click any part of the brain, or use the buttons above, to learn what it does.</p>
       </aside>
     </section>
 
-    <p class="brain-credit">3D model: Z-Anatomy (Gauthier Kervyn) &amp; BodyParts3D / DBCLS, licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
+    <p class="brain-credit">3D model: Z-Anatomy (Gauthier Kervyn) &amp; BodyParts3D / DBCLS, licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>. Descriptions written and sourced by The Neuroscience Review.</p>
   </main>
 
   <footer class="site-footer">
@@ -103,151 +168,487 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-    // Region knowledge base. Keys are matched (substring, case-insensitive) against mesh names.
+    // ---- Region data: fact-checked blurbs + sources + colorblind-safe jewel palette ----
+    // group: 'cortex' (outer, co-visible) or 'deep' (hidden inside; isolate on select).
+    // dir: hand-tuned explode direction so structures fan out cleanly.
     const REGIONS = [
-      { match:['cerebrum','cerebral'], label:'Cerebrum', deep:false, text:"The cerebrum is the big wrinkled outer brain, and it's where most of what feels like 'you' happens — thinking, planning, language, sensation, and voluntary movement. Its rear strip, the motor cortex, sends the commands that turn an intention to speak or move into action.", link:'posts/brain-implant-inner-voice.html', linkText:'Read: can a brain implant read your inner voice?' },
-      { match:['cerebell'], label:'Cerebellum', deep:false, text:"The cerebellum, the small dense structure at the back and bottom, fine-tunes movement — timing, balance, and coordination. Damage here doesn't paralyze you, it makes movement clumsy and unsteady." },
-      { match:['brainstem','brain stem'], label:'Brainstem', deep:false, text:"The brainstem connects the brain to the spinal cord and quietly runs the things you never think about — breathing, heart rate, and the switch between sleep and waking. You can lose a lot of brain and survive; you can't lose this." },
-      { match:['hippocamp'], label:'Hippocampus', deep:true, text:"The hippocampus, a curled structure deep in the temporal lobe, is where new memories get formed and filed. It's one of the first areas Alzheimer's damages, which is why losing recent memories comes early.", link:'posts/do-the-new-alzheimers-drugs-work.html', linkText:"Read: do the new Alzheimer's drugs work?" },
-      { match:['amygdal'], label:'Amygdala', deep:true, text:"The amygdala is a small almond-shaped hub deep in the brain that flags what matters, especially threat and fear. It reacts fast, often before you're consciously aware, and colors memories with emotion.", link:'posts/aggression-switch-in-the-brain.html', linkText:'Read: is there an aggression switch in the brain?' },
-      { match:['thalam'], label:'Thalamus', deep:true, text:"The thalamus sits in the center of the brain as its main relay station. Nearly every signal heading to the cortex — sight, sound, touch — passes through here first and gets routed to the right place." },
+      { mesh:'Frontal lobe', label:'Frontal lobe', group:'cortex', color:'#E17A5D', dir:[0,0.25,1], oneLiner:'Planning, movement, and speech',
+        text:"The frontal lobe sits right behind your forehead and stretches back to a deep groove called the central sulcus. Its front section, the prefrontal cortex, runs what scientists call executive functions, things like planning, decision-making, and keeping your impulses in check. A strip along its back edge, the primary motor cortex, sends the commands that move your muscles, and a patch on the left known as Broca's area helps turn thoughts into spoken words.",
+        wgw:"Damage here can blunt someone's personality and judgment, or leave speech slow and effortful, as in Broca's aphasia.",
+        src:{title:'Cleveland Clinic, Cerebral Cortex', url:'https://my.clevelandclinic.org/health/articles/23073-cerebral-cortex'}, link:'posts/brain-implant-inner-voice.html', linkText:'Read: can a brain implant read your inner voice?' },
+      { mesh:'Parietal lobe', label:'Parietal lobe', group:'cortex', color:'#E3AE4C', dir:[0,1,0.2], oneLiner:'Touch and where you are in space',
+        text:"The parietal lobe sits just behind the frontal lobe, across the central sulcus. Its front strip, the primary somatosensory cortex, takes in touch, temperature, pain, and the sense of where your limbs are without looking. Farther back, it blends those signals with what you see and hear to build a map of your body and the space around it, which is how you reach for a cup or move through a room without bumping into everything.",
+        wgw:"Damage, often on the right side, can leave people ignoring one whole side of space, a condition called hemispatial neglect.",
+        src:{title:'Kenhub, Parietal lobe', url:'https://www.kenhub.com/en/library/anatomy/parietal-lobe'} },
+      { mesh:'Temporal lobe', label:'Temporal lobe', group:'cortex', color:'#1D9A7C', dir:[0,-0.55,0.35], oneLiner:'Hearing, memory, and language',
+        text:"The temporal lobe sits low on each side of the brain, roughly behind your temples and ears. It holds the primary auditory cortex, which sorts out the pitch, rhythm, and loudness of sound, and Wernicke's area on the left, which lets you make sense of spoken and written words. Curled inside it is the hippocampus, the structure that turns today's experiences into long-term memories.",
+        wgw:"Damage to the hippocampus can make it nearly impossible to form new memories, and injury to Wernicke's area leaves speech fluent but hard to follow.",
+        src:{title:'Cleveland Clinic, Temporal Lobe', url:'https://my.clevelandclinic.org/health/body/16799-temporal-lobe'}, link:'posts/how-memory-works.html', linkText:'Read: how does memory actually work?' },
+      { mesh:'Occipital lobe', label:'Occipital lobe', group:'cortex', color:'#4478C4', dir:[0,0.2,-1], oneLiner:"The brain's vision center",
+        text:"The occipital lobe sits at the very back of your head and is almost entirely devoted to vision. Signals from your eyes travel through a relay station in the thalamus and land first in the primary visual cortex, also called V1. V1 picks out basic features like edges and orientation, then passes the information to neighboring areas that work out color, motion, depth, and the faces and objects you recognize.",
+        wgw:"Damage can cause partial or total blindness even when the eyes themselves work perfectly, known as cortical blindness.",
+        src:{title:'StatPearls, Occipital Lobe (NCBI)', url:'https://www.ncbi.nlm.nih.gov/books/NBK544320/'} },
+      { mesh:'Limbic lobe', label:'Limbic lobe', group:'cortex', color:'#9C5BA6', dir:[0,0.6,-0.4], oneLiner:"Emotion and memory's inner ring",
+        text:"The limbic lobe isn't a bump you can spot from the outside. It's a ring of older cortex on the inner face of each hemisphere, made mostly of the cingulate gyrus arching over the corpus callosum. French anatomist Paul Broca named this border region in the 1870s, and it works hand in hand with the hippocampus and amygdala tucked nearby to color your experiences with emotion and lock them into memory.",
+        wgw:"When these circuits misfire, the result can be trouble managing mood and fear, or serious memory loss.",
+        src:{title:'The limbic system (NCBI/PMC)', url:'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2917081/'}, link:'posts/aggression-switch-in-the-brain.html', linkText:'Read: is there an aggression switch in the brain?' },
+
+      { mesh:'Cerebellum', label:'Cerebellum', group:'deep', color:'#5A6BB0', dir:[0,-0.5,-1], oneLiner:'Coordinates movement and balance',
+        text:"The cerebellum sits at the back of the brain, tucked underneath the two big hemispheres. It's only about a tenth of the brain by volume, yet it holds roughly 80 percent of all the neurons in your brain, close to 69 billion of them. Its main job is to smooth out movement so that every reach, step, and spoken word comes out coordinated and on time, and it also helps with balance and learning new skills.",
+        wgw:"Damage causes ataxia, a loss of coordination that shows up as clumsy movements, an unsteady walk, and slurred speech.",
+        src:{title:'Cleveland Clinic, Cerebellum', url:'https://my.clevelandclinic.org/health/body/23418-cerebellum'} },
+      { mesh:'Brainstem', label:'Brainstem', group:'deep', color:'#A88C66', dir:[0,-1,-0.15], oneLiner:'Breathing, heartbeat, consciousness',
+        text:"The brainstem is the stalk that connects your brain to your spinal cord, and it's built from three parts called the midbrain, pons, and medulla. It runs the automatic jobs you never think about, like breathing, heart rate, blood pressure, and staying awake. Ten of your twelve cranial nerves branch off here too, handling things like eye movement, hearing, and facial sensation.",
+        wgw:"Because it controls these vital automatic functions, damage here can stop breathing or the heartbeat and is often life-threatening.",
+        src:{title:'Cleveland Clinic, Brainstem', url:'https://my.clevelandclinic.org/health/body/21598-brainstem'} },
+      { mesh:'Thalamus', label:'Thalamus', group:'deep', color:'#D25C97', dir:[0,1,0.25], oneLiner:"The brain's sensory relay",
+        text:"The thalamus is a pair of egg-shaped hubs sitting near the center of the brain. Almost every signal from your senses stops here first and gets sorted before it's passed up to the cortex, the brain's thinking surface. Smell is the one sense that skips it. Beyond relaying, the thalamus also helps regulate alertness, sleep, and consciousness.",
+        wgw:"A stroke or injury to the thalamus can cause numbness, ongoing pain, or trouble with attention and consciousness.",
+        src:{title:'StatPearls, Thalamus (NCBI)', url:'https://www.ncbi.nlm.nih.gov/books/NBK542184/'} },
+      { mesh:'Hypothalamus', label:'Hypothalamus', group:'deep', color:'#E08A45', dir:[0,-0.7,0.6], oneLiner:'Thermostat and hormone control',
+        text:"The hypothalamus is a small region deep in the brain, sitting just below the thalamus. It works as the body's balance keeper, holding your temperature, hunger, thirst, and sleep-wake cycle steady. It does much of this by telling the nearby pituitary gland when to release hormones, which is how it links your nervous system to the rest of your body's chemistry.",
+        wgw:"Damage can throw off body temperature, appetite, thirst, sleep, and hormone balance all at once.",
+        src:{title:'Cleveland Clinic, Hypothalamus', url:'https://my.clevelandclinic.org/health/body/22566-hypothalamus'} },
+      { mesh:'Basal ganglia', label:'Basal ganglia', group:'deep', color:'#178E8E', dir:[0,0.7,0.5], oneLiner:'Selects movements, builds habits',
+        text:"The basal ganglia are a cluster of structures buried deep beneath the cortex. They act like a gatekeeper for movement, helping decide which actions to start and which to hold back, and they're central to building habits and automatic routines. They rely on the chemical messenger dopamine to do this work.",
+        wgw:"When the dopamine-making cells that feed it die off, you get Parkinson's disease, with its tremor, stiffness, and slowed movement.",
+        src:{title:'Nature Reviews Neuroscience, basal ganglia', url:'https://www.nature.com/articles/nrn2915'} },
+      { mesh:'Hippocampus', label:'Hippocampus', group:'deep', color:'#9885DE', dir:[0,-0.25,1], oneLiner:'Forms new memories, maps space',
+        text:"The hippocampus is a curved, seahorse-shaped structure in the brain's temporal lobe, and you have one on each side. It's essential for turning everyday experiences into lasting memories, and it holds special place cells that work like an inner map for finding your way around. Without a working hippocampus, new memories can't get filed away.",
+        wgw:"When it's damaged, as happens early in Alzheimer's disease, people struggle to form new memories and can get lost in familiar places.",
+        src:{title:'Frontiers, place cells & spatial memory', url:'https://www.frontiersin.org/journals/behavioral-neuroscience/articles/10.3389/fnbeh.2022.1082158/full'}, link:'posts/do-the-new-alzheimers-drugs-work.html', linkText:"Read: do the new Alzheimer's drugs work?" },
+      { mesh:'Amygdala', label:'Amygdala', group:'deep', color:'#D4556A', dir:[0,-0.4,1], oneLiner:'Threat and fear detector',
+        text:"The amygdala is a pair of almond-shaped clusters deep in the temporal lobes, and its name comes from the Greek word for almond. It works as the brain's alarm system, quickly spotting threats and triggering the fight-or-flight response before you've consciously noticed the danger. It also tags experiences with emotion, which is part of why frightening or thrilling moments stick in memory.",
+        wgw:"An overactive amygdala is tied to anxiety and PTSD, while damage to it can blunt fear and make threats hard to recognize.",
+        src:{title:'Neuropsychologia, amygdala & threat', url:'https://www.sciencedirect.com/science/article/pii/S0306453005001022'}, link:'posts/aggression-switch-in-the-brain.html', linkText:'Read: is there an aggression switch in the brain?' },
+      { mesh:'Corpus callosum', label:'Corpus callosum', group:'deep', color:'#5E86A8', dir:[0,1,-0.2], oneLiner:'Bridge between the hemispheres',
+        text:"The corpus callosum is a thick band of roughly 200 million nerve fibers running across the middle of the brain. It's the largest bundle of white matter you have, and its job is to link the left and right hemispheres so they can share information and work as one. Every time the two sides of your brain coordinate, they're talking through this bridge.",
+        wgw:"If it's surgically cut or never fully forms, the two halves of the brain can't easily share information, a condition known as split-brain.",
+        src:{title:'StatPearls, Corpus Callosum (NCBI)', url:'https://www.ncbi.nlm.nih.gov/books/NBK448209/'} },
+      { mesh:'Ventricles', label:'Ventricles', group:'deep', color:'#86CFDD', dir:[0,1,0.15], oneLiner:'Fluid spaces that cushion the brain',
+        text:"The ventricles are four hollow, connected chambers deep inside the brain, filled with clear cerebrospinal fluid. A tissue lining them called the choroid plexus makes this fluid, which cushions the brain, floats it so it weighs less, and helps carry away waste. The fluid made here flows around the whole brain and spinal cord before it's reabsorbed.",
+        wgw:"If the fluid can't drain properly it backs up and swells the ventricles, a condition called hydrocephalus that raises pressure on the brain.",
+        src:{title:'TeachMeAnatomy, Ventricles', url:'https://teachmeanatomy.info/neuroanatomy/vessels/ventricles/'} },
     ];
-    function lookup(name){
-      const n = (name||'').toLowerCase();
-      for(const r of REGIONS){ if(r.match.some(m => n.includes(m))) return r; }
-      return null;
-    }
+    // three.js sanitizes glTF names (spaces->_, dots removed). Reduce to lowercase alnum.
+    function norm(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]/g,'').replace(/\d+$/,''); }
+    const byMesh = {}; REGIONS.forEach(r => { byMesh[norm(r.mesh)] = r; });
+    function regionForName(n){ return byMesh[norm(n)] || null; }
+    function regionByLabel(l){ return REGIONS.find(r => r.label === l) || null; }
 
-    const stage = document.getElementById('brain-canvas');
+    const stageEl = document.getElementById('brain-canvas');
     const infoEl = document.getElementById('brain-info');
+    const infoBar = document.getElementById('brain-info-bar');
     const loadingEl = document.getElementById('brain-loading');
+    const fallbackEl = document.getElementById('brain-fallback');
+    const fallbackMsg = document.getElementById('brain-fallback-msg');
+    const tooltipEl = document.getElementById('brain-tooltip');
+    const rm = matchMedia('(prefers-reduced-motion: reduce)');
 
-    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    renderer.setSize(stage.clientWidth, stage.clientHeight);
-    stage.appendChild(renderer.domElement);
+    // ---- WebGL support check + graceful fallback ----
+    function webglOk(){ try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch(e){ return false; } }
+    if(!webglOk()){ showFallback('Your browser could not start 3D graphics. You can still read about each region using the buttons above.'); }
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, stage.clientWidth/stage.clientHeight, 0.01, 100);
-    camera.position.set(0, 0.05, 2.6);
-
-    scene.add(new THREE.HemisphereLight(0xdfeaf2, 0x2b2f36, 1.05));
-    const key = new THREE.DirectionalLight(0xffffff, 1.15); key.position.set(2, 3, 2.5); scene.add(key);
-    const fill = new THREE.DirectionalLight(0xbcd2e6, 0.5); fill.position.set(-3, -1, -2); scene.add(fill);
-
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; controls.dampingFactor = 0.08;
-    controls.minDistance = 1.2; controls.maxDistance = 6; controls.enablePan = false;
-    controls.autoRotate = true; controls.autoRotateSpeed = 0.6;
-
+    let renderer, scene, camera, controls, pmrem;
     let brain = null;
     const meshes = [];
-    let highlighted = null;
+    let modelRadius = 1, baseScale = 1;
+    let needsRender = true, focusing = false, focusDist = null;
+    const targetFocus = new THREE.Vector3(0,0,0);
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
 
-    const loader = new GLTFLoader();
-    loader.load('models/brain.glb', (gltf) => {
+    // ---- Central UI state; refresh() is the ONLY place that mutates materials/positions ----
+    const state = { selected: null, xray: false, explode: 0, tour: false };
+
+    function showFallback(msg){
+      if(fallbackMsg && msg) fallbackMsg.textContent = msg;
+      if(loadingEl) loadingEl.style.display = 'none';
+      if(fallbackEl) fallbackEl.style.display = 'flex';
+    }
+
+    function initGL(){
+      renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, preserveDrawingBuffer:true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.setSize(stageEl.clientWidth, stageEl.clientHeight);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      stageEl.appendChild(renderer.domElement);
+      renderer.domElement.tabIndex = 0;
+      renderer.domElement.setAttribute('role','application');
+      renderer.domElement.setAttribute('aria-label','Interactive 3D brain. Use the region buttons above, or arrow keys to cycle regions, Escape to reset.');
+
+      scene = new THREE.Scene();
+      pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+      camera = new THREE.PerspectiveCamera(45, stageEl.clientWidth/stageEl.clientHeight, 0.01, 100);
+      camera.position.set(0, 0.05, 2.6);
+
+      hemi = new THREE.HemisphereLight(0xeaf1f7, 0x3a2f2a, 0.55); scene.add(hemi);
+      key = new THREE.DirectionalLight(0xfff4e8, 1.5); key.position.set(2.5, 3.5, 2.5); scene.add(key);
+      fill = new THREE.DirectionalLight(0xcfe0f0, 0.55); fill.position.set(-3, 0.5, 1.5); scene.add(fill);
+      rimL = new THREE.DirectionalLight(0xbcd6ff, 0.9); rimL.position.set(-1.5, 1.2, -3); scene.add(rimL);
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; controls.dampingFactor = 0.08;
+      controls.minDistance = 1.1; controls.maxDistance = 6; controls.enablePan = false;
+      controls.autoRotate = !rm.matches; controls.autoRotateSpeed = 0.55;
+      controls.addEventListener('change', () => { needsRender = true; });
+
+      // WebGL context loss handling
+      renderer.domElement.addEventListener('webglcontextlost', (e) => { e.preventDefault(); showFallback('3D graphics paused. Reload the page to bring the brain back.'); }, false);
+
+      applyStageTheme();
+    }
+    let hemi, key, fill, rimL;
+
+    function applyStageTheme(){
+      if(!renderer) return;
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      renderer.toneMappingExposure = dark ? 1.05 : 1.18;
+      if(hemi) hemi.intensity = dark ? 0.55 : 0.72;
+      if(fill) fill.intensity = dark ? 0.55 : 0.68;
+      needsRender = true;
+    }
+    new MutationObserver(applyStageTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+
+    // ---- Load model ----
+    if(webglOk()){
+      initGL();
+      const loader = new GLTFLoader();
+      loader.load('models/brain.glb', onLoaded, undefined, () => showFallback('The brain model could not load. Please check your connection and reload.'));
+      animate();
+    }
+    buildChips();
+    buildLegend();
+
+    function onLoaded(gltf){
       brain = gltf.scene;
-      // center + scale to a unit-ish size
       const box = new THREE.Box3().setFromObject(brain);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
       const scale = 1.7 / Math.max(size.x, size.y, size.z);
+      baseScale = scale;
       brain.scale.setScalar(scale);
       brain.position.sub(center.multiplyScalar(scale));
+      brain.updateWorldMatrix(true, true);
+      modelRadius = 0.85;
+      const brainBox = new THREE.Box3().setFromObject(brain);
+      const brainCenter = brainBox.getCenter(new THREE.Vector3());
       brain.traverse(o => {
         if(o.isMesh){
-          o.material = new THREE.MeshStandardMaterial({ color:0xe9c6be, roughness:0.72, metalness:0.02, transparent:true, opacity:1 });
-          o.userData.baseColor = o.material.color.clone();
+          const r = regionForName(o.name);
+          const base = new THREE.Color(r ? r.color : '#d8c3bb');
+          o.material = new THREE.MeshPhysicalMaterial({ color:base.clone(), roughness:0.55, metalness:0.0,
+            clearcoat:0.35, clearcoatRoughness:0.55, sheen:0.4, sheenRoughness:0.6, sheenColor:new THREE.Color(0xffe4d6),
+            envMapIntensity:0.45, transparent:false, opacity:1, depthWrite:true });
+          o.material.emissive = new THREE.Color(0x000000);
+          o.userData.baseColor = base.clone();
+          o.userData.region = r;
+          const mb = new THREE.Box3().setFromObject(o);
+          o.userData.center = mb.getCenter(new THREE.Vector3());
+          o.userData.home = o.position.clone();
+          // explode direction: use hand-tuned dir if given, else radial from brain center
+          let dir;
+          if(r && r.dir){ dir = new THREE.Vector3(r.dir[0], r.dir[1], r.dir[2]); }
+          else { dir = o.userData.center.clone().sub(brainCenter); }
+          if(dir.lengthSq() < 1e-6) dir.set(0,1,0);
+          o.userData.dir = dir.normalize();
           meshes.push(o);
         }
       });
       scene.add(brain);
       loadingEl.style.display = 'none';
-      buildChips();
-    }, undefined, (err) => {
-      loadingEl.textContent = 'Could not load the brain model.';
-      console.error(err);
-    });
+      refresh();
+      applyHash(); // deep-link support
+      needsRender = true;
+    }
 
-    const DEFAULT_INFO = '<p class="brain-info__default">Click any part of the brain, or use the buttons above, to learn what it does.</p>';
-    function showAll(){
+    // ---- THE resolver: one function computes every mesh's appearance + position ----
+    function refresh(){
+      const sel = state.selected;
+      const selRegion = sel && sel.userData.region;
+      const selDeep = selRegion && selRegion.group === 'deep';
+      const cortexDim = state.xray ? 0.14 : 0.18;
       meshes.forEach(m => {
-        m.material.opacity = 1; m.material.depthWrite = true;
+        const region = m.userData.region;
+        const isCortex = region && region.group === 'cortex';
+        let opacity = 1, emissiveScale = 0;
+        if(sel){
+          if(m === sel){ opacity = 1; emissiveScale = 0.55; }
+          else { opacity = selDeep ? 0.05 : (isCortex ? 0.2 : 0.08); }
+        } else if(state.xray && isCortex){
+          opacity = cortexDim;
+        }
+        const translucent = opacity < 0.999;
+        m.material.transparent = translucent;
+        m.material.opacity = opacity;
+        m.material.depthWrite = !translucent;
         m.material.color.copy(m.userData.baseColor);
-        if(m.material.emissive) m.material.emissive.setHex(0x000000);
+        if(emissiveScale > 0){
+          m.material.emissive.copy(m.userData.baseColor).multiplyScalar(emissiveScale);
+          m.material.emissiveIntensity = 0.4;
+          m.material.envMapIntensity = 0.7;
+        } else {
+          m.material.emissive.setHex(0x000000);
+          m.material.envMapIntensity = opacity < 0.5 ? 0.06 : 0.45; // ghosts don't catch reflections
+        }
+        // explode: translate along tuned direction (cortex opens, deep spreads a bit less)
+        const e = state.explode;
+        const spread = (isCortex ? 0.5 : 0.4) * modelRadius;
+        m.position.copy(m.userData.home).addScaledVector(m.userData.dir, e * spread);
       });
-      highlighted = null;
+      // shrink the whole group as it explodes so the fanned-out assembly stays framed
+      if(brain) brain.scale.setScalar(baseScale * (1 - state.explode * 0.34));
+      needsRender = true;
     }
-    function isolate(target){
-      meshes.forEach(m => { const on = (m === target); m.material.opacity = on ? 1 : 0.07; m.material.depthWrite = on; });
-    }
-    function setHighlight(mesh){
-      if(mesh){
-        if(mesh.material.emissive){ mesh.material.emissive = new THREE.Color(0x2f6f8f); mesh.material.emissiveIntensity = 0.55; }
-        mesh.material.color.set(0xf3d9d2);
-      }
-      highlighted = mesh;
-    }
-    function meshForRegion(region){
-      return meshes.find(m => region.match.some(t => m.name.toLowerCase().includes(t)));
-    }
-    function showInfo(region, rawName){
+
+    // ---- Info panel ----
+    const DEFAULT_INFO = '<span class="brain-info__bar" id="brain-info-bar"></span><p class="brain-info__default">Click any part of the brain, or use the buttons above, to learn what it does.</p>';
+    function showInfo(region){
       if(!region){ infoEl.innerHTML = DEFAULT_INFO; return; }
-      let html = '<p class="brain-info__label">Region</p><h2>'+ region.label +'</h2><p>'+ region.text +'</p>';
-      if(region.link) html += '<a class="brain-info__more" href="'+ region.link +'">'+ (region.linkText||'Read more') +' &rarr;</a>';
-      infoEl.innerHTML = html;
+      const groupLabel = region.group === 'cortex' ? 'Lobe' : 'Deep structure';
+      let h = '<span class="brain-info__bar" style="background:'+region.color+'"></span>';
+      h += '<p class="brain-info__eyebrow"><span class="brain-info__dot" style="background:'+region.color+'"></span>'+groupLabel+'</p>';
+      h += '<h2>'+region.label+'</h2>';
+      h += '<p class="brain-info__tag">'+region.oneLiner+'</p>';
+      h += '<p>'+region.text+'</p>';
+      if(region.wgw) h += '<p class="brain-info__wgw"><span class="brain-info__wgw-label">What goes wrong</span>'+region.wgw+'</p>';
+      h += '<div class="brain-info__links">';
+      if(region.link) h += '<a class="brain-info__more" href="'+region.link+'">'+(region.linkText||'Read more')+' <span aria-hidden="true">&rarr;</span></a>';
+      if(region.src) h += '<span class="brain-info__src">Source: <a href="'+region.src.url+'" target="_blank" rel="noopener">'+region.src.title+'</a></span>';
+      h += '</div>';
+      infoEl.innerHTML = h;
     }
     function markChip(region){
-      document.querySelectorAll('.brain-chip').forEach(c => c.classList.toggle('is-active', !!region && c.dataset.label === region.label));
-    }
-    function selectRegion(region, mesh){
-      controls.autoRotate = false;
-      showAll();
-      const target = mesh || (region && meshForRegion(region));
-      if(region && region.deep && target) isolate(target);
-      if(target) setHighlight(target);
-      showInfo(region, target && target.name);
-      markChip(region);
-    }
-    function buildChips(){
-      const wrap = document.getElementById('brain-chips');
-      REGIONS.forEach(r => {
-        if(!meshForRegion(r)) return;
-        const b = document.createElement('button');
-        b.className = 'brain-chip'; b.dataset.label = r.label; b.textContent = r.label;
-        b.addEventListener('click', () => selectRegion(r));
-        wrap.appendChild(b);
+      document.querySelectorAll('.brain-chip').forEach(c => {
+        const on = !!region && c.dataset.mesh === region.mesh;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-pressed', String(on));
+        c.style.background = on ? region.color : '';
       });
-      const reset = document.createElement('button');
-      reset.className = 'brain-chip brain-chip--reset'; reset.textContent = 'Whole brain';
-      reset.addEventListener('click', () => { showAll(); showInfo(null); markChip(null); controls.autoRotate = true; });
-      wrap.appendChild(reset);
+    }
+    function meshForRegion(region){ return meshes.find(m => norm(m.name) === norm(region.mesh)); }
+
+    // ---- Selection ----
+    function selectRegion(region, opts){
+      opts = opts || {};
+      if(!region) return;
+      const target = meshForRegion(region);
+      state.selected = target || null;
+      if(controls && !state.tour) controls.autoRotate = false;
+      refresh();
+      if(target && controls){
+        const bx = new THREE.Box3().setFromObject(target); bx.getCenter(targetFocus);
+        const sph = bx.getBoundingSphere(new THREE.Sphere());
+        focusDist = Math.min(4, Math.max(1.3, sph.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov/2)) * 1.8));
+        focusing = true;
+      }
+      showInfo(region);
+      markChip(region);
+      if(!opts.silent) writeHash();
+    }
+    function resetView(){
+      state.selected = null; state.xray = false; state.explode = 0; stopTour();
+      document.getElementById('tool-xray').setAttribute('aria-pressed','false');
+      document.getElementById('tool-explode').value = 0;
+      refresh();
+      showInfo(null); markChip(null);
+      if(controls){ targetFocus.set(0,0,0); focusDist = 2.6; focusing = true; controls.autoRotate = !rm.matches; }
+      writeHash();
     }
 
-    renderer.domElement.addEventListener('pointerdown', (e) => {
-      if(!meshes.length) return;
-      const rect = renderer.domElement.getBoundingClientRect();
-      pointer.x = ((e.clientX-rect.left)/rect.width)*2 - 1;
-      pointer.y = -((e.clientY-rect.top)/rect.height)*2 + 1;
-      raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(meshes, true).filter(h => h.object.material.opacity > 0.2);
-      if(hits.length){ const mesh = hits[0].object; selectRegion(lookup(mesh.name), mesh); }
+    // ---- Chips + legend ----
+    function buildChips(){
+      const wrap = document.getElementById('brain-chips'); wrap.innerHTML = '';
+      [['Lobes','cortex'],['Deep','deep']].forEach(([label, grp]) => {
+        const items = REGIONS.filter(r => r.group === grp);
+        const row = document.createElement('div'); row.className = 'brain-chip-row';
+        const lab = document.createElement('span'); lab.className = 'brain-chip-row__label'; lab.textContent = label; row.appendChild(lab);
+        items.forEach(r => {
+          const b = document.createElement('button'); b.className = 'brain-chip'; b.type='button';
+          b.dataset.mesh = r.mesh; b.setAttribute('aria-pressed','false');
+          b.innerHTML = '<span class="brain-chip__dot" style="background:'+r.color+'"></span>'+r.label;
+          b.addEventListener('click', () => selectRegion(r));
+          row.appendChild(b);
+        });
+        wrap.appendChild(row);
+      });
+    }
+    function buildLegend(){
+      const el = document.getElementById('brain-legend'); el.innerHTML = '';
+      const t = document.createElement('p'); t.className='brain-legend__title'; t.textContent='Lobes'; el.appendChild(t);
+      REGIONS.filter(r => r.group==='cortex').forEach(r => {
+        const b = document.createElement('button'); b.type='button';
+        b.innerHTML = '<span class="brain-legend__sw" style="background:'+r.color+'"></span>'+r.label;
+        b.addEventListener('click', () => selectRegion(r));
+        el.appendChild(b);
+      });
+    }
+
+    // ---- Toolbar ----
+    document.getElementById('tool-xray').addEventListener('click', (e) => {
+      state.xray = !state.xray; e.currentTarget.setAttribute('aria-pressed', String(state.xray)); refresh(); writeHash();
     });
+    document.getElementById('tool-explode').addEventListener('input', (e) => {
+      state.explode = (+e.target.value)/100; refresh(); writeHash();
+    });
+    document.getElementById('tool-tour').addEventListener('click', () => { state.tour ? stopTour() : startTour(); });
+    document.getElementById('tool-reset').addEventListener('click', resetView);
+    document.getElementById('tool-snapshot').addEventListener('click', snapshot);
 
-    function onResize(){
-      const w = stage.clientWidth, h = stage.clientHeight;
-      renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix();
+    // ---- Guided tour ----
+    let tourIdx = 0, tourTimer = null;
+    function startTour(){
+      state.tour = true; tourIdx = 0;
+      document.getElementById('tool-tour').setAttribute('aria-pressed','true');
+      document.getElementById('tool-tour').textContent = 'Stop tour';
+      controls.autoRotate = false;
+      tourStep(0);
+      if(!rm.matches) tourTimer = setInterval(() => tourStep(1), 4200);
     }
-    addEventListener('resize', onResize);
+    function stopTour(){
+      state.tour = false;
+      if(tourTimer){ clearInterval(tourTimer); tourTimer = null; }
+      const t = document.getElementById('tool-tour');
+      if(t){ t.setAttribute('aria-pressed','false'); t.textContent = 'Take the tour'; }
+    }
+    function tourStep(delta){
+      tourIdx = (tourIdx + delta + REGIONS.length) % REGIONS.length;
+      selectRegion(REGIONS[tourIdx], { silent:true });
+    }
 
-    (function animate(){
-      requestAnimationFrame(animate);
-      controls.update();
+    // ---- Snapshot ----
+    function snapshot(){
+      if(!renderer) return;
       renderer.render(scene, camera);
-    })();
+      try {
+        const url = renderer.domElement.toDataURL('image/png');
+        const a = document.createElement('a');
+        const sel = state.selected && state.selected.userData.region;
+        a.download = 'brain' + (sel ? '-' + sel.mesh.toLowerCase().replace(/\s+/g,'-') : '') + '.png';
+        a.href = url; a.click();
+      } catch(e){ /* tainted canvas guard */ }
+    }
+
+    // ---- Deep-linking via URL hash ----
+    function writeHash(){
+      const parts = [];
+      const sel = state.selected && state.selected.userData.region;
+      if(sel) parts.push('region=' + encodeURIComponent(sel.mesh));
+      if(state.xray) parts.push('xray=1');
+      if(state.explode > 0) parts.push('explode=' + Math.round(state.explode*100));
+      const h = parts.join('&');
+      history.replaceState(null, '', h ? '#'+h : location.pathname + location.search);
+    }
+    function applyHash(){
+      const h = location.hash.replace(/^#/, ''); if(!h) return;
+      const p = new URLSearchParams(h);
+      if(p.get('xray') === '1'){ state.xray = true; document.getElementById('tool-xray').setAttribute('aria-pressed','true'); }
+      const ex = parseInt(p.get('explode')||'0', 10);
+      if(ex > 0){ state.explode = Math.min(1, ex/100); document.getElementById('tool-explode').value = ex; }
+      const reg = p.get('region');
+      if(reg){ const r = regionForName(reg) || REGIONS.find(x => x.mesh === reg); if(r){ selectRegion(r, { silent:true }); return; } }
+      refresh();
+    }
+
+    // ---- Pointer: select only on a genuine tap/click (not a rotate drag) ----
+    let down = null;
+    function pick(clientX, clientY){
+      if(!meshes.length) return null;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((clientX-rect.left)/rect.width)*2 - 1;
+      pointer.y = -((clientY-rect.top)/rect.height)*2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(meshes, false).filter(h => h.object.material.opacity > 0.15);
+      return hits.length ? hits[0].object : null;
+    }
+    function onDown(e){ down = { x:e.clientX, y:e.clientY, id:e.pointerId }; }
+    function onUp(e){
+      if(!down || e.pointerId !== down.id) { down = null; return; }
+      const moved = Math.hypot(e.clientX-down.x, e.clientY-down.y);
+      down = null;
+      if(moved > 6) return; // a drag/rotate, not a tap
+      if(state.tour) stopTour();
+      const m = pick(e.clientX, e.clientY);
+      if(m && m.userData.region) selectRegion(m.userData.region);
+      else if(state.selected) resetView(); // tap empty space to clear
+    }
+    if(webglOk()){
+      renderer.domElement.addEventListener('pointerdown', onDown);
+      renderer.domElement.addEventListener('pointerup', onUp);
+      renderer.domElement.addEventListener('pointercancel', () => { down = null; });
+      renderer.domElement.addEventListener('pointermove', (e) => {
+        if(e.pointerType === 'touch' || !meshes.length) return;
+        const m = pick(e.clientX, e.clientY);
+        renderer.domElement.style.cursor = m ? 'pointer' : 'grab';
+        if(m && m.userData.region){
+          const rect = renderer.domElement.getBoundingClientRect();
+          tooltipEl.textContent = m.userData.region.label;
+          tooltipEl.style.left = (e.clientX-rect.left)+'px';
+          tooltipEl.style.top = (e.clientY-rect.top)+'px';
+          tooltipEl.style.opacity = '1';
+        } else tooltipEl.style.opacity = '0';
+      });
+      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; });
+
+      // Keyboard: arrows cycle regions, Esc reset, R reset camera, T tour
+      renderer.domElement.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape'){ resetView(); }
+        else if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); cycle(1); }
+        else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){ e.preventDefault(); cycle(-1); }
+        else if(e.key === 't' || e.key === 'T'){ state.tour ? stopTour() : startTour(); }
+        else if(e.key === 'r' || e.key === 'R'){ resetView(); }
+      });
+    }
+    function cycle(dir){
+      const cur = state.selected && state.selected.userData.region;
+      let i = cur ? REGIONS.indexOf(cur) : -1;
+      i = (i + dir + REGIONS.length) % REGIONS.length;
+      selectRegion(REGIONS[i]);
+    }
+
+    // ---- Resize (container-aware) + render-on-demand loop ----
+    function onResize(){
+      if(!renderer) return;
+      const w = stageEl.clientWidth, h = stageEl.clientHeight;
+      if(!w || !h) return;
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix();
+      needsRender = true;
+    }
+    if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
+    addEventListener('resize', onResize);
+    rm.addEventListener('change', () => { controls.autoRotate = !rm.matches && !state.selected && !state.tour; needsRender = true; });
+    addEventListener('hashchange', () => { /* internal writes use replaceState; ignore */ });
+
+    function animate(){
+      requestAnimationFrame(animate);
+      if(!renderer) return;
+      let render = false;
+      if(focusing){
+        controls.target.lerp(targetFocus, 0.1);
+        if(focusDist != null){
+          const off = camera.position.clone().sub(controls.target);
+          off.setLength(off.length() + (focusDist - off.length()) * 0.1);
+          camera.position.copy(controls.target).add(off);
+        }
+        const closeT = controls.target.distanceToSquared(targetFocus) < 1e-5;
+        const closeD = focusDist == null || Math.abs(camera.position.distanceTo(controls.target) - focusDist) < 0.015;
+        if(closeT && closeD){ controls.target.copy(targetFocus); focusing = false; focusDist = null; }
+        render = true;
+      }
+      if(controls.autoRotate) render = true;
+      if(needsRender) render = true;
+      needsRender = false;              // reset first; controls.update() re-sets it via 'change' while damping/rotating
+      if(render){
+        controls.update();
+        renderer.render(scene, camera);
+      }
+    }
   </script>
 </body>
 </html>
