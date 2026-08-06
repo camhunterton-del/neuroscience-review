@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore a Neuron — The Neuroscience Review</title>
+  <meta name="description" content="An interactive 3D neuron. Spin it, click a part to see what it does, and fire a signal down the axon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://theneuroreview.com/neuron.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="Explore a Neuron — The Neuroscience Review">
+  <meta property="og:description" content="An interactive 3D neuron. Spin it, click a part to see what it does, and fire a signal down the axon.">
+  <style>
+    #main{ --brain-glass:rgba(250,247,241,.92); --brain-glass-bd:var(--border,#dcd7cd); --brain-glass-fg:var(--text,#26251f); --brain-glass-mut:var(--text-faint,#6f6a61); }
+    [data-theme="dark"] #main{ --brain-glass:rgba(16,22,30,.82); --brain-glass-bd:rgba(120,150,170,.28); --brain-glass-fg:#eef6f2; --brain-glass-mut:#9fb1bf; }
+    .brain-hero{ max-width:1200px; margin:0 auto; padding:2.4rem 1.2rem 0.4rem; }
+    .brain-hero__kicker{ display:inline-flex; align-items:center; gap:.7rem; font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .55rem; }
+    .brain-hero__kicker::after{ content:""; width:2.2rem; height:1px; background:var(--accent,#2f6f8f); opacity:.5; }
+    .brain-hero h1{ font-family:var(--serif,Newsreader); font-weight:600; font-size:clamp(2rem,4.4vw,3rem); line-height:1.06; letter-spacing:-.015em; margin:0 0 .5rem; }
+    .brain-hero__sub{ font-family:var(--serif,Newsreader); color:var(--text-faint,#5b5b57); font-size:1.1rem; max-width:62ch; margin:0; }
+
+    .brain-chips{ max-width:1040px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.55rem; }
+    .brain-chip-row{ display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; }
+    .brain-chip-row__label{ font-family:var(--sans,Inter); font-size:.66rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-faint,#7a756c); margin-right:.15rem; min-width:3.6rem; }
+    .brain-chip{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.85rem; font-weight:500; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:999px; padding:.4rem .85rem; cursor:pointer; transition:background .15s, border-color .15s, color .15s; }
+    .brain-chip:hover{ border-color:var(--accent,#2f6f8f); }
+    .brain-chip__dot{ width:.72rem; height:.72rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.18) inset; }
+    .brain-chip.is-active{ color:#fff; border-color:transparent; }
+    .brain-chip:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
+
+    .brain-explorer{ max-width:1040px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.7rem; }
+    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:480px; background:radial-gradient(120% 120% at 50% 20%, #ffffff 0%, #eef1f4 38%, #e2e7ec 70%, #d6dce2 100%); }
+    .brain-stage::before{ content:""; position:absolute; inset:0; background:radial-gradient(60% 45% at 50% 42%, rgba(47,111,143,.14), transparent 70%); pointer-events:none; }
+    [data-theme="dark"] .brain-stage{ background:radial-gradient(120% 120% at 50% 18%, #1c2836 0%, #121a23 60%, #0a0e13 100%); }
+    [data-theme="dark"] .brain-stage::before{ background:radial-gradient(58% 44% at 50% 40%, rgba(70,150,190,.22), transparent 72%); }
+    @media(min-width:900px){ .brain-stage{ min-height:560px; } }
+    #brain-canvas{ position:absolute; inset:0; }
+    #brain-canvas canvas{ display:block; width:100%!important; height:100%!important; touch-action:none; outline:none; }
+    #brain-canvas canvas:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:-2px; }
+    .brain-loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.95rem; pointer-events:none; text-align:center; padding:1.5rem; }
+    .brain-fallback{ position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:1.5rem; text-align:center; }
+    .brain-fallback p{ font-family:var(--sans,Inter); font-size:.9rem; color:var(--brain-glass-mut); margin:0; max-width:40ch; }
+    .brain-hint{ position:absolute; left:0; right:0; bottom:.7rem; text-align:center; margin:0; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.03em; pointer-events:none; opacity:.9; }
+    .brain-tooltip{ position:absolute; z-index:6; pointer-events:none; transform:translate(-50%,-140%); background:var(--brain-glass); color:var(--brain-glass-fg); font-family:var(--sans,Inter); font-size:.78rem; font-weight:500; padding:.28rem .58rem; border-radius:7px; border:1px solid var(--brain-glass-bd); white-space:nowrap; opacity:0; transition:opacity .12s; backdrop-filter:blur(6px); }
+
+    .brain-legend{ position:absolute; left:.7rem; bottom:.7rem; z-index:5; display:flex; flex-direction:column; gap:.2rem; padding:.5rem .6rem; border-radius:11px; background:var(--brain-glass); border:1px solid var(--brain-glass-bd); backdrop-filter:blur(8px); max-width:46%; }
+    .brain-legend__title{ font-family:var(--sans,Inter); font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--brain-glass-mut); margin:0 0 .15rem; }
+    .brain-legend button{ display:flex; align-items:center; gap:.45rem; background:none; border:0; padding:.12rem .1rem; cursor:pointer; font-family:var(--sans,Inter); font-size:.74rem; color:var(--brain-glass-fg); text-align:left; border-radius:5px; }
+    .brain-legend button:hover{ color:var(--accent,#2f6f8f); }
+    .brain-legend__sw{ width:.7rem; height:.7rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.2) inset; }
+    @media(max-width:560px){ .brain-legend{ display:none; } }
+
+    .brain-toolbar{ display:flex; flex-wrap:wrap; align-items:center; gap:.55rem .8rem; padding:.2rem .1rem; }
+    .brain-tool{ display:inline-flex; align-items:center; gap:.4rem; font-family:var(--sans,Inter); font-size:.8rem; font-weight:600; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:8px; padding:.4rem .7rem; cursor:pointer; transition:border-color .15s, background .15s, color .15s; }
+    .brain-tool:hover{ border-color:var(--accent,#2f6f8f); }
+    .brain-tool--fire{ color:#fff; background:#d98a3a; border-color:#d98a3a; }
+    .brain-tool--fire:hover{ background:#e79a48; border-color:#e79a48; }
+    .brain-tool[aria-pressed="true"]{ background:var(--accent,#2f6f8f); border-color:var(--accent,#2f6f8f); color:#fff; }
+    .brain-tool:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
+    .brain-toolbar__spacer{ flex:1 1 auto; }
+    .brain-toolbar__read{ font-family:var(--sans,Inter); font-size:.78rem; color:var(--brain-glass-mut,#7a756c); }
+
+    .brain-info{ position:absolute; top:.7rem; right:.7rem; z-index:6; width:min(350px,44%); max-height:calc(100% - 1.4rem); overflow-y:auto; border:1px solid var(--brain-glass-bd); border-radius:14px; background:var(--brain-glass); backdrop-filter:blur(11px); padding:1.15rem 1.25rem 1.25rem; color:var(--brain-glass-fg); opacity:0; visibility:hidden; transform:translateX(10px); transition:opacity .2s ease, transform .2s ease, visibility .2s; }
+    .brain-info.is-visible{ opacity:1; visibility:visible; transform:none; }
+    @media(max-width:720px){ .brain-info{ top:auto; left:.6rem; right:.6rem; bottom:.6rem; width:auto; max-height:56%; } }
+    .brain-info__bar{ position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:14px 0 0 14px; background:transparent; }
+    .brain-info__eyebrow{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.66rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .4rem; }
+    .brain-info__dot{ width:.66rem; height:.66rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.15) inset; }
+    .brain-info h2{ font-family:var(--serif,Newsreader); font-weight:600; font-size:1.6rem; margin:0 0 .2rem; line-height:1.14; }
+    .brain-info__tag{ font-family:var(--sans,Inter); font-size:.82rem; color:var(--text-faint,#6f6a61); margin:0 0 .8rem; font-style:italic; }
+    .brain-info p{ font-family:var(--serif,Newsreader); color:var(--text,#26251f); font-size:1.03rem; line-height:1.55; margin:0 0 .9rem; }
+    .brain-info__wgw{ border-left:2px solid var(--brain-glass-bd); padding-left:.8rem; }
+    .brain-info__wgw-label{ display:block; font-family:var(--sans,Inter); font-size:.64rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint,#6f6a61); margin-bottom:.2rem; }
+    .brain-info__links{ display:flex; flex-wrap:wrap; gap:.4rem 1.1rem; align-items:center; margin-top:.2rem; }
+    .brain-info__src{ font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
+    .brain-info__src a{ color:inherit; }
+
+    .brain-credit{ max-width:1040px; margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
+    .brain-credit a{ color:inherit; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="posts.html">Posts</a>
+        <a href="news.html">News</a>
+        <a aria-current="page" href="lab.html">Lab</a>
+        <a href="commons.html">The Commons</a>
+        <a class="site-nav__cta" href="index.html#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="brain-hero">
+      <p class="brain-hero__kicker">The Lab</p>
+      <h1>Explore a neuron</h1>
+      <p class="brain-hero__sub">The brain's basic unit, built to carry signals. Spin it, click a part to see what it does, and hit Fire to send an impulse down the axon.</p>
+    </section>
+
+    <div class="brain-chips" id="brain-chips" role="group" aria-label="Jump to a neuron part"></div>
+
+    <section class="brain-explorer" aria-label="Interactive 3D neuron">
+      <div class="brain-stage">
+        <div id="brain-canvas"></div>
+        <div class="brain-legend" id="brain-legend" aria-label="Neuron part key"></div>
+        <aside class="brain-info" id="brain-info" aria-live="polite"></aside>
+        <div id="brain-tooltip" class="brain-tooltip" role="status" aria-live="off"></div>
+        <div id="brain-loading" class="brain-loading">Building the neuron&hellip;</div>
+        <div id="brain-fallback" class="brain-fallback"><p id="brain-fallback-msg">Your browser could not start 3D graphics. You can still read about each part using the buttons above.</p></div>
+        <p class="brain-hint" id="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a part</p>
+      </div>
+      <div class="brain-toolbar" id="brain-toolbar" role="toolbar" aria-label="Neuron controls">
+        <button class="brain-tool brain-tool--fire" id="tool-fire" type="button" title="Send an action potential down the axon">Fire signal</button>
+        <button class="brain-tool" id="tool-fit" type="button" title="Zoom out to see the whole neuron">Fit view</button>
+        <button class="brain-tool" id="tool-reset" type="button" title="Back to the whole neuron">Reset</button>
+        <span class="brain-toolbar__spacer"></span>
+        <span class="brain-toolbar__read" id="fire-status"></span>
+      </div>
+    </section>
+
+    <p class="brain-credit">A stylized teaching model built by The Neuroscience Review. Descriptions written and sourced by us. Real neurons vary enormously in shape.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
+      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="commons.html">The Commons</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
+    </div>
+  </footer>
+
+  <script type="importmap">
+  { "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }}
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    // ---- Part data: fact-checked plain-English blurbs + sources ----
+    const PARTS = [
+      { key:'dendrites', label:'Dendrites', color:'#5B9BD5', oneLiner:'The neuron’s receiving antennas',
+        text:"Dendrites are the branching arms that reach out from the cell body to receive signals from thousands of other neurons. Their tiny bumps, called spines, are where most incoming connections land. The more branches a neuron has, the more messages it can take in at once.",
+        wgw:"Losing dendritic spines is an early change in Alzheimer’s and several other disorders, cutting off a neuron’s inputs.",
+        src:{title:'NCBI Bookshelf, Neurons and Glia', url:'https://www.ncbi.nlm.nih.gov/books/NBK11117/'} },
+      { key:'soma', label:'Cell body', color:'#E39A4C', oneLiner:'The living core of the cell',
+        text:"The cell body, or soma, is the neuron’s core. It holds the nucleus and the machinery that keeps the cell alive and builds its proteins. It also sums up all the signals arriving from the dendrites, tipping toward firing or staying quiet.",
+        wgw:"If the cell body dies, the whole neuron dies with it, and most neurons are never replaced.",
+        src:{title:'Cleveland Clinic, Neurons', url:'https://my.clevelandclinic.org/health/body/22366-neurons-nerve-cells'} },
+      { key:'nucleus', label:'Nucleus', color:'#C05B9A', oneLiner:'Holds the neuron’s DNA',
+        text:"The nucleus sits inside the cell body and holds the neuron’s DNA. It runs the cell by controlling which genes are switched on, which sets the proteins the neuron makes and how it responds to experience.",
+        wgw:"Faulty gene control in the nucleus underlies many inherited and age-related brain diseases.",
+        src:{title:'NCBI Bookshelf, The Neuron', url:'https://www.ncbi.nlm.nih.gov/books/NBK11117/'} },
+      { key:'hillock', label:'Axon hillock', color:'#E3C04C', oneLiner:'The trigger point for firing',
+        text:"The axon hillock is the cone where the axon leaves the cell body. It’s the decision point: if the signals adding up here cross a threshold, the neuron fires an all-or-nothing action potential. Below threshold, nothing is sent.",
+        wgw:"",
+        src:{title:'NCBI Bookshelf, The Action Potential', url:'https://www.ncbi.nlm.nih.gov/books/NBK11117/'} },
+      { key:'axon', label:'Axon', color:'#57B894', oneLiner:'The output cable',
+        text:"The axon is the long, thin cable that carries the neuron’s output, the action potential, away from the cell body. A single axon can stretch a remarkable distance. Some run from the base of your spine all the way to your toe, over a meter long.",
+        wgw:"When axons are cut or crushed, as in spinal cord injury, the signals they carried are lost.",
+        src:{title:'Cleveland Clinic, Axon', url:'https://my.clevelandclinic.org/health/body/24148-axon'} },
+      { key:'myelin', label:'Myelin sheath', color:'#E7D3AE', oneLiner:'Fatty insulation that speeds signals',
+        text:"The myelin sheath is fatty insulation wrapped around the axon in segments. Like the coating on a wire, it lets the signal leap from gap to gap instead of crawling along the whole length, speeding it up many times over.",
+        wgw:"When myelin is stripped away, as in multiple sclerosis, signals slow down or fail entirely.",
+        src:{title:'NCBI Bookshelf, Myelin', url:'https://www.ncbi.nlm.nih.gov/books/NBK11117/'} },
+      { key:'nodes', label:'Nodes of Ranvier', color:'#DB5E5E', oneLiner:'The bare gaps the signal jumps',
+        text:"The nodes of Ranvier are the small bare gaps between myelin segments. The action potential leaps from one node to the next, a fast relay called saltatory conduction that makes myelinated axons far quicker than bare ones.",
+        wgw:"",
+        src:{title:'NCBI Bookshelf, Saltatory Conduction', url:'https://www.ncbi.nlm.nih.gov/books/NBK11117/'} },
+      { key:'terminals', label:'Axon terminals', color:'#9B7EDE', oneLiner:'Where the message is passed on',
+        text:"The axon terminals are the branched endings where the neuron hands its message to the next cell. When the signal arrives, they release chemical messengers called neurotransmitters across a tiny gap, the synapse, to the neighboring neuron.",
+        wgw:"Most drugs that change mood or thought act right here, at the terminals and the synapse.",
+        src:{title:'Cleveland Clinic, Synapse', url:'https://my.clevelandclinic.org/health/body/24445-synapse'},
+        link:'posts/what-is-a-neuron.html', linkText:'Read: what is a neuron, really?' },
+    ];
+    const byKey = {}; PARTS.forEach(p => byKey[p.key] = p);
+
+    const stageEl = document.getElementById('brain-canvas');
+    const infoEl = document.getElementById('brain-info');
+    const loadingEl = document.getElementById('brain-loading');
+    const fallbackEl = document.getElementById('brain-fallback');
+    const tooltipEl = document.getElementById('brain-tooltip');
+    const fireStatus = document.getElementById('fire-status');
+    const rm = matchMedia('(prefers-reduced-motion: reduce)');
+
+    function webglOk(){ try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch(e){ return false; } }
+
+    let renderer, scene, camera, controls, pmrem, neuron;
+    let hemi, key, fill, rimL;
+    const parts = {};          // key -> { region, group, meshes:[] }
+    let modelScale = 1;
+    let needsRender = true, focusing = false;
+    let firing = false, fireStart = 0, impulse = null;
+    const targetFocus = new THREE.Vector3(0,0,0);
+    const targetCamPos = new THREE.Vector3(0,0.05,7);
+    const DEFAULT_CAM = new THREE.Vector3(0,0.6,7);
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    const state = { selected: null };
+
+    // axon path (shared by geometry + the fire animation), in model space
+    const axonPts = [
+      new THREE.Vector3(0.55,-0.02,0), new THREE.Vector3(1.5,-0.08,0.12), new THREE.Vector3(2.5,-0.16,-0.06),
+      new THREE.Vector3(3.5,-0.24,0.06), new THREE.Vector3(4.4,-0.3,-0.03), new THREE.Vector3(5.1,-0.34,0)
+    ];
+    const axonCurve = new THREE.CatmullRomCurve3(axonPts);
+    // myelin segments as [startT, endT]; nodes sit in the gaps between them
+    const myelinSegs = [[0.06,0.20],[0.26,0.40],[0.46,0.60],[0.66,0.80],[0.86,0.97]];
+    const nodeTs = [0.23,0.43,0.63,0.83];
+
+    function showFallback(msg){ if(msg) document.getElementById('brain-fallback-msg').textContent = msg; loadingEl.style.display='none'; fallbackEl.style.display='flex'; }
+
+    if(!webglOk()){ showFallback(); }
+    else { init(); buildNeuron(); animate(); }
+    buildChips(); buildLegend();
+
+    function init(){
+      renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, preserveDrawingBuffer:true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+      renderer.setSize(stageEl.clientWidth, stageEl.clientHeight);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+      stageEl.appendChild(renderer.domElement);
+      renderer.domElement.tabIndex = 0; renderer.domElement.setAttribute('role','application');
+      renderer.domElement.setAttribute('aria-label','Interactive 3D neuron. Use the part buttons above, arrow keys to cycle parts, Escape to reset, F to fire a signal.');
+      scene = new THREE.Scene();
+      pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      camera = new THREE.PerspectiveCamera(45, stageEl.clientWidth/stageEl.clientHeight, 0.01, 200);
+      camera.position.copy(DEFAULT_CAM);
+      hemi = new THREE.HemisphereLight(0xeaf1f7, 0x3a2f2a, 0.6); scene.add(hemi);
+      key = new THREE.DirectionalLight(0xfff4e8, 1.4); key.position.set(3,4,4); scene.add(key);
+      fill = new THREE.DirectionalLight(0xcfe0f0, 0.55); fill.position.set(-4,1,2); scene.add(fill);
+      rimL = new THREE.DirectionalLight(0xbcd6ff, 0.9); rimL.position.set(-2,1.5,-4); scene.add(rimL);
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; controls.dampingFactor = 0.08;
+      controls.minDistance = 2.5; controls.maxDistance = 20; controls.enablePan = true;
+      controls.autoRotate = !rm.matches; controls.autoRotateSpeed = 0.5;
+      controls.target.set(0,0,0);
+      controls.addEventListener('change', () => { needsRender = true; });
+      renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); showFallback('3D graphics paused. Reload the page to bring the neuron back.'); }, false);
+      applyStageTheme();
+    }
+    function applyStageTheme(){
+      if(!renderer) return;
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      renderer.toneMappingExposure = dark ? 1.05 : 1.16;
+      if(hemi) hemi.intensity = dark ? 0.6 : 0.78;
+      needsRender = true;
+    }
+    new MutationObserver(applyStageTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+
+    // ---------- procedural neuron ----------
+    function mat(hex){ return new THREE.MeshPhysicalMaterial({ color:new THREE.Color(hex), roughness:0.5, metalness:0.0, clearcoat:0.3, clearcoatRoughness:0.5, sheen:0.35, sheenColor:new THREE.Color(0xffe4d6), envMapIntensity:0.5, transparent:false, opacity:1, depthWrite:true }); }
+    function tubeMesh(points, radius, m){ const c = new THREE.CatmullRomCurve3(points); const g = new THREE.TubeGeometry(c, Math.max(16, points.length*8), radius, 10, false); return new THREE.Mesh(g, m); }
+    function ball(pos, r, m){ const s = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 18), m); s.position.copy(pos); return s; }
+    function perp(v){ const a = Math.abs(v.y) < 0.99 ? new THREE.Vector3(0,1,0) : new THREE.Vector3(1,0,0); return new THREE.Vector3().crossVectors(v, a).normalize(); }
+
+    function makePart(key){ const region = byKey[key]; const group = new THREE.Group(); const meshes = []; parts[key] = { region, group, meshes }; return { region, group, meshes, m: mat(region.color) }; }
+    function addMesh(part, mesh){ mesh.userData.partKey = part.region.key; part.meshes.push(mesh); part.group.add(mesh); mesh.material.userData = mesh.material.userData || {}; mesh.userData.baseColor = mesh.material.color.clone(); }
+
+    // recursive dendrite branch
+    function dendrite(part, start, dir, len, radius, gen){
+      const d = dir.clone().normalize();
+      const end = start.clone().addScaledVector(d, len);
+      const mid = start.clone().addScaledVector(d, len*0.5).addScaledVector(perp(d), len*0.14);
+      addMesh(part, tubeMesh([start, mid, end], radius, part.m));
+      if(gen > 0){
+        const p = perp(d);
+        const a1 = d.clone().applyAxisAngle(p, 0.5).applyAxisAngle(d.clone(), 0).normalize();
+        const a2 = d.clone().applyAxisAngle(p, -0.55).normalize();
+        const a3 = d.clone().applyAxisAngle(new THREE.Vector3(0,0,1), 0.5).normalize();
+        dendrite(part, end, a1, len*0.7, radius*0.68, gen-1);
+        dendrite(part, end, a2, len*0.7, radius*0.68, gen-1);
+        if(gen === 2) dendrite(part, end, a3, len*0.6, radius*0.6, gen-1);
+      } else {
+        addMesh(part, ball(end, radius*1.1, part.m)); // rounded tip
+      }
+    }
+
+    function buildNeuron(){
+      neuron = new THREE.Group();
+
+      // soma
+      const soma = makePart('soma');
+      const somaMesh = ball(new THREE.Vector3(0,0,0), 0.5, soma.m); somaMesh.scale.set(1.15,1.0,0.95);
+      addMesh(soma, somaMesh);
+      neuron.add(soma.group);
+
+      // nucleus
+      const nuc = makePart('nucleus');
+      addMesh(nuc, ball(new THREE.Vector3(-0.03,0.02,0), 0.24, nuc.m));
+      neuron.add(nuc.group);
+
+      // dendrites (from soma surface, pointing up/left)
+      const den = makePart('dendrites');
+      const dirs = [ new THREE.Vector3(-0.6,0.85,0.05), new THREE.Vector3(-0.95,0.4,0.25), new THREE.Vector3(-0.9,0.1,-0.3),
+                     new THREE.Vector3(-0.4,1.0,0.2), new THREE.Vector3(-0.8,0.65,-0.35), new THREE.Vector3(0.05,1.0,0.15) ];
+      dirs.forEach(dir => { const dn = dir.clone().normalize(); dendrite(den, dn.clone().multiplyScalar(0.48), dn, 0.95, 0.075, 2); });
+      neuron.add(den.group);
+
+      // axon hillock (cone at +x of soma)
+      const hill = makePart('hillock');
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.5, 20), hill.m);
+      cone.position.set(0.42,-0.02,0); cone.rotation.z = -Math.PI/2;
+      cone.userData.baseColor = cone.material.color.clone(); cone.userData.partKey = 'hillock';
+      hill.meshes.push(cone); hill.group.add(cone);
+      neuron.add(hill.group);
+
+      // axon (thin tube along the curve)
+      const ax = makePart('axon');
+      addMesh(ax, tubeMesh(axonPts, 0.07, ax.m));
+      neuron.add(ax.group);
+
+      // myelin sheath (fat segments over the axon)
+      const my = makePart('myelin');
+      myelinSegs.forEach(([t0,t1]) => {
+        const n = 10, pts = [];
+        for(let i=0;i<=n;i++){ pts.push(axonCurve.getPointAt(t0 + (t1-t0)*i/n)); }
+        addMesh(my, tubeMesh(pts, 0.17, my.m));
+      });
+      neuron.add(my.group);
+
+      // nodes of Ranvier (thin bright bands in the gaps)
+      const nd = makePart('nodes');
+      nodeTs.forEach(t => {
+        const p0 = axonCurve.getPointAt(Math.max(0,t-0.012)), p1 = axonCurve.getPointAt(Math.min(1,t+0.012));
+        addMesh(nd, tubeMesh([p0, axonCurve.getPointAt(t), p1], 0.095, nd.m));
+      });
+      neuron.add(nd.group);
+
+      // axon terminals (branch at the end, boutons)
+      const term = makePart('terminals');
+      const tip = axonCurve.getPointAt(1);
+      const tdirs = [ new THREE.Vector3(0.7,0.55,0.35), new THREE.Vector3(0.8,-0.1,-0.5), new THREE.Vector3(0.6,-0.7,0.2), new THREE.Vector3(0.75,-0.35,0.55), new THREE.Vector3(0.7,0.25,-0.4) ];
+      tdirs.forEach(dir => {
+        const d = dir.clone().normalize(); const end = tip.clone().addScaledVector(d, 0.75);
+        const mid = tip.clone().addScaledVector(d, 0.4).addScaledVector(perp(d), 0.08);
+        addMesh(term, tubeMesh([tip, mid, end], 0.05, term.m));
+        addMesh(term, ball(end, 0.11, term.m));
+      });
+      neuron.add(term.group);
+
+      // scale + center to fit
+      const box = new THREE.Box3().setFromObject(neuron);
+      const size = box.getSize(new THREE.Vector3()); const center = box.getCenter(new THREE.Vector3());
+      modelScale = 6.4 / Math.max(size.x, size.y, size.z);
+      neuron.scale.setScalar(modelScale);
+      neuron.position.sub(center.multiplyScalar(modelScale));
+      scene.add(neuron);
+
+      loadingEl.style.display = 'none';
+      buildChips(); buildLegend();
+      refresh();
+      applyHash();
+      needsRender = true;
+    }
+
+    // ---------- appearance resolver ----------
+    function refresh(){
+      const selKey = state.selected;
+      Object.keys(parts).forEach(k => {
+        const on = !selKey || k === selKey;
+        const emphasize = selKey && k === selKey;
+        parts[k].meshes.forEach(m => {
+          if(m.userData.isImpulse) return;
+          const opacity = on ? 1 : 0.08;
+          const translucent = opacity < 0.999;
+          m.material.transparent = translucent; m.material.opacity = opacity; m.material.depthWrite = !translucent;
+          m.material.color.copy(m.userData.baseColor);
+          if(emphasize){ m.material.emissive.copy(m.userData.baseColor).multiplyScalar(0.5); m.material.emissiveIntensity = 0.5; m.material.envMapIntensity = 0.75; }
+          else { m.material.emissive.setHex(0x000000); m.material.envMapIntensity = translucent ? 0.06 : 0.5; }
+        });
+      });
+      updateAutoRotate();
+      needsRender = true;
+    }
+    function updateAutoRotate(){ if(controls) controls.autoRotate = !rm.matches && !state.selected && !firing; }
+
+    function partCenter(key){ const b = new THREE.Box3(); parts[key].meshes.forEach(m => b.expandByObject(m)); return b.getBoundingSphere(new THREE.Sphere()); }
+    function framingDist(r){ return r / Math.sin(THREE.MathUtils.degToRad(camera.fov/2)); }
+    function viewDir(){ const d = camera.position.clone().sub(controls.target); if(d.lengthSq()<1e-6) d.set(0,0.1,1); return d.normalize(); }
+
+    // ---------- info panel ----------
+    function showInfo(region){
+      if(!region){ infoEl.classList.remove('is-visible'); infoEl.innerHTML=''; setViewBias(false); return; }
+      let h = '<span class="brain-info__bar" style="background:'+region.color+'"></span>';
+      h += '<p class="brain-info__eyebrow"><span class="brain-info__dot" style="background:'+region.color+'"></span>Neuron part</p>';
+      h += '<h2>'+region.label+'</h2><p class="brain-info__tag">'+region.oneLiner+'</p><p>'+region.text+'</p>';
+      if(region.wgw) h += '<p class="brain-info__wgw"><span class="brain-info__wgw-label">What goes wrong</span>'+region.wgw+'</p>';
+      h += '<div class="brain-info__links">';
+      if(region.link) h += '<a class="brain-info__more" style="font-family:var(--sans);font-size:.88rem;font-weight:600;color:var(--accent);text-decoration:none" href="'+region.link+'">'+(region.linkText||'Read more')+' &rarr;</a>';
+      if(region.src) h += '<span class="brain-info__src">Source: <a href="'+region.src.url+'" target="_blank" rel="noopener">'+region.src.title+'</a></span>';
+      h += '</div>';
+      infoEl.innerHTML = h; infoEl.classList.add('is-visible'); setViewBias(true);
+    }
+    function setViewBias(open){
+      if(!camera || !renderer) return;
+      const w = stageEl.clientWidth, h = stageEl.clientHeight;
+      if(open && w >= 720){ camera.setViewOffset(w, h, Math.min(w*0.17,155), 0, w, h); } else { camera.clearViewOffset(); }
+      needsRender = true;
+    }
+    function markChip(region){ document.querySelectorAll('.brain-chip').forEach(c => { const on = !!region && c.dataset.key === region.key; c.classList.toggle('is-active', on); c.setAttribute('aria-pressed', String(on)); c.style.background = on ? region.color : ''; }); }
+
+    function selectPart(region, opts){
+      opts = opts || {}; if(!region) return;
+      state.selected = region.key;
+      refresh();
+      if(controls && parts[region.key]){
+        const sph = partCenter(region.key); targetFocus.copy(sph.center);
+        const dist = Math.min(14, Math.max(3, framingDist(sph.radius) * 1.9));
+        targetCamPos.copy(targetFocus).add(viewDir().multiplyScalar(dist)); focusing = true;
+      }
+      showInfo(region); markChip(region);
+      if(!opts.silent) writeHash();
+    }
+    function defocus(){ state.selected = null; refresh(); showInfo(null); markChip(null); frameAll(); writeHash(); }
+    function frameAll(){ if(!controls) return; targetFocus.set(0,0,0); targetCamPos.copy(viewDir().multiplyScalar(7)); focusing = true; }
+    function resetView(){ state.selected = null; refresh(); showInfo(null); markChip(null); if(controls){ targetFocus.set(0,0,0); targetCamPos.copy(DEFAULT_CAM); focusing = true; controls.autoRotate = !rm.matches; } writeHash(); }
+
+    // ---------- chips + legend ----------
+    function buildChips(){
+      const wrap = document.getElementById('brain-chips'); wrap.innerHTML = '';
+      const row = document.createElement('div'); row.className = 'brain-chip-row';
+      const lab = document.createElement('span'); lab.className = 'brain-chip-row__label'; lab.textContent = 'Parts'; row.appendChild(lab);
+      PARTS.forEach(r => { const b = document.createElement('button'); b.className='brain-chip'; b.type='button'; b.dataset.key=r.key; b.setAttribute('aria-pressed','false'); b.innerHTML = '<span class="brain-chip__dot" style="background:'+r.color+'"></span>'+r.label; b.addEventListener('click', () => selectPart(r)); row.appendChild(b); });
+      wrap.appendChild(row);
+    }
+    function buildLegend(){
+      const el = document.getElementById('brain-legend'); el.innerHTML = '';
+      const t = document.createElement('p'); t.className='brain-legend__title'; t.textContent='Parts'; el.appendChild(t);
+      PARTS.forEach(r => { const b = document.createElement('button'); b.type='button'; b.innerHTML = '<span class="brain-legend__sw" style="background:'+r.color+'"></span>'+r.label; b.addEventListener('click', () => selectPart(r)); el.appendChild(b); });
+    }
+
+    // ---------- fire: an action potential travels the axon ----------
+    function makeImpulse(){
+      const g = new THREE.SphereGeometry(0.34, 20, 16);
+      const m = new THREE.MeshBasicMaterial({ color:0xfff4c2 });
+      impulse = new THREE.Mesh(g, m); impulse.userData.isImpulse = true; impulse.visible = false;
+      impulse.renderOrder = 5;
+      neuron.add(impulse);
+      const halo = new THREE.Mesh(new THREE.SphereGeometry(0.6,20,16), new THREE.MeshBasicMaterial({ color:0xffdd66, transparent:true, opacity:0.3, depthWrite:false }));
+      impulse.add(halo);
+    }
+    function fire(){
+      if(!neuron || firing) return;
+      if(!impulse) makeImpulse();
+      if(state.selected){ defocus(); }
+      firing = true; fireStart = performance.now(); impulse.visible = true;
+      fireStatus.textContent = 'Signal firing…';
+      updateAutoRotate();
+      needsRender = true;
+    }
+    function tickFire(now){
+      const DUR = 4600; // ms
+      let t = (now - fireStart) / DUR;
+      if(t >= 1){ endFire(); return; }
+      // phases: 0-0.15 dendrites glow, 0.15-0.25 soma+hillock, 0.25-0.9 down axon, 0.9-1 terminals
+      const glow = (key, amt) => parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isImpulse) return; m.material.emissive.copy(m.userData.baseColor); m.material.emissiveIntensity = amt; });
+      const clear = (key) => parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isImpulse) return; m.material.emissiveIntensity = 0; m.material.emissive.setHex(0x000000); });
+      ['dendrites','soma','nucleus','hillock','axon','myelin','nodes','terminals'].forEach(clear);
+      if(t < 0.16){ glow('dendrites', 1.7*(1 - Math.abs(t-0.08)/0.08)); impulse.visible=false; }
+      else if(t < 0.26){ glow('soma', 1.8); glow('hillock', 2.2); impulse.visible=false; }
+      else if(t < 0.9){
+        const at = (t - 0.26) / 0.64;                 // 0..1 along axon
+        const pos = axonCurve.getPointAt(at);
+        impulse.visible = true; impulse.position.copy(pos);
+        // saltatory: light the node the impulse is nearest to
+        nodeTs.forEach((nt, i) => { if(Math.abs(at - nt) < 0.06){ parts.nodes.meshes[i] && (parts.nodes.meshes[i].material.emissive.copy(parts.nodes.meshes[i].userData.baseColor), parts.nodes.meshes[i].material.emissiveIntensity = 2.4); } });
+        glow('myelin', 0.35);
+      } else {
+        impulse.visible = false;
+        glow('terminals', 2.4*(1 - (t-0.9)/0.1));      // terminals flash = neurotransmitter release
+      }
+      needsRender = true;
+    }
+    function endFire(){
+      firing = false; if(impulse) impulse.visible = false;
+      fireStatus.textContent = '';
+      refresh();                 // restore normal appearance
+      updateAutoRotate();
+    }
+
+    // ---------- deep-linking ----------
+    function writeHash(){ const p = state.selected ? '#part='+state.selected : location.pathname + location.search; history.replaceState(null,'',p); }
+    function applyHash(){ const h = location.hash.replace(/^#/,''); if(!h){ refresh(); return; } const q = new URLSearchParams(h); const k = q.get('part'); if(k && byKey[k]){ selectPart(byKey[k], {silent:true}); } else refresh(); }
+
+    // ---------- pointer / keyboard ----------
+    let down = null;
+    function pick(cx, cy){
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((cx-rect.left)/rect.width)*2-1; pointer.y = -((cy-rect.top)/rect.height)*2+1;
+      raycaster.setFromCamera(pointer, camera);
+      const all = []; Object.keys(parts).forEach(k => parts[k].meshes.forEach(m => all.push(m)));
+      const hits = raycaster.intersectObjects(all, false).filter(h => h.object.material.opacity > 0.15 && !h.object.userData.isImpulse);
+      return hits.length ? hits[0].object : null;
+    }
+    if(webglOk()){
+      renderer.domElement.addEventListener('pointerdown', e => { down = { x:e.clientX, y:e.clientY, id:e.pointerId }; });
+      renderer.domElement.addEventListener('pointercancel', () => { down = null; });
+      renderer.domElement.addEventListener('pointerup', e => {
+        if(!down || e.pointerId !== down.id){ down = null; return; }
+        const moved = Math.hypot(e.clientX-down.x, e.clientY-down.y); down = null;
+        if(moved > 6) return;
+        const m = pick(e.clientX, e.clientY);
+        if(m && m.userData.partKey) selectPart(byKey[m.userData.partKey]);
+        else if(state.selected) defocus();
+      });
+      renderer.domElement.addEventListener('pointermove', e => {
+        if(e.pointerType === 'touch') return;
+        const m = pick(e.clientX, e.clientY);
+        renderer.domElement.style.cursor = m ? 'pointer' : 'grab';
+        if(m && m.userData.partKey){ const rect = renderer.domElement.getBoundingClientRect(); tooltipEl.textContent = byKey[m.userData.partKey].label; tooltipEl.style.left = (e.clientX-rect.left)+'px'; tooltipEl.style.top = (e.clientY-rect.top)+'px'; tooltipEl.style.opacity='1'; }
+        else tooltipEl.style.opacity = '0';
+      });
+      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; });
+      renderer.domElement.addEventListener('keydown', e => {
+        if(e.key === 'Escape') resetView();
+        else if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); cycle(1); }
+        else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){ e.preventDefault(); cycle(-1); }
+        else if(e.key === 'f' || e.key === 'F') fire();
+      });
+    }
+    function cycle(dir){ const cur = state.selected ? PARTS.findIndex(p=>p.key===state.selected) : -1; let i = (cur + dir + PARTS.length) % PARTS.length; selectPart(PARTS[i]); }
+
+    document.getElementById('tool-fire').addEventListener('click', fire);
+    document.getElementById('tool-fit').addEventListener('click', () => { if(state.selected) defocus(); else frameAll(); });
+    document.getElementById('tool-reset').addEventListener('click', resetView);
+
+    function onResize(){ if(!renderer) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); needsRender = true; }
+    if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
+    addEventListener('resize', onResize);
+    rm.addEventListener('change', () => { updateAutoRotate(); needsRender = true; });
+
+    function animate(){
+      requestAnimationFrame(animate);
+      if(!renderer) return;
+      if(firing) tickFire(performance.now());
+      if(focusing){
+        controls.target.lerp(targetFocus, 0.14); camera.position.lerp(targetCamPos, 0.14); camera.lookAt(controls.target);
+        if(controls.target.distanceToSquared(targetFocus) < 1e-4 && camera.position.distanceToSquared(targetCamPos) < 1e-4){ controls.target.copy(targetFocus); camera.position.copy(targetCamPos); camera.lookAt(controls.target); focusing = false; }
+        renderer.render(scene, camera); return;
+      }
+      let render = false;
+      if(controls.autoRotate || firing) render = true;
+      if(needsRender) render = true;
+      needsRender = false;
+      if(render){ controls.update(); renderer.render(scene, camera); }
+    }
+  </script>
+</body>
+</html>
