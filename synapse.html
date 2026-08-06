@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore a Synapse — The Neuroscience Review</title>
+  <meta name="description" content="An interactive 3D synapse. Spin it, click a part to see what it does, release neurotransmitter across the gap, or break a part to see what goes wrong.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://theneuroreview.com/synapse.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="Explore a Synapse — The Neuroscience Review">
+  <meta property="og:description" content="An interactive 3D synapse. Spin it, click a part to see what it does, release neurotransmitter across the gap, or break a part to see what goes wrong.">
+  <style>
+    #main{ --brain-glass:rgba(250,247,241,.92); --brain-glass-bd:var(--border,#dcd7cd); --brain-glass-fg:var(--text,#26251f); --brain-glass-mut:var(--text-faint,#6f6a61); }
+    [data-theme="dark"] #main{ --brain-glass:rgba(16,22,30,.82); --brain-glass-bd:rgba(120,150,170,.28); --brain-glass-fg:#eef6f2; --brain-glass-mut:#9fb1bf; }
+    .brain-hero{ max-width:min(94vw,1600px); margin:0 auto; padding:2.4rem 1.2rem 0.4rem; }
+    .brain-hero__kicker{ display:inline-flex; align-items:center; gap:.7rem; font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .55rem; }
+    .brain-hero__kicker::after{ content:""; width:2.2rem; height:1px; background:var(--accent,#2f6f8f); opacity:.5; }
+    .brain-hero h1{ font-family:var(--serif,Newsreader); font-weight:600; font-size:clamp(2rem,4.4vw,3rem); line-height:1.06; letter-spacing:-.015em; margin:0 0 .5rem; }
+    .brain-hero__sub{ font-family:var(--serif,Newsreader); color:var(--text-faint,#5b5b57); font-size:1.1rem; max-width:62ch; margin:0; }
+
+    .brain-chips{ max-width:min(94vw,1600px); margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.55rem; }
+    .brain-chip-row{ display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; }
+    .brain-chip-row__label{ font-family:var(--sans,Inter); font-size:.66rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-faint,#7a756c); margin-right:.15rem; min-width:3.6rem; }
+    .brain-chip{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.85rem; font-weight:500; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:999px; padding:.4rem .85rem; cursor:pointer; transition:background .15s, border-color .15s, color .15s; }
+    .brain-chip:hover{ border-color:var(--accent,#2f6f8f); }
+    .brain-chip__dot{ width:.72rem; height:.72rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.18) inset; }
+    .brain-chip.is-active{ color:#fff; border-color:transparent; }
+    .brain-chip:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
+
+    .brain-explorer{ max-width:min(94vw,1600px); margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.7rem; }
+    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:clamp(460px,66vh,760px); background:radial-gradient(120% 120% at 50% 20%, #ffffff 0%, #eef1f4 38%, #e2e7ec 70%, #d6dce2 100%); }
+    .brain-stage::before{ content:""; position:absolute; inset:0; background:radial-gradient(60% 45% at 50% 42%, rgba(47,111,143,.14), transparent 70%); pointer-events:none; }
+    [data-theme="dark"] .brain-stage{ background:radial-gradient(120% 120% at 50% 18%, #1c2836 0%, #121a23 60%, #0a0e13 100%); }
+    [data-theme="dark"] .brain-stage::before{ background:radial-gradient(58% 44% at 50% 40%, rgba(70,150,190,.22), transparent 72%); }
+    @media(min-width:900px){ .brain-stage{ min-height:clamp(600px,78vh,860px); } }
+    #brain-canvas{ position:absolute; inset:0; }
+    #brain-canvas canvas{ display:block; width:100%!important; height:100%!important; touch-action:none; outline:none; }
+    #brain-canvas canvas:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:-2px; }
+    .brain-loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.95rem; pointer-events:none; text-align:center; padding:1.5rem; }
+    .brain-fallback{ position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:1.5rem; text-align:center; }
+    .brain-fallback p{ font-family:var(--sans,Inter); font-size:.9rem; color:var(--brain-glass-mut); margin:0; max-width:40ch; }
+    .brain-hint{ position:absolute; left:0; right:0; bottom:.7rem; text-align:center; margin:0; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.03em; pointer-events:none; opacity:.9; }
+    .brain-tooltip{ position:absolute; z-index:6; pointer-events:none; transform:translate(-50%,-140%); background:var(--brain-glass); color:var(--brain-glass-fg); font-family:var(--sans,Inter); font-size:.78rem; font-weight:500; padding:.28rem .58rem; border-radius:7px; border:1px solid var(--brain-glass-bd); white-space:nowrap; opacity:0; transition:opacity .12s; backdrop-filter:blur(6px); }
+
+    .brain-legend{ position:absolute; left:.7rem; bottom:.7rem; z-index:5; display:flex; flex-direction:column; gap:.2rem; padding:.5rem .6rem; border-radius:11px; background:var(--brain-glass); border:1px solid var(--brain-glass-bd); backdrop-filter:blur(8px); max-width:46%; }
+    .brain-legend__title{ font-family:var(--sans,Inter); font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--brain-glass-mut); margin:0 0 .15rem; }
+    .brain-legend button{ display:flex; align-items:center; gap:.45rem; background:none; border:0; padding:.12rem .1rem; cursor:pointer; font-family:var(--sans,Inter); font-size:.74rem; color:var(--brain-glass-fg); text-align:left; border-radius:5px; }
+    .brain-legend button:hover{ color:var(--accent,#2f6f8f); }
+    .brain-legend__sw{ width:.7rem; height:.7rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.2) inset; }
+    @media(max-width:560px){ .brain-legend{ display:none; } }
+
+    .brain-toolbar{ display:flex; flex-wrap:wrap; align-items:center; gap:.55rem .8rem; padding:.2rem .1rem; }
+    .brain-tool{ display:inline-flex; align-items:center; gap:.4rem; font-family:var(--sans,Inter); font-size:.8rem; font-weight:600; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:8px; padding:.4rem .7rem; cursor:pointer; transition:border-color .15s, background .15s, color .15s; }
+    .brain-tool:hover{ border-color:var(--accent,#2f6f8f); }
+    .brain-tool--fire{ color:#fff; background:#d98a3a; border-color:#d98a3a; }
+    .brain-tool--fire:hover{ background:#e79a48; border-color:#e79a48; }
+    .brain-tool[aria-pressed="true"]{ background:var(--accent,#2f6f8f); border-color:var(--accent,#2f6f8f); color:#fff; }
+    .brain-tool:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
+    .brain-toolbar__spacer{ flex:1 1 auto; }
+    .brain-toolbar__read{ font-family:var(--sans,Inter); font-size:.78rem; color:var(--brain-glass-mut,#7a756c); }
+
+    .brain-info{ position:absolute; top:.7rem; right:.7rem; z-index:6; width:min(350px,44%); max-height:calc(100% - 1.4rem); overflow-y:auto; border:1px solid var(--brain-glass-bd); border-radius:14px; background:var(--brain-glass); backdrop-filter:blur(11px); padding:1.15rem 1.25rem 1.25rem; color:var(--brain-glass-fg); opacity:0; visibility:hidden; transform:translateX(10px); transition:opacity .2s ease, transform .2s ease, visibility .2s; }
+    .brain-info.is-visible{ opacity:1; visibility:visible; transform:none; }
+    @media(max-width:720px){ .brain-info{ top:auto; left:.6rem; right:.6rem; bottom:.6rem; width:auto; max-height:56%; } }
+    .brain-info__bar{ position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:14px 0 0 14px; background:transparent; }
+    .brain-info__eyebrow{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.66rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .4rem; }
+    .brain-info__dot{ width:.66rem; height:.66rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.15) inset; }
+    .brain-info h2{ font-family:var(--serif,Newsreader); font-weight:600; font-size:1.6rem; margin:0 0 .2rem; line-height:1.14; }
+    .brain-info__tag{ font-family:var(--sans,Inter); font-size:.82rem; color:var(--text-faint,#6f6a61); margin:0 0 .8rem; font-style:italic; }
+    .brain-info p{ font-family:var(--serif,Newsreader); color:var(--text,#26251f); font-size:1.03rem; line-height:1.55; margin:0 0 .9rem; }
+    .brain-info__wgw{ border-left:2px solid var(--brain-glass-bd); padding-left:.8rem; }
+    .brain-info__wgw-label{ display:block; font-family:var(--sans,Inter); font-size:.64rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint,#6f6a61); margin-bottom:.2rem; }
+    .brain-info__links{ display:flex; flex-wrap:wrap; gap:.4rem 1.1rem; align-items:center; margin-top:.2rem; }
+    .brain-info__src{ font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
+    .brain-info__src a{ color:inherit; }
+
+    .brain-credit{ max-width:min(94vw,1600px); margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
+    .brain-credit a{ color:inherit; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="posts.html">Posts</a>
+        <a href="news.html">News</a>
+        <a aria-current="page" href="lab.html">Lab</a>
+        <a href="commons.html">The Commons</a>
+        <a class="site-nav__cta" href="index.html#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="brain-hero">
+      <p class="brain-hero__kicker">The Lab</p>
+      <h1>Explore a synapse</h1>
+      <p class="brain-hero__sub">The tiny junction where one neuron talks to the next. Spin it, click a part to see what it does, and hit Release to send neurotransmitter across the gap. You can also break any part to see what goes wrong, then repair it.</p>
+    </section>
+
+    <div class="brain-chips" id="brain-chips" role="group" aria-label="Jump to a synapse part"></div>
+
+    <section class="brain-explorer" aria-label="Interactive 3D synapse">
+      <div class="brain-stage">
+        <div id="brain-canvas"></div>
+        <div class="brain-legend" id="brain-legend" aria-label="Synapse part key"></div>
+        <aside class="brain-info" id="brain-info" aria-live="polite"></aside>
+        <div id="brain-tooltip" class="brain-tooltip" role="status" aria-live="off"></div>
+        <div id="brain-loading" class="brain-loading">Building the synapse&hellip;</div>
+        <div id="brain-fallback" class="brain-fallback"><p id="brain-fallback-msg">Your browser could not start 3D graphics. You can still read about each part using the buttons above.</p></div>
+        <p class="brain-hint" id="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a part</p>
+      </div>
+      <div class="brain-toolbar" id="brain-toolbar" role="toolbar" aria-label="Synapse controls">
+        <button class="brain-tool brain-tool--fire" id="tool-fire" type="button" title="Release neurotransmitter across the gap">Release</button>
+        <button class="brain-tool" id="tool-fit" type="button" title="Zoom out to see the whole synapse">Fit view</button>
+        <button class="brain-tool" id="tool-reset" type="button" title="Back to the whole synapse">Reset</button>
+        <span class="brain-toolbar__spacer"></span>
+        <span class="brain-toolbar__read" id="fire-status"></span>
+      </div>
+    </section>
+
+    <p class="brain-credit">A stylized teaching model built by The Neuroscience Review. Distances are exaggerated so you can see inside. Descriptions written and sourced by us.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
+      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="commons.html">The Commons</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
+    </div>
+  </footer>
+
+  <script type="importmap">
+  { "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }}
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    // ---- Part data: fact-checked plain-English blurbs + sources ----
+    const PARTS = [
+      { key:'presyn', label:'Presynaptic terminal', color:'#6E8FCB', oneLiner:'Fires the signal across',
+        text:"This is the very end of the sending neuron, the tip of its axon. When an electrical signal arrives here, it opens voltage-gated calcium channels, and the sudden rush of calcium into the terminal is the trigger that tells the cell to release its chemical messengers. Think of it as the launch pad for every message a neuron sends.",
+        wgw:"In Lambert-Eaton myasthenic syndrome, the immune system attacks these calcium channels, so less messenger gets released and the muscles turn weak and tire easily.",
+        src:{title:'Physiology, Synapse (StatPearls, NCBI Bookshelf)', url:'https://www.ncbi.nlm.nih.gov/books/NBK526047/'} },
+      { key:'vesicles', label:'Synaptic vesicles', color:'#E3B24C', oneLiner:'Store and release messengers',
+        text:"Vesicles are tiny bubble-like sacs packed with neurotransmitter and parked near the tip of the sending neuron. When calcium floods in, special SNARE proteins pull each sac into the cell membrane so it fuses and dumps its contents into the gap. The empty sac is then pulled back inside, refilled, and used again.",
+        wgw:"Botulinum toxin, the cause of botulism, cuts the SNARE proteins these sacs rely on, so they can't release their messenger and the muscles go limp.",
+        src:{title:'Physiology, Synapse (StatPearls, NCBI Bookshelf)', url:'https://www.ncbi.nlm.nih.gov/books/NBK526047/'} },
+      { key:'transmitter', label:'Neurotransmitter', color:'#57B894', oneLiner:'The chemical message itself',
+        text:"Neurotransmitters are the chemical messengers that actually carry the signal across the gap between two neurons. Different ones send different kinds of messages. Glutamate is the main 'go' signal that excites the next cell, GABA is the main 'stop' signal that calms it, and others like dopamine and acetylcholine shape mood, movement, and attention.",
+        wgw:"When the brain runs low on dopamine, as it does in Parkinson's disease, movements become slow, stiff, and shaky.",
+        src:{title:'Neurotransmitters (Cleveland Clinic)', url:'https://my.clevelandclinic.org/health/articles/22513-neurotransmitters'} },
+      { key:'cleft', label:'Synaptic cleft', color:'#93A2AE', oneLiner:'The gap between neurons',
+        text:"The synaptic cleft is the tiny gap between the two neurons, so narrow that the messenger crosses it almost instantly. In the brain it's only around 20 to 40 nanometers wide, and it runs a little wider, close to 50, where a nerve meets a muscle. This space is also where clean-up enzymes work, like acetylcholinesterase, which quickly breaks acetylcholine apart so the signal doesn't keep firing.",
+        wgw:"Nerve agents and some pesticides block acetylcholinesterase, so acetylcholine piles up in the cleft and overstimulates the muscles, which can cause cramping and even trouble breathing.",
+        src:{title:'Physiology, Neuromuscular Junction (StatPearls, NCBI Bookshelf)', url:'https://www.ncbi.nlm.nih.gov/books/NBK470413/'} },
+      { key:'postsyn', label:'Postsynaptic membrane', color:'#C77BA6', oneLiner:'Catches the incoming signal',
+        text:"This is the receiving surface of the next neuron, the part that catches the message. In the brain it's often a dendritic spine, a tiny mushroom-shaped bump on a dendrite where most excitatory connections land. Bigger, stronger spines tend to mean stronger connections, and they can grow or shrink as you learn.",
+        wgw:"When these spines form abnormally or in the wrong numbers, it's linked to conditions like autism, intellectual disability, and schizophrenia.",
+        src:{title:'Structural plasticity of dendritic spines (PMC)', url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC4281347/'} },
+      { key:'receptors', label:'Receptors', color:'#D8654F', oneLiner:'Read the chemical message',
+        text:"Receptors are proteins on the receiving neuron that grab the neurotransmitter as it arrives, each one shaped to fit a specific messenger like a lock and key. Some are channels that pop open the instant they bind, letting ions flood in and quickly nudging the neuron toward firing. Others work more slowly, setting off a chain of signals inside the cell that can change how it behaves for a while.",
+        wgw:"In myasthenia gravis the immune system attacks the acetylcholine receptors on muscle, so the signal can't get through and the muscles grow weak and tire quickly.",
+        src:{title:'Physiology, Synapse (StatPearls, NCBI Bookshelf)', url:'https://www.ncbi.nlm.nih.gov/books/NBK526047/'} },
+      { key:'reuptake', label:'Reuptake transporters', color:'#9B7EDE', oneLiner:'Recycle used messengers',
+        text:"After a message is delivered, these pump-like proteins vacuum the leftover neurotransmitter out of the gap and haul it back into the sending neuron to be reused. It's a fast, tidy way to end the signal and spare the cell from making everything fresh each time. Because they decide how long a messenger sticks around, they're a major target for medicines.",
+        wgw:"Antidepressants called SSRIs block serotonin reuptake to lift mood, while cocaine blocks dopamine reuptake so the messenger floods the synapse, which is a big part of why it's so addictive.",
+        src:{title:'Overview of Monoamine Transporters (PMC)', url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5841473/'},
+        link:'posts/what-is-a-neuron.html', linkText:'Read: what is a neuron, really?' },
+    ];
+    const byKey = {}; PARTS.forEach(p => byKey[p.key] = p);
+
+    // What happens if this part is damaged (fact-checked, sourced).
+    const DAMAGE = {
+      "presyn": { "condition":"Lambert-Eaton myasthenic syndrome", "symptoms":"In Lambert-Eaton myasthenic syndrome, the immune system makes antibodies that attack the voltage-gated calcium channels on the presynaptic terminal. Calcium normally has to flow in to trigger neurotransmitter release, so when those channels are blocked, the nerve can't release enough of its chemical signal. People feel weakness in the muscles closest to the body, especially the hips and thighs, along with fatigue and sometimes a dry mouth or lightheadedness. One quirky sign is that strength often improves a little after a few seconds of repeated effort.", "source":{ "title":"Lambert-Eaton Myasthenic Syndrome (StatPearls, NCBI Bookshelf)", "url":"https://www.ncbi.nlm.nih.gov/books/NBK507891/" } },
+      "vesicles": { "condition":"Botulism", "symptoms":"Botulism happens when a toxin from the bacterium Clostridium botulinum chops up the SNARE proteins that let vesicles dock and dump their acetylcholine. Without those proteins the nerve terminal can't release its signal, so the muscle never gets the message to contract. This causes a floppy, descending weakness that usually starts in the face with drooping eyelids, blurred or double vision, and trouble swallowing or speaking. In serious cases it can reach the breathing muscles, which is why it's treated as an emergency with an antitoxin.", "source":{ "title":"Botulism (StatPearls, NCBI Bookshelf)", "url":"https://www.ncbi.nlm.nih.gov/books/NBK459273/" } },
+      "transmitter": { "condition":"Parkinson's disease", "symptoms":"Parkinson's disease develops when the brain slowly loses the neurons in a region called the substantia nigra that make dopamine. With less dopamine reaching the circuits that fine-tune movement, the body's motor signals get harder to control. People often notice a resting tremor, stiffness, slower movement, and problems with balance, and these tend to build up gradually over years. It can also affect things like sleep, sense of smell, and mood.", "source":{ "title":"Parkinson Disease (StatPearls, NCBI Bookshelf)", "url":"https://www.ncbi.nlm.nih.gov/books/NBK470193/" } },
+      "cleft": { "condition":"Organophosphate and nerve-agent poisoning", "symptoms":"Some pesticides and nerve agents block acetylcholinesterase, the enzyme in the synaptic cleft whose job is to clear away acetylcholine after each signal. When that cleanup stops, acetylcholine piles up and keeps firing the receptors over and over. The result is a flood of effects like tearing, drooling, sweating, tight airways, muscle twitching, and a slow heart rate, and in severe cases confusion, seizures, or trouble breathing. Doctors treat it with medicines such as atropine that counter the excess signaling.", "source":{ "title":"Organophosphate Toxicity (StatPearls, NCBI Bookshelf)", "url":"https://www.ncbi.nlm.nih.gov/books/NBK470430/" } },
+      "postsyn": { "condition":"Glutamate excitotoxicity", "symptoms":"Glutamate is the brain's main go signal, but too much of it overexcites the postsynaptic neuron. The over-activated receptors let a flood of calcium pour into the cell, and that calcium switches on enzymes that damage the neuron from the inside. This process, called excitotoxicity, is one of the ways brain cells die during a stroke or after a head injury. It's also thought to play a part in conditions like ALS and other neurodegenerative diseases.", "source":{ "title":"Biochemistry, Glutamate (StatPearls, NCBI Bookshelf)", "url":"https://www.ncbi.nlm.nih.gov/books/NBK537267/" } },
+      "receptors": { "condition":"Myasthenia gravis", "symptoms":"In myasthenia gravis, the immune system makes antibodies that block and destroy the acetylcholine receptors on the muscle side of the neuromuscular junction. The nerve still releases its signal, but with fewer working receptors to catch it, the muscle can't respond reliably. People notice weakness that gets worse with use and better with rest, often starting with drooping eyelids, double vision, and trouble swallowing or speaking. It can spread to the arms, legs, and breathing muscles, and it's usually well managed with medication.", "source":{ "title":"Myasthenia Gravis (StatPearls, NCBI Bookshelf)", "url":"https://www.ncbi.nlm.nih.gov/books/NBK559331/" } },
+      "reuptake": { "condition":"Depression (monoamine hypothesis)", "symptoms":"After a neuron releases serotonin or dopamine, reuptake transporters act like tiny vacuums that pull the transmitter back in so the signal switches off. A leading idea behind many antidepressants is that low monoamine signaling is linked to depression. SSRIs work by slowing the serotonin transporter, so more serotonin stays in the cleft and keeps signaling for longer. It isn't a full explanation of depression, but it's why these medicines are a common first step, and they usually take a few weeks to help.", "source":{ "title":"Selective Serotonin Reuptake Inhibitors (StatPearls, NCBI Bookshelf)", "url":"https://www.ncbi.nlm.nih.gov/books/NBK554406/" } }
+    };
+
+    const stageEl = document.getElementById('brain-canvas');
+    const infoEl = document.getElementById('brain-info');
+    const loadingEl = document.getElementById('brain-loading');
+    const fallbackEl = document.getElementById('brain-fallback');
+    const tooltipEl = document.getElementById('brain-tooltip');
+    const fireStatus = document.getElementById('fire-status');
+    const rm = matchMedia('(prefers-reduced-motion: reduce)');
+
+    function webglOk(){ try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch(e){ return false; } }
+
+    let renderer, scene, camera, controls, pmrem, synapse;
+    let hemi, key, fill, rimL;
+    const parts = {};          // key -> { region, group, meshes:[] }
+    let modelScale = 1;
+    let needsRender = true, focusing = false;
+    let releasing = false, releaseStart = 0, releaseMode = null;
+    let particles = [];        // animated neurotransmitter dots
+    const receptorPos = [];    // local-space receptor targets (set at build)
+    const targetFocus = new THREE.Vector3(0,0,0);
+    const targetCamPos = new THREE.Vector3(0,0,9);
+    const DEFAULT_CAM = new THREE.Vector3(0,0.2,9);
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    const state = { selected: null, damaged: new Set() };
+
+    // key vertical geometry (model space, before scale/center)
+    const PRE_C = new THREE.Vector3(0, 2.0, 0), PRE_R = 1.3;     // presynaptic terminal center + radius
+    const ACTIVE_Y = 0.78;     // presynaptic membrane / active zone
+    const POST_TOP = 0.16;     // postsynaptic membrane top
+
+    function showFallback(msg){ if(msg) document.getElementById('brain-fallback-msg').textContent = msg; loadingEl.style.display='none'; fallbackEl.style.display='flex';
+      ['tool-fire','tool-fit','tool-reset'].forEach(id => { const b = document.getElementById(id); if(b){ b.disabled = true; b.style.opacity = '0.5'; b.style.cursor = 'not-allowed'; } }); }
+
+    if(!webglOk()){ showFallback(); }
+    else { init(); buildSynapse(); animate(); }
+    buildChips(); buildLegend();
+    if(!renderer) applyHash();   // fallback (no WebGL): still open the info panel for a deep link / default
+
+    function init(){
+      renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, preserveDrawingBuffer:true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+      renderer.setSize(stageEl.clientWidth, stageEl.clientHeight);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+      stageEl.appendChild(renderer.domElement);
+      renderer.domElement.tabIndex = 0; renderer.domElement.setAttribute('role','application');
+      renderer.domElement.setAttribute('aria-label','Interactive 3D synapse. Use the part buttons above, arrow keys to cycle parts, Escape to reset, R to release neurotransmitter.');
+      scene = new THREE.Scene();
+      pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      camera = new THREE.PerspectiveCamera(45, stageEl.clientWidth/stageEl.clientHeight, 0.01, 200);
+      camera.position.copy(DEFAULT_CAM);
+      hemi = new THREE.HemisphereLight(0xeaf1f7, 0x3a2f2a, 0.6); scene.add(hemi);
+      key = new THREE.DirectionalLight(0xfff4e8, 1.4); key.position.set(3,4,4); scene.add(key);
+      fill = new THREE.DirectionalLight(0xcfe0f0, 0.55); fill.position.set(-4,1,2); scene.add(fill);
+      rimL = new THREE.DirectionalLight(0xbcd6ff, 0.9); rimL.position.set(-2,1.5,-4); scene.add(rimL);
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; controls.dampingFactor = 0.08;
+      controls.minDistance = 3; controls.maxDistance = 26; controls.enablePan = true;
+      controls.autoRotate = !rm.matches; controls.autoRotateSpeed = 0.5;
+      controls.target.set(0,0,0);
+      controls.addEventListener('change', () => { needsRender = true; });
+      renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); showFallback('3D graphics paused. Reload the page to bring the synapse back.'); }, false);
+      applyStageTheme();
+    }
+    function applyStageTheme(){
+      if(!renderer) return;
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      renderer.toneMappingExposure = dark ? 1.05 : 1.16;
+      if(hemi) hemi.intensity = dark ? 0.6 : 0.78;
+      needsRender = true;
+    }
+    new MutationObserver(applyStageTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+
+    // ---------- helpers ----------
+    function mat(hex, opts){ opts = opts || {}; const tr = opts.op!=null && opts.op<1; return new THREE.MeshPhysicalMaterial({ color:new THREE.Color(hex), roughness:opts.rough!=null?opts.rough:0.5, metalness:0.0, clearcoat:0.3, clearcoatRoughness:0.5, sheen:0.35, sheenColor:new THREE.Color(0xffe4d6), envMapIntensity:0.5, transparent:tr, opacity:opts.op!=null?opts.op:1, depthWrite:!tr }); }
+    function ball(pos, r, m){ const s = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 18), m); s.position.copy(pos); return s; }
+    function cyl(pos, rTop, rBot, h, m){ const c = new THREE.Mesh(new THREE.CylinderGeometry(rTop, rBot, h, 20), m); c.position.copy(pos); return c; }
+
+    function makePart(key, opts){ const region = byKey[key]; const group = new THREE.Group(); const meshes = []; parts[key] = { region, group, meshes }; return { region, group, meshes, m: mat(region.color, opts) }; }
+    function addMesh(part, mesh, baseOpacity){ mesh.userData.partKey = part.region.key; part.meshes.push(mesh); part.group.add(mesh); mesh.userData.baseColor = mesh.material.color.clone(); if(baseOpacity!=null) mesh.userData.baseOpacity = baseOpacity; }
+
+    function buildSynapse(){
+      synapse = new THREE.Group();
+
+      // presynaptic terminal (translucent bulb so you can see the vesicles inside)
+      const pre = makePart('presyn', { op:0.6, rough:0.35 });
+      const preMesh = ball(PRE_C, PRE_R, pre.m); preMesh.scale.set(1.16,1.0,1.16);
+      addMesh(pre, preMesh, 0.6);
+      synapse.add(pre.group);
+
+      // synaptic vesicles (spheres clustered in the lower terminal, a few docked near the active zone)
+      const ves = makePart('vesicles');
+      const vspots = [
+        [-0.55,1.55,0.2],[0.5,1.6,-0.25],[-0.15,1.75,0.45],[0.35,1.85,0.3],[-0.6,1.9,-0.35],
+        [0.1,1.45,-0.4],[-0.35,1.35,0.05],[0.55,1.3,0.15],[-0.05,2.05,-0.1],
+        [-0.3,1.05,0.28],[0.28,1.02,-0.15],[0.02,0.98,0.02]  // docked trio near active zone
+      ];
+      vspots.forEach(p => addMesh(ves, ball(new THREE.Vector3(p[0],p[1],p[2]), 0.16, ves.m)));
+      synapse.add(ves.group);
+
+      // neurotransmitter (a few molecules poised at the active zone + a couple already in the cleft)
+      const nt = makePart('transmitter');
+      [[-0.12,0.72,0.06],[0.14,0.7,-0.08],[0.0,0.64,0.14],[-0.2,0.55,-0.1],[0.22,0.52,0.05],[0.02,0.44,-0.05]].forEach(p =>
+        addMesh(nt, ball(new THREE.Vector3(p[0],p[1],p[2]), 0.11, nt.m)));
+      synapse.add(nt.group);
+
+      // synaptic cleft (translucent disc filling the gap)
+      const cl = makePart('cleft', { op:0.24, rough:0.6 });
+      const disc = cyl(new THREE.Vector3(0,0.44,0), 1.02, 1.02, 0.5, cl.m);
+      addMesh(cl, disc, 0.24);
+      synapse.add(cl.group);
+
+      // postsynaptic membrane (flattened dome, a dendritic spine head)
+      const post = makePart('postsyn', { rough:0.45 });
+      const postMesh = ball(new THREE.Vector3(0,-0.85,0), 1.25, post.m); postMesh.scale.set(1.34,0.8,1.34);
+      addMesh(post, postMesh);
+      synapse.add(post.group);
+
+      // receptors (small posts standing up from the postsynaptic membrane into the cleft)
+      const rec = makePart('receptors', { rough:0.4 });
+      const rspots = [[0,0.0],[0.55,0.2],[-0.5,0.25],[0.3,-0.5],[-0.35,-0.45],[0.66,-0.3],[-0.68,-0.15]];
+      rspots.forEach(p => {
+        const x=p[0], z=p[1]; const yTop = POST_TOP + 0.02;
+        const post0 = cyl(new THREE.Vector3(x, yTop-0.02, z), 0.135, 0.16, 0.26, rec.m);
+        const capMat = rec.m; const cap = ball(new THREE.Vector3(x, yTop+0.12, z), 0.15, capMat);
+        addMesh(rec, post0); addMesh(rec, cap);
+        receptorPos.push(new THREE.Vector3(x, yTop+0.12, z));
+      });
+      synapse.add(rec.group);
+
+      // reuptake transporters (small posts on the presynaptic membrane edge, facing down)
+      const ru = makePart('reuptake', { rough:0.4 });
+      [[-0.78,0.3],[0.8,-0.2],[0.15,0.72]].forEach(p => {
+        const x=p[0], z=p[1];
+        addMesh(ru, cyl(new THREE.Vector3(x, ACTIVE_Y+0.02, z), 0.15, 0.17, 0.3, ru.m));
+      });
+      synapse.add(ru.group);
+
+      // scale + center to fit
+      const box = new THREE.Box3().setFromObject(synapse);
+      const size = box.getSize(new THREE.Vector3()); const center = box.getCenter(new THREE.Vector3());
+      modelScale = 6.6 / Math.max(size.x, size.y, size.z);
+      synapse.scale.setScalar(modelScale);
+      synapse.position.sub(center.clone().multiplyScalar(modelScale));
+      scene.add(synapse);
+
+      makeParticles();
+      loadingEl.style.display = 'none';
+      buildChips(); buildLegend();
+      refresh();
+      applyHash();
+      needsRender = true;
+    }
+
+    // ---------- appearance resolver ----------
+    function refresh(){
+      const selKey = state.selected;
+      Object.keys(parts).forEach(k => {
+        const on = !selKey || k === selKey;
+        const emphasize = selKey && k === selKey;
+        parts[k].meshes.forEach(m => {
+          if(m.userData.isParticle) return;
+          const baseOp = m.userData.baseOpacity != null ? m.userData.baseOpacity : 1;
+          const opacity = on ? baseOp : 0.06;
+          const translucent = opacity < 0.999;
+          m.material.transparent = translucent; m.material.opacity = opacity; m.material.depthWrite = !translucent;
+          m.material.color.copy(m.userData.baseColor);
+          if(state.damaged.has(k)){
+            m.material.color.lerp(new THREE.Color(0x515151), 0.8);   // greyed / dead
+            m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = 0.12;
+          } else if(emphasize){ m.material.emissive.copy(m.userData.baseColor).multiplyScalar(0.5); m.material.emissiveIntensity = 0.5; m.material.envMapIntensity = 0.75; }
+          else { m.material.emissive.setHex(0x000000); m.material.envMapIntensity = translucent ? 0.06 : 0.5; }
+        });
+      });
+      updateAutoRotate();
+      needsRender = true;
+    }
+    function updateAutoRotate(){ if(controls) controls.autoRotate = !rm.matches && !state.selected && !releasing; }
+
+    function partCenter(key){ const b = new THREE.Box3(); parts[key].meshes.forEach(m => b.expandByObject(m)); return b.getBoundingSphere(new THREE.Sphere()); }
+    function framingDist(r){ return r / Math.sin(THREE.MathUtils.degToRad(camera.fov/2)); }
+    function viewDir(){ const d = camera.position.clone().sub(controls.target); if(d.lengthSq()<1e-6) d.set(0,0.1,1); return d.normalize(); }
+
+    // ---------- info panel ----------
+    function showInfo(region){
+      if(!region){ infoEl.classList.remove('is-visible'); infoEl.innerHTML=''; setViewBias(false); return; }
+      const dmg = state.damaged.has(region.key) && DAMAGE[region.key];
+      let h = '<span class="brain-info__bar" style="background:'+(dmg?'#d9534f':region.color)+'"></span>';
+      if(dmg){
+        h += '<p class="brain-info__eyebrow" style="color:#d9534f"><span class="brain-info__dot" style="background:#d9534f"></span>Damaged &middot; '+region.label+'</p>';
+        h += '<h2>'+dmg.condition+'</h2><p>'+dmg.symptoms+'</p>';
+        h += '<div class="brain-info__links">';
+        if(dmg.source) h += '<span class="brain-info__src">Source: <a href="'+dmg.source.url+'" target="_blank" rel="noopener">'+dmg.source.title+'</a></span>';
+        h += '</div><button class="brain-tool" data-action="repair" type="button" style="margin-top:1rem">Repair</button>';
+      } else {
+        h += '<p class="brain-info__eyebrow"><span class="brain-info__dot" style="background:'+region.color+'"></span>Synapse part</p>';
+        h += '<h2>'+region.label+'</h2><p class="brain-info__tag">'+region.oneLiner+'</p><p>'+region.text+'</p>';
+        if(region.wgw) h += '<p class="brain-info__wgw"><span class="brain-info__wgw-label">What goes wrong</span>'+region.wgw+'</p>';
+        h += '<div class="brain-info__links">';
+        if(region.link) h += '<a class="brain-info__more" style="font-family:var(--sans);font-size:.88rem;font-weight:600;color:var(--accent);text-decoration:none" href="'+region.link+'">'+(region.linkText||'Read more')+' &rarr;</a>';
+        if(region.src) h += '<span class="brain-info__src">Source: <a href="'+region.src.url+'" target="_blank" rel="noopener">'+region.src.title+'</a></span>';
+        h += '</div>';
+        if(DAMAGE[region.key]) h += '<button class="brain-tool" data-action="damage" type="button" style="margin-top:1rem;color:#fff;background:#c15b52;border-color:#c15b52">What happens if it breaks?</button>';
+      }
+      infoEl.innerHTML = h; infoEl.classList.add('is-visible'); setViewBias(true);
+    }
+    function setViewBias(open){
+      if(!camera || !renderer) return;
+      const w = stageEl.clientWidth, h = stageEl.clientHeight;
+      if(open && w >= 720){ camera.setViewOffset(w, h, Math.min(w*0.17,155), 0, w, h); } else { camera.clearViewOffset(); }
+      needsRender = true;
+    }
+    function markChip(region){ document.querySelectorAll('.brain-chip').forEach(c => { const on = !!region && c.dataset.key === region.key; c.classList.toggle('is-active', on); c.setAttribute('aria-pressed', String(on)); c.style.background = on ? region.color : ''; }); }
+
+    function selectPart(region, opts){
+      opts = opts || {}; if(!region) return;
+      state.selected = region.key;
+      refresh();
+      if(controls && parts[region.key]){
+        const sph = partCenter(region.key); targetFocus.copy(sph.center);
+        const dist = Math.min(16, Math.max(3.4, framingDist(sph.radius) * 1.9));
+        targetCamPos.copy(targetFocus).add(viewDir().multiplyScalar(dist)); focusing = true;
+      }
+      showInfo(region); markChip(region);
+      if(!opts.silent) writeHash();
+    }
+    function defocus(){ state.selected = null; refresh(); showInfo(null); markChip(null); frameAll(); writeHash(); }
+    function frameAll(){ if(!controls) return; targetFocus.set(0,0,0); targetCamPos.copy(viewDir().multiplyScalar(9)); focusing = true; }
+    function resetView(){ state.selected = null; state.damaged.clear(); refresh(); showInfo(null); markChip(null); if(controls){ targetFocus.set(0,0,0); targetCamPos.copy(DEFAULT_CAM); focusing = true; controls.autoRotate = !rm.matches; } writeHash(); }
+    // ---------- damage / lesion mode ----------
+    function focusPanelAction(){ const b = infoEl.querySelector('[data-action]'); if(b) b.focus(); }
+    function damagePart(key){ if(!byKey[key] || !DAMAGE[key]) return; state.damaged.add(key); refresh(); showInfo(byKey[key]); focusPanelAction(); }
+    function repairPart(key){ state.damaged.delete(key); refresh(); showInfo(byKey[key]); focusPanelAction(); }
+    infoEl.addEventListener('click', e => { const b = e.target.closest('[data-action]'); if(!b || !state.selected) return; if(b.dataset.action==='damage') damagePart(state.selected); else if(b.dataset.action==='repair') repairPart(state.selected); });
+
+    // ---------- chips + legend ----------
+    function buildChips(){
+      const wrap = document.getElementById('brain-chips'); wrap.innerHTML = '';
+      const row = document.createElement('div'); row.className = 'brain-chip-row';
+      const lab = document.createElement('span'); lab.className = 'brain-chip-row__label'; lab.textContent = 'Parts'; row.appendChild(lab);
+      PARTS.forEach(r => { const b = document.createElement('button'); b.className='brain-chip'; b.type='button'; b.dataset.key=r.key; b.setAttribute('aria-pressed','false'); b.innerHTML = '<span class="brain-chip__dot" style="background:'+r.color+'"></span>'+r.label; b.addEventListener('click', () => selectPart(r)); row.appendChild(b); });
+      wrap.appendChild(row);
+    }
+    function buildLegend(){
+      const el = document.getElementById('brain-legend'); el.innerHTML = '';
+      const t = document.createElement('p'); t.className='brain-legend__title'; t.textContent='Parts'; el.appendChild(t);
+      PARTS.forEach(r => { const b = document.createElement('button'); b.type='button'; b.innerHTML = '<span class="brain-legend__sw" style="background:'+r.color+'"></span>'+r.label; b.addEventListener('click', () => selectPart(r)); el.appendChild(b); });
+    }
+
+    // ---------- release: neurotransmitter crosses the cleft ----------
+    function makeParticles(){
+      particles = [];
+      const geo = new THREE.SphereGeometry(0.12, 14, 12);
+      for(let i=0;i<9;i++){
+        const m = new THREE.MeshBasicMaterial({ color:0x8fe3bf });
+        const p = new THREE.Mesh(geo, m); p.userData.isParticle = true; p.visible = false; p.renderOrder = 5;
+        synapse.add(p);
+        particles.push(p);
+      }
+    }
+    const RELEASE_MSG = { blocked:'No neurotransmitter released', noreceive:'Message arrives but the receptors can’t catch it', pileup:'Messenger piles up in the gap', overload:'Receiving side overexcited', normal:'Signal received' };
+    function release(){
+      if(!synapse || releasing) return;
+      if(state.selected){ defocus(); }
+      // damage decides what happens
+      releaseMode = (state.damaged.has('vesicles') || state.damaged.has('transmitter') || state.damaged.has('presyn')) ? 'blocked'
+                  : state.damaged.has('receptors') ? 'noreceive'
+                  : state.damaged.has('cleft') || state.damaged.has('reuptake') ? 'pileup'
+                  : state.damaged.has('postsyn') ? 'overload' : 'normal';
+      if(rm.matches){ releaseStatic(); return; }   // reduced motion: show the outcome, skip the travel
+      releasing = true; releaseStart = performance.now();
+      fireStatus.textContent = 'Signal arriving…';
+      updateAutoRotate();
+      needsRender = true;
+    }
+    // reduced-motion outcome: no particle travel, just the end state
+    function releaseStatic(){
+      clearGlow();
+      const blocked = releaseMode === 'blocked';
+      particles.forEach((p,i) => { p.visible = !blocked; if(!blocked) p.position.copy(receptorPos[i % receptorPos.length]); });
+      if(!blocked) glow('receptors', releaseMode==='overload' ? 2.6 : 1.8);
+      fireStatus.textContent = (blocked && state.damaged.has('presyn')) ? 'Signal arrives but little is released' : RELEASE_MSG[releaseMode];
+      needsRender = true;
+      setTimeout(() => { particles.forEach(p => p.visible = false); refresh(); fireStatus.textContent = ''; }, 2400);
+    }
+    function glow(key, amt){ parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isParticle) return; m.material.emissive.copy(m.userData.baseColor); m.material.emissiveIntensity = amt; }); }
+    function clearGlow(){ Object.keys(parts).forEach(k => parts[k].meshes.forEach(m => { if(m.userData.isParticle) return; m.material.emissiveIntensity = 0; m.material.emissive.setHex(0x000000); })); }
+    function ease(t){ return t*t*(3-2*t); }
+    function tickRelease(now){
+      const DUR = 4200;
+      let t = (now - releaseStart) / DUR;
+      if(t >= 1){ endRelease(); return; }
+      clearGlow();
+      const startY = ACTIVE_Y, spread = 0.22;
+      // phase 1: signal arrives, presynaptic terminal + vesicles light up
+      if(t < 0.24){
+        glow('presyn', 1.3*(1 - Math.abs(t-0.12)/0.12));
+        glow('vesicles', 1.4*(t/0.24));
+        particles.forEach(p => p.visible = false);
+        if(releaseMode === 'blocked' && t > 0.2){
+          glow('vesicles', 0.2);
+          fireStatus.textContent = state.damaged.has('presyn') ? 'Signal arrives but little is released' : 'No neurotransmitter released';
+          if(t > 0.22) endRelease();
+          needsRender = true; return;
+        }
+      }
+      // phase 2: vesicles fuse, messenger crosses the cleft
+      else if(t < 0.72){
+        const at = ease((t - 0.24) / 0.48);
+        glow('vesicles', 0.5);
+        const n = releaseMode === 'blocked' ? 0 : particles.length;
+        particles.forEach((p, i) => {
+          if(i >= n){ p.visible = false; return; }
+          p.visible = true;
+          const target = receptorPos[i % receptorPos.length];
+          const sx = (i%3-1)*spread, sz = (Math.floor(i/3)-1)*spread;
+          const from = new THREE.Vector3(sx*0.6, startY, sz*0.6);
+          p.position.lerpVectors(from, target, at);
+          p.position.x += Math.sin(at*Math.PI)*sx*0.5;
+        });
+        fireStatus.textContent = 'Neurotransmitter crossing the gap';
+      }
+      // phase 3: messenger binds receptors
+      else {
+        const bt = (t - 0.72) / 0.28;
+        particles.forEach((p, i) => { if(i < particles.length){ p.position.copy(receptorPos[i % receptorPos.length]); } });
+        if(releaseMode === 'noreceive'){
+          particles.forEach(p => p.visible = true);           // messenger sits unread
+          fireStatus.textContent = 'Message arrives but the receptors can’t catch it';
+        } else if(releaseMode === 'pileup'){
+          particles.forEach(p => p.visible = true);           // not cleared from the gap
+          glow('receptors', 1.6);
+          fireStatus.textContent = 'Messenger piles up in the gap';
+        } else if(releaseMode === 'overload'){
+          particles.forEach(p => p.visible = bt < 0.6);
+          glow('receptors', 3.0); glow('postsyn', 1.6*Math.abs(Math.sin(bt*Math.PI*3)));
+          fireStatus.textContent = 'Receiving side overexcited';
+        } else {
+          particles.forEach(p => p.visible = bt < 0.55);       // cleared as signal passes on
+          glow('receptors', 2.4*(1 - bt));
+          glow('postsyn', 0.8*(1 - bt));
+          fireStatus.textContent = 'Signal received';
+        }
+      }
+      needsRender = true;
+    }
+    function endRelease(){
+      releasing = false;
+      particles.forEach(p => p.visible = false);
+      setTimeout(() => { if(!releasing) fireStatus.textContent = ''; }, 1500);
+      refresh();
+      updateAutoRotate();
+    }
+
+    // ---------- deep-linking ----------
+    function writeHash(){ const p = state.selected ? '#part='+state.selected : location.pathname + location.search; history.replaceState(null,'',p); }
+    function applyHash(){ const h = location.hash.replace(/^#/,''); if(!h){ refresh(); return; } const q = new URLSearchParams(h); const k = q.get('part'); if(k && byKey[k]){ selectPart(byKey[k], {silent:true}); } else refresh(); }
+
+    // ---------- pointer / keyboard ----------
+    let down = null;
+    const SHELL = { presyn:1, cleft:1 };   // translucent parts that enclose smaller ones
+    function pick(cx, cy){
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((cx-rect.left)/rect.width)*2-1; pointer.y = -((cy-rect.top)/rect.height)*2+1;
+      raycaster.setFromCamera(pointer, camera);
+      const all = []; Object.keys(parts).forEach(k => parts[k].meshes.forEach(m => all.push(m)));
+      const hits = raycaster.intersectObjects(all, false).filter(h => h.object.material.opacity > 0.12 && !h.object.userData.isParticle);
+      if(!hits.length) return null;
+      // clicks pass through the translucent bulb/cleft to the specific part behind, when there is one
+      const inner = hits.find(h => !SHELL[h.object.userData.partKey]);
+      return (inner || hits[0]).object;
+    }
+    if(webglOk()){
+      renderer.domElement.addEventListener('pointerdown', e => { down = { x:e.clientX, y:e.clientY, id:e.pointerId }; });
+      renderer.domElement.addEventListener('pointercancel', () => { down = null; });
+      renderer.domElement.addEventListener('pointerup', e => {
+        if(!down || e.pointerId !== down.id){ down = null; return; }
+        const moved = Math.hypot(e.clientX-down.x, e.clientY-down.y); down = null;
+        if(moved > 6) return;
+        const m = pick(e.clientX, e.clientY);
+        if(m && m.userData.partKey) selectPart(byKey[m.userData.partKey]);
+        else if(state.selected) defocus();
+      });
+      renderer.domElement.addEventListener('pointermove', e => {
+        if(e.pointerType === 'touch') return;
+        const m = pick(e.clientX, e.clientY);
+        renderer.domElement.style.cursor = m ? 'pointer' : 'grab';
+        if(m && m.userData.partKey){ const rect = renderer.domElement.getBoundingClientRect(); tooltipEl.textContent = byKey[m.userData.partKey].label; tooltipEl.style.left = (e.clientX-rect.left)+'px'; tooltipEl.style.top = (e.clientY-rect.top)+'px'; tooltipEl.style.opacity='1'; }
+        else tooltipEl.style.opacity = '0';
+      });
+      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; });
+      renderer.domElement.addEventListener('keydown', e => {
+        if(e.key === 'Escape') resetView();
+        else if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); cycle(1); }
+        else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){ e.preventDefault(); cycle(-1); }
+        else if(e.key === 'r' || e.key === 'R' || e.key === 'f' || e.key === 'F') release();
+      });
+    }
+    function cycle(dir){ const cur = state.selected ? PARTS.findIndex(p=>p.key===state.selected) : -1; let i = (cur + dir + PARTS.length) % PARTS.length; selectPart(PARTS[i]); }
+
+    document.getElementById('tool-fire').addEventListener('click', release);
+    document.getElementById('tool-fit').addEventListener('click', () => { if(state.selected) defocus(); else frameAll(); });
+    document.getElementById('tool-reset').addEventListener('click', resetView);
+
+    function onResize(){ if(!renderer) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); needsRender = true; }
+    if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
+    addEventListener('resize', onResize);
+    rm.addEventListener('change', () => { updateAutoRotate(); needsRender = true; });
+
+    function animate(){
+      requestAnimationFrame(animate);
+      if(!renderer) return;
+      if(releasing) tickRelease(performance.now());
+      if(focusing){
+        controls.target.lerp(targetFocus, 0.14); camera.position.lerp(targetCamPos, 0.14); camera.lookAt(controls.target);
+        if(controls.target.distanceToSquared(targetFocus) < 1e-4 && camera.position.distanceToSquared(targetCamPos) < 1e-4){ controls.target.copy(targetFocus); camera.position.copy(targetCamPos); camera.lookAt(controls.target); focusing = false; }
+        renderer.render(scene, camera); return;
+      }
+      let render = false;
+      if(controls.autoRotate || releasing) render = true;
+      if(needsRender) render = true;
+      needsRender = false;
+      if(render){ controls.update(); renderer.render(scene, camera); }
+    }
+  </script>
+</body>
+</html>
