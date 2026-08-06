@@ -45,7 +45,7 @@ jobs:
           fail=0
           echo "$home" | grep -q "The Neuroscience Review" || { echo "MISSING site title"; fail=1; }
           echo "$home" | grep -q 'news.html">News' || { echo "MISSING News nav link"; fail=1; }
-          echo "$home" | grep -q 'the-paper-that-hooked-me.html">Column' || { echo "MISSING Column nav link"; fail=1; }
+          echo "$home" | grep -q 'commons.html">The Commons' || { echo "MISSING The Commons nav link"; fail=1; }
           [ "$fail" = "0" ] && echo "homepage sanity ok"
           exit $fail
 
