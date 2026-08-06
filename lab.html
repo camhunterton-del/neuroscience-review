@@ -104,6 +104,34 @@
     .lab-bench .brain-instrument img{ display:block; width:100%; max-width:430px; height:auto; margin:0 auto; filter:drop-shadow(0 14px 30px rgba(0,0,0,.5)); }
     .lab-bench .brain-instrument__cue{ display:block; font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; color:var(--faint); margin-top:.9rem; }
 
+    /* ---------- LAB TOP: 3D models (left, big) + this week on the bench (right) ---------- */
+    .lab-bench .bench-top{ padding:clamp(1.6rem,4vw,2.8rem) 0; }
+    .lab-bench .bench-top__grid{ display:grid; grid-template-columns:minmax(0,1.34fr) minmax(0,1fr); gap:clamp(1.3rem,3vw,2.3rem); align-items:start; }
+    .lab-bench .bench-top__models{ display:flex; flex-direction:column; gap:clamp(1.1rem,2.3vw,1.7rem); }
+    .lab-bench a.model-card{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.08fr); gap:clamp(.9rem,2vw,1.5rem); align-items:center; text-decoration:none; background:radial-gradient(130% 130% at 28% 18%,#16212b 0%,#0b1116 78%); border:1px solid var(--teal-dim); border-radius:16px; padding:clamp(1rem,2.2vw,1.5rem); transition:border-color .2s, transform .2s, box-shadow .2s; }
+    .lab-bench a.model-card:hover{ border-color:var(--teal); transform:translateY(-3px); box-shadow:0 16px 40px -18px rgba(0,0,0,.75); }
+    .lab-bench .model-card__media{ display:flex; align-items:center; justify-content:center; }
+    .lab-bench .model-card__media img{ display:block; width:100%; height:auto; filter:drop-shadow(0 14px 30px rgba(0,0,0,.5)); }
+    .lab-bench .model-card__body{ display:flex; flex-direction:column; align-items:flex-start; }
+    .lab-bench .model-card .bench-tab{ margin:0 0 .55rem; font-size:.64rem; }
+    .lab-bench .model-card__title{ font-family:var(--serif); font-weight:600; font-size:clamp(1.45rem,2.6vw,2rem); color:#eef6f2; margin:0 0 .5rem; line-height:1.08; letter-spacing:-.01em; }
+    .lab-bench .model-card__note{ font-family:var(--serif); color:var(--soft); font-size:1rem; line-height:1.5; margin:0 0 1rem; }
+    .lab-bench .model-card__cue{ display:inline-flex; align-items:center; gap:.4rem; font-family:var(--sans); font-weight:600; font-size:.92rem; color:var(--teal); border-bottom:1px solid var(--teal-dim); padding-bottom:2px; transition:color .15s, border-color .15s; }
+    .lab-bench a.model-card:hover .model-card__cue{ color:var(--teal-bright); border-color:var(--teal); }
+    .lab-bench .bench-top__bench{ background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--teal-dim); border-radius:16px; padding:clamp(1.2rem,2.6vw,1.8rem); }
+    .lab-bench .bench-top__bench .bench-featured__title{ font-size:clamp(1.5rem,2.8vw,1.95rem); }
+    .lab-bench .bench-top__bench .bench-featured__note{ font-size:1rem; margin-bottom:.4rem; }
+    .lab-bench .bench-top__bench .labdemo{ margin-top:1rem; }
+    .lab-bench .bench-top__bench .lif-canvas{ height:clamp(140px,20vw,180px); }
+    .lab-bench .bench-top__bench .bench-read{ margin-top:1.1rem; }
+    @media (max-width:960px){
+      .lab-bench .bench-top__grid{ grid-template-columns:1fr; }
+    }
+    @media (max-width:560px){
+      .lab-bench a.model-card{ grid-template-columns:1fr; }
+      .lab-bench .model-card__media img{ max-width:280px; margin:0 auto; }
+    }
+
     /* ---------- editorial grid ---------- */
     .lab-bench .bench-grid-wrap{ padding:clamp(1.4rem,4vw,2.4rem) 0 clamp(2.4rem,5vw,3.4rem); }
     .lab-bench .bench-section-kicker{ font-family:var(--mono); font-size:.74rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:var(--teal); margin:0 0 1.3rem; padding-bottom:.9rem; border-bottom:1px solid var(--line); }
@@ -2011,59 +2039,41 @@
       <svg viewBox="0 0 1200 24" preserveAspectRatio="none"><polyline points="0,12 470,12 486,12 496,6 505,18 515,12 590,12 600,12 610,3 619,21 628,12 720,12 736,12 746,8 754,16 763,12 1200,12"></polyline></svg>
     </div>
 
-    <!-- ============ FLAGSHIP: EXPLORE THE BRAIN IN 3D ============ -->
-    <section class="bench-featured" id="brain-3d" aria-label="Explore the brain in 3D">
-      <div class="bench-inner bench-featured__inner reveal">
-        <div class="bench-featured__meta">
-          <p class="bench-tab">Featured &middot; new</p>
-          <h2 class="bench-featured__title">Explore the brain in 3D</h2>
-          <p class="bench-featured__note">Spin a real anatomical brain, zoom in, and click any region to see what it does, in plain English. The cortex, cerebellum and brainstem on the outside, the hippocampus, amygdala and thalamus tucked inside.</p>
-          <a class="bench-read" href="brain.html">Open the explorer <span aria-hidden="true">&rarr;</span></a>
-          <p class="bench-featured__cap">Built on an open, CC-licensed anatomical model.</p>
+    <!-- ============ EXPLORE IN 3D (left, big) + ON THE BENCH (right) ============ -->
+    <section class="bench-top" id="explore-3d" aria-label="Explore in 3D, and this week on the bench">
+      <div class="bench-inner bench-top__grid reveal">
+
+        <!-- LEFT: the two 3D explorers, big -->
+        <div class="bench-top__models">
+          <a class="model-card" href="brain.html" aria-label="Open the 3D brain explorer">
+            <span class="model-card__media">
+              <img src="img/brain-preview.png" alt="A detailed three-dimensional anatomical brain" loading="lazy">
+            </span>
+            <span class="model-card__body">
+              <span class="bench-tab">Explore in 3D</span>
+              <span class="model-card__title">The brain</span>
+              <span class="model-card__note">Spin a real anatomical brain and click any region to see what it does, in plain English. Slide it apart, x-ray the cortex, or damage a region to see the condition it causes.</span>
+              <span class="model-card__cue">Open the explorer <span aria-hidden="true">&rarr;</span></span>
+            </span>
+          </a>
+          <a class="model-card" href="neuron.html" aria-label="Open the 3D neuron explorer">
+            <span class="model-card__media">
+              <img src="img/neuron-preview.png" alt="A stylized three-dimensional neuron with dendrites, a cell body, a myelinated axon and terminals" loading="lazy">
+            </span>
+            <span class="model-card__body">
+              <span class="bench-tab">Explore in 3D</span>
+              <span class="model-card__title">The neuron</span>
+              <span class="model-card__note">The brain's basic unit. Click a part, fire an action potential down the axon, or break a part to see what goes wrong, from MS to botulism.</span>
+              <span class="model-card__cue">Open the explorer <span aria-hidden="true">&rarr;</span></span>
+            </span>
+          </a>
         </div>
-        <a class="bench-featured__instrument brain-instrument" href="brain.html" aria-label="Open the 3D brain explorer">
-          <img src="img/brain-preview.png" alt="A detailed three-dimensional anatomical brain, front view" loading="lazy">
-          <span class="brain-instrument__cue">Drag to rotate &middot; scroll to zoom &middot; click a region</span>
-        </a>
-      </div>
-    </section>
 
-    <div class="trace-divider" role="presentation" aria-hidden="true">
-      <svg viewBox="0 0 1200 24" preserveAspectRatio="none"><polyline points="0,12 470,12 486,12 496,6 505,18 515,12 590,12 600,12 610,3 619,21 628,12 720,12 736,12 746,8 754,16 763,12 1200,12"></polyline></svg>
-    </div>
-
-    <!-- ============ FLAGSHIP: EXPLORE A NEURON IN 3D ============ -->
-    <section class="bench-featured" id="neuron-3d" aria-label="Explore a neuron in 3D">
-      <div class="bench-inner bench-featured__inner reveal">
-        <div class="bench-featured__meta">
-          <p class="bench-tab">Featured &middot; new</p>
-          <h2 class="bench-featured__title">Explore a neuron in 3D</h2>
-          <p class="bench-featured__note">The brain's basic unit, built to carry signals. Spin it, click a part to see what it does, and hit Fire to send an action potential racing down the axon, leaping node to node.</p>
-          <a class="bench-read" href="neuron.html">Open the explorer <span aria-hidden="true">&rarr;</span></a>
-          <p class="bench-featured__cap">A stylized teaching model with sourced descriptions.</p>
-        </div>
-        <a class="bench-featured__instrument brain-instrument" href="neuron.html" aria-label="Open the 3D neuron explorer">
-          <img src="img/neuron-preview.png" alt="A stylized three-dimensional neuron with dendrites, a cell body, a myelinated axon and terminals" loading="lazy">
-          <span class="brain-instrument__cue">Drag to rotate &middot; click a part &middot; Fire a signal</span>
-        </a>
-      </div>
-    </section>
-
-    <div class="trace-divider" role="presentation" aria-hidden="true">
-      <svg viewBox="0 0 1200 24" preserveAspectRatio="none"><polyline points="0,12 470,12 486,12 496,6 505,18 515,12 590,12 600,12 610,3 619,21 628,12 720,12 736,12 746,8 754,16 763,12 1200,12"></polyline></svg>
-    </div>
-
-    <!-- ============ THIS WEEK ON THE BENCH ============ -->
-    <section class="bench-featured" id="this-week" aria-label="This week on the bench">
-      <div class="bench-inner bench-featured__inner reveal">
-        <div class="bench-featured__meta">
-          <p class="bench-tab">This week on the bench</p>
+        <!-- RIGHT: this week's interactive, smaller -->
+        <aside class="bench-top__bench">
+          <p class="bench-tab">On the bench</p>
           <h2 class="bench-featured__title">Drive a neuron to threshold</h2>
-          <p class="bench-featured__note">The same neuron from the hero, now yours to push. It is a leaky integrate and fire model, the textbook simplification. Below a certain drive it sits quiet. Above it, the rate climbs, but the spike size never does.</p>
-          <a class="bench-read" href="posts/what-is-a-neuron.html">Read the piece <span aria-hidden="true">&rarr;</span></a>
-          <p class="bench-featured__cap">Companion to &ldquo;What is a neuron, really?&rdquo;</p>
-        </div>
-        <div class="bench-featured__instrument">
+          <p class="bench-featured__note">A leaky integrate and fire model, the textbook simplification. Below a certain drive it sits quiet. Above it, the rate climbs, but the spike size never does.</p>
           <section class="labdemo" aria-label="Integrate-and-fire neuron experiment">
             <div class="labdemo__stage" style="min-height:auto">
               <canvas class="lif-canvas" id="lif-trace" width="680" height="150"></canvas>
@@ -2074,9 +2084,11 @@
                 <canvas class="lif-fi" id="lif-fi" width="680" height="90"></canvas>
               </div>
             </div>
-            <p class="labdemo__muted" style="margin-top:1rem">This is a leaky integrate and fire neuron, the textbook simplification. Below a certain push it settles at a low quiet level below threshold and never spikes. Above it, it fires a full spike and resets, and the harder you push the faster it fires. The spike size never changes, only the rate.</p>
           </section>
-        </div>
+          <a class="bench-read" href="posts/what-is-a-neuron.html">Read the piece <span aria-hidden="true">&rarr;</span></a>
+          <p class="bench-featured__cap">Companion to &ldquo;What is a neuron, really?&rdquo;</p>
+        </aside>
+
       </div>
     </section>
 

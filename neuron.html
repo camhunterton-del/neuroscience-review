@@ -20,13 +20,13 @@
   <style>
     #main{ --brain-glass:rgba(250,247,241,.92); --brain-glass-bd:var(--border,#dcd7cd); --brain-glass-fg:var(--text,#26251f); --brain-glass-mut:var(--text-faint,#6f6a61); }
     [data-theme="dark"] #main{ --brain-glass:rgba(16,22,30,.82); --brain-glass-bd:rgba(120,150,170,.28); --brain-glass-fg:#eef6f2; --brain-glass-mut:#9fb1bf; }
-    .brain-hero{ max-width:1200px; margin:0 auto; padding:2.4rem 1.2rem 0.4rem; }
+    .brain-hero{ max-width:min(94vw,1600px); margin:0 auto; padding:2.4rem 1.2rem 0.4rem; }
     .brain-hero__kicker{ display:inline-flex; align-items:center; gap:.7rem; font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .55rem; }
     .brain-hero__kicker::after{ content:""; width:2.2rem; height:1px; background:var(--accent,#2f6f8f); opacity:.5; }
     .brain-hero h1{ font-family:var(--serif,Newsreader); font-weight:600; font-size:clamp(2rem,4.4vw,3rem); line-height:1.06; letter-spacing:-.015em; margin:0 0 .5rem; }
     .brain-hero__sub{ font-family:var(--serif,Newsreader); color:var(--text-faint,#5b5b57); font-size:1.1rem; max-width:62ch; margin:0; }
 
-    .brain-chips{ max-width:1040px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.55rem; }
+    .brain-chips{ max-width:min(94vw,1600px); margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.55rem; }
     .brain-chip-row{ display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; }
     .brain-chip-row__label{ font-family:var(--sans,Inter); font-size:.66rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-faint,#7a756c); margin-right:.15rem; min-width:3.6rem; }
     .brain-chip{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.85rem; font-weight:500; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:999px; padding:.4rem .85rem; cursor:pointer; transition:background .15s, border-color .15s, color .15s; }
@@ -35,12 +35,12 @@
     .brain-chip.is-active{ color:#fff; border-color:transparent; }
     .brain-chip:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
 
-    .brain-explorer{ max-width:1040px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.7rem; }
-    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:480px; background:radial-gradient(120% 120% at 50% 20%, #ffffff 0%, #eef1f4 38%, #e2e7ec 70%, #d6dce2 100%); }
+    .brain-explorer{ max-width:min(94vw,1600px); margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.7rem; }
+    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:clamp(460px,66vh,760px); background:radial-gradient(120% 120% at 50% 20%, #ffffff 0%, #eef1f4 38%, #e2e7ec 70%, #d6dce2 100%); }
     .brain-stage::before{ content:""; position:absolute; inset:0; background:radial-gradient(60% 45% at 50% 42%, rgba(47,111,143,.14), transparent 70%); pointer-events:none; }
     [data-theme="dark"] .brain-stage{ background:radial-gradient(120% 120% at 50% 18%, #1c2836 0%, #121a23 60%, #0a0e13 100%); }
     [data-theme="dark"] .brain-stage::before{ background:radial-gradient(58% 44% at 50% 40%, rgba(70,150,190,.22), transparent 72%); }
-    @media(min-width:900px){ .brain-stage{ min-height:560px; } }
+    @media(min-width:900px){ .brain-stage{ min-height:clamp(600px,78vh,860px); } }
     #brain-canvas{ position:absolute; inset:0; }
     #brain-canvas canvas{ display:block; width:100%!important; height:100%!important; touch-action:none; outline:none; }
     #brain-canvas canvas:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:-2px; }
@@ -82,7 +82,7 @@
     .brain-info__src{ font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
     .brain-info__src a{ color:inherit; }
 
-    .brain-credit{ max-width:1040px; margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
+    .brain-credit{ max-width:min(94vw,1600px); margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
     .brain-credit a{ color:inherit; }
   </style>
 </head>
@@ -190,6 +190,9 @@
     ];
     const byKey = {}; PARTS.forEach(p => byKey[p.key] = p);
 
+    // What happens if this part is damaged (fact-checked, sourced).
+    const DAMAGE = {"dendrites": {"condition": "Alzheimer's disease","symptoms": "Dendrites are how a neuron listens, so when they wither the messages that build memory and thought can't get in. In Alzheimer's this shows up as forgetfulness, trouble learning new things, and a slow decline in reasoning and language. This spine loss tracks closely with how much a person's thinking has slipped, and it often starts before whole neurons even die.","source": {"title": "Dendritic Spines: Mediators of Cognitive Resilience in Aging and Alzheimer's Disease (The Neuroscientist, NIH/PMC)","url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8130863/"}},"soma": {"condition": "Amyotrophic lateral sclerosis (ALS)","symptoms": "When motor neuron cell bodies die, the muscles they used to drive stop getting signals and waste away. In ALS this brings steadily worsening weakness, muscle shrinking, and trouble moving, speaking, and swallowing. Over time it reaches the muscles that power breathing, which is what makes the disease life-threatening.","source": {"title": "Neuroanatomy, Motor Neuron (StatPearls, NIH Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK554616/"}},"nucleus": {"condition": "Huntington's disease","symptoms": "The nucleus is the neuron's control room, so when its gene-reading gets jammed the cell slowly fails and dies. In Huntington's disease this causes involuntary jerky movements called chorea, along with mood and personality changes. Thinking, memory, and judgment fade over the years as more and more neurons are lost.","source": {"title": "Huntington's Disease (National Institute of Neurological Disorders and Stroke, NIH)","url": "https://www.ninds.nih.gov/health-information/disorders/huntingtons-disease"}},"hillock": {"condition": "Epilepsy (disordered neuronal firing)","symptoms": "This spot is the neuron's launch pad for its electrical signal, and it's packed with sodium channels. When those channels don't work right, some inherited epilepsies can follow. A clear example is Dravet syndrome, where the faulty channels sit in the brain's inhibitory 'brake' cells, so the brakes weaken and other neurons fire too much. A seizure is what you see when whole networks of neurons fire in runaway bursts at once, which can look like convulsions, staring spells, or a sudden loss of awareness. Most epilepsy isn't one broken launch pad but a whole circuit tipping out of balance between excitation and inhibition.","source": {"title": "Signal Processing in the Axon Initial Segment (Neuron, review)","url": "https://www.cell.com/neuron/fulltext/S0896-6273(12)00050-5"}},"axon": {"condition": "Diffuse axonal injury (traumatic brain injury)","symptoms": "The axon is the neuron's transmission line, so when it snaps the message simply can't travel. In diffuse axonal injury from a violent blow or crash, this widespread wire-breaking can knock someone unconscious or into a coma. Survivors often live with lasting problems in memory, attention, movement, and coordination.","source": {"title": "Diffuse Axonal Injury (Merck Manual, Consumer Version)","url": "https://www.merckmanuals.com/home/injuries-and-poisoning/head-injuries/diffuse-axonal-injury"}},"myelin": {"condition": "Multiple sclerosis","symptoms": "Myelin lets signals race down the nerve, so losing it garbles the messages traveling between the brain and body. In multiple sclerosis this brings muscle weakness, numbness and tingling, vision changes, balance and coordination trouble, and heavy fatigue. Symptoms often come and go, because the body patches some myelin while fresh attacks strip more away.","source": {"title": "Multiple Sclerosis (MS) (Cleveland Clinic)","url": "https://my.clevelandclinic.org/health/diseases/17248-multiple-sclerosis"}},"nodes": {"condition": "Nodopathy (nodal forms of Guillain-Barre syndrome)","symptoms": "These gaps are what let a signal hop quickly down the nerve, so when they're damaged the signal slows to a crawl or stops. In the nodal forms of Guillain-Barre syndrome this causes fast-spreading weakness, numbness, and sometimes near-total paralysis over just a few days. Many people recover as the nodes reset, though severe cases can go on to damage the axon itself.","source": {"title": "Nodo-paranodopathies: Concepts, Clinical Implications, and Management (NIH/PMC review)","url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9996523/"}},"terminals": {"condition": "Botulism","symptoms": "The terminal is where the neuron hands its signal off, so silencing it means muscles never get the go-ahead to move. In botulism the toxin shuts down these terminals and causes limp, floppy paralysis that usually starts in the face and eyes with drooping lids and double vision, then the throat with trouble swallowing and speaking. It's dangerous because the same block can reach the muscles that power breathing.","source": {"title": "Botulinum Neurotoxins: History, Mechanism, and Applications. A Narrative Review (Journal of Neurochemistry, NIH/PMC)","url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12323300/"}}};
+
     const stageEl = document.getElementById('brain-canvas');
     const infoEl = document.getElementById('brain-info');
     const loadingEl = document.getElementById('brain-loading');
@@ -205,13 +208,13 @@
     const parts = {};          // key -> { region, group, meshes:[] }
     let modelScale = 1;
     let needsRender = true, focusing = false;
-    let firing = false, fireStart = 0, impulse = null;
+    let firing = false, fireStart = 0, impulse = null, fireBlock = null, fireNoRelease = false;
     const targetFocus = new THREE.Vector3(0,0,0);
     const targetCamPos = new THREE.Vector3(0,0.05,7);
     const DEFAULT_CAM = new THREE.Vector3(0,0.6,7);
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
-    const state = { selected: null };
+    const state = { selected: null, damaged: new Set() };
 
     // axon path (shared by geometry + the fire animation), in model space
     const axonPts = [
@@ -382,7 +385,10 @@
           const translucent = opacity < 0.999;
           m.material.transparent = translucent; m.material.opacity = opacity; m.material.depthWrite = !translucent;
           m.material.color.copy(m.userData.baseColor);
-          if(emphasize){ m.material.emissive.copy(m.userData.baseColor).multiplyScalar(0.5); m.material.emissiveIntensity = 0.5; m.material.envMapIntensity = 0.75; }
+          if(state.damaged.has(k)){
+            m.material.color.lerp(new THREE.Color(0x515151), 0.8);   // greyed / dead
+            m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = 0.12;
+          } else if(emphasize){ m.material.emissive.copy(m.userData.baseColor).multiplyScalar(0.5); m.material.emissiveIntensity = 0.5; m.material.envMapIntensity = 0.75; }
           else { m.material.emissive.setHex(0x000000); m.material.envMapIntensity = translucent ? 0.06 : 0.5; }
         });
       });
@@ -398,14 +404,24 @@
     // ---------- info panel ----------
     function showInfo(region){
       if(!region){ infoEl.classList.remove('is-visible'); infoEl.innerHTML=''; setViewBias(false); return; }
-      let h = '<span class="brain-info__bar" style="background:'+region.color+'"></span>';
-      h += '<p class="brain-info__eyebrow"><span class="brain-info__dot" style="background:'+region.color+'"></span>Neuron part</p>';
-      h += '<h2>'+region.label+'</h2><p class="brain-info__tag">'+region.oneLiner+'</p><p>'+region.text+'</p>';
-      if(region.wgw) h += '<p class="brain-info__wgw"><span class="brain-info__wgw-label">What goes wrong</span>'+region.wgw+'</p>';
-      h += '<div class="brain-info__links">';
-      if(region.link) h += '<a class="brain-info__more" style="font-family:var(--sans);font-size:.88rem;font-weight:600;color:var(--accent);text-decoration:none" href="'+region.link+'">'+(region.linkText||'Read more')+' &rarr;</a>';
-      if(region.src) h += '<span class="brain-info__src">Source: <a href="'+region.src.url+'" target="_blank" rel="noopener">'+region.src.title+'</a></span>';
-      h += '</div>';
+      const dmg = state.damaged.has(region.key) && DAMAGE[region.key];
+      let h = '<span class="brain-info__bar" style="background:'+(dmg?'#d9534f':region.color)+'"></span>';
+      if(dmg){
+        h += '<p class="brain-info__eyebrow" style="color:#d9534f"><span class="brain-info__dot" style="background:#d9534f"></span>Damaged &middot; '+region.label+'</p>';
+        h += '<h2>'+dmg.condition+'</h2><p>'+dmg.symptoms+'</p>';
+        h += '<div class="brain-info__links">';
+        if(dmg.source) h += '<span class="brain-info__src">Source: <a href="'+dmg.source.url+'" target="_blank" rel="noopener">'+dmg.source.title+'</a></span>';
+        h += '</div><button class="brain-tool" data-action="repair" type="button" style="margin-top:1rem">Repair</button>';
+      } else {
+        h += '<p class="brain-info__eyebrow"><span class="brain-info__dot" style="background:'+region.color+'"></span>Neuron part</p>';
+        h += '<h2>'+region.label+'</h2><p class="brain-info__tag">'+region.oneLiner+'</p><p>'+region.text+'</p>';
+        if(region.wgw) h += '<p class="brain-info__wgw"><span class="brain-info__wgw-label">What goes wrong</span>'+region.wgw+'</p>';
+        h += '<div class="brain-info__links">';
+        if(region.link) h += '<a class="brain-info__more" style="font-family:var(--sans);font-size:.88rem;font-weight:600;color:var(--accent);text-decoration:none" href="'+region.link+'">'+(region.linkText||'Read more')+' &rarr;</a>';
+        if(region.src) h += '<span class="brain-info__src">Source: <a href="'+region.src.url+'" target="_blank" rel="noopener">'+region.src.title+'</a></span>';
+        h += '</div>';
+        if(DAMAGE[region.key]) h += '<button class="brain-tool" data-action="damage" type="button" style="margin-top:1rem;color:#fff;background:#c15b52;border-color:#c15b52">What happens if it breaks?</button>';
+      }
       infoEl.innerHTML = h; infoEl.classList.add('is-visible'); setViewBias(true);
     }
     function setViewBias(open){
@@ -430,7 +446,11 @@
     }
     function defocus(){ state.selected = null; refresh(); showInfo(null); markChip(null); frameAll(); writeHash(); }
     function frameAll(){ if(!controls) return; targetFocus.set(0,0,0); targetCamPos.copy(viewDir().multiplyScalar(7)); focusing = true; }
-    function resetView(){ state.selected = null; refresh(); showInfo(null); markChip(null); if(controls){ targetFocus.set(0,0,0); targetCamPos.copy(DEFAULT_CAM); focusing = true; controls.autoRotate = !rm.matches; } writeHash(); }
+    function resetView(){ state.selected = null; state.damaged.clear(); refresh(); showInfo(null); markChip(null); if(controls){ targetFocus.set(0,0,0); targetCamPos.copy(DEFAULT_CAM); focusing = true; controls.autoRotate = !rm.matches; } writeHash(); }
+    // ---------- damage / lesion mode ----------
+    function damagePart(key){ if(!byKey[key] || !DAMAGE[key]) return; state.damaged.add(key); refresh(); showInfo(byKey[key]); }
+    function repairPart(key){ state.damaged.delete(key); refresh(); showInfo(byKey[key]); }
+    infoEl.addEventListener('click', e => { const b = e.target.closest('[data-action]'); if(!b || !state.selected) return; if(b.dataset.action==='damage') damagePart(state.selected); else if(b.dataset.action==='repair') repairPart(state.selected); });
 
     // ---------- chips + legend ----------
     function buildChips(){
@@ -461,6 +481,13 @@
       if(!impulse) makeImpulse();
       if(state.selected){ defocus(); }
       firing = true; fireStart = performance.now(); impulse.visible = true;
+      impulse.material.color.setHex(0xfff4c2);
+      // damaged parts block or weaken the signal
+      fireBlock = (state.damaged.has('hillock') || state.damaged.has('soma')) ? 0
+                : state.damaged.has('axon') ? 0.5
+                : state.damaged.has('myelin') ? 0.42
+                : state.damaged.has('nodes') ? 0.58 : null;
+      fireNoRelease = state.damaged.has('terminals');
       fireStatus.textContent = 'Signal firing…';
       updateAutoRotate();
       needsRender = true;
@@ -474,24 +501,39 @@
       const clear = (key) => parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isImpulse) return; m.material.emissiveIntensity = 0; m.material.emissive.setHex(0x000000); });
       ['dendrites','soma','nucleus','hillock','axon','myelin','nodes','terminals'].forEach(clear);
       if(t < 0.16){ glow('dendrites', 1.7*(1 - Math.abs(t-0.08)/0.08)); impulse.visible=false; }
-      else if(t < 0.26){ glow('soma', 1.8); glow('hillock', 2.2); impulse.visible=false; }
+      else if(t < 0.26){
+        glow('soma', 1.8); glow('hillock', 2.2); impulse.visible=false;
+        if(fireBlock === 0){                           // hillock/soma damaged: can't even fire
+          parts.hillock.meshes.forEach(m => { m.material.emissive.setHex(0xd93030); m.material.emissiveIntensity = 2.6; });
+          fireStatus.textContent = "Signal can't start";
+          if(t > 0.22) endFire();
+          needsRender = true; return;
+        }
+      }
       else if(t < 0.9){
         const at = (t - 0.26) / 0.64;                 // 0..1 along axon
-        const pos = axonCurve.getPointAt(at);
-        impulse.visible = true; impulse.position.copy(pos);
+        if(fireBlock != null && fireBlock > 0 && at >= fireBlock){   // demyelination / cut axon: signal stalls
+          impulse.visible = true; impulse.position.copy(axonCurve.getPointAt(fireBlock));
+          impulse.material.color.setHex(0xd93030);
+          fireStatus.textContent = 'Signal blocked';
+          if(at >= fireBlock + 0.08 || t > 0.86) endFire();
+          needsRender = true; return;
+        }
+        impulse.visible = true; impulse.position.copy(axonCurve.getPointAt(at));
         // saltatory: light the node the impulse is nearest to
         nodeTs.forEach((nt, i) => { if(Math.abs(at - nt) < 0.06){ parts.nodes.meshes[i] && (parts.nodes.meshes[i].material.emissive.copy(parts.nodes.meshes[i].userData.baseColor), parts.nodes.meshes[i].material.emissiveIntensity = 2.4); } });
         glow('myelin', 0.35);
       } else {
         impulse.visible = false;
-        glow('terminals', 2.4*(1 - (t-0.9)/0.1));      // terminals flash = neurotransmitter release
+        if(fireNoRelease){ fireStatus.textContent = 'No neurotransmitter released'; }
+        else glow('terminals', 2.4*(1 - (t-0.9)/0.1));      // terminals flash = neurotransmitter release
       }
       needsRender = true;
     }
     function endFire(){
-      firing = false; if(impulse) impulse.visible = false;
-      fireStatus.textContent = '';
-      refresh();                 // restore normal appearance
+      firing = false; if(impulse){ impulse.visible = false; impulse.material.color.setHex(0xfff4c2); }
+      setTimeout(() => { if(!firing) fireStatus.textContent = ''; }, 1400);   // let block/failure messages linger
+      refresh();                 // restore normal appearance (keeps damaged parts greyed)
       updateAutoRotate();
     }
 

@@ -21,13 +21,13 @@
   <style>
     #main{ --brain-glass:rgba(250,247,241,.92); --brain-glass-bd:var(--border,#dcd7cd); --brain-glass-fg:var(--text,#26251f); --brain-glass-mut:var(--text-faint,#6f6a61); }
     [data-theme="dark"] #main{ --brain-glass:rgba(16,22,30,.82); --brain-glass-bd:rgba(120,150,170,.28); --brain-glass-fg:#eef6f2; --brain-glass-mut:#9fb1bf; }
-    .brain-hero{ max-width:1200px; margin:0 auto; padding:2.4rem 1.2rem 0.4rem; }
+    .brain-hero{ max-width:min(94vw,1600px); margin:0 auto; padding:2.4rem 1.2rem 0.4rem; }
     .brain-hero__kicker{ display:inline-flex; align-items:center; gap:.7rem; font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .55rem; }
     .brain-hero__kicker::after{ content:""; width:2.2rem; height:1px; background:var(--accent,#2f6f8f); opacity:.5; }
     .brain-hero h1{ font-family:var(--serif,Newsreader); font-weight:600; font-size:clamp(2rem,4.4vw,3rem); line-height:1.06; letter-spacing:-.015em; margin:0 0 .5rem; }
     .brain-hero__sub{ font-family:var(--serif,Newsreader); color:var(--text-faint,#5b5b57); font-size:1.1rem; max-width:62ch; margin:0; }
 
-    .brain-chips{ max-width:1200px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.55rem; }
+    .brain-chips{ max-width:min(94vw,1600px); margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.55rem; }
     .brain-chip-row{ display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; }
     .brain-chip-row__label{ font-family:var(--sans,Inter); font-size:.66rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-faint,#7a756c); margin-right:.15rem; min-width:4.2rem; }
     .brain-chip{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.85rem; font-weight:500; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:999px; padding:.4rem .85rem; cursor:pointer; transition:background .15s, border-color .15s, color .15s; }
@@ -36,13 +36,13 @@
     .brain-chip.is-active{ color:#fff; border-color:transparent; }
     .brain-chip:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
 
-    .brain-explorer{ max-width:1040px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.7rem; }
-    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:520px;
+    .brain-explorer{ max-width:min(94vw,1600px); margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.7rem; }
+    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:clamp(460px,66vh,760px);
       background:radial-gradient(120% 120% at 50% 20%, #ffffff 0%, #eef1f4 38%, #e2e7ec 70%, #d6dce2 100%); }
     .brain-stage::before{ content:""; position:absolute; inset:0; background:radial-gradient(60% 45% at 50% 42%, rgba(47,111,143,.14), transparent 70%); pointer-events:none; }
     [data-theme="dark"] .brain-stage{ background:radial-gradient(120% 120% at 50% 18%, #1c2836 0%, #121a23 60%, #0a0e13 100%); }
     [data-theme="dark"] .brain-stage::before{ background:radial-gradient(58% 44% at 50% 40%, rgba(70,150,190,.22), transparent 72%); }
-    @media(min-width:900px){ .brain-stage{ min-height:680px; } }
+    @media(min-width:900px){ .brain-stage{ min-height:clamp(600px,78vh,860px); } }
     #brain-canvas{ position:absolute; inset:0; }
     #brain-canvas canvas{ display:block; width:100%!important; height:100%!important; touch-action:none; outline:none; }
     #brain-canvas canvas:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:-2px; }
@@ -87,7 +87,7 @@
     .brain-info__src{ font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
     .brain-info__src a{ color:inherit; }
 
-    .brain-credit{ max-width:1200px; margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
+    .brain-credit{ max-width:min(94vw,1600px); margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
     .brain-credit a{ color:inherit; }
     @media (prefers-reduced-motion: reduce){ .brain-tooltip{ transition:none; } }
   </style>
@@ -231,6 +231,8 @@
     // three.js sanitizes glTF names (spaces->_, dots removed). Reduce to lowercase alnum.
     function norm(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]/g,'').replace(/\d+$/,''); }
     const byMesh = {}; REGIONS.forEach(r => { byMesh[norm(r.mesh)] = r; });
+    // What happens if a region is damaged (fact-checked, sourced).
+    const DAMAGE = {"Frontal lobe": {"condition": "Frontal lobe syndrome","symptoms": "The person often looks the same on the outside but changes on the inside. They can turn impulsive and tactless, or flat and unmotivated, and they struggle to plan ahead or catch their own mistakes. Judgment and self-control slip, so someone once careful might act rashly or lose interest in things they used to care about.","source": {"title": "Frontal Lobe Syndrome (StatPearls, NCBI Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK532981/"}},"Parietal lobe": {"condition": "Hemispatial neglect","symptoms": "The person stops paying attention to one whole side of the world, most often the left. They might eat food from only the right half of the plate, dress or shave just one side of their body, and bump into things on the ignored side without noticing anything is missing. To them it doesn't feel like a problem, because that side has simply dropped out of their awareness.","source": {"title": "Spatial Neglect (StatPearls, NCBI Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK562184/"}},"Temporal lobe": {"condition": "Wernicke's aphasia (receptive aphasia)","symptoms": "The person can still speak quickly and smoothly, but the words come out jumbled and don't carry real meaning. They also can't understand what other people are saying, and they usually don't realize their own speech isn't making sense. It can look like two people talking past each other in different languages.","source": {"title": "Wernicke's (Receptive) Aphasia (Cleveland Clinic)","url": "https://my.clevelandclinic.org/health/diseases/wernickes-aphasia-receptive-aphasia"}},"Occipital lobe": {"condition": "Cortical blindness (with Anton syndrome)","symptoms": "The person goes blind because the brain can no longer build a picture out of what the eyes send it. In a striking version called Anton syndrome, they insist they can still see and even make up descriptions of a room they can't actually perceive. They may bump into furniture while calmly claiming everything looks normal.","source": {"title": "Anton's Syndrome due to Bilateral Ischemic Occipital Lobe Strokes (Case Reports in Neurological Medicine, NCBI PMC)","url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4235183/"}},"Limbic lobe": {"condition": "Akinetic mutism (apathy syndrome)","symptoms": "The person is awake and their eyes can follow you around the room, but the drive to move or speak is gone. They aren't paralyzed and they aren't asleep, they just have almost no urge to do anything on their own. Family often describe someone who lies quietly, rarely starts a sentence, and seems emptied of motivation.","source": {"title": "On the pathophysiology and treatment of akinetic mutism (Neuroscience and Biobehavioral Reviews)","url": "https://www.sciencedirect.com/science/article/pii/S0149763419301447"}},"Cerebellum": {"condition": "Cerebellar ataxia","symptoms": "Movements lose their smoothness and timing, so reaching for a cup turns clumsy and overshoots or undershoots the target. Walking becomes unsteady with a wide, staggering gait that can look like drunkenness, and speech may turn slurred and choppy. The eyes can also jerk instead of tracking smoothly.","source": {"title": "Cerebellar Dysfunction (StatPearls, NCBI Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK562317/"}},"Brainstem": {"condition": "Locked-in syndrome","symptoms": "The person is fully awake and aware, thinking and feeling normally, but nearly every muscle is paralyzed. Often the only movements left are blinking and looking up and down, which becomes their whole way of communicating. It's one of the most frightening conditions in medicine, because the mind stays intact inside a body that can't move.","source": {"title": "Locked-in Syndrome (StatPearls, NCBI Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK559026/"}},"Thalamus": {"condition": "Dejerine-Roussy syndrome (thalamic pain syndrome)","symptoms": "At first one side of the body goes numb, then weeks or months later a deep, burning, relentless pain takes over that same side. A light touch, a cool breeze, or even bedsheets can start to feel agonizing. The pain is very real and hard to treat, because the problem sits in the brain's wiring rather than in the skin being touched.","source": {"title": "Dejerine-Roussy Syndrome (StatPearls, NCBI Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK519047/"}},"Hypothalamus": {"condition": "Hypothalamic dysfunction (including diabetes insipidus)","symptoms": "The body loses its automatic thermostat and its grip on hunger, thirst, and hormones. People can swing to extreme appetite and weight gain, run too hot or too cold, and in diabetes insipidus feel unquenchable thirst while passing huge amounts of urine. Sleep, mood, and growth or reproductive hormones can all go off balance too.","source": {"title": "Hypothalamic Dysfunction (StatPearls, NCBI Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK560743/"}},"Basal ganglia": {"condition": "Parkinsonism (Parkinson's disease)","symptoms": "Movement slows down and starting a motion becomes hard, so simple acts like standing up or walking feel stuck. A resting tremor often shows up in the hands, and the muscles turn stiff. Even speech and posture can suffer, because the brain can no longer fine-tune the body's movements smoothly.","source": {"title": "Parkinson Disease (StatPearls, NCBI Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK470193/"}},"Hippocampus": {"condition": "Anterograde amnesia","symptoms": "The person can no longer turn new experiences into lasting memories, so a conversation from ten minutes ago simply vanishes. They may ask the same question over and over, or fail to recognize someone they just met. Older memories from before the injury often stay intact, which is why they can recall their childhood but not this morning.","source": {"title": "Human memory: The hippocampus is the key (Current Biology)","url": "https://www.sciencedirect.com/science/article/pii/S0960982202707781"}},"Amygdala": {"condition": "Urbach-Wiethe disease (amygdala loss)","symptoms": "The person largely loses the feeling of fear and can't spot fear on other people's faces. They might walk right up to dangerous animals or strangers without the caution most of us feel automatically. They still understand danger as an idea, but the gut-level alarm that keeps people safe just doesn't fire.","source": {"title": "Temporal lobe epilepsy and emotion recognition without amygdala: a case study of Urbach-Wiethe disease (PubMed)","url": "https://pubmed.ncbi.nlm.nih.gov/25465029/"}},"Corpus callosum": {"condition": "Split-brain (callosal disconnection) syndrome","symptoms": "The two halves of the brain can no longer swap information, so an object seen only on the left can't be named out loud. In alien hand syndrome, one hand acts on its own and may undo what the other hand is doing, like unbuttoning a shirt the other hand just buttoned. The person feels genuinely surprised by their own rogue hand.","source": {"title": "Callosal disconnection syndrome manifesting as alien hand syndrome following extensive corpus callosum infarct (NCBI PMC)","url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11074696/"}},"Ventricles": {"condition": "Hydrocephalus","symptoms": "The rising pressure can bring headaches, nausea, blurred vision, and drowsiness. In the slow adult form called normal pressure hydrocephalus, people develop an unsteady shuffling walk, trouble holding their bladder, and fuzzy thinking that can look like dementia. Left untreated, the pressure can become dangerous.","source": {"title": "Hydrocephalus (StatPearls, NCBI Bookshelf)","url": "https://www.ncbi.nlm.nih.gov/books/NBK560875/"}}};
     function regionForName(n){ return byMesh[norm(n)] || null; }
     function regionByLabel(l){ return REGIONS.find(r => r.label === l) || null; }
 
@@ -260,7 +262,7 @@
     const pointer = new THREE.Vector2();
 
     // ---- Central UI state; refresh() is the ONLY place that mutates materials/positions ----
-    const state = { selected: null, xray: false, explode: 0, tour: false };
+    const state = { selected: null, xray: false, explode: 0, tour: false, damaged: new Set() };
 
     function showFallback(msg){
       if(fallbackMsg && msg) fallbackMsg.textContent = msg;
@@ -399,6 +401,10 @@
           m.material.emissive.setHex(0x000000);
           m.material.envMapIntensity = opacity < 0.5 ? 0.06 : 0.45; // ghosts don't catch reflections
         }
+        if(region && state.damaged.has(region.mesh)){   // lesioned: greyed / dead
+          m.material.color.lerp(new THREE.Color(0x515151), 0.8);
+          m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = 0.12;
+        }
         // explode: translate along tuned direction (cortex opens, deep spreads a bit less)
         const e = state.explode;
         const spreadWorld = isCortex ? 0.7 : 0.55;   // world units of travel at full explode
@@ -426,20 +432,48 @@
     function showInfo(region){
       if(!region){ infoEl.classList.remove('is-visible'); infoEl.innerHTML = ''; setViewBias(false); return; }
       const groupLabel = region.group === 'cortex' ? 'Lobe' : 'Deep structure';
-      let h = '<span class="brain-info__bar" style="background:'+region.color+'"></span>';
-      h += '<p class="brain-info__eyebrow"><span class="brain-info__dot" style="background:'+region.color+'"></span>'+groupLabel+'</p>';
-      h += '<h2>'+region.label+'</h2>';
-      h += '<p class="brain-info__tag">'+region.oneLiner+'</p>';
-      h += '<p>'+region.text+'</p>';
-      if(region.wgw) h += '<p class="brain-info__wgw"><span class="brain-info__wgw-label">What goes wrong</span>'+region.wgw+'</p>';
-      h += '<div class="brain-info__links">';
-      if(region.link) h += '<a class="brain-info__more" href="'+region.link+'">'+(region.linkText||'Read more')+' <span aria-hidden="true">&rarr;</span></a>';
-      if(region.src) h += '<span class="brain-info__src">Source: <a href="'+region.src.url+'" target="_blank" rel="noopener">'+region.src.title+'</a></span>';
-      h += '</div>';
+      const dmg = state.damaged.has(region.mesh) && DAMAGE[region.mesh];
+      let h = '<span class="brain-info__bar" style="background:'+(dmg?'#d9534f':region.color)+'"></span>';
+      if(dmg){
+        h += '<p class="brain-info__eyebrow" style="color:#d9534f"><span class="brain-info__dot" style="background:#d9534f"></span>Damaged &middot; '+region.label+'</p>';
+        h += '<h2>'+dmg.condition+'</h2><p>'+dmg.symptoms+'</p>';
+        h += '<div class="brain-info__links">';
+        if(dmg.source) h += '<span class="brain-info__src">Source: <a href="'+dmg.source.url+'" target="_blank" rel="noopener">'+dmg.source.title+'</a></span>';
+        h += '</div><button class="brain-tool" data-action="repair" type="button" style="margin-top:1rem">Repair</button>';
+      } else {
+        h += '<p class="brain-info__eyebrow"><span class="brain-info__dot" style="background:'+region.color+'"></span>'+groupLabel+'</p>';
+        h += '<h2>'+region.label+'</h2>';
+        h += '<p class="brain-info__tag">'+region.oneLiner+'</p>';
+        h += '<p>'+region.text+'</p>';
+        if(region.wgw) h += '<p class="brain-info__wgw"><span class="brain-info__wgw-label">What goes wrong</span>'+region.wgw+'</p>';
+        h += '<div class="brain-info__links">';
+        if(region.link) h += '<a class="brain-info__more" href="'+region.link+'">'+(region.linkText||'Read more')+' <span aria-hidden="true">&rarr;</span></a>';
+        if(region.src) h += '<span class="brain-info__src">Source: <a href="'+region.src.url+'" target="_blank" rel="noopener">'+region.src.title+'</a></span>';
+        h += '</div>';
+        if(DAMAGE[region.mesh]) h += '<button class="brain-tool" data-action="damage" type="button" style="margin-top:1rem;color:#fff;background:#c15b52;border-color:#c15b52">What happens if it breaks?</button>';
+      }
       infoEl.innerHTML = h;
       infoEl.classList.add('is-visible');
       setViewBias(true);
     }
+    // ---- Damage / lesion mode ----
+    function currentRegion(){ return state.selected ? state.selected.userData.region : null; }
+    function damageRegion(name){
+      if(!byMesh[norm(name)] || !DAMAGE[name]) return;
+      state.damaged.add(name); refresh();
+      const r = currentRegion(); if(r) showInfo(r);
+    }
+    function repairRegion(name){
+      state.damaged.delete(name); refresh();
+      const r = currentRegion(); if(r) showInfo(r);
+    }
+    // Delegated clicks for the damage/repair buttons inside the glass panel.
+    infoEl.addEventListener('click', e => {
+      const b = e.target.closest('[data-action]'); if(!b) return;
+      const r = currentRegion(); if(!r) return;
+      if(b.dataset.action === 'damage') damageRegion(r.mesh);
+      else if(b.dataset.action === 'repair') repairRegion(r.mesh);
+    });
     // Shift the rendered brain left (lens shift) when the info panel is open, so they never overlap.
     function setViewBias(open){
       if(!camera || !renderer) return;
@@ -485,7 +519,7 @@
       frameAll(); writeHash();
     }
     function resetView(){
-      state.selected = null; state.xray = false; state.explode = 0; stopTour();
+      state.selected = null; state.xray = false; state.explode = 0; state.damaged.clear(); stopTour();
       document.getElementById('tool-xray').setAttribute('aria-pressed','false');
       document.getElementById('tool-explode').value = 0;
       refresh();
