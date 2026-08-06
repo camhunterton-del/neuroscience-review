@@ -36,15 +36,13 @@
     .brain-chip.is-active{ color:#fff; border-color:transparent; }
     .brain-chip:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
 
-    .brain-explorer{ max-width:1200px; margin:1.1rem auto 0; padding:0 1.2rem; display:grid; grid-template-columns:1fr; gap:1.1rem; }
-    @media(min-width:900px){ .brain-explorer{ grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr); align-items:start; } }
-    .brain-main{ display:flex; flex-direction:column; gap:.7rem; min-width:0; }
-    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:460px;
+    .brain-explorer{ max-width:1040px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-direction:column; gap:.7rem; }
+    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; min-height:520px;
       background:radial-gradient(120% 120% at 50% 20%, #ffffff 0%, #eef1f4 38%, #e2e7ec 70%, #d6dce2 100%); }
     .brain-stage::before{ content:""; position:absolute; inset:0; background:radial-gradient(60% 45% at 50% 42%, rgba(47,111,143,.14), transparent 70%); pointer-events:none; }
     [data-theme="dark"] .brain-stage{ background:radial-gradient(120% 120% at 50% 18%, #1c2836 0%, #121a23 60%, #0a0e13 100%); }
     [data-theme="dark"] .brain-stage::before{ background:radial-gradient(58% 44% at 50% 40%, rgba(70,150,190,.22), transparent 72%); }
-    @media(min-width:900px){ .brain-stage{ min-height:580px; } }
+    @media(min-width:900px){ .brain-stage{ min-height:680px; } }
     #brain-canvas{ position:absolute; inset:0; }
     #brain-canvas canvas{ display:block; width:100%!important; height:100%!important; touch-action:none; outline:none; }
     #brain-canvas canvas:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:-2px; }
@@ -71,8 +69,10 @@
     .brain-slider input[type=range]{ width:118px; accent-color:var(--accent,#2f6f8f); cursor:pointer; }
     .brain-toolbar__spacer{ flex:1 1 auto; }
 
-    .brain-info{ border:1px solid var(--border,#dcd7cd); border-radius:16px; background:var(--bg-alt,#faf7f1); padding:1.4rem 1.5rem; min-height:220px; position:relative; overflow:hidden; }
-    .brain-info__bar{ position:absolute; left:0; top:0; bottom:0; width:4px; background:transparent; transition:background .2s; }
+    .brain-info{ position:absolute; top:.7rem; right:.7rem; z-index:6; width:min(350px,44%); max-height:calc(100% - 1.4rem); overflow-y:auto; border:1px solid var(--brain-glass-bd); border-radius:14px; background:var(--brain-glass); backdrop-filter:blur(11px); padding:1.15rem 1.25rem 1.25rem; color:var(--brain-glass-fg); opacity:0; visibility:hidden; transform:translateX(10px); transition:opacity .2s ease, transform .2s ease, visibility .2s; }
+    .brain-info.is-visible{ opacity:1; visibility:visible; transform:none; }
+    @media(max-width:720px){ .brain-info{ top:auto; left:.6rem; right:.6rem; bottom:.6rem; width:auto; max-height:56%; } }
+    .brain-info__bar{ position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:14px 0 0 14px; background:transparent; transition:background .2s; }
     .brain-info__eyebrow{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--sans,Inter); font-size:.66rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .4rem; }
     .brain-info__dot{ width:.66rem; height:.66rem; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.15) inset; }
     .brain-info h2{ font-family:var(--serif,Newsreader); font-weight:600; font-size:1.6rem; margin:0 0 .2rem; line-height:1.14; }
@@ -118,33 +118,29 @@
     <div class="brain-chips" id="brain-chips" role="group" aria-label="Jump to a brain region"></div>
 
     <section class="brain-explorer" aria-label="Interactive 3D brain">
-      <div class="brain-main">
-        <div class="brain-stage">
-          <div id="brain-canvas"></div>
-          <div class="brain-legend" id="brain-legend" aria-label="Lobe colour key"></div>
-          <div id="brain-tooltip" class="brain-tooltip" role="status" aria-live="off"></div>
-          <div id="brain-loading" class="brain-loading">Loading the brain&hellip;</div>
-          <div id="brain-fallback" class="brain-fallback">
-            <img src="img/brain-preview.png" alt="A detailed 3D anatomical brain">
-            <p id="brain-fallback-msg">Your browser could not start 3D graphics. You can still read about each region using the buttons above.</p>
-          </div>
-          <p class="brain-hint" id="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a region</p>
+      <div class="brain-stage">
+        <div id="brain-canvas"></div>
+        <div class="brain-legend" id="brain-legend" aria-label="Lobe colour key"></div>
+        <aside class="brain-info" id="brain-info" aria-live="polite"></aside>
+        <div id="brain-tooltip" class="brain-tooltip" role="status" aria-live="off"></div>
+        <div id="brain-loading" class="brain-loading">Loading the brain&hellip;</div>
+        <div id="brain-fallback" class="brain-fallback">
+          <img src="img/brain-preview.png" alt="A detailed 3D anatomical brain">
+          <p id="brain-fallback-msg">Your browser could not start 3D graphics. You can still read about each region using the buttons above.</p>
         </div>
-        <div class="brain-toolbar" id="brain-toolbar" role="toolbar" aria-label="Brain view controls">
-          <button class="brain-tool" id="tool-xray" type="button" aria-pressed="false" title="See through the cortex to the deep structures">X-ray</button>
-          <label class="brain-slider">Explode
-            <input type="range" id="tool-explode" min="0" max="100" value="0" aria-label="Explode view amount">
-          </label>
-          <button class="brain-tool" id="tool-tour" type="button" aria-pressed="false" title="Step through every region">Take the tour</button>
-          <span class="brain-toolbar__spacer"></span>
-          <button class="brain-tool" id="tool-snapshot" type="button" title="Download this view as an image">Snapshot</button>
-          <button class="brain-tool" id="tool-reset" type="button" title="Back to the whole brain">Reset</button>
-        </div>
+        <p class="brain-hint" id="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a region</p>
       </div>
-      <aside class="brain-info" id="brain-info" aria-live="polite">
-        <span class="brain-info__bar" id="brain-info-bar"></span>
-        <p class="brain-info__default">Click any part of the brain, or use the buttons above, to learn what it does.</p>
-      </aside>
+      <div class="brain-toolbar" id="brain-toolbar" role="toolbar" aria-label="Brain view controls">
+        <button class="brain-tool" id="tool-xray" type="button" aria-pressed="false" title="See through the cortex to the deep structures">X-ray</button>
+        <label class="brain-slider">Explode
+          <input type="range" id="tool-explode" min="0" max="100" value="0" aria-label="Explode view amount">
+        </label>
+        <button class="brain-tool" id="tool-fit" type="button" title="Zoom out to see the whole model">Fit view</button>
+        <button class="brain-tool" id="tool-tour" type="button" aria-pressed="false" title="Step through every region">Take the tour</button>
+        <span class="brain-toolbar__spacer"></span>
+        <button class="brain-tool" id="tool-snapshot" type="button" title="Download this view as an image">Snapshot</button>
+        <button class="brain-tool" id="tool-reset" type="button" title="Back to the whole brain">Reset</button>
+      </div>
     </section>
 
     <p class="brain-credit">3D model: Z-Anatomy (Gauthier Kervyn) &amp; BodyParts3D / DBCLS, licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>. Descriptions written and sourced by The Neuroscience Review.</p>
@@ -255,8 +251,11 @@
     let brain = null;
     const meshes = [];
     let modelRadius = 1, baseScale = 1;
-    let needsRender = true, focusing = false, focusDist = null;
-    const targetFocus = new THREE.Vector3(0,0,0);
+    let needsRender = true, focusing = false;
+    const targetFocus = new THREE.Vector3(0,0,0);         // controls.target eases here
+    const targetCamPos = new THREE.Vector3(0,0.05,2.6);   // camera.position eases here
+    function framingDist(r){ return r / Math.sin(THREE.MathUtils.degToRad(camera.fov/2)); }
+    function viewDir(){ const d = camera.position.clone().sub(controls.target); if(d.lengthSq()<1e-6) d.set(0,0.03,1); return d.normalize(); }
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
 
@@ -294,7 +293,7 @@
 
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true; controls.dampingFactor = 0.08;
-      controls.minDistance = 1.1; controls.maxDistance = 6; controls.enablePan = false;
+      controls.minDistance = 1.0; controls.maxDistance = 8; controls.enablePan = true;
       controls.autoRotate = !rm.matches; controls.autoRotateSpeed = 0.55;
       controls.addEventListener('change', () => { needsRender = true; });
 
@@ -335,7 +334,7 @@
       brain.scale.setScalar(scale);
       brain.position.sub(center.multiplyScalar(scale));
       brain.updateWorldMatrix(true, true);
-      modelRadius = 0.85;
+      modelRadius = Math.max(size.x, size.y, size.z) / 2;  // LOCAL radius (pre-scale); explode offsets are in local space
       const brainBox = new THREE.Box3().setFromObject(brain);
       const brainCenter = brainBox.getCenter(new THREE.Vector3());
       brain.traverse(o => {
@@ -373,15 +372,19 @@
       const selRegion = sel && sel.userData.region;
       const selDeep = selRegion && selRegion.group === 'deep';
       const cortexDim = state.xray ? 0.14 : 0.18;
+      const exploded = state.explode > 0.02;
       meshes.forEach(m => {
         const region = m.userData.region;
         const isCortex = region && region.group === 'cortex';
         let opacity = 1, emissiveScale = 0;
-        if(sel){
-          if(m === sel){ opacity = 1; emissiveScale = 0.55; }
+        if(sel && !exploded){
+          // isolate mode: ghost everything but the selected structure
+          if(m === sel){ emissiveScale = 0.55; }
           else { opacity = selDeep ? 0.05 : (isCortex ? 0.2 : 0.08); }
-        } else if(state.xray && isCortex){
-          opacity = cortexDim;
+        } else {
+          // exploded (or nothing selected): show all pieces; selected just glows; x-ray ghosts cortex
+          if(m === sel) emissiveScale = 0.55;
+          if(state.xray && isCortex) opacity = cortexDim;
         }
         const translucent = opacity < 0.999;
         m.material.transparent = translucent;
@@ -398,18 +401,30 @@
         }
         // explode: translate along tuned direction (cortex opens, deep spreads a bit less)
         const e = state.explode;
-        const spread = (isCortex ? 0.5 : 0.4) * modelRadius;
-        m.position.copy(m.userData.home).addScaledVector(m.userData.dir, e * spread);
+        const spreadWorld = isCortex ? 0.7 : 0.55;   // world units of travel at full explode
+        m.position.copy(m.userData.home).addScaledVector(m.userData.dir, e * spreadWorld / baseScale);
       });
-      // shrink the whole group as it explodes so the fanned-out assembly stays framed
-      if(brain) brain.scale.setScalar(baseScale * (1 - state.explode * 0.34));
+      updateAutoRotate();
       needsRender = true;
+    }
+    // Auto-rotate only when idle: not selected, not touring, not exploded, motion allowed.
+    function updateAutoRotate(){
+      if(controls) controls.autoRotate = !rm.matches && !state.selected && !state.tour && state.explode < 0.02;
+    }
+
+    // Frame the entire (possibly exploded) assembly so every piece stays in view.
+    function frameAll(){
+      if(!controls) return;
+      targetFocus.set(0,0,0);
+      const dist = 2.6 + state.explode * 1.8;   // pull back as the model explodes so all pieces stay in view
+      targetCamPos.copy(viewDir().multiplyScalar(dist));
+      focusing = true;
     }
 
     // ---- Info panel ----
     const DEFAULT_INFO = '<span class="brain-info__bar" id="brain-info-bar"></span><p class="brain-info__default">Click any part of the brain, or use the buttons above, to learn what it does.</p>';
     function showInfo(region){
-      if(!region){ infoEl.innerHTML = DEFAULT_INFO; return; }
+      if(!region){ infoEl.classList.remove('is-visible'); infoEl.innerHTML = ''; setViewBias(false); return; }
       const groupLabel = region.group === 'cortex' ? 'Lobe' : 'Deep structure';
       let h = '<span class="brain-info__bar" style="background:'+region.color+'"></span>';
       h += '<p class="brain-info__eyebrow"><span class="brain-info__dot" style="background:'+region.color+'"></span>'+groupLabel+'</p>';
@@ -422,6 +437,16 @@
       if(region.src) h += '<span class="brain-info__src">Source: <a href="'+region.src.url+'" target="_blank" rel="noopener">'+region.src.title+'</a></span>';
       h += '</div>';
       infoEl.innerHTML = h;
+      infoEl.classList.add('is-visible');
+      setViewBias(true);
+    }
+    // Shift the rendered brain left (lens shift) when the info panel is open, so they never overlap.
+    function setViewBias(open){
+      if(!camera || !renderer) return;
+      const w = stageEl.clientWidth, h = stageEl.clientHeight;
+      if(open && w >= 720){ camera.setViewOffset(w, h, Math.min(w*0.17, 155), 0, w, h); }
+      else { camera.clearViewOffset(); }
+      needsRender = true;
     }
     function markChip(region){
       document.querySelectorAll('.brain-chip').forEach(c => {
@@ -442,14 +467,22 @@
       if(controls && !state.tour) controls.autoRotate = false;
       refresh();
       if(target && controls){
+        // zoom to frame the clicked structure, whether exploded or not
         const bx = new THREE.Box3().setFromObject(target); bx.getCenter(targetFocus);
         const sph = bx.getBoundingSphere(new THREE.Sphere());
-        focusDist = Math.min(4, Math.max(1.3, sph.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov/2)) * 1.8));
+        const dist = Math.min(5, Math.max(1.3, framingDist(sph.radius) * 1.7));
+        targetCamPos.copy(targetFocus).add(viewDir().multiplyScalar(dist));
         focusing = true;
       }
       showInfo(region);
       markChip(region);
       if(!opts.silent) writeHash();
+    }
+    // Back out from a focused piece to the whole (possibly exploded) assembly, keeping explode/x-ray.
+    function defocus(){
+      state.selected = null;
+      refresh(); showInfo(null); markChip(null);
+      frameAll(); writeHash();
     }
     function resetView(){
       state.selected = null; state.xray = false; state.explode = 0; stopTour();
@@ -457,7 +490,7 @@
       document.getElementById('tool-explode').value = 0;
       refresh();
       showInfo(null); markChip(null);
-      if(controls){ targetFocus.set(0,0,0); focusDist = 2.6; focusing = true; controls.autoRotate = !rm.matches; }
+      if(controls){ targetFocus.set(0,0,0); targetCamPos.set(0,0.05,2.6); focusing = true; controls.autoRotate = !rm.matches; }
       writeHash();
     }
 
@@ -494,8 +527,9 @@
       state.xray = !state.xray; e.currentTarget.setAttribute('aria-pressed', String(state.xray)); refresh(); writeHash();
     });
     document.getElementById('tool-explode').addEventListener('input', (e) => {
-      state.explode = (+e.target.value)/100; refresh(); writeHash();
+      state.explode = (+e.target.value)/100; refresh(); frameAll(); writeHash();
     });
+    document.getElementById('tool-fit').addEventListener('click', () => { if(state.selected) defocus(); else frameAll(); });
     document.getElementById('tool-tour').addEventListener('click', () => { state.tour ? stopTour() : startTour(); });
     document.getElementById('tool-reset').addEventListener('click', resetView);
     document.getElementById('tool-snapshot').addEventListener('click', snapshot);
@@ -551,8 +585,9 @@
       const ex = parseInt(p.get('explode')||'0', 10);
       if(ex > 0){ state.explode = Math.min(1, ex/100); document.getElementById('tool-explode').value = ex; }
       const reg = p.get('region');
-      if(reg){ const r = regionForName(reg) || REGIONS.find(x => x.mesh === reg); if(r){ selectRegion(r, { silent:true }); return; } }
+      if(reg){ const r = regionForName(reg) || REGIONS.find(x => x.mesh === reg); if(r){ selectRegion(r, { silent:true }); if(state.explode > 0.02) frameAll(); return; } }
       refresh();
+      if(state.explode > 0.02) frameAll();
     }
 
     // ---- Pointer: select only on a genuine tap/click (not a rotate drag) ----
@@ -575,7 +610,8 @@
       if(state.tour) stopTour();
       const m = pick(e.clientX, e.clientY);
       if(m && m.userData.region) selectRegion(m.userData.region);
-      else if(state.selected) resetView(); // tap empty space to clear
+      else if(state.selected) defocus();          // tap empty space to back out to the full view
+      else if(state.explode > 0.02) frameAll();    // re-fit the exploded assembly
     }
     if(webglOk()){
       renderer.domElement.addEventListener('pointerdown', onDown);
@@ -597,7 +633,7 @@
 
       // Keyboard: arrows cycle regions, Esc reset, R reset camera, T tour
       renderer.domElement.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape'){ resetView(); }
+        if(e.key === 'Escape'){ state.selected ? defocus() : resetView(); }
         else if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); cycle(1); }
         else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){ e.preventDefault(); cycle(-1); }
         else if(e.key === 't' || e.key === 'T'){ state.tour ? stopTour() : startTour(); }
@@ -618,6 +654,7 @@
       if(!w || !h) return;
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix();
+      setViewBias(infoEl.classList.contains('is-visible'));
       needsRender = true;
     }
     if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
@@ -628,19 +665,19 @@
     function animate(){
       requestAnimationFrame(animate);
       if(!renderer) return;
-      let render = false;
+      // During a focus transition, move the camera manually and DON'T call controls.update()
+      // (update() re-derives the camera from OrbitControls' internal state and fights the lerp).
       if(focusing){
-        controls.target.lerp(targetFocus, 0.1);
-        if(focusDist != null){
-          const off = camera.position.clone().sub(controls.target);
-          off.setLength(off.length() + (focusDist - off.length()) * 0.1);
-          camera.position.copy(controls.target).add(off);
+        controls.target.lerp(targetFocus, 0.14);
+        camera.position.lerp(targetCamPos, 0.14);
+        camera.lookAt(controls.target);
+        if(controls.target.distanceToSquared(targetFocus) < 1e-4 && camera.position.distanceToSquared(targetCamPos) < 1e-4){
+          controls.target.copy(targetFocus); camera.position.copy(targetCamPos); camera.lookAt(controls.target); focusing = false;
         }
-        const closeT = controls.target.distanceToSquared(targetFocus) < 1e-5;
-        const closeD = focusDist == null || Math.abs(camera.position.distanceTo(controls.target) - focusDist) < 0.015;
-        if(closeT && closeD){ controls.target.copy(targetFocus); focusing = false; focusDist = null; }
-        render = true;
+        renderer.render(scene, camera);
+        return;
       }
+      let render = false;
       if(controls.autoRotate) render = true;
       if(needsRender) render = true;
       needsRender = false;              // reset first; controls.update() re-sets it via 'change' while damping/rotating
