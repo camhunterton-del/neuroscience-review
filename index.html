@@ -106,6 +106,16 @@
     .brain-band__lede { font-family: var(--serif); font-size: 1.03rem; line-height: 1.55; color: #b9c6cf; margin: 0 0 1rem; max-width: 54ch; }
     .brain-band__cue { font-family: var(--sans); font-size: 0.85rem; font-weight: 600; color: #5bd0c4; }
     @media (max-width: 700px) { .brain-band { grid-template-columns: 1fr; } .brain-band__media img { max-width: 240px; } }
+    /* two-explorer Lab spotlight (brain + neuron) */
+    .lab-duo { background: radial-gradient(130% 130% at 28% 18%, #17232e 0%, #0c1319 72%); border: 1px solid #22323f; border-radius: 18px; padding: clamp(1.4rem, 3.2vw, 2.4rem); }
+    .lab-duo__head { max-width: 62ch; }
+    .lab-duo__cards { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2.5vw, 1.6rem); margin-top: clamp(1.2rem, 3vw, 1.8rem); }
+    .lab-duo__card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .45rem; text-decoration: none; background: rgba(255,255,255,.02); border: 1px solid #22323f; border-radius: 14px; padding: clamp(1rem, 2.4vw, 1.5rem); transition: border-color .2s, transform .2s, background .2s; }
+    .lab-duo__card:hover { border-color: #2f6f8f; transform: translateY(-3px); background: rgba(255,255,255,.04); }
+    .lab-duo__media { display: flex; align-items: center; justify-content: center; width: 100%; height: clamp(150px, 20vw, 205px); }
+    .lab-duo__media img { max-width: 300px; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 12px 26px rgba(0,0,0,.5)); }
+    .lab-duo__cardtitle { font-family: var(--serif); font-size: 1.25rem; font-weight: 600; color: #eef6f2; margin-top: .5rem; }
+    @media (max-width: 640px) { .lab-duo__cards { grid-template-columns: 1fr; } .lab-duo__media { height: 160px; } }
   </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -202,17 +212,27 @@
         </a>
       </section>
 
-      <!-- Lab spotlight: explore the brain in 3D -->
+      <!-- Lab spotlight: explore the brain + neuron in 3D -->
       <section class="home-block lab-spotlight">
-        <a class="brain-band" href="brain.html">
-          <div class="brain-band__media"><img src="img/brain-preview.png" alt="A detailed three-dimensional anatomical brain, front view" loading="lazy"></div>
-          <div class="brain-band__body">
+        <div class="lab-duo">
+          <div class="lab-duo__head">
             <div class="brain-band__eyebrow">New in The Lab</div>
-            <h2 class="brain-band__title">Explore the brain in 3D</h2>
-            <p class="brain-band__lede">Spin a real anatomical brain, zoom in, and click any region to see what it does, in plain English. The cortex and cerebellum on the outside, the hippocampus, amygdala and thalamus tucked inside.</p>
-            <span class="brain-band__cue">Open the explorer &rarr;</span>
+            <h2 class="brain-band__title">Explore the brain and neuron in 3D</h2>
+            <p class="brain-band__lede">Spin them, click any part to see what it does in plain English, then damage a region to watch the condition it causes, from Wernicke's aphasia to multiple sclerosis. Repair it and it comes back.</p>
           </div>
-        </a>
+          <div class="lab-duo__cards">
+            <a class="lab-duo__card" href="brain.html">
+              <span class="lab-duo__media"><img src="img/brain-preview.png" alt="A detailed three-dimensional anatomical brain" loading="lazy"></span>
+              <span class="lab-duo__cardtitle">The brain</span>
+              <span class="brain-band__cue">Open the explorer &rarr;</span>
+            </a>
+            <a class="lab-duo__card" href="neuron.html">
+              <span class="lab-duo__media"><img src="img/neuron-preview.png" alt="A stylized three-dimensional neuron with dendrites, a cell body, a myelinated axon and terminals" loading="lazy"></span>
+              <span class="lab-duo__cardtitle">The neuron</span>
+              <span class="brain-band__cue">Open the explorer &rarr;</span>
+            </a>
+          </div>
+        </div>
       </section>
 
       <!-- Hub: magazine grid + most-read rail -->
