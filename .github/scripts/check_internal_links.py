@@ -25,6 +25,10 @@ for f in glob.glob("**/*.html", recursive=True):
             ("http://", "https://", "mailto:", "tel:", "//", "#", "/", "data:")
         ):
             continue
+        # Skip URLs built dynamically in JS (e.g. href="'+region.link+'" inside a
+        # Three.js template string) — they're not static links to a repo file.
+        if any(tok in ref for tok in ("'", "`", "${", "{{", "<%")):
+            continue
         target = ref.split("#")[0].split("?")[0]
         if not target:
             continue
