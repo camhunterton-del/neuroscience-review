@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore the Brain — The Neuroscience Review</title>
+  <meta name="description" content="An interactive 3D brain. Spin it, zoom in, and click a region to see what it does, in plain English.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="canonical" href="https://theneuroreview.com/brain.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="Explore the Brain — The Neuroscience Review">
+  <meta property="og:description" content="An interactive 3D brain. Spin it, zoom in, and click a region to see what it does, in plain English.">
+  <style>
+    .brain-hero{ max-width:1200px; margin:0 auto; padding:2.4rem 1.2rem 0.6rem; }
+    .brain-hero__kicker{ font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .5rem; }
+    .brain-hero h1{ font-family:var(--serif,Newsreader); font-weight:600; font-size:clamp(2rem,4.4vw,3rem); line-height:1.08; margin:0 0 .5rem; }
+    .brain-hero__sub{ font-family:var(--serif,Newsreader); color:var(--text-faint,#5b5b57); font-size:1.1rem; max-width:60ch; margin:0; }
+    .brain-explorer{ max-width:1200px; margin:1.2rem auto 0; padding:0 1.2rem; display:grid; grid-template-columns:1fr; gap:1.1rem; }
+    @media(min-width:900px){ .brain-explorer{ grid-template-columns:minmax(0,1.75fr) minmax(280px,1fr); align-items:stretch; } }
+    .brain-stage{ position:relative; border:1px solid var(--border,#dcd7cd); border-radius:16px; overflow:hidden; background:radial-gradient(120% 120% at 50% 18%, #1c2733 0%, #10161d 62%, #0b0f14 100%); min-height:440px; }
+    @media(min-width:900px){ .brain-stage{ min-height:560px; } }
+    #brain-canvas{ position:absolute; inset:0; }
+    #brain-canvas canvas{ display:block; width:100%!important; height:100%!important; touch-action:none; }
+    .brain-loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#c8d4de; font-family:var(--sans,Inter); font-size:.95rem; letter-spacing:.02em; background:transparent; pointer-events:none; }
+    .brain-hint{ position:absolute; left:0; right:0; bottom:.7rem; text-align:center; margin:0; color:#8aa0b3; font-family:var(--sans,Inter); font-size:.76rem; letter-spacing:.04em; pointer-events:none; }
+    .brain-info{ border:1px solid var(--border,#dcd7cd); border-radius:16px; background:var(--bg-alt,#faf7f1); padding:1.4rem 1.5rem; min-height:200px; }
+    .brain-info__label{ font-family:var(--sans,Inter); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin:0 0 .3rem; }
+    .brain-info h2{ font-family:var(--serif,Newsreader); font-weight:600; font-size:1.5rem; margin:0 0 .7rem; line-height:1.15; }
+    .brain-info p{ font-family:var(--serif,Newsreader); color:var(--text,#26251f); font-size:1.04rem; line-height:1.55; margin:0 0 .9rem; }
+    .brain-info__default{ color:var(--text-faint,#5b5b57)!important; }
+    .brain-info__more{ font-family:var(--sans,Inter); font-size:.9rem; font-weight:600; color:var(--accent,#2f6f8f); text-decoration:none; }
+    .brain-info__more:hover{ text-decoration:underline; }
+    .brain-chips{ max-width:1200px; margin:1.1rem auto 0; padding:0 1.2rem; display:flex; flex-wrap:wrap; gap:.5rem; }
+    .brain-chip{ font-family:var(--sans,Inter); font-size:.86rem; font-weight:500; color:var(--text,#26251f); background:var(--bg-alt,#faf7f1); border:1px solid var(--border,#dcd7cd); border-radius:999px; padding:.42rem .95rem; cursor:pointer; transition:background .15s ease, border-color .15s ease, color .15s ease; }
+    .brain-chip:hover{ border-color:var(--accent,#2f6f8f); }
+    .brain-chip.is-active{ background:var(--accent,#2f6f8f); border-color:var(--accent,#2f6f8f); color:#fff; }
+    .brain-chip--reset{ font-weight:600; }
+    .brain-credit{ max-width:1200px; margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
+    .brain-credit a{ color:inherit; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="posts.html">Posts</a>
+        <a href="news.html">News</a>
+        <a aria-current="page" href="lab.html">Lab</a>
+        <a href="commons.html">The Commons</a>
+        <a class="site-nav__cta" href="index.html#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="brain-hero">
+      <p class="brain-hero__kicker">The Lab</p>
+      <h1>Explore the brain</h1>
+      <p class="brain-hero__sub">Spin it, zoom in, and click a region to see what it does, in plain English.</p>
+    </section>
+
+    <div class="brain-chips" id="brain-chips" role="group" aria-label="Jump to a brain region"></div>
+
+    <section class="brain-explorer" aria-label="Interactive 3D brain">
+      <div class="brain-stage">
+        <div id="brain-canvas"></div>
+        <div id="brain-loading" class="brain-loading">Loading the brain&hellip;</div>
+        <p class="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a region</p>
+      </div>
+      <aside class="brain-info" id="brain-info">
+        <p class="brain-info__default">Click any part of the brain to learn what it does.</p>
+      </aside>
+    </section>
+
+    <p class="brain-credit">3D model: Z-Anatomy (Gauthier Kervyn) &amp; BodyParts3D / DBCLS, licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>&copy; 2026 The Neuroscience Review</p>
+      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
+      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Posts</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="commons.html">The Commons</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
+    </div>
+  </footer>
+
+  <script type="importmap">
+  { "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }}
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    // Region knowledge base. Keys are matched (substring, case-insensitive) against mesh names.
+    const REGIONS = [
+      { match:['cerebrum','cerebral'], label:'Cerebrum', deep:false, text:"The cerebrum is the big wrinkled outer brain, and it's where most of what feels like 'you' happens — thinking, planning, language, sensation, and voluntary movement. Its rear strip, the motor cortex, sends the commands that turn an intention to speak or move into action.", link:'posts/brain-implant-inner-voice.html', linkText:'Read: can a brain implant read your inner voice?' },
+      { match:['cerebell'], label:'Cerebellum', deep:false, text:"The cerebellum, the small dense structure at the back and bottom, fine-tunes movement — timing, balance, and coordination. Damage here doesn't paralyze you, it makes movement clumsy and unsteady." },
+      { match:['brainstem','brain stem'], label:'Brainstem', deep:false, text:"The brainstem connects the brain to the spinal cord and quietly runs the things you never think about — breathing, heart rate, and the switch between sleep and waking. You can lose a lot of brain and survive; you can't lose this." },
+      { match:['hippocamp'], label:'Hippocampus', deep:true, text:"The hippocampus, a curled structure deep in the temporal lobe, is where new memories get formed and filed. It's one of the first areas Alzheimer's damages, which is why losing recent memories comes early.", link:'posts/do-the-new-alzheimers-drugs-work.html', linkText:"Read: do the new Alzheimer's drugs work?" },
+      { match:['amygdal'], label:'Amygdala', deep:true, text:"The amygdala is a small almond-shaped hub deep in the brain that flags what matters, especially threat and fear. It reacts fast, often before you're consciously aware, and colors memories with emotion.", link:'posts/aggression-switch-in-the-brain.html', linkText:'Read: is there an aggression switch in the brain?' },
+      { match:['thalam'], label:'Thalamus', deep:true, text:"The thalamus sits in the center of the brain as its main relay station. Nearly every signal heading to the cortex — sight, sound, touch — passes through here first and gets routed to the right place." },
+    ];
+    function lookup(name){
+      const n = (name||'').toLowerCase();
+      for(const r of REGIONS){ if(r.match.some(m => n.includes(m))) return r; }
+      return null;
+    }
+
+    const stage = document.getElementById('brain-canvas');
+    const infoEl = document.getElementById('brain-info');
+    const loadingEl = document.getElementById('brain-loading');
+
+    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(stage.clientWidth, stage.clientHeight);
+    stage.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, stage.clientWidth/stage.clientHeight, 0.01, 100);
+    camera.position.set(0, 0.05, 2.6);
+
+    scene.add(new THREE.HemisphereLight(0xdfeaf2, 0x2b2f36, 1.05));
+    const key = new THREE.DirectionalLight(0xffffff, 1.15); key.position.set(2, 3, 2.5); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xbcd2e6, 0.5); fill.position.set(-3, -1, -2); scene.add(fill);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.dampingFactor = 0.08;
+    controls.minDistance = 1.2; controls.maxDistance = 6; controls.enablePan = false;
+    controls.autoRotate = true; controls.autoRotateSpeed = 0.6;
+
+    let brain = null;
+    const meshes = [];
+    let highlighted = null;
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+
+    const loader = new GLTFLoader();
+    loader.load('models/brain.glb', (gltf) => {
+      brain = gltf.scene;
+      // center + scale to a unit-ish size
+      const box = new THREE.Box3().setFromObject(brain);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const scale = 1.7 / Math.max(size.x, size.y, size.z);
+      brain.scale.setScalar(scale);
+      brain.position.sub(center.multiplyScalar(scale));
+      brain.traverse(o => {
+        if(o.isMesh){
+          o.material = new THREE.MeshStandardMaterial({ color:0xe9c6be, roughness:0.72, metalness:0.02, transparent:true, opacity:1 });
+          o.userData.baseColor = o.material.color.clone();
+          meshes.push(o);
+        }
+      });
+      scene.add(brain);
+      loadingEl.style.display = 'none';
+      buildChips();
+    }, undefined, (err) => {
+      loadingEl.textContent = 'Could not load the brain model.';
+      console.error(err);
+    });
+
+    const DEFAULT_INFO = '<p class="brain-info__default">Click any part of the brain, or use the buttons above, to learn what it does.</p>';
+    function showAll(){
+      meshes.forEach(m => {
+        m.material.opacity = 1; m.material.depthWrite = true;
+        m.material.color.copy(m.userData.baseColor);
+        if(m.material.emissive) m.material.emissive.setHex(0x000000);
+      });
+      highlighted = null;
+    }
+    function isolate(target){
+      meshes.forEach(m => { const on = (m === target); m.material.opacity = on ? 1 : 0.07; m.material.depthWrite = on; });
+    }
+    function setHighlight(mesh){
+      if(mesh){
+        if(mesh.material.emissive){ mesh.material.emissive = new THREE.Color(0x2f6f8f); mesh.material.emissiveIntensity = 0.55; }
+        mesh.material.color.set(0xf3d9d2);
+      }
+      highlighted = mesh;
+    }
+    function meshForRegion(region){
+      return meshes.find(m => region.match.some(t => m.name.toLowerCase().includes(t)));
+    }
+    function showInfo(region, rawName){
+      if(!region){ infoEl.innerHTML = DEFAULT_INFO; return; }
+      let html = '<p class="brain-info__label">Region</p><h2>'+ region.label +'</h2><p>'+ region.text +'</p>';
+      if(region.link) html += '<a class="brain-info__more" href="'+ region.link +'">'+ (region.linkText||'Read more') +' &rarr;</a>';
+      infoEl.innerHTML = html;
+    }
+    function markChip(region){
+      document.querySelectorAll('.brain-chip').forEach(c => c.classList.toggle('is-active', !!region && c.dataset.label === region.label));
+    }
+    function selectRegion(region, mesh){
+      controls.autoRotate = false;
+      showAll();
+      const target = mesh || (region && meshForRegion(region));
+      if(region && region.deep && target) isolate(target);
+      if(target) setHighlight(target);
+      showInfo(region, target && target.name);
+      markChip(region);
+    }
+    function buildChips(){
+      const wrap = document.getElementById('brain-chips');
+      REGIONS.forEach(r => {
+        if(!meshForRegion(r)) return;
+        const b = document.createElement('button');
+        b.className = 'brain-chip'; b.dataset.label = r.label; b.textContent = r.label;
+        b.addEventListener('click', () => selectRegion(r));
+        wrap.appendChild(b);
+      });
+      const reset = document.createElement('button');
+      reset.className = 'brain-chip brain-chip--reset'; reset.textContent = 'Whole brain';
+      reset.addEventListener('click', () => { showAll(); showInfo(null); markChip(null); controls.autoRotate = true; });
+      wrap.appendChild(reset);
+    }
+
+    renderer.domElement.addEventListener('pointerdown', (e) => {
+      if(!meshes.length) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((e.clientX-rect.left)/rect.width)*2 - 1;
+      pointer.y = -((e.clientY-rect.top)/rect.height)*2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(meshes, true).filter(h => h.object.material.opacity > 0.2);
+      if(hits.length){ const mesh = hits[0].object; selectRegion(lookup(mesh.name), mesh); }
+    });
+
+    function onResize(){
+      const w = stage.clientWidth, h = stage.clientHeight;
+      renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix();
+    }
+    addEventListener('resize', onResize);
+
+    (function animate(){
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    })();
+  </script>
+</body>
+</html>
