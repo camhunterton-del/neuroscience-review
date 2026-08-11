@@ -63,6 +63,44 @@ jobs:
       - name: News feed reads newest-first
         run: python3 .github/scripts/check_news_order.py
 
+      - name: Discovery surfaces and key assets are live and valid
+        run: |
+          BASE="https://theneuroreview.com"
+          fail=0
+          code() { curl -s -o /dev/null -w "%{http_code}" --max-time 25 "$1"; }
+          body() { curl -s --max-time 25 "$1"; }
+
+          # Atom feed: 200 and actually an Atom document with entries.
+          c=$(code "$BASE/feed.xml")
+          if [ "$c" = "200" ] && body "$BASE/feed.xml" | grep -q "<feed" && body "$BASE/feed.xml" | grep -q "<entry"; then
+            echo "ok   feed.xml"; else echo "FAIL feed.xml (HTTP $c, or not a non-empty Atom feed)"; fail=1; fi
+
+          # Sitemap: 200 and a real urlset listing the homepage.
+          c=$(code "$BASE/sitemap.xml")
+          if [ "$c" = "200" ] && body "$BASE/sitemap.xml" | grep -q "<urlset" && body "$BASE/sitemap.xml" | grep -q "theneuroreview.com/</loc>"; then
+            echo "ok   sitemap.xml"; else echo "FAIL sitemap.xml (HTTP $c, or not a valid sitemap)"; fail=1; fi
+
+          # Search index: 200 and parses as a non-empty JSON array of objects with url+title.
+          if body "$BASE/search-index.json" | python3 -c "import sys,json; d=json.load(sys.stdin); assert isinstance(d,list) and d and all('url' in e and 'title' in e for e in d)" 2>/dev/null; then
+            echo "ok   search-index.json"; else echo "FAIL search-index.json (missing, invalid JSON, or wrong shape)"; fail=1; fi
+
+          # Stylesheet must serve (a broken CSS deploy makes every page look broken).
+          c=$(code "$BASE/css/styles.css")
+          if [ "$c" = "200" ]; then echo "ok   css/styles.css"; else echo "FAIL css/styles.css -> HTTP $c"; fail=1; fi
+
+          # Every committed 3D model must serve 200 (the Lab explorers rely on them).
+          for g in $(git ls-files '*.glb'); do
+            c=$(code "$BASE/$g")
+            if [ "$c" = "200" ]; then echo "ok   $g"; else echo "FAIL $g -> HTTP $c"; fail=1; fi
+          done
+
+          # The subscribe form endpoint should exist in the served homepage markup
+          # (assert the markup, do not submit an address).
+          if body "$BASE/" | grep -q "buttondown.com/api/emails/embed-subscribe"; then
+            echo "ok   subscribe form present"; else echo "FAIL subscribe form markup missing on homepage"; fail=1; fi
+
+          exit $fail
+
       - name: Open or update alert issue on failure
         if: failure()
         uses: actions/github-script@v7
@@ -76,7 +114,7 @@ jobs:
               `- Trigger: **${context.eventName}**`,
               `- Run log: ${runUrl}`,
               '',
-              'Open the run log and look for the step marked with a red X (page down, missing homepage content, HTTPS not enforced, a broken internal link, or the News feed out of date order).'
+              'Open the run log and look for the step marked with a red X (a page down, missing homepage content, HTTPS not enforced, a broken internal link, the News feed out of date order, or a discovery surface / asset down: feed, sitemap, search index, CSS, a 3D model, or the subscribe form).'
             ].join('\n');
             const { data: issues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner, repo: context.repo.repo, state: 'open', per_page: 100
