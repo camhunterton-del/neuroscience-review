@@ -1,0 +1,116 @@
+name: Publish peptides post
+
+# Scheduled publish for "What to know before you try peptides" (The honest guide).
+# The finished post + all wiring (homepage card, Articles list, feed, sitemap,
+# search index, inline figures) is staged on branch post/peptides. This workflow
+# fires on Aug 12, merges that branch into main, verifies the page went live, and
+# notifies. Idempotent (no-op if already published). Manual dry-run confirms the
+# merge is clean without publishing; workflow_dispatch (Run workflow) can publish
+# on demand at any time.
+
+on:
+  schedule:
+    - cron: '13 13 12 8 *'   # Aug 12, 13:13 UTC (~9:13am ET)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Test the merge without publishing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: publish-peptides
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Merge staged post branch into main
+        id: merge
+        run: |
+          set -e
+          BRANCH_REF="origin/post/peptides"
+          POST="posts/what-to-know-before-peptides.html"
+          DRY="${{ github.event.inputs.dry_run }}"
+          git config user.name "neuro-publish-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git fetch origin post/peptides
+
+          if [ -f "$POST" ]; then
+            echo "Post already published on main — nothing to do."
+            echo "result=already" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [ "$DRY" = "true" ]; then
+            if git merge --no-commit --no-ff "$BRANCH_REF"; then
+              git merge --abort || true
+              echo "DRY RUN: merge is clean and would publish successfully."
+              echo "result=dryok" >> $GITHUB_OUTPUT
+            else
+              git merge --abort || true
+              echo "DRY RUN: merge would CONFLICT — needs a re-sync before Aug 12."
+              echo "result=conflict" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+            exit 0
+          fi
+
+          if git merge --no-ff "$BRANCH_REF" -m "Publish: What to know before you try peptides (scheduled)"; then
+            pushed=false
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push origin main && { pushed=true; break; } || sleep 5
+            done
+            [ "$pushed" = "true" ] || { echo "push failed after retries"; echo "result=conflict" >> $GITHUB_OUTPUT; exit 1; }
+            echo "result=merged" >> $GITHUB_OUTPUT
+          else
+            git merge --abort || true
+            echo "Merge conflict — did not publish."
+            echo "result=conflict" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Verify the post is live
+        if: steps.merge.outputs.result == 'merged'
+        run: |
+          sleep 120
+          url="https://theneuroreview.com/posts/what-to-know-before-peptides.html"
+          for i in 1 2 3 4 5; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 25 "$url")
+            echo "attempt $i: HTTP $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 20
+          done
+          echo "Post not live after merge."; exit 1
+
+      - name: Notify published
+        if: steps.merge.outputs.result == 'merged'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: '🟢 Peptides post published',
+              body: 'The scheduled peptides guide merged to main and is live: https://theneuroreview.com/posts/what-to-know-before-peptides.html'
+            });
+
+      - name: Notify failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: '🔴 Peptides post publish FAILED',
+              body: `The scheduled Aug 12 publish did not complete (merge conflict or deploy issue). It needs a manual publish.\n\nRun log: ${runUrl}`
+            });
