@@ -47,6 +47,7 @@
     #brain-canvas canvas:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:-2px; }
     .brain-loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.95rem; pointer-events:none; text-align:center; padding:1.5rem; }
     .brain-fallback{ position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:1.5rem; text-align:center; }
+    .brain-fallback img{ max-width:min(80%,420px); max-height:60%; height:auto; object-fit:contain; border-radius:12px; filter:drop-shadow(0 14px 30px rgba(0,0,0,.4)); }
     .brain-fallback p{ font-family:var(--sans,Inter); font-size:.9rem; color:var(--brain-glass-mut); margin:0; max-width:40ch; }
     .brain-hint{ position:absolute; left:0; right:0; bottom:.7rem; text-align:center; margin:0; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.03em; pointer-events:none; opacity:.9; }
     .brain-tooltip{ position:absolute; z-index:6; pointer-events:none; transform:translate(-50%,-140%); background:var(--brain-glass); color:var(--brain-glass-fg); font-family:var(--sans,Inter); font-size:.78rem; font-weight:500; padding:.28rem .58rem; border-radius:7px; border:1px solid var(--brain-glass-bd); white-space:nowrap; opacity:0; transition:opacity .12s; backdrop-filter:blur(6px); }
@@ -133,7 +134,10 @@
         <aside class="brain-info" id="brain-info" aria-live="polite"></aside>
         <div id="brain-tooltip" class="brain-tooltip" role="status" aria-live="off"></div>
         <div id="brain-loading" class="brain-loading">Building the synapse&hellip;</div>
-        <div id="brain-fallback" class="brain-fallback"><p id="brain-fallback-msg">Your browser could not start 3D graphics. You can still read about each part using the buttons above.</p></div>
+        <div id="brain-fallback" class="brain-fallback">
+          <img src="img/synapse-preview.png" alt="A labeled 3D synapse: presynaptic terminal, synaptic vesicles, neurotransmitter, synaptic cleft, postsynaptic membrane, receptors, and reuptake transporters">
+          <p id="brain-fallback-msg">Your browser could not start 3D graphics. You can still read about each part using the buttons above.</p>
+        </div>
         <p class="brain-hint" id="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a part</p>
       </div>
       <div class="brain-toolbar" id="brain-toolbar" role="toolbar" aria-label="Synapse controls">
@@ -182,10 +186,52 @@
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
   }}
   </script>
+  <!-- Reliability watchdog (P1 fix): a CLASSIC script, so it runs even when the ES module below fails
+       to load (e.g. a school/work network that blocks cdn.jsdelivr.net). The module sets window.__labReady
+       as its first statement; if that never happens, we reveal the static fallback instead of a stuck "Loading…". -->
+  <script>
+  (function(){
+    var revealed = false;
+    function reveal(){
+      if(revealed || window.__labReady) return;
+      revealed = true;
+      var loading  = document.getElementById('brain-loading');
+      var fallback = document.getElementById('brain-fallback');
+      var msg      = document.getElementById('brain-fallback-msg');
+      if(msg)      msg.textContent = 'The interactive 3D could not load. This can happen on networks that block outside scripts, or with a very slow connection. Try another network or reload.';
+      if(loading)  loading.style.display = 'none';
+      if(fallback) fallback.style.display = 'flex';
+    }
+    // Backstop: if Three.js never initialised (imports blocked/unreachable), reveal after a grace period.
+    setTimeout(function(){ if(!window.__labReady) reveal(); }, 8000);
+    // Faster path: a script/module load failure trips this before the timeout. Gated on !__labReady so a
+    // normal runtime error AFTER a working load can never hide the page.
+    function looksLikeLoadFailure(e){
+      if(!e) return false;
+      var t = e.target || e.srcElement;
+      if(t && t.tagName === 'SCRIPT') return true;   // a <script> failed to load (capture phase) — the ES module never ran
+      var m = String(e.message || '') + ' ' + String(e.filename || '');
+      return /jsdelivr|module|import|dynamically imported|failed to fetch/i.test(m);
+    }
+    window.addEventListener('error', function(e){
+      if(!window.__labReady && looksLikeLoadFailure(e)) reveal();
+    }, true);   // capture phase — resource (script) load errors do not bubble
+    window.addEventListener('unhandledrejection', function(e){
+      if(window.__labReady) return;
+      var r = e && e.reason;
+      var m = (r && (r.message || (r.toString && r.toString()))) || '';
+      if(/jsdelivr|module|import|dynamically imported|failed to fetch/i.test(String(m))) reveal();
+    });
+  })();
+  </script>
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    // Module executed => Three.js + addons resolved from the CDN. The classic watchdog above reads this
+    // flag; setting it FIRST (before webglOk()/init) means an 8s timeout never false-fires on a normal load.
+    window.__labReady = true;
 
     // ---- Part data: fact-checked plain-English blurbs + sources ----
     const PARTS = [

@@ -166,11 +166,53 @@
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
   }}
   </script>
+  <!-- Reliability watchdog (P1 fix): a CLASSIC script, so it runs even when the ES module below fails
+       to load (e.g. a school/work network that blocks cdn.jsdelivr.net). The module sets window.__labReady
+       as its first statement; if that never happens, we reveal the static fallback instead of a stuck "Loading…". -->
+  <script>
+  (function(){
+    var revealed = false;
+    function reveal(){
+      if(revealed || window.__labReady) return;
+      revealed = true;
+      var loading  = document.getElementById('brain-loading');
+      var fallback = document.getElementById('brain-fallback');
+      var msg      = document.getElementById('brain-fallback-msg');
+      if(msg)      msg.textContent = 'The interactive 3D could not load. This can happen on networks that block outside scripts, or with a very slow connection. Try another network or reload.';
+      if(loading)  loading.style.display = 'none';
+      if(fallback) fallback.style.display = 'flex';
+    }
+    // Backstop: if Three.js never initialised (imports blocked/unreachable), reveal after a grace period.
+    setTimeout(function(){ if(!window.__labReady) reveal(); }, 8000);
+    // Faster path: a script/module load failure trips this before the timeout. Gated on !__labReady so a
+    // normal runtime error AFTER a working load can never hide the page.
+    function looksLikeLoadFailure(e){
+      if(!e) return false;
+      var t = e.target || e.srcElement;
+      if(t && t.tagName === 'SCRIPT') return true;   // a <script> failed to load (capture phase) — the ES module never ran
+      var m = String(e.message || '') + ' ' + String(e.filename || '');
+      return /jsdelivr|module|import|dynamically imported|failed to fetch/i.test(m);
+    }
+    window.addEventListener('error', function(e){
+      if(!window.__labReady && looksLikeLoadFailure(e)) reveal();
+    }, true);   // capture phase — resource (script) load errors do not bubble
+    window.addEventListener('unhandledrejection', function(e){
+      if(window.__labReady) return;
+      var r = e && e.reason;
+      var m = (r && (r.message || (r.toString && r.toString()))) || '';
+      if(/jsdelivr|module|import|dynamically imported|failed to fetch/i.test(String(m))) reveal();
+    });
+  })();
+  </script>
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    // Module executed => Three.js + addons resolved from the CDN. The classic watchdog above reads this
+    // flag; setting it FIRST (before webglOk()/init) means an 8s timeout never false-fires on a normal load.
+    window.__labReady = true;
 
     // ---- Region data: fact-checked blurbs + sources + colorblind-safe jewel palette ----
     // group: 'cortex' (outer, co-visible) or 'deep' (hidden inside; isolate on select).
