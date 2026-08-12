@@ -299,7 +299,7 @@
     const HOVER_LERP = 0.5;        // hovered part: partial warm toward code color
     const parts = {};          // key -> { region, group, meshes:[] }
     let modelScale = 1;
-    let needsRender = true, focusing = false;
+    let needsRender = true, focusing = false, looping = false;
     let releasing = false, releaseStart = 0, releaseMode = null;
     const receptorPos = [];    // local-space receptor targets (set at build)
     let vesInst = null;        // InstancedMesh of synaptic vesicles (reserve + docked)
@@ -350,7 +350,7 @@
     const SHOT = (function(){ try { return new URLSearchParams(location.search).get('shot') === '1'; } catch(e){ return false; } })();
     let shotDone = false;
     if(!webglOk()){ showFallback(); }
-    else { init(); buildSynapse(); animate(); }
+    else { init(); buildSynapse(); requestRender(); }
     buildChips(); buildLegend();
     if(!renderer) applyHash();   // fallback (no WebGL): still open the info panel for a deep link / default
 
@@ -377,7 +377,7 @@
       controls.minDistance = 3; controls.maxDistance = 26; controls.enablePan = true;
       controls.autoRotate = !rm.matches; controls.autoRotateSpeed = 0.5;
       controls.target.set(0,0,0);
-      controls.addEventListener('change', () => { needsRender = true; });
+      controls.addEventListener('change', () => { requestRender(); });
       renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); showFallback('3D graphics paused. Reload the page to bring the synapse back.'); }, false);
       applyStageTheme();
     }
@@ -386,7 +386,7 @@
       const dark = document.documentElement.getAttribute('data-theme') === 'dark';
       renderer.toneMappingExposure = dark ? 1.05 : 1.16;
       if(hemi) hemi.intensity = dark ? 0.6 : 0.78;
-      needsRender = true;
+      requestRender();
     }
     new MutationObserver(applyStageTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
 
@@ -666,7 +666,7 @@
       buildChips(); buildLegend();
       refresh();
       applyHash();
-      needsRender = true;
+      requestRender();
     }
 
     // ---------- appearance resolver ----------
@@ -721,7 +721,7 @@
       });
       if(cleftDim) cleftDim.visible = (state.selected === 'cleft');
       updateAutoRotate();
-      needsRender = true;
+      requestRender();
     }
     function setHover(key){
       const eff = (!state.selected && !releasing) ? (key || null) : null;
@@ -768,7 +768,7 @@
       if(!camera || !renderer) return;
       const w = stageEl.clientWidth, h = stageEl.clientHeight;
       if(open && w >= 720){ camera.setViewOffset(w, h, Math.min(w*0.17,155), 0, w, h); } else { camera.clearViewOffset(); }
-      needsRender = true;
+      requestRender();
     }
     function markChip(region){ document.querySelectorAll('.brain-chip').forEach(c => { const on = !!region && c.dataset.key === region.key; c.classList.toggle('is-active', on); c.setAttribute('aria-pressed', String(on)); c.style.background = on ? region.color : ''; }); }
 
@@ -839,7 +839,7 @@
     function restoreDocked(){
       if(!vesInst) return;
       for(let i=0;i<dockedIdx.length;i++) vesInst.setMatrixAt(dockedIdx[i], dockedRest[i]);
-      vesInst.instanceMatrix.needsUpdate = true; needsRender = true;
+      vesInst.instanceMatrix.needsUpdate = true; requestRender();
     }
     // Which outcome does this release show? An explicit scenario wins; otherwise fall back to any part broken by hand.
     function currentMode(){
@@ -862,7 +862,7 @@
       meterReset();
       fireStatus.textContent = 'Signal arriving…';
       updateAutoRotate();
-      needsRender = true;
+      requestRender();
     }
     // reduced-motion outcome: flash the end state, no travel
     function releaseStatic(){
@@ -884,7 +884,7 @@
       if(mode === 'normal') glow('reuptake', 1.2);
       fireStatus.textContent = RELEASE_MSG[mode] || '';
       meterUpdate(mode, 1);
-      needsRender = true;
+      requestRender();
       setTimeout(() => { if(ntInst) ntInst.visible = false; clearGlow(); refresh(); fireStatus.textContent = ''; }, 2600);
     }
     function glow(key, amt){ parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isParticle) return; m.material.emissive.copy(m.userData.glowColor); m.material.emissiveIntensity = amt; }); }
@@ -1006,7 +1006,7 @@
         else { const bt = (t-P_BIND)/(1-P_BIND); glow('receptors', 2.2*(1-bt*0.5)); glow('postsyn', 0.8*(1-bt*0.5)); if(t >= P_CLEAR) glow('reuptake', 1.6); fireStatus.textContent = (t >= P_CLEAR) ? 'Reuptake clears the gap' : 'Signal received'; }
       }
       meterUpdate(mode, t);
-      needsRender = true;
+      requestRender();
     }
     function endRelease(){
       releasing = false;
@@ -1015,7 +1015,7 @@
       setTimeout(() => { if(!releasing) fireStatus.textContent = ''; }, 1500);
       refresh();
       updateAutoRotate();
-      needsRender = true;
+      requestRender();
     }
     // ---- drug-scenario segmented control ----
     function setScenario(id){
@@ -1091,10 +1091,10 @@
     setScenario('normal');   // initial aria-pressed + hide the note
     meterReset();            // flat baseline until the first Release
 
-    function onResize(){ if(!renderer) return; if(SHOT) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); needsRender = true; }
+    function onResize(){ if(!renderer) return; if(SHOT) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); requestRender(); }
     if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
     addEventListener('resize', onResize);
-    rm.addEventListener('change', () => { updateAutoRotate(); needsRender = true; });
+    rm.addEventListener('change', () => { updateAutoRotate(); requestRender(); });
 
     // ---------- dev-only preview-card export ( ?shot=1 ) ----------
     // Renders a TRANSPARENT, fixed-size PNG of the rebuilt synapse for img/synapse-preview.png.
@@ -1151,21 +1151,31 @@
     }
     if(SHOT && webglOk()) scheduleShot();
 
+    // On-demand render loop (Codex Lab audit P1). Run rAF only while something is
+    // actually animating — a camera focus lerp, auto-rotate/damping, or a release
+    // burst — or a one-off render was requested. Idle with nothing moving, or a
+    // hidden tab, parks the loop entirely instead of waking ~60x/sec forever.
+    function requestRender(){ needsRender = true; if(!looping && !document.hidden) startLoop(); }
+    function startLoop(){ if(looping) return; looping = true; requestAnimationFrame(animate); }
     function animate(){
-      requestAnimationFrame(animate);
-      if(!renderer) return;
+      if(!renderer){ looping = false; return; }
+      if(document.hidden){ looping = false; return; }   // visibilitychange re-kicks it
       if(releasing) tickRelease(performance.now());
       if(focusing){
         controls.target.lerp(targetFocus, 0.14); camera.position.lerp(targetCamPos, 0.14); camera.lookAt(controls.target);
         if(controls.target.distanceToSquared(targetFocus) < 1e-4 && camera.position.distanceToSquared(targetCamPos) < 1e-4){ controls.target.copy(targetFocus); camera.position.copy(targetCamPos); camera.lookAt(controls.target); focusing = false; }
-        renderer.render(scene, camera); return;
+        renderer.render(scene, camera);
+      } else {
+        let render = false;
+        if(controls.autoRotate || releasing) render = true;
+        if(needsRender) render = true;
+        needsRender = false;
+        if(render){ controls.update(); renderer.render(scene, camera); }
       }
-      let render = false;
-      if(controls.autoRotate || releasing) render = true;
-      if(needsRender) render = true;
-      needsRender = false;
-      if(render){ controls.update(); renderer.render(scene, camera); }
+      if(focusing || controls.autoRotate || releasing || needsRender) requestAnimationFrame(animate);
+      else looping = false;
     }
+    document.addEventListener('visibilitychange', () => { if(!document.hidden) requestRender(); });
   </script>
 </body>
 </html>

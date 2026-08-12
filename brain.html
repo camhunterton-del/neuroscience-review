@@ -313,7 +313,7 @@
     let brain = null;
     const meshes = [];
     let modelRadius = 1, baseScale = 1;
-    let needsRender = true, focusing = false;
+    let needsRender = true, focusing = false, looping = false;
     const targetFocus = new THREE.Vector3(0,0,0);         // controls.target eases here
     const targetCamPos = new THREE.Vector3(0,0.05,2.6);   // camera.position eases here
     function framingDist(r){ return r / Math.sin(THREE.MathUtils.degToRad(camera.fov/2)); }
@@ -367,7 +367,7 @@
       controls.enableDamping = true; controls.dampingFactor = 0.08;
       controls.minDistance = 1.0; controls.maxDistance = 8; controls.enablePan = true;
       controls.autoRotate = !rm.matches; controls.autoRotateSpeed = 0.55;
-      controls.addEventListener('change', () => { needsRender = true; });
+      controls.addEventListener('change', () => { requestRender(); });
 
       // WebGL context loss handling
       renderer.domElement.addEventListener('webglcontextlost', (e) => { e.preventDefault(); showFallback('3D graphics paused. Reload the page to bring the brain back.'); }, false);
@@ -382,7 +382,7 @@
       renderer.toneMappingExposure = dark ? 1.05 : 1.18;
       if(hemi) hemi.intensity = dark ? 0.55 : 0.72;
       if(fill) fill.intensity = dark ? 0.55 : 0.68;
-      needsRender = true;
+      requestRender();
     }
     new MutationObserver(applyStageTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
 
@@ -391,7 +391,7 @@
       initGL();
       const loader = new GLTFLoader();
       loader.load('models/brain.glb', onLoaded, undefined, () => showFallback('The brain model could not load. Please check your connection and reload.'));
-      animate();
+      requestRender();
     }
     buildChips();
     buildLegend();
@@ -439,7 +439,7 @@
       loadingEl.style.display = 'none';
       refresh();
       applyHash(); // deep-link support
-      needsRender = true;
+      requestRender();
       if(SHOT) scheduleShot();   // dev-only preview-card export (GLB is async, so kick it here)
     }
 
@@ -508,7 +508,7 @@
         m.position.copy(m.userData.home).addScaledVector(m.userData.dir, e * spreadWorld / baseScale);
       });
       updateAutoRotate();
-      needsRender = true;
+      requestRender();
     }
     // Hover bloom: warm the hovered region toward its code colour, but only when nothing is selected.
     function setHover(mesh){
@@ -593,7 +593,7 @@
       const w = stageEl.clientWidth, h = stageEl.clientHeight;
       if(open && w >= 720){ camera.setViewOffset(w, h, Math.min(w*0.17, 155), 0, w, h); }
       else { camera.clearViewOffset(); }
-      needsRender = true;
+      requestRender();
     }
     function markChip(region){
       document.querySelectorAll('.brain-chip').forEach(c => {
@@ -807,11 +807,11 @@
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix();
       setViewBias(infoEl.classList.contains('is-visible'));
-      needsRender = true;
+      requestRender();
     }
     if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
     addEventListener('resize', onResize);
-    rm.addEventListener('change', () => { controls.autoRotate = !rm.matches && !state.selected && !state.tour; needsRender = true; });
+    rm.addEventListener('change', () => { controls.autoRotate = !rm.matches && !state.selected && !state.tour; requestRender(); });
     addEventListener('hashchange', () => { /* internal writes use replaceState; ignore */ });
 
     // ---------- dev-only preview-card export ( ?shot=1 ) ----------
@@ -873,9 +873,15 @@
       if(document.fonts && document.fonts.ready){ document.fonts.ready.then(settle); } else { settle(); }
     }
 
+    // On-demand render loop (Codex Lab audit P1). Run rAF only while something is
+    // actually animating — a camera focus lerp or auto-rotate/damping — or a one-off
+    // render was requested. Idle with nothing moving, or a hidden tab, parks the
+    // loop entirely instead of waking ~60x/sec forever.
+    function requestRender(){ needsRender = true; if(!looping && !document.hidden) startLoop(); }
+    function startLoop(){ if(looping) return; looping = true; requestAnimationFrame(animate); }
     function animate(){
-      requestAnimationFrame(animate);
-      if(!renderer) return;
+      if(!renderer){ looping = false; return; }
+      if(document.hidden){ looping = false; return; }   // visibilitychange re-kicks it
       // During a focus transition, move the camera manually and DON'T call controls.update()
       // (update() re-derives the camera from OrbitControls' internal state and fights the lerp).
       if(focusing){
@@ -886,17 +892,20 @@
           controls.target.copy(targetFocus); camera.position.copy(targetCamPos); camera.lookAt(controls.target); focusing = false;
         }
         renderer.render(scene, camera);
-        return;
+      } else {
+        let render = false;
+        if(controls.autoRotate) render = true;
+        if(needsRender) render = true;
+        needsRender = false;              // reset first; controls.update() re-sets it via 'change' while damping/rotating
+        if(render){
+          controls.update();
+          renderer.render(scene, camera);
+        }
       }
-      let render = false;
-      if(controls.autoRotate) render = true;
-      if(needsRender) render = true;
-      needsRender = false;              // reset first; controls.update() re-sets it via 'change' while damping/rotating
-      if(render){
-        controls.update();
-        renderer.render(scene, camera);
-      }
+      if(focusing || controls.autoRotate || needsRender) requestAnimationFrame(animate);
+      else looping = false;
     }
+    document.addEventListener('visibilitychange', () => { if(!document.hidden) requestRender(); });
   </script>
 </body>
 </html>

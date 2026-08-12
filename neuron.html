@@ -289,7 +289,7 @@
     const HOVER_LERP = 0.5;        // hovered part: partial warm toward code color
     const parts = {};          // key -> { region, group, meshes:[] }
     let modelScale = 1;
-    let needsRender = true, focusing = false;
+    let needsRender = true, focusing = false, looping = false;
     let firing = false, fireStart = 0, impulse = null, fireBlock = null, fireNoRelease = false;
     const targetFocus = new THREE.Vector3(0,0,0);
     const targetCamPos = new THREE.Vector3(0,0.05,7);
@@ -330,7 +330,7 @@
     const SHOT = (function(){ try { return new URLSearchParams(location.search).get('shot') === '1'; } catch(e){ return false; } })();
     let shotDone = false;
     if(!webglOk()){ showFallback(); }
-    else { init(); buildNeuron(); animate(); }
+    else { init(); buildNeuron(); requestRender(); }
     buildChips(); buildLegend(); initGauge();
 
     function init(){
@@ -356,7 +356,7 @@
       controls.minDistance = 2.5; controls.maxDistance = 20; controls.enablePan = true;
       controls.autoRotate = !rm.matches; controls.autoRotateSpeed = 0.5;
       controls.target.set(0,0,0);
-      controls.addEventListener('change', () => { needsRender = true; });
+      controls.addEventListener('change', () => { requestRender(); });
       renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); showFallback('3D graphics paused. Reload the page to bring the neuron back.'); }, false);
       applyStageTheme();
     }
@@ -365,7 +365,7 @@
       const dark = document.documentElement.getAttribute('data-theme') === 'dark';
       renderer.toneMappingExposure = dark ? 1.05 : 1.16;
       if(hemi) hemi.intensity = dark ? 0.6 : 0.78;
-      needsRender = true;
+      requestRender();
     }
     new MutationObserver(applyStageTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
 
@@ -660,7 +660,7 @@
       buildChips(); buildLegend();
       refresh();
       applyHash();
-      needsRender = true;
+      requestRender();
     }
 
     // ---------- appearance resolver ----------
@@ -714,7 +714,7 @@
         });
       });
       updateAutoRotate();
-      needsRender = true;
+      requestRender();
     }
     function setHover(key){
       const eff = (!state.selected && !firing) ? (key || null) : null;
@@ -761,7 +761,7 @@
       if(!camera || !renderer) return;
       const w = stageEl.clientWidth, h = stageEl.clientHeight;
       if(open && w >= 720){ camera.setViewOffset(w, h, Math.min(w*0.17,155), 0, w, h); } else { camera.clearViewOffset(); }
-      needsRender = true;
+      requestRender();
     }
     function markChip(region){ document.querySelectorAll('.brain-chip').forEach(c => { const on = !!region && c.dataset.key === region.key; c.classList.toggle('is-active', on); c.setAttribute('aria-pressed', String(on)); c.style.background = on ? region.color : ''; }); }
 
@@ -897,7 +897,7 @@
       fireNoRelease = state.damaged.has('terminals');
       fireStatus.textContent = 'Signal firing…';
       updateAutoRotate();
-      needsRender = true;
+      requestRender();
     }
     function tickFire(now){
       const elapsed = now - fireStart;
@@ -919,7 +919,7 @@
           parts.hillock.meshes.forEach(m => { m.material.emissive.setHex(0xd93030); m.material.emissiveIntensity = 2.6; });
           fireStatus.textContent = "Signal can't start";
           if(elapsed > F_DEND + F_SOMA*0.7){ endFire(); }
-          needsRender = true; return;
+          requestRender(); return;
         }
       } else if(elapsed < F_DEND + F_SOMA + F_AXON){   // 3) saltatory hops node-to-node down the axon
         const s = saltAt(elapsed - (F_DEND + F_SOMA));
@@ -930,7 +930,7 @@
           impulse.material.color.setHex(0xd93030);
           fireStatus.textContent = 'Signal blocked';
           if(s.t >= fireBlock + 0.1 || elapsed > F_DEND + F_SOMA + F_AXON*0.9){ endFire(); }
-          needsRender = true; return;
+          requestRender(); return;
         }
         impulse.visible = true;
         const posT = reduce ? (s.leaping ? s.snapT : s.t) : s.t;      // snap over internodes when reduced-motion
@@ -953,7 +953,7 @@
         if(fireNoRelease){ fireStatus.textContent = 'No neurotransmitter released'; }
         else { setGlow('terminals', 2.4*(1 - u)); }
       }
-      needsRender = true;
+      requestRender();
     }
     function endFire(){
       firing = false; if(impulse){ impulse.visible = false; resetImpulse(); }
@@ -1012,10 +1012,10 @@
     document.getElementById('tool-realistic').addEventListener('click', () => setViewMode('realistic'));
     document.getElementById('tool-labeled').addEventListener('click', () => setViewMode('labeled'));
 
-    function onResize(){ if(!renderer) return; if(SHOT) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); needsRender = true; }
+    function onResize(){ if(!renderer) return; if(SHOT) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); requestRender(); }
     if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
     addEventListener('resize', onResize);
-    rm.addEventListener('change', () => { updateAutoRotate(); needsRender = true; });
+    rm.addEventListener('change', () => { updateAutoRotate(); requestRender(); });
 
     // ---------- dev-only preview-card export ( ?shot=1 ) ----------
     // Renders a TRANSPARENT, fixed-size PNG of the rebuilt neuron for img/neuron-preview.png.
@@ -1067,21 +1067,31 @@
     }
     if(SHOT && webglOk()) scheduleShot();
 
+    // On-demand render loop (Codex Lab audit P1). Run rAF only while something is
+    // actually animating — a camera focus lerp, auto-rotate/damping, or a firing
+    // impulse — or a one-off render was requested. Idle with nothing moving, or a
+    // hidden tab, parks the loop entirely instead of waking ~60x/sec forever.
+    function requestRender(){ needsRender = true; if(!looping && !document.hidden) startLoop(); }
+    function startLoop(){ if(looping) return; looping = true; requestAnimationFrame(animate); }
     function animate(){
-      requestAnimationFrame(animate);
-      if(!renderer) return;
+      if(!renderer){ looping = false; return; }
+      if(document.hidden){ looping = false; return; }   // visibilitychange re-kicks it
       if(firing) tickFire(performance.now());
       if(focusing){
         controls.target.lerp(targetFocus, 0.14); camera.position.lerp(targetCamPos, 0.14); camera.lookAt(controls.target);
         if(controls.target.distanceToSquared(targetFocus) < 1e-4 && camera.position.distanceToSquared(targetCamPos) < 1e-4){ controls.target.copy(targetFocus); camera.position.copy(targetCamPos); camera.lookAt(controls.target); focusing = false; }
-        renderer.render(scene, camera); return;
+        renderer.render(scene, camera);
+      } else {
+        let render = false;
+        if(controls.autoRotate || firing) render = true;
+        if(needsRender) render = true;
+        needsRender = false;
+        if(render){ controls.update(); renderer.render(scene, camera); }
       }
-      let render = false;
-      if(controls.autoRotate || firing) render = true;
-      if(needsRender) render = true;
-      needsRender = false;
-      if(render){ controls.update(); renderer.render(scene, camera); }
+      if(focusing || controls.autoRotate || firing || needsRender) requestAnimationFrame(animate);
+      else looping = false;
     }
+    document.addEventListener('visibilitychange', () => { if(!document.hidden) requestRender(); });
   </script>
 </body>
 </html>
