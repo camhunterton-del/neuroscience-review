@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 The Neuroscience Review (theneuroreview.com). Original interactive and 3D model, all rights reserved. Not to be copied, redistributed, or reused without permission. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -65,6 +66,7 @@
     .brain-tool:hover{ border-color:var(--accent,#2f6f8f); }
     .brain-tool[aria-pressed="true"]{ background:var(--accent,#2f6f8f); border-color:var(--accent,#2f6f8f); color:#fff; }
     .brain-tool:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
+    .brain-seg{ display:inline-flex; align-items:center; gap:.3rem; }
     .brain-slider{ display:inline-flex; align-items:center; gap:.5rem; font-family:var(--sans,Inter); font-size:.72rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint,#7a756c); }
     .brain-slider input[type=range]{ width:118px; accent-color:var(--accent,#2f6f8f); cursor:pointer; }
     .brain-toolbar__spacer{ flex:1 1 auto; }
@@ -137,6 +139,10 @@
         </label>
         <button class="brain-tool" id="tool-fit" type="button" title="Zoom out to see the whole model">Fit view</button>
         <button class="brain-tool" id="tool-tour" type="button" aria-pressed="false" title="Step through every region">Take the tour</button>
+        <span class="brain-seg" role="group" aria-label="Appearance">
+          <button class="brain-tool" id="tool-realistic" type="button" aria-pressed="true" title="Muted, wet-tissue look; a region lights up in its colour when you touch or select it">Realistic</button>
+          <button class="brain-tool" id="tool-labeled" type="button" aria-pressed="false" title="Show every region in its bright key colour">Labeled</button>
+        </span>
         <span class="brain-toolbar__spacer"></span>
         <button class="brain-tool" id="tool-snapshot" type="button" title="Download this view as an image">Snapshot</button>
         <button class="brain-tool" id="tool-reset" type="button" title="Back to the whole brain">Reset</button>
@@ -236,6 +242,18 @@
     function regionForName(n){ return byMesh[norm(n)] || null; }
     function regionByLabel(l){ return REGIONS.find(r => r.label === l) || null; }
 
+    // Vivid code colour -> muted wet-tissue tone: same hue, saturation crushed, lightness lifted,
+    // then pulled toward soft pinkish-grey so every region reads as one continuous piece of brain.
+    // The region's original colour stays the CODE colour (chips/legend/info/highlight); this is only the at-rest albedo.
+    function bioTone(hex){
+      const c = new THREE.Color(hex); const hsl = {}; c.getHSL(hsl);
+      const s = hsl.s * 0.42;   // MUTING KNOB 1: saturation kept (lower = greyer)
+      const l = THREE.MathUtils.clamp(0.60 + (hsl.l - 0.5) * 0.30, 0.5, 0.78);
+      const out = new THREE.Color().setHSL(hsl.h, s, l);
+      out.lerp(new THREE.Color(0xcaa79c), 0.22);   // MUTING KNOB 2: pull toward brain flesh (higher = more uniform)
+      return out;
+    }
+
     const stageEl = document.getElementById('brain-canvas');
     const infoEl = document.getElementById('brain-info');
     const infoBar = document.getElementById('brain-info-bar');
@@ -262,7 +280,17 @@
     const pointer = new THREE.Vector2();
 
     // ---- Central UI state; refresh() is the ONLY place that mutates materials/positions ----
-    const state = { selected: null, xray: false, explode: 0, tour: false, damaged: new Set() };
+    const state = { selected: null, xray: false, explode: 0, tour: false, damaged: new Set(), hovered: null };
+
+    // ---- Appearance mode (Phase A): muted brain tissue at rest, code colour blooms on demand ----
+    // Declared above initGL/onLoaded/animate so refresh() never hits a temporal-dead-zone.
+    let viewMode = 'realistic';    // 'realistic' (muted tissue) | 'labeled' (bright code colours)
+    const EMPH_LERP = 0.9;         // selected region: how far albedo blooms bio -> code colour
+    const HOVER_LERP = 0.5;        // hovered region: partial warm toward code colour
+    // dev-only preview-card export flag ( ?shot=1 ) — declared above initGL/onLoaded/animate (TDZ) so the
+    // hoisted updateAutoRotate()/onResize() can see it. Fully inert when the URL has no ?shot=1.
+    const SHOT = (function(){ try { return new URLSearchParams(location.search).get('shot') === '1'; } catch(e){ return false; } })();
+    let shotDone = false;
 
     function showFallback(msg){
       if(fallbackMsg && msg) fallbackMsg.textContent = msg;
@@ -342,12 +370,16 @@
       brain.traverse(o => {
         if(o.isMesh){
           const r = regionForName(o.name);
-          const base = new THREE.Color(r ? r.color : '#d8c3bb');
-          o.material = new THREE.MeshPhysicalMaterial({ color:base.clone(), roughness:0.55, metalness:0.0,
-            clearcoat:0.35, clearcoatRoughness:0.55, sheen:0.4, sheenRoughness:0.6, sheenColor:new THREE.Color(0xffe4d6),
-            envMapIntensity:0.45, transparent:false, opacity:1, depthWrite:true });
+          const code = new THREE.Color(r ? r.color : '#d8c3bb');   // vivid CODE colour (chips/legend/info/highlight)
+          const bio = bioTone(r ? r.color : '#d8c3bb');            // muted wet-tissue tone shown at rest
+          // Each mesh already gets its OWN material here, so regions tint independently (no shared-material cloning needed).
+          // Matte-not-candy: clearcoat/sheen dropped, broad dull roughness, warm spec -> reads as moist tissue.
+          o.material = new THREE.MeshPhysicalMaterial({ color:bio.clone(), roughness:0.5, metalness:0.0,
+            clearcoat:0.0, sheen:0.0, specularColor:new THREE.Color(0xffe9dc), specularIntensity:0.55,
+            envMapIntensity:0.5, transparent:false, opacity:1, depthWrite:true });
           o.material.emissive = new THREE.Color(0x000000);
-          o.userData.baseColor = base.clone();
+          o.userData.baseColor = bio.clone();      // at-rest albedo (Realistic)
+          o.userData.glowColor = code.clone();     // vivid code colour for bloom + emissive rim
           o.userData.region = r;
           const mb = new THREE.Box3().setFromObject(o);
           o.userData.center = mb.getCenter(new THREE.Vector3());
@@ -366,45 +398,68 @@
       refresh();
       applyHash(); // deep-link support
       needsRender = true;
+      if(SHOT) scheduleShot();   // dev-only preview-card export (GLB is async, so kick it here)
     }
 
     // ---- THE resolver: one function computes every mesh's appearance + position ----
+    // Realistic = muted brain tissue at rest, the CODE colour blooms on select/hover.
+    // Labeled  = every region at its bright code colour, the select/hover highlight sits on top.
     function refresh(){
       const sel = state.selected;
       const selRegion = sel && sel.userData.region;
       const selDeep = selRegion && selRegion.group === 'deep';
       const cortexDim = state.xray ? 0.14 : 0.18;
       const exploded = state.explode > 0.02;
+      const labeled = viewMode === 'labeled';
+      const something = !!sel;
+      const hoverMesh = (!something && state.hovered) ? state.hovered : null;
+      const GREY = new THREE.Color(0x515151);
+      const hsl = {};
       meshes.forEach(m => {
         const region = m.userData.region;
         const isCortex = region && region.group === 'cortex';
-        let opacity = 1, emissiveScale = 0;
+        const code = m.userData.glowColor || m.userData.baseColor;   // vivid code colour
+        const bio  = m.userData.baseColor;                           // muted wet-tissue tone
+        const atRest = labeled ? code : bio;                         // resting albedo depends on mode
+        const isSel = m === sel;
+        const isHover = m === hoverMesh;
+        const isGhost = something && !isSel;
+        const damaged = region && state.damaged.has(region.mesh);
+
+        // ---- opacity: existing isolate-on-select + x-ray logic, unchanged ----
+        let opacity = 1;
         if(sel && !exploded){
           // isolate mode: ghost everything but the selected structure
-          if(m === sel){ emissiveScale = 0.55; }
-          else { opacity = selDeep ? 0.05 : (isCortex ? 0.2 : 0.08); }
+          if(!isSel) opacity = selDeep ? 0.05 : (isCortex ? 0.2 : 0.08);
         } else {
-          // exploded (or nothing selected): show all pieces; selected just glows; x-ray ghosts cortex
-          if(m === sel) emissiveScale = 0.55;
+          // exploded (or nothing selected): x-ray ghosts cortex
           if(state.xray && isCortex) opacity = cortexDim;
         }
         const translucent = opacity < 0.999;
         m.material.transparent = translucent;
         m.material.opacity = opacity;
         m.material.depthWrite = !translucent;
-        m.material.color.copy(m.userData.baseColor);
-        if(emissiveScale > 0){
-          m.material.emissive.copy(m.userData.baseColor).multiplyScalar(emissiveScale);
-          m.material.emissiveIntensity = 0.4;
-          m.material.envMapIntensity = 0.7;
-        } else {
-          m.material.emissive.setHex(0x000000);
-          m.material.envMapIntensity = opacity < 0.5 ? 0.06 : 0.45; // ghosts don't catch reflections
-        }
-        if(region && state.damaged.has(region.mesh)){   // lesioned: greyed / dead
-          m.material.color.lerp(new THREE.Color(0x515151), 0.8);
+
+        // ---- colour: muted default, code colour on demand ----
+        const col = m.material.color;
+        if(damaged){                                    // lesioned: greyed / dead
+          col.copy(atRest).lerp(GREY, 0.82);
           m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = 0.12;
+        } else if(isSel){                               // selected: bloom bio -> code + emissive rim
+          col.copy(atRest).lerp(code, labeled ? 0 : EMPH_LERP);
+          m.material.emissive.copy(code).multiplyScalar(0.5); m.material.emissiveIntensity = 0.5; m.material.envMapIntensity = 0.8;
+        } else if(isHover){                             // hover (nothing selected): warm partway toward code
+          col.copy(atRest).lerp(code, labeled ? 0 : HOVER_LERP);
+          m.material.emissive.copy(code).multiplyScalar(0.26); m.material.emissiveIntensity = 0.3; m.material.envMapIntensity = 0.6;
+        } else if(isGhost){                             // non-selected: recede as tissue context
+          col.copy(atRest);
+          if(!labeled){ col.getHSL(hsl); col.setHSL(hsl.h, hsl.s * 0.55, hsl.l * 0.85); }  // desaturate; labeled keeps it bright
+          m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = opacity < 0.5 ? 0.06 : 0.3;
+        } else {                                        // at rest
+          col.copy(atRest);
+          m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = opacity < 0.5 ? 0.06 : 0.5;
         }
+
         // explode: translate along tuned direction (cortex opens, deep spreads a bit less)
         const e = state.explode;
         const spreadWorld = isCortex ? 0.7 : 0.55;   // world units of travel at full explode
@@ -413,9 +468,25 @@
       updateAutoRotate();
       needsRender = true;
     }
+    // Hover bloom: warm the hovered region toward its code colour, but only when nothing is selected.
+    function setHover(mesh){
+      const eff = (!state.selected && mesh && mesh.userData.region) ? mesh : null;
+      if(state.hovered === eff) return;
+      state.hovered = eff; refresh();
+    }
+    // Realistic | Labeled segmented toggle.
+    function setViewMode(mode){
+      viewMode = mode;
+      const rb = document.getElementById('tool-realistic'), lb = document.getElementById('tool-labeled');
+      if(rb) rb.setAttribute('aria-pressed', String(mode === 'realistic'));
+      if(lb) lb.setAttribute('aria-pressed', String(mode === 'labeled'));
+      refresh();
+    }
     // Auto-rotate only when idle: not selected, not touring, not exploded, motion allowed.
     function updateAutoRotate(){
-      if(controls) controls.autoRotate = !rm.matches && !state.selected && !state.tour && state.explode < 0.02;
+      if(!controls) return;
+      if(SHOT){ controls.autoRotate = false; return; }
+      controls.autoRotate = !rm.matches && !state.selected && !state.tour && state.explode < 0.02;
     }
 
     // Frame the entire (possibly exploded) assembly so every piece stays in view.
@@ -498,6 +569,7 @@
       if(!region) return;
       const target = meshForRegion(region);
       state.selected = target || null;
+      state.hovered = null;
       if(controls && !state.tour) controls.autoRotate = false;
       refresh();
       if(target && controls){
@@ -567,6 +639,8 @@
     document.getElementById('tool-tour').addEventListener('click', () => { state.tour ? stopTour() : startTour(); });
     document.getElementById('tool-reset').addEventListener('click', resetView);
     document.getElementById('tool-snapshot').addEventListener('click', snapshot);
+    document.getElementById('tool-realistic').addEventListener('click', () => setViewMode('realistic'));
+    document.getElementById('tool-labeled').addEventListener('click', () => setViewMode('labeled'));
 
     // ---- Guided tour ----
     let tourIdx = 0, tourTimer = null;
@@ -655,6 +729,7 @@
         if(e.pointerType === 'touch' || !meshes.length) return;
         const m = pick(e.clientX, e.clientY);
         renderer.domElement.style.cursor = m ? 'pointer' : 'grab';
+        setHover(m);   // bloom the hovered region toward its code colour (only when nothing is selected)
         if(m && m.userData.region){
           const rect = renderer.domElement.getBoundingClientRect();
           tooltipEl.textContent = m.userData.region.label;
@@ -663,7 +738,7 @@
           tooltipEl.style.opacity = '1';
         } else tooltipEl.style.opacity = '0';
       });
-      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; });
+      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; setHover(null); });
 
       // Keyboard: arrows cycle regions, Esc reset, R reset camera, T tour
       renderer.domElement.addEventListener('keydown', (e) => {
@@ -684,6 +759,7 @@
     // ---- Resize (container-aware) + render-on-demand loop ----
     function onResize(){
       if(!renderer) return;
+      if(SHOT) return;
       const w = stageEl.clientWidth, h = stageEl.clientHeight;
       if(!w || !h) return;
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -695,6 +771,65 @@
     addEventListener('resize', onResize);
     rm.addEventListener('change', () => { controls.autoRotate = !rm.matches && !state.selected && !state.tour; needsRender = true; });
     addEventListener('hashchange', () => { /* internal writes use replaceState; ignore */ });
+
+    // ---------- dev-only preview-card export ( ?shot=1 ) ----------
+    // Renders a TRANSPARENT, fixed-size PNG of the rebuilt brain for img/brain-preview.png.
+    // Runs only when SHOT is true (kicked from onLoaded, since the GLB loads async); the normal
+    // explorer path never enters it. Re-tint every region mesh toward its code colour at `strength`
+    // (reuses the per-mesh baseColor/glowColor userData + the bio->code lerp the select branch uses)
+    // so the thumbnail reads as upgraded tissue yet stays legible instead of a grey blob.
+    function shotTintAll(strength){
+      meshes.forEach(m => {
+        const glow = m.userData.glowColor, bio = m.userData.baseColor;
+        if(!glow || !bio) return;
+        m.material.color.copy(bio).lerp(glow, strength);
+        m.material.emissive.copy(glow).multiplyScalar(0.18); m.material.emissiveIntensity = 0.22;   // gentle all-regions rim
+      });
+    }
+    // Canonical hero pose: a clean 3/4 anatomical view (+Z front, +X side, slight +Y top) showing the whole
+    // brain. Frames by projecting the model's 8 box corners onto the camera's right/up/forward axes, so it
+    // fills the export aspect tightly at this rotated angle + a little padding (nothing clips at any azimuth).
+    function shotPose(aspect){
+      const box = new THREE.Box3().setFromObject(brain);
+      const center = box.getCenter(new THREE.Vector3());
+      const dir = new THREE.Vector3(0.8, 0.2, 0.8).normalize();
+      const up = new THREE.Vector3(0,1,0);
+      const right = new THREE.Vector3().crossVectors(dir, up).normalize();
+      const camUp = new THREE.Vector3().crossVectors(right, dir).normalize();
+      let halfW=0, halfH=0, halfD=0; const v = new THREE.Vector3();
+      for(let i=0;i<8;i++){
+        v.set(i&1?box.max.x:box.min.x, i&2?box.max.y:box.min.y, i&4?box.max.z:box.min.z).sub(center);
+        halfW = Math.max(halfW, Math.abs(v.dot(right)));
+        halfH = Math.max(halfH, Math.abs(v.dot(camUp)));
+        halfD = Math.max(halfD, Math.abs(v.dot(dir)));
+      }
+      const vHalf = THREE.MathUtils.degToRad(camera.fov/2), hHalf = Math.atan(Math.tan(vHalf)*aspect);
+      const dist = Math.max(halfH/Math.tan(vHalf), halfW/Math.tan(hHalf))*1.12 + halfD;
+      controls.target.copy(center); camera.up.set(0,1,0);
+      camera.position.copy(center).addScaledVector(dir, dist); camera.lookAt(center);
+      camera.updateProjectionMatrix(); controls.update();
+    }
+    function scheduleShot(){
+      const W = 1400, H = 1080;                                       // brain preview: landscape ~1.3:1
+      state.selected = null; state.hovered = null; state.damaged.clear();
+      state.xray = false; state.explode = 0; state.tour = false; focusing = false;
+      viewMode = 'realistic';
+      if(controls){ controls.autoRotate = false; controls.enableDamping = false; }
+      scene.background = null; renderer.setClearColor(0x000000, 0);   // transparent capture
+      renderer.setPixelRatio(2); renderer.setSize(W, H, false);       // fixed export size @ DPR 2 (buffer 2800x2160)
+      camera.clearViewOffset(); camera.aspect = W/H; camera.updateProjectionMatrix();
+      shotPose(W/H);
+      refresh(); shotTintAll(0.35);                                   // realistic rest, then ~0.35 re-tint on ALL regions
+      const capture = () => {
+        if(shotDone) return; shotDone = true;
+        renderer.render(scene, camera);
+        window.__shotPNG = renderer.domElement.toDataURL('image/png');
+        console.log('SHOT_READY ' + window.__shotPNG.length);
+      };
+      const settle = () => requestAnimationFrame(() => { renderer.render(scene, camera);
+        requestAnimationFrame(() => requestAnimationFrame(capture)); });   // let PMREM/env + a couple frames settle
+      if(document.fonts && document.fonts.ready){ document.fonts.ready.then(settle); } else { settle(); }
+    }
 
     function animate(){
       requestAnimationFrame(animate);

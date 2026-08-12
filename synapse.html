@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 The Neuroscience Review (theneuroreview.com). Original interactive and 3D model, all rights reserved. Not to be copied, redistributed, or reused without permission. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -66,6 +67,7 @@
     .brain-tool:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
     .brain-toolbar__spacer{ flex:1 1 auto; }
     .brain-toolbar__read{ font-family:var(--sans,Inter); font-size:.78rem; color:var(--brain-glass-mut,#7a756c); }
+    .brain-seg{ display:inline-flex; align-items:center; gap:.3rem; }
 
     .brain-info{ position:absolute; top:.7rem; right:.7rem; z-index:6; width:min(350px,44%); max-height:calc(100% - 1.4rem); overflow-y:auto; border:1px solid var(--brain-glass-bd); border-radius:14px; background:var(--brain-glass); backdrop-filter:blur(11px); padding:1.15rem 1.25rem 1.25rem; color:var(--brain-glass-fg); opacity:0; visibility:hidden; transform:translateX(10px); transition:opacity .2s ease, transform .2s ease, visibility .2s; }
     .brain-info.is-visible{ opacity:1; visibility:visible; transform:none; }
@@ -84,6 +86,19 @@
 
     .brain-credit{ max-width:min(94vw,1600px); margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
     .brain-credit a{ color:inherit; }
+
+    .brain-seg__label{ font-family:var(--sans,Inter); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint,#7a756c); margin-right:.05rem; }
+    .brain-seg--scen{ flex-wrap:wrap; }
+    .brain-meter{ display:inline-flex; align-items:center; gap:.5rem; color:var(--brain-glass-fg,#26251f); }
+    .brain-meter__label{ font-family:var(--sans,Inter); font-size:.6rem; font-weight:600; letter-spacing:.03em; color:var(--text-faint,#7a756c); line-height:1.15; text-align:right; }
+    .brain-meter__label em{ font-style:italic; font-weight:500; opacity:.85; }
+    .brain-meter__svg{ display:block; }
+    @media(max-width:560px){ .brain-meter{ display:none; } }
+    .brain-scenario-note{ margin:.1rem 0 0; padding:.6rem .85rem; font-family:var(--sans,Inter); font-size:.82rem; line-height:1.5; color:var(--brain-glass-fg,#26251f); background:var(--brain-glass); border:1px solid var(--brain-glass-bd); border-radius:10px; display:none; }
+    .brain-scenario-note.is-visible{ display:block; }
+    .brain-scenario-note strong{ font-weight:700; }
+    .brain-scenario-note__tag{ display:inline-block; font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent,#2f6f8f); margin-right:.4rem; }
+    .brain-scenario-note a{ color:var(--accent,#2f6f8f); }
   </style>
 </head>
 <body>
@@ -125,9 +140,29 @@
         <button class="brain-tool brain-tool--fire" id="tool-fire" type="button" title="Release neurotransmitter across the gap">Release</button>
         <button class="brain-tool" id="tool-fit" type="button" title="Zoom out to see the whole synapse">Fit view</button>
         <button class="brain-tool" id="tool-reset" type="button" title="Back to the whole synapse">Reset</button>
+        <span class="brain-seg" role="group" aria-label="Appearance">
+          <button class="brain-tool" id="tool-realistic" type="button" aria-pressed="true" title="Muted, wet-tissue look; a part lights up in its color when you touch it">Realistic</button>
+          <button class="brain-tool" id="tool-labeled" type="button" aria-pressed="false" title="Show every part in its bright key color">Labeled</button>
+        </span>
+        <span class="brain-seg brain-seg--scen" role="group" aria-label="Try a drug scenario, then Release">
+          <span class="brain-seg__label">Scenario</span>
+          <button class="brain-tool brain-scen" data-scen="normal" type="button" aria-pressed="true" title="Healthy signaling: full release, binding, and reuptake">Normal</button>
+          <button class="brain-tool brain-scen" data-scen="ssri" type="button" aria-pressed="false" title="SSRI: reuptake blocked, so the messenger lingers in the gap">SSRI</button>
+          <button class="brain-tool brain-scen" data-scen="botox" type="button" aria-pressed="false" title="Botulinum: vesicle fusion blocked, so nothing is released">Botulinum</button>
+          <button class="brain-tool brain-scen" data-scen="nerve" type="button" aria-pressed="false" title="Nerve agent: clean-up enzyme blocked, so the messenger piles up">Nerve agent</button>
+          <button class="brain-tool brain-scen" data-scen="curare" type="button" aria-pressed="false" title="Curare / myasthenia: receptors blocked, so the message can't be read">Curare</button>
+        </span>
         <span class="brain-toolbar__spacer"></span>
+        <span class="brain-meter">
+          <span class="brain-meter__label">Postsynaptic response<br><em>illustrative</em></span>
+          <svg class="brain-meter__svg" width="116" height="30" viewBox="0 0 116 30" role="img" aria-label="Postsynaptic response trace, illustrative">
+            <line x1="3" y1="27" x2="113" y2="27" stroke="currentColor" stroke-opacity="0.25" stroke-width="1"></line>
+            <polyline id="meter-trace" fill="none" stroke="#93A2AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="3,27 113,27"></polyline>
+          </svg>
+        </span>
         <span class="brain-toolbar__read" id="fire-status"></span>
       </div>
+      <p class="brain-scenario-note" id="scenario-note" aria-live="polite"></p>
     </section>
 
     <p class="brain-credit">A stylized teaching model built by The Neuroscience Review. Distances are exaggerated so you can see inside. Descriptions written and sourced by us.</p>
@@ -209,27 +244,65 @@
 
     let renderer, scene, camera, controls, pmrem, synapse;
     let hemi, key, fill, rimL;
+    let noiseTex = null;           // shared value-noise texture (bump + roughness)
+    let viewMode = 'realistic';    // 'realistic' (muted tissue) | 'labeled' (bright code colors)
+    // appearance tuning (Phase A — owner tunes muting strength at preview)
+    const GHOST_DIM = new THREE.Color(0x2a2b2e);  // non-selected parts dim toward this
+    const DIM_OP = 0.3;            // opacity of non-selected parts (was harsh 0.06)
+    const EMPH_LERP = 0.82;        // selected part: how far albedo lerps bio -> code color
+    const HOVER_LERP = 0.5;        // hovered part: partial warm toward code color
     const parts = {};          // key -> { region, group, meshes:[] }
     let modelScale = 1;
     let needsRender = true, focusing = false;
     let releasing = false, releaseStart = 0, releaseMode = null;
-    let particles = [];        // animated neurotransmitter dots
     const receptorPos = [];    // local-space receptor targets (set at build)
+    let vesInst = null;        // InstancedMesh of synaptic vesicles (reserve + docked)
+    const dockedIdx = [];      // instance indices of the docked (readily-releasable) pool
+    const dockedRest = [];     // their rest matrices (Phase C fusion reads these)
+    // --- Phase C: functional release cycle (all declared ABOVE init()/buildSynapse() — TDZ) ---
+    let ntInst = null;              // InstancedMesh of neurotransmitter molecules (replaces the old dots)
+    const ntMol = [];               // per-molecule state {sx,sz,target,phase,jx,jz}
+    const dockedBase = [];          // decomposed docked-vesicle rest transforms {pos,quat,scl}
+    const _dummy = new THREE.Object3D();
+    let cleftDim = null;            // cleft "~20-40 nm" dimension annotation group
+    let scenario = 'normal';        // active drug scenario (segmented control)
+    const NT_N = 48;                // neurotransmitter molecule count
+    const RELEASE_DUR = 5200;       // full release-cycle duration (ms)
+    // Drug scenarios promote the five fact-checked DAMAGE outcomes to a first-class control.
+    const SCENARIOS = [
+      { id:'normal', label:'Normal',      full:'Healthy signaling',        mode:'normal',    dmgKey:null },
+      { id:'ssri',   label:'SSRI',        full:'Reuptake blocked',         mode:'ssri',      dmgKey:'reuptake' },
+      { id:'botox',  label:'Botulinum',   full:'Fusion blocked',           mode:'blocked',   dmgKey:'vesicles' },
+      { id:'nerve',  label:'Nerve agent', full:'Enzyme blocked, pile-up',  mode:'pileup',    dmgKey:'cleft' },
+      { id:'curare', label:'Curare',      full:'Receptors blocked',        mode:'noreceive', dmgKey:'receptors' }
+    ];
+    const scenById = {}; SCENARIOS.forEach(s => scenById[s.id] = s);
     const targetFocus = new THREE.Vector3(0,0,0);
     const targetCamPos = new THREE.Vector3(0,0,9);
     const DEFAULT_CAM = new THREE.Vector3(0,0.2,9);
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
-    const state = { selected: null, damaged: new Set() };
+    const state = { selected: null, damaged: new Set(), hovered: null };
 
     // key vertical geometry (model space, before scale/center)
     const PRE_C = new THREE.Vector3(0, 2.0, 0), PRE_R = 1.3;     // presynaptic terminal center + radius
-    const ACTIVE_Y = 0.78;     // presynaptic membrane / active zone
-    const POST_TOP = 0.16;     // postsynaptic membrane top
+    // --- cleft geometry: a clear, deliberately-exaggerated teaching gap (the "distances are exaggerated" caption covers it) so the neurotransmitter visibly crosses open space between the membranes ---
+    const CLEFT_W = 0.6;                     // synaptic cleft width (model units). EXPOSED for the release animation (Phase C) — NT travel distance = CLEFT_W. Everything downstream (PSD_Y, spine head flat-top, receptors, receptorPos, ECM, caliper) derives from this.
+    const AZ_Y = 1.05;                        // presynaptic active-zone face (flat bottom of the bouton), top of the cleft
+    const PSD_Y = AZ_Y - CLEFT_W;             // postsynaptic density plane (flat top of the spine head), bottom of the cleft = 0.89
+    const CLEFT_Y = (AZ_Y + PSD_Y) / 2;       // cleft mid-plane
+    const ACTIVE_Y = AZ_Y - 0.03;             // neurotransmitter spawn point, just inside the cleft below the active-zone face
+    const POST_TOP = PSD_Y;                    // postsynaptic membrane top (== PSD plane)
 
     function showFallback(msg){ if(msg) document.getElementById('brain-fallback-msg').textContent = msg; loadingEl.style.display='none'; fallbackEl.style.display='flex';
       ['tool-fire','tool-fit','tool-reset'].forEach(id => { const b = document.getElementById(id); if(b){ b.disabled = true; b.style.opacity = '0.5'; b.style.cursor = 'not-allowed'; } }); }
 
+    // must be initialized before buildNeuron/buildSynapse runs (TDZ fix)
+    const THICK_PARTS = { presyn:1, postsyn:1, cleft:1 };
+    // dev-only preview-card export flag ( ?shot=1 ) — declared ABOVE init/build/animate (TDZ) so the
+    // hoisted updateAutoRotate()/onResize() can see it. Fully inert when the URL has no ?shot=1.
+    const SHOT = (function(){ try { return new URLSearchParams(location.search).get('shot') === '1'; } catch(e){ return false; } })();
+    let shotDone = false;
     if(!webglOk()){ showFallback(); }
     else { init(); buildSynapse(); animate(); }
     buildChips(); buildLegend();
@@ -244,6 +317,7 @@
       renderer.domElement.tabIndex = 0; renderer.domElement.setAttribute('role','application');
       renderer.domElement.setAttribute('aria-label','Interactive 3D synapse. Use the part buttons above, arrow keys to cycle parts, Escape to reset, R to release neurotransmitter.');
       scene = new THREE.Scene();
+      noiseTex = makeNoiseTexture();
       pmrem = new THREE.PMREMGenerator(renderer);
       scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
       camera = new THREE.PerspectiveCamera(45, stageEl.clientWidth/stageEl.clientHeight, 0.01, 200);
@@ -251,7 +325,7 @@
       hemi = new THREE.HemisphereLight(0xeaf1f7, 0x3a2f2a, 0.6); scene.add(hemi);
       key = new THREE.DirectionalLight(0xfff4e8, 1.4); key.position.set(3,4,4); scene.add(key);
       fill = new THREE.DirectionalLight(0xcfe0f0, 0.55); fill.position.set(-4,1,2); scene.add(fill);
-      rimL = new THREE.DirectionalLight(0xbcd6ff, 0.9); rimL.position.set(-2,1.5,-4); scene.add(rimL);
+      rimL = new THREE.DirectionalLight(0xffbfae, 1.1); rimL.position.set(-2,1.5,-4); scene.add(rimL);  // warm back-rim = fake SSS for thin parts
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true; controls.dampingFactor = 0.08;
       controls.minDistance = 3; controls.maxDistance = 26; controls.enablePan = true;
@@ -271,76 +345,274 @@
     new MutationObserver(applyStageTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
 
     // ---------- helpers ----------
-    function mat(hex, opts){ opts = opts || {}; const tr = opts.op!=null && opts.op<1; return new THREE.MeshPhysicalMaterial({ color:new THREE.Color(hex), roughness:opts.rough!=null?opts.rough:0.5, metalness:0.0, clearcoat:0.3, clearcoatRoughness:0.5, sheen:0.35, sheenColor:new THREE.Color(0xffe4d6), envMapIntensity:0.5, transparent:tr, opacity:opts.op!=null?opts.op:1, depthWrite:!tr }); }
+    // Parts thick enough to carry a subsurface (transmission) pass; thin parts skip it for perf.
+
+    // Vivid code color -> muted wet-tissue tone: same hue, saturation crushed, lightness lifted,
+    // then pulled toward a fleshy pink-grey so every part reads as one continuous tissue.
+    function bioTone(hex){
+      const c = new THREE.Color(hex); const hsl = {}; c.getHSL(hsl);
+      const s = hsl.s * 0.42;   // MUTING KNOB 1: saturation kept (lower = greyer)
+      const l = THREE.MathUtils.clamp(0.60 + (hsl.l - 0.5) * 0.30, 0.5, 0.78);
+      const out = new THREE.Color().setHSL(hsl.h, s, l);
+      out.lerp(new THREE.Color(0xcaa79c), 0.20);   // MUTING KNOB 2: pull toward flesh (higher = more uniform)
+      return out;
+    }
+    // One 512x512 value-noise texture, reused as bumpMap + roughnessMap on every material.
+    function makeNoiseTexture(){
+      const size = 512, cell = 8, gw = size/cell;
+      const grid = new Float32Array((gw+1)*(gw+1));
+      for(let i=0;i<grid.length;i++) grid[i] = Math.random();
+      const gv = (x,y)=> grid[y*(gw+1)+x];
+      const cv = document.createElement('canvas'); cv.width = cv.height = size;
+      const ctx = cv.getContext('2d'); const img = ctx.createImageData(size, size);
+      for(let y=0;y<size;y++){ for(let x=0;x<size;x++){
+        const fx=x/cell, fy=y/cell, x0=Math.floor(fx), y0=Math.floor(fy);
+        const tx=fx-x0, ty=fy-y0, sx=tx*tx*(3-2*tx), sy=ty*ty*(3-2*ty);
+        const top = gv(x0,y0)+(gv(x0+1,y0)-gv(x0,y0))*sx;
+        const bot = gv(x0,y0+1)+(gv(x0+1,y0+1)-gv(x0,y0+1))*sx;
+        let v = top+(bot-top)*sy;
+        let h = Math.sin(x*12.9898 + y*78.233)*43758.5453; h = h - Math.floor(h);
+        v = v*0.82 + h*0.18;
+        const g = Math.max(0, Math.min(255, Math.round((0.6 + v*0.4)*255)));
+        const o=(y*size+x)*4; img.data[o]=g; img.data[o+1]=g; img.data[o+2]=g; img.data[o+3]=255;
+      }}
+      ctx.putImageData(img,0,0);
+      const tex = new THREE.CanvasTexture(cv);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(3,3); tex.colorSpace = THREE.NoColorSpace;
+      return tex;
+    }
+    // Tissue material factory. albedo = bioTone(code); wet-not-glossy; optional fake subsurface on thick parts.
+    // Keeps the existing opts.op (translucent shells) and opts.rough hooks.
+    function mat(hex, opts){
+      opts = opts || {};
+      const tr = opts.op != null && opts.op < 1;
+      const m = new THREE.MeshPhysicalMaterial({
+        color: bioTone(hex),
+        roughness: opts.rough != null ? opts.rough : 0.48,
+        metalness: 0.0, clearcoat: 0.0, sheen: 0.0,
+        specularColor: new THREE.Color(0xffe9dc), specularIntensity: 0.6,
+        envMapIntensity: 0.5,
+        transparent: tr, opacity: opts.op != null ? opts.op : 1, depthWrite: !tr
+      });
+      if(noiseTex){ m.bumpMap = noiseTex; m.bumpScale = 0.004; m.roughnessMap = noiseTex; }
+      if(opts.thick){ m.transmission = 0.55; m.thickness = 0.6; m.ior = 1.37; m.attenuationColor = new THREE.Color(0xd98a76); m.attenuationDistance = 2.5; }
+      return m;
+    }
     function ball(pos, r, m){ const s = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 18), m); s.position.copy(pos); return s; }
     function cyl(pos, rTop, rBot, h, m){ const c = new THREE.Mesh(new THREE.CylinderGeometry(rTop, rBot, h, 20), m); c.position.copy(pos); return c; }
+    // Noise-displaced icosahedron (no sphere poles), with an optional flattened top/bottom face.
+    // flattenTop / flattenBottom are in LOCAL geometry coords (clamp any vertex past that plane onto it).
+    function deformedBlob(radius, o){
+      o = o || {};
+      const detail = o.detail != null ? o.detail : 3;
+      const amp = o.amp != null ? o.amp : 0.06;
+      const sxz = o.squashXZ != null ? o.squashXZ : 1;
+      const sy = o.squashY != null ? o.squashY : 1;
+      const geo = new THREE.IcosahedronGeometry(radius, detail);
+      const pos = geo.attributes.position, v = new THREE.Vector3(), n = new THREE.Vector3();
+      for(let i=0;i<pos.count;i++){
+        v.fromBufferAttribute(pos, i); n.copy(v).normalize();
+        const d = 1 + amp*( Math.sin(n.x*4.1+n.y*3.3)*0.5 + Math.sin(n.y*5.2+n.z*2.7)*0.32 + Math.sin(n.z*3.9+n.x*4.6)*0.22 );
+        v.multiplyScalar(d);
+        v.x *= sxz; v.z *= sxz; v.y *= sy;
+        if(o.flattenBottom != null && v.y < o.flattenBottom) v.y = o.flattenBottom;
+        if(o.flattenTop != null && v.y > o.flattenTop) v.y = o.flattenTop;
+        pos.setXYZ(i, v.x, v.y, v.z);
+      }
+      geo.computeVertexNormals();
+      return geo;
+    }
+    // Lathe a 2D profile (array of [radius,height] pairs) around Y — ion-channel funnels / transporter barrels.
+    function latheProfile(pts, seg){ return new THREE.LatheGeometry(pts.map(p => new THREE.Vector2(p[0], p[1])), seg || 14); }
+    // Canvas-texture sprite label (always faces camera) for the cleft dimension annotation.
+    function roundRectPath(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+    function makeLabelSprite(text){
+      const cv = document.createElement('canvas'); cv.width = 256; cv.height = 72;
+      const ctx = cv.getContext('2d'); ctx.clearRect(0,0,256,72);
+      ctx.fillStyle = 'rgba(20,26,32,0.86)'; roundRectPath(ctx, 6, 12, 244, 48, 12); ctx.fill();
+      ctx.font = '600 30px Inter, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#eaf1f7'; ctx.fillText(text, 128, 37);
+      const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+      const mat = new THREE.SpriteMaterial({ map:tex, transparent:true, depthTest:false, depthWrite:false });
+      const sp = new THREE.Sprite(mat); sp.scale.set(0.9, 0.253, 1); sp.renderOrder = 21;
+      return sp;
+    }
+    // Thin caliper across the (vertical) cleft gap + a "~20-40 nm" label. Shown only when the cleft is selected.
+    function buildCleftDim(){
+      const g = new THREE.Group();
+      const X = 0.86, tick = 0.075;
+      const p = [ X, AZ_Y, 0,  X, PSD_Y, 0,   X-tick, AZ_Y, 0, X+tick, AZ_Y, 0,   X-tick, PSD_Y, 0, X+tick, PSD_Y, 0 ];
+      const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
+      const lm = new THREE.LineBasicMaterial({ color:0x8fa3b0, transparent:true, opacity:0.95, depthTest:false });
+      const line = new THREE.LineSegments(geo, lm); line.renderOrder = 20; g.add(line);
+      const label = makeLabelSprite('~20-40 nm'); label.position.set(X + 0.52, CLEFT_Y, 0); g.add(label);
+      return g;
+    }
 
-    function makePart(key, opts){ const region = byKey[key]; const group = new THREE.Group(); const meshes = []; parts[key] = { region, group, meshes }; return { region, group, meshes, m: mat(region.color, opts) }; }
-    function addMesh(part, mesh, baseOpacity){ mesh.userData.partKey = part.region.key; part.meshes.push(mesh); part.group.add(mesh); mesh.userData.baseColor = mesh.material.color.clone(); if(baseOpacity!=null) mesh.userData.baseOpacity = baseOpacity; }
+    function makePart(key, opts){ opts = Object.assign({}, opts); if(THICK_PARTS[key]) opts.thick = true; const region = byKey[key]; const group = new THREE.Group(); const meshes = []; parts[key] = { region, group, meshes }; return { region, group, meshes, m: mat(region.color, opts) }; }
+    function addMesh(part, mesh, baseOpacity){ mesh.userData.partKey = part.region.key; part.meshes.push(mesh); part.group.add(mesh); mesh.userData.baseColor = mesh.material.color.clone(); mesh.userData.glowColor = new THREE.Color(part.region.color); mesh.userData.baseTransmission = mesh.material.transmission || 0; if(baseOpacity!=null) mesh.userData.baseOpacity = baseOpacity; }
 
     function buildSynapse(){
       synapse = new THREE.Group();
+      const TAU = Math.PI * 2;
+      const dummy = new THREE.Object3D();
+      const SPINE_C = new THREE.Vector3(0, 0.0, 0), SPINE_R = 0.95;   // postsynaptic spine head
 
-      // presynaptic terminal (translucent bulb so you can see the vesicles inside)
+      // ===== Presynaptic bouton: deformed icosahedron, bottom flattened into a real active-zone face =====
       const pre = makePart('presyn', { op:0.6, rough:0.35 });
-      const preMesh = ball(PRE_C, PRE_R, pre.m); preMesh.scale.set(1.16,1.0,1.16);
+      const preGeo = deformedBlob(PRE_R, { detail:3, amp:0.07, squashXZ:1.12, squashY:1.0, flattenBottom: AZ_Y - PRE_C.y });
+      const preMesh = new THREE.Mesh(preGeo, pre.m); preMesh.position.copy(PRE_C);
       addMesh(pre, preMesh, 0.6);
+      // active zone: a small dense (darker) patch on the bouton face + a few dense-projection cones — where release happens
+      const azMat = mat(pre.region.color, { rough:0.5 }); azMat.color.multiplyScalar(0.6); azMat.transmission = 0;
+      const azPatch = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.34, 0.05, 24), azMat);
+      azPatch.position.set(0, AZ_Y - 0.02, 0);
+      addMesh(pre, azPatch);
+      for(let i=0;i<4;i++){
+        const ang = i/4*TAU + 0.6;
+        const cone = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.11, 8), azMat);
+        cone.position.set(Math.cos(ang)*0.15, AZ_Y - 0.10, Math.sin(ang)*0.15);
+        cone.rotation.z = Math.PI;                 // apex points down into the cleft
+        addMesh(pre, cone);
+      }
       synapse.add(pre.group);
 
-      // synaptic vesicles (spheres clustered in the lower terminal, a few docked near the active zone)
+      // ===== Synaptic vesicles: dense InstancedMesh — reserve cloud (density rising toward the AZ) + docked pool =====
       const ves = makePart('vesicles');
-      const vspots = [
-        [-0.55,1.55,0.2],[0.5,1.6,-0.25],[-0.15,1.75,0.45],[0.35,1.85,0.3],[-0.6,1.9,-0.35],
-        [0.1,1.45,-0.4],[-0.35,1.35,0.05],[0.55,1.3,0.15],[-0.05,2.05,-0.1],
-        [-0.3,1.05,0.28],[0.28,1.02,-0.15],[0.02,0.98,0.02]  // docked trio near active zone
-      ];
-      vspots.forEach(p => addMesh(ves, ball(new THREE.Vector3(p[0],p[1],p[2]), 0.16, ves.m)));
+      const RES_N = 165, DOCK_N = 10, VES_N = RES_N + DOCK_N;   // bouton:vesicle diameter ~ 2.6:0.10 ≈ 1:26
+      const vesGeo = new THREE.SphereGeometry(0.052, 10, 8);
+      vesInst = new THREE.InstancedMesh(vesGeo, ves.m, VES_N);
+      vesInst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);   // Phase C animates the docked pool
+      const reserveTint = new THREE.Color(0.82, 0.82, 0.82), dockTint = new THREE.Color(1, 1, 1);
+      const boutonR = PRE_R * 0.88;
+      let placed = 0, guard = 0;
+      while(placed < RES_N && guard < 40000){
+        guard++;
+        const px = (Math.random()*2-1)*boutonR*1.12;
+        const py = PRE_C.y + (Math.random()*2-1)*boutonR;
+        const pz = (Math.random()*2-1)*boutonR*1.12;
+        const dx = px-PRE_C.x, dy = py-PRE_C.y, dz = pz-PRE_C.z;
+        if(dx*dx/(1.12*1.12) + dy*dy + dz*dz/(1.12*1.12) > boutonR*boutonR) continue;   // inside the (squashed) bouton
+        if(py < AZ_Y + 0.11) continue;                                                   // stay above the flat face + above the docked pool
+        const u = THREE.MathUtils.clamp((py - AZ_Y) / (PRE_C.y + boutonR - AZ_Y), 0, 1); // 0 at the face .. 1 at the top
+        if(Math.random() > (1 - 0.5*u)) continue;                                        // density rises toward the active zone
+        dummy.position.set(px, py, pz);
+        dummy.scale.setScalar(0.78 + Math.random()*0.5);
+        dummy.rotation.set(Math.random()*TAU, Math.random()*TAU, 0);
+        dummy.updateMatrix();
+        vesInst.setMatrixAt(placed, dummy.matrix);
+        vesInst.setColorAt(placed, reserveTint);
+        placed++;
+      }
+      while(placed < RES_N){   // safety fill if rejection sampling starved (rare)
+        dummy.position.set((Math.random()*2-1)*0.3, PRE_C.y + Math.random()*0.6, (Math.random()*2-1)*0.3);
+        dummy.scale.setScalar(0.9); dummy.rotation.set(0,0,0); dummy.updateMatrix();
+        vesInst.setMatrixAt(placed, dummy.matrix); vesInst.setColorAt(placed, reserveTint); placed++;
+      }
+      for(let i=0;i<DOCK_N;i++){   // docked (readily-releasable) pool clustered on the active-zone face
+        const ang = Math.random()*TAU, rad = Math.sqrt(Math.random())*0.26;
+        dummy.position.set(Math.cos(ang)*rad, AZ_Y + 0.075 + Math.random()*0.025, Math.sin(ang)*rad);
+        dummy.scale.setScalar(0.95 + Math.random()*0.25);
+        dummy.rotation.set(Math.random()*TAU, Math.random()*TAU, 0);
+        dummy.updateMatrix();
+        const idx = RES_N + i;
+        vesInst.setMatrixAt(idx, dummy.matrix);
+        vesInst.setColorAt(idx, dockTint);           // docked read brighter
+        dockedIdx.push(idx); dockedRest.push(dummy.matrix.clone());
+      }
+      vesInst.instanceMatrix.needsUpdate = true;
+      if(vesInst.instanceColor) vesInst.instanceColor.needsUpdate = true;
+      addMesh(ves, vesInst);                          // hits report partKey='vesicles'; material.color still multiplies through
+      vesInst.userData.dockedIdx = dockedIdx; vesInst.userData.dockedRest = dockedRest;
       synapse.add(ves.group);
 
-      // neurotransmitter (a few molecules poised at the active zone + a couple already in the cleft)
+      // ===== Neurotransmitter: a few molecules poised in the cleft at the active zone =====
       const nt = makePart('transmitter');
-      [[-0.12,0.72,0.06],[0.14,0.7,-0.08],[0.0,0.64,0.14],[-0.2,0.55,-0.1],[0.22,0.52,0.05],[0.02,0.44,-0.05]].forEach(p =>
-        addMesh(nt, ball(new THREE.Vector3(p[0],p[1],p[2]), 0.11, nt.m)));
+      for(let i=0;i<6;i++){
+        const ang = Math.random()*TAU, rad = Math.sqrt(Math.random())*0.24;
+        const y = PSD_Y + 0.04 + Math.random()*(CLEFT_W - 0.06);
+        addMesh(nt, ball(new THREE.Vector3(Math.cos(ang)*rad, y, Math.sin(ang)*rad), 0.055, nt.m));
+      }
       synapse.add(nt.group);
 
-      // synaptic cleft (translucent disc filling the gap)
-      const cl = makePart('cleft', { op:0.24, rough:0.6 });
-      const disc = cyl(new THREE.Vector3(0,0.44,0), 1.02, 1.02, 0.5, cl.m);
-      addMesh(cl, disc, 0.24);
+      // ===== Synaptic cleft: thin near-clear disc filling the (now sliver) gap =====
+      const cl = makePart('cleft', { op:0.16, rough:0.6 });
+      const disc = cyl(new THREE.Vector3(0, CLEFT_Y, 0), 0.9, 0.9, CLEFT_W, cl.m);
+      addMesh(cl, disc, 0.16);
       synapse.add(cl.group);
+      // faint cleft ECM filaments so the gap doesn't read as empty vacuum (non-pickable decor, not in any part)
+      const ecmMat = new THREE.MeshBasicMaterial({ color:0x9fb0bc, transparent:true, opacity:0.15, depthWrite:false });
+      for(let i=0;i<12;i++){
+        const ang = Math.random()*TAU, rad = Math.sqrt(Math.random())*0.5;
+        const fil = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, CLEFT_W*(0.7+Math.random()*0.3), 4), ecmMat);
+        fil.position.set(Math.cos(ang)*rad, CLEFT_Y + (Math.random()-0.5)*0.02, Math.sin(ang)*rad);
+        fil.rotation.set((Math.random()-0.5)*0.5, Math.random()*TAU, (Math.random()-0.5)*0.5);
+        fil.userData.isDecor = true;
+        synapse.add(fil);
+      }
+      // cleft dimension annotation — a thin ~20-40 nm caliper shown only when the cleft is selected
+      cleftDim = buildCleftDim(); cleftDim.visible = false; synapse.add(cleftDim);
 
-      // postsynaptic membrane (flattened dome, a dendritic spine head)
+      // ===== Postsynaptic spine: mushroom head (flat top seats the PSD) + tapering neck out of frame =====
       const post = makePart('postsyn', { rough:0.45 });
-      const postMesh = ball(new THREE.Vector3(0,-0.85,0), 1.25, post.m); postMesh.scale.set(1.34,0.8,1.34);
-      addMesh(post, postMesh);
+      const headGeo = deformedBlob(SPINE_R, { detail:3, amp:0.06, squashXZ:1.04, squashY:1.0, flattenTop: PSD_Y - SPINE_C.y });
+      const headMesh = new THREE.Mesh(headGeo, post.m); headMesh.position.copy(SPINE_C);
+      addMesh(post, headMesh);
+      const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.22, 2.0, 20), post.m);
+      neckMesh.position.set(0, SPINE_C.y - 1.60, 0);   // top ~ -0.6 (hidden inside head) .. bottom ~ -2.6 (off-frame)
+      addMesh(post, neckMesh);
+      // PSD: a darker dense disc on the flattened spine top, size-matched to the AZ, aligned across the cleft (nanocolumn)
+      const psdMat = mat(post.region.color, { rough:0.5 }); psdMat.color.multiplyScalar(0.55); psdMat.transmission = 0;
+      const psd = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.30, 0.035, 24), psdMat);
+      psd.position.set(0, PSD_Y + 0.006, 0);
+      addMesh(post, psd);
       synapse.add(post.group);
 
-      // receptors (small posts standing up from the postsynaptic membrane into the cleft)
+      // ===== Receptors: InstancedMesh of ion-channel funnels (wide mouth, narrow waist) clustered on the PSD =====
       const rec = makePart('receptors', { rough:0.4 });
-      const rspots = [[0,0.0],[0.55,0.2],[-0.5,0.25],[0.3,-0.5],[-0.35,-0.45],[0.66,-0.3],[-0.68,-0.15]];
-      rspots.forEach(p => {
-        const x=p[0], z=p[1]; const yTop = POST_TOP + 0.02;
-        const post0 = cyl(new THREE.Vector3(x, yTop-0.02, z), 0.135, 0.16, 0.26, rec.m);
-        const capMat = rec.m; const cap = ball(new THREE.Vector3(x, yTop+0.12, z), 0.15, capMat);
-        addMesh(rec, post0); addMesh(rec, cap);
-        receptorPos.push(new THREE.Vector3(x, yTop+0.12, z));
-      });
+      const recGeo = latheProfile([[0.085,0],[0.055,0.028],[0.046,0.052],[0.08,0.084],[0.112,0.104]], 14);
+      const REC_N = 24, GOLD = Math.PI*(3 - Math.sqrt(5));
+      const recInst = new THREE.InstancedMesh(recGeo, rec.m, REC_N);
+      for(let i=0;i<REC_N;i++){
+        const rad = 0.34*Math.sqrt((i+0.5)/REC_N), ang = i*GOLD;
+        const x = Math.cos(ang)*rad + (Math.random()-0.5)*0.02;
+        const z = Math.sin(ang)*rad + (Math.random()-0.5)*0.02;
+        dummy.position.set(x, PSD_Y + 0.004, z);
+        dummy.rotation.set(0, Math.random()*TAU, 0);
+        dummy.scale.setScalar(0.9 + Math.random()*0.22);
+        dummy.updateMatrix();
+        recInst.setMatrixAt(i, dummy.matrix);
+        receptorPos.push(new THREE.Vector3(x, PSD_Y + 0.10, z));   // mouth-top target the release animation aims for
+      }
+      recInst.instanceMatrix.needsUpdate = true;
+      addMesh(rec, recInst);
       synapse.add(rec.group);
 
-      // reuptake transporters (small posts on the presynaptic membrane edge, facing down)
-      const ru = makePart('reuptake', { rough:0.4 });
-      [[-0.78,0.3],[0.8,-0.2],[0.15,0.72]].forEach(p => {
-        const x=p[0], z=p[1];
-        addMesh(ru, cyl(new THREE.Vector3(x, ACTIVE_Y+0.02, z), 0.15, 0.17, 0.3, ru.m));
-      });
+      // ===== Reuptake transporters: InstancedMesh of barrels on the presynaptic membrane edge =====
+      const ru = makePart('reuptake', { rough:0.42 });
+      const ruGeo = latheProfile([[0.10,0],[0.115,0.05],[0.11,0.12],[0.055,0.13],[0.05,0.10],[0.06,0.02]], 14);
+      const RU_N = 5;
+      const ruInst = new THREE.InstancedMesh(ruGeo, ru.m, RU_N);
+      for(let i=0;i<RU_N;i++){
+        const ang = i/RU_N*TAU + 0.5, rad = 0.60;
+        dummy.position.set(Math.cos(ang)*rad, AZ_Y - 0.05, Math.sin(ang)*rad);
+        dummy.rotation.set(0, Math.random()*TAU, 0);
+        dummy.scale.setScalar(0.9 + Math.random()*0.2);
+        dummy.updateMatrix();
+        ruInst.setMatrixAt(i, dummy.matrix);
+      }
+      ruInst.instanceMatrix.needsUpdate = true;
+      addMesh(ru, ruInst);
       synapse.add(ru.group);
 
-      // scale + center to fit
-      const box = new THREE.Box3().setFromObject(synapse);
-      const size = box.getSize(new THREE.Vector3()); const center = box.getCenter(new THREE.Vector3());
-      modelScale = 6.6 / Math.max(size.x, size.y, size.z);
+      // ---- fit: scale on the synaptic CORE (bouton..spine head) so the neck trails off-frame; center on the core ----
+      const coreTop = PRE_C.y + PRE_R*1.05;
+      const coreBot = SPINE_C.y - SPINE_R*1.02;
+      const coreSpan = coreTop - coreBot;
+      const coreWidth = PRE_R*2*1.16;
+      modelScale = 6.4 / Math.max(coreSpan, coreWidth);
       synapse.scale.setScalar(modelScale);
-      synapse.position.sub(center.clone().multiplyScalar(modelScale));
+      synapse.position.set(0, -((coreTop + coreBot)/2)*modelScale, 0);
       scene.add(synapse);
 
       makeParticles();
@@ -352,29 +624,72 @@
     }
 
     // ---------- appearance resolver ----------
+    // Every visual state routes through here. Realistic = muted tissue at rest, code color blooms
+    // on select/hover. Labeled = every surface at its bright code color, highlight/hover on top.
     function refresh(){
       const selKey = state.selected;
+      const labeled = viewMode === 'labeled';
+      const something = !!selKey;
+      const GREY = new THREE.Color(0x515151);
       Object.keys(parts).forEach(k => {
-        const on = !selKey || k === selKey;
-        const emphasize = selKey && k === selKey;
+        const isSel = something && k === selKey;
+        const isHover = !something && state.hovered === k;
+        const isGhost = something && !isSel;
+        const damaged = state.damaged.has(k);
         parts[k].meshes.forEach(m => {
           if(m.userData.isParticle) return;
+          const glow = m.userData.glowColor, bio = m.userData.baseColor;
+          const atRest = labeled ? glow : bio;                 // resting albedo depends on mode
           const baseOp = m.userData.baseOpacity != null ? m.userData.baseOpacity : 1;
-          const opacity = on ? baseOp : 0.06;
+          const baseTrans = m.userData.baseTransmission || 0;
+          const hasTrans = ('transmission' in m.material);
+
+          // opacity: non-selected parts dim but stay visible as tissue context (not ghosted to nothing)
+          const opacity = isGhost ? Math.min(baseOp, DIM_OP) : baseOp;
           const translucent = opacity < 0.999;
           m.material.transparent = translucent; m.material.opacity = opacity; m.material.depthWrite = !translucent;
-          m.material.color.copy(m.userData.baseColor);
-          if(state.damaged.has(k)){
-            m.material.color.lerp(new THREE.Color(0x515151), 0.8);   // greyed / dead
+
+          const col = m.material.color;
+          if(damaged){
+            col.copy(atRest).lerp(GREY, 0.85);
             m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = 0.12;
-          } else if(emphasize){ m.material.emissive.copy(m.userData.baseColor).multiplyScalar(0.5); m.material.emissiveIntensity = 0.5; m.material.envMapIntensity = 0.75; }
-          else { m.material.emissive.setHex(0x000000); m.material.envMapIntensity = translucent ? 0.06 : 0.5; }
+            if(hasTrans) m.material.transmission = 0;            // let grey/opacity actually show
+          } else if(isSel){
+            col.copy(atRest).lerp(glow, labeled ? 0 : EMPH_LERP);
+            m.material.emissive.copy(glow).multiplyScalar(0.45); m.material.emissiveIntensity = 0.55; m.material.envMapIntensity = 0.8;
+            if(hasTrans) m.material.transmission = baseTrans;
+          } else if(isHover){
+            col.copy(atRest).lerp(glow, labeled ? 0 : HOVER_LERP);
+            m.material.emissive.copy(glow).multiplyScalar(0.28); m.material.emissiveIntensity = 0.3; m.material.envMapIntensity = 0.6;
+            if(hasTrans) m.material.transmission = baseTrans;
+          } else if(isGhost){
+            col.copy(atRest).lerp(GHOST_DIM, 0.6);              // desaturate + dim into background tissue
+            m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = 0.18;
+            if(hasTrans) m.material.transmission = 0;            // transmission ignores opacity, so zero it to darken
+          } else {                                              // at rest
+            col.copy(atRest);
+            m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = translucent ? 0.3 : 0.5;
+            if(hasTrans) m.material.transmission = baseTrans;
+          }
         });
       });
+      if(cleftDim) cleftDim.visible = (state.selected === 'cleft');
       updateAutoRotate();
       needsRender = true;
     }
-    function updateAutoRotate(){ if(controls) controls.autoRotate = !rm.matches && !state.selected && !releasing; }
+    function setHover(key){
+      const eff = (!state.selected && !releasing) ? (key || null) : null;
+      if(state.hovered === eff) return;
+      state.hovered = eff; refresh();
+    }
+    function setViewMode(mode){
+      viewMode = mode;
+      const rb = document.getElementById('tool-realistic'), lb = document.getElementById('tool-labeled');
+      if(rb) rb.setAttribute('aria-pressed', String(mode === 'realistic'));
+      if(lb) lb.setAttribute('aria-pressed', String(mode === 'labeled'));
+      refresh();
+    }
+    function updateAutoRotate(){ if(!controls) return; if(SHOT){ controls.autoRotate = false; return; } controls.autoRotate = !rm.matches && !state.selected && !releasing; }
 
     function partCenter(key){ const b = new THREE.Box3(); parts[key].meshes.forEach(m => b.expandByObject(m)); return b.getBoundingSphere(new THREE.Sphere()); }
     function framingDist(r){ return r / Math.sin(THREE.MathUtils.degToRad(camera.fov/2)); }
@@ -413,7 +728,7 @@
 
     function selectPart(region, opts){
       opts = opts || {}; if(!region) return;
-      state.selected = region.key;
+      state.selected = region.key; state.hovered = null;
       refresh();
       if(controls && parts[region.key]){
         const sph = partCenter(region.key); targetFocus.copy(sph.center);
@@ -446,109 +761,232 @@
       PARTS.forEach(r => { const b = document.createElement('button'); b.type='button'; b.innerHTML = '<span class="brain-legend__sw" style="background:'+r.color+'"></span>'+r.label; b.addEventListener('click', () => selectPart(r)); el.appendChild(b); });
     }
 
-    // ---------- release: neurotransmitter crosses the cleft ----------
+    // ---------- release: a real vesicle-fusion cycle (arrival -> fusion -> diffusion -> binding -> reuptake) ----------
     function makeParticles(){
-      particles = [];
-      const geo = new THREE.SphereGeometry(0.12, 14, 12);
-      for(let i=0;i<9;i++){
-        const m = new THREE.MeshBasicMaterial({ color:0x8fe3bf });
-        const p = new THREE.Mesh(geo, m); p.userData.isParticle = true; p.visible = false; p.renderOrder = 5;
-        synapse.add(p);
-        particles.push(p);
+      // neurotransmitter molecules as ONE InstancedMesh (replaces the 9 MeshBasic dots)
+      const geo = new THREE.SphereGeometry(0.038, 8, 6);
+      const nmat = new THREE.MeshBasicMaterial({ color:0x8fe3bf, transparent:true, opacity:0.95, depthWrite:false });
+      ntInst = new THREE.InstancedMesh(geo, nmat, NT_N);
+      ntInst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      ntInst.userData.isParticle = true; ntInst.renderOrder = 6; ntInst.visible = false; ntInst.frustumCulled = false;
+      synapse.add(ntInst);
+      // decompose docked-vesicle rest transforms once, for the fusion animation
+      dockedBase.length = 0;
+      const dp = new THREE.Vector3(), dq = new THREE.Quaternion(), ds = new THREE.Vector3();
+      dockedRest.forEach(mtx => { mtx.decompose(dp,dq,ds); dockedBase.push({ pos:dp.clone(), quat:dq.clone(), scl:ds.clone() }); });
+      // assign each molecule a source docked vesicle + a target receptor mouth
+      ntMol.length = 0;
+      const nSrc = Math.max(1, dockedBase.length), nRec = Math.max(1, receptorPos.length);
+      for(let i=0;i<NT_N;i++){
+        const src = dockedBase[i % nSrc];
+        const sx = src ? src.pos.x : 0, sz = src ? src.pos.z : 0;
+        ntMol.push({
+          sx: sx + (Math.random()-0.5)*0.05,
+          sz: sz + (Math.random()-0.5)*0.05,
+          target: receptorPos[i % nRec] ? receptorPos[i % nRec].clone() : new THREE.Vector3(0, PSD_Y+0.1, 0),
+          phase: Math.random()*Math.PI*2,
+          jx: 0.6 + Math.random()*0.9,
+          jz: 0.6 + Math.random()*0.9
+        });
       }
     }
-    const RELEASE_MSG = { blocked:'No neurotransmitter released', noreceive:'Message arrives but the receptors can’t catch it', pileup:'Messenger piles up in the gap', overload:'Receiving side overexcited', normal:'Signal received' };
+    function restoreDocked(){
+      if(!vesInst) return;
+      for(let i=0;i<dockedIdx.length;i++) vesInst.setMatrixAt(dockedIdx[i], dockedRest[i]);
+      vesInst.instanceMatrix.needsUpdate = true; needsRender = true;
+    }
+    // Which outcome does this release show? An explicit scenario wins; otherwise fall back to any part broken by hand.
+    function currentMode(){
+      if(scenario && scenario !== 'normal' && scenById[scenario]) return scenById[scenario].mode;
+      if(state.damaged.has('vesicles') || state.damaged.has('transmitter') || state.damaged.has('presyn')) return 'blocked';
+      if(state.damaged.has('receptors')) return 'noreceive';
+      if(state.damaged.has('reuptake')) return 'ssri';
+      if(state.damaged.has('cleft')) return 'pileup';
+      if(state.damaged.has('postsyn')) return 'overload';
+      return 'normal';
+    }
+    const RELEASE_MSG = { blocked:'No neurotransmitter released', noreceive:'Message arrives but the receptors can’t catch it', pileup:'Messenger piles up in the gap', overload:'Receiving side overexcited', ssri:'Messenger lingers in the gap', normal:'Signal received' };
     function release(){
       if(!synapse || releasing) return;
       if(state.selected){ defocus(); }
-      // damage decides what happens
-      releaseMode = (state.damaged.has('vesicles') || state.damaged.has('transmitter') || state.damaged.has('presyn')) ? 'blocked'
-                  : state.damaged.has('receptors') ? 'noreceive'
-                  : state.damaged.has('cleft') || state.damaged.has('reuptake') ? 'pileup'
-                  : state.damaged.has('postsyn') ? 'overload' : 'normal';
-      if(rm.matches){ releaseStatic(); return; }   // reduced motion: show the outcome, skip the travel
+      releaseMode = currentMode();
+      if(rm.matches){ releaseStatic(); return; }   // reduced motion: outcome only, no travel
       releasing = true; releaseStart = performance.now();
+      if(ntInst) ntInst.visible = true;
+      meterReset();
       fireStatus.textContent = 'Signal arriving…';
       updateAutoRotate();
       needsRender = true;
     }
-    // reduced-motion outcome: no particle travel, just the end state
+    // reduced-motion outcome: flash the end state, no travel
     function releaseStatic(){
       clearGlow();
-      const blocked = releaseMode === 'blocked';
-      particles.forEach((p,i) => { p.visible = !blocked; if(!blocked) p.position.copy(receptorPos[i % receptorPos.length]); });
-      if(!blocked) glow('receptors', releaseMode==='overload' ? 2.6 : 1.8);
-      fireStatus.textContent = (blocked && state.damaged.has('presyn')) ? 'Signal arrives but little is released' : RELEASE_MSG[releaseMode];
+      const mode = releaseMode, crosses = mode !== 'blocked';
+      if(ntInst){
+        ntInst.visible = crosses;
+        for(let i=0;i<NT_N;i++){
+          const mm = ntMol[i];
+          const y = (mode === 'noreceive') ? mm.target.y + 0.06 : mm.target.y;
+          _dummy.position.set(mm.target.x, y, mm.target.z); _dummy.quaternion.identity();
+          _dummy.scale.setScalar(crosses ? 1 : 0.0001); _dummy.updateMatrix();
+          ntInst.setMatrixAt(i, _dummy.matrix);
+        }
+        ntInst.instanceMatrix.needsUpdate = true;
+      }
+      if(crosses && mode !== 'noreceive') glow('receptors', (mode==='overload'||mode==='pileup') ? 2.6 : 1.8);
+      if(mode === 'overload') glow('postsyn', 1.4);
+      if(mode === 'normal') glow('reuptake', 1.2);
+      fireStatus.textContent = RELEASE_MSG[mode] || '';
+      meterUpdate(mode, 1);
       needsRender = true;
-      setTimeout(() => { particles.forEach(p => p.visible = false); refresh(); fireStatus.textContent = ''; }, 2400);
+      setTimeout(() => { if(ntInst) ntInst.visible = false; clearGlow(); refresh(); fireStatus.textContent = ''; }, 2600);
     }
-    function glow(key, amt){ parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isParticle) return; m.material.emissive.copy(m.userData.baseColor); m.material.emissiveIntensity = amt; }); }
+    function glow(key, amt){ parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isParticle) return; m.material.emissive.copy(m.userData.glowColor); m.material.emissiveIntensity = amt; }); }
     function clearGlow(){ Object.keys(parts).forEach(k => parts[k].meshes.forEach(m => { if(m.userData.isParticle) return; m.material.emissiveIntensity = 0; m.material.emissive.setHex(0x000000); })); }
     function ease(t){ return t*t*(3-2*t); }
+
+    // ---- postsynaptic response meter (illustrative depolarization trace) ----
+    const METER_W = 116, METER_H = 30, METER_PAD = 3;
+    const METER_STROKE = { normal:'#57B894', ssri:'#E3B24C', pileup:'#D8654F', overload:'#D8654F', noreceive:'#93A2AE', blocked:'#93A2AE' };
+    function meterLevel(mode, t){
+      const onset = 0.60; if(t <= onset) return 0;
+      const u = (t - onset)/(1 - onset);
+      switch(mode){
+        case 'normal':   { const rise = Math.min(1, u/0.22); const dec = u>0.4 ? Math.max(0, 1-(u-0.4)/0.6) : 1; return rise*dec; }
+        case 'ssri':     { const rise = Math.min(1, u/0.22); const dec = u>0.5 ? Math.max(0.6, 1-(u-0.5)*0.35) : 1; return 0.9*rise*dec + 0.05; }
+        case 'pileup':
+        case 'overload': { const rise = Math.min(1, u/0.18); return Math.min(1.2, 1.02*rise + 0.12*Math.abs(Math.sin(u*Math.PI*4))); }
+        default:         return 0;   // noreceive / blocked: flat
+      }
+    }
+    function meterUpdate(mode, t){
+      const el = document.getElementById('meter-trace'); if(!el) return;
+      const N = 48, pts = [], x0 = METER_PAD, x1 = METER_W - METER_PAD, base = METER_H - METER_PAD, top = METER_PAD;
+      for(let i=0;i<=N;i++){
+        const tt = (i/N)*t, lv = Math.min(1.2, meterLevel(mode, tt))/1.2;
+        pts.push((x0 + (i/N)*(x1-x0)).toFixed(1) + ',' + (base - lv*(base-top)).toFixed(1));
+      }
+      el.setAttribute('points', pts.join(' '));
+      el.setAttribute('stroke', METER_STROKE[mode] || '#93A2AE');
+    }
+    function meterReset(){
+      const el = document.getElementById('meter-trace'); if(!el) return;
+      const base = METER_H - METER_PAD;
+      el.setAttribute('points', METER_PAD + ',' + base + ' ' + (METER_W - METER_PAD) + ',' + base);
+      el.setAttribute('stroke', '#93A2AE');
+    }
+
     function tickRelease(now){
-      const DUR = 4200;
-      let t = (now - releaseStart) / DUR;
+      const t = (now - releaseStart) / RELEASE_DUR;
       if(t >= 1){ endRelease(); return; }
+      const mode = releaseMode, fused = mode !== 'blocked';
+      const P_FUSE = 0.16, P_DIFF = 0.34, P_BIND = 0.62, P_CLEAR = 0.82;
       clearGlow();
-      const startY = ACTIVE_Y, spread = 0.22;
-      // phase 1: signal arrives, presynaptic terminal + vesicles light up
-      if(t < 0.24){
-        glow('presyn', 1.3*(1 - Math.abs(t-0.12)/0.12));
-        glow('vesicles', 1.4*(t/0.24));
-        particles.forEach(p => p.visible = false);
-        if(releaseMode === 'blocked' && t > 0.2){
-          glow('vesicles', 0.2);
-          fireStatus.textContent = state.damaged.has('presyn') ? 'Signal arrives but little is released' : 'No neurotransmitter released';
-          if(t > 0.22) endRelease();
-          needsRender = true; return;
+
+      // ---- docked-vesicle fusion: swell, then collapse into the active-zone membrane ----
+      const fp = (t >= P_FUSE) ? THREE.MathUtils.clamp((t - P_FUSE)/(P_DIFF - P_FUSE), 0, 1) : 0;
+      if(vesInst && dockedBase.length){
+        for(let i=0;i<dockedIdx.length;i++){
+          const b = dockedBase[i]; let scl = 1, y = b.pos.y;
+          if(fused && fp > 0){
+            if(fp < 0.45){ scl = 1 + 1.1*Math.sin((fp/0.45)*Math.PI/2); }
+            else { const k = (fp-0.45)/0.55; scl = 2.1*(1-k); y = THREE.MathUtils.lerp(b.pos.y, AZ_Y-0.02, ease(k)); }
+          } else if(!fused){
+            scl = 1 + 0.06*Math.sin(now*0.006 + i);   // botulinum: docked jiggle but never fuse
+          }
+          _dummy.position.set(b.pos.x, y, b.pos.z);
+          _dummy.quaternion.copy(b.quat);
+          _dummy.scale.set(b.scl.x*scl, b.scl.y*scl, b.scl.z*scl);
+          _dummy.updateMatrix();
+          vesInst.setMatrixAt(dockedIdx[i], _dummy.matrix);
         }
+        vesInst.instanceMatrix.needsUpdate = true;
       }
-      // phase 2: vesicles fuse, messenger crosses the cleft
-      else if(t < 0.72){
-        const at = ease((t - 0.24) / 0.48);
-        glow('vesicles', 0.5);
-        const n = releaseMode === 'blocked' ? 0 : particles.length;
-        particles.forEach((p, i) => {
-          if(i >= n){ p.visible = false; return; }
-          p.visible = true;
-          const target = receptorPos[i % receptorPos.length];
-          const sx = (i%3-1)*spread, sz = (Math.floor(i/3)-1)*spread;
-          const from = new THREE.Vector3(sx*0.6, startY, sz*0.6);
-          p.position.lerpVectors(from, target, at);
-          p.position.x += Math.sin(at*Math.PI)*sx*0.5;
-        });
-        fireStatus.textContent = 'Neurotransmitter crossing the gap';
-      }
-      // phase 3: messenger binds receptors
-      else {
-        const bt = (t - 0.72) / 0.28;
-        particles.forEach((p, i) => { if(i < particles.length){ p.position.copy(receptorPos[i % receptorPos.length]); } });
-        if(releaseMode === 'noreceive'){
-          particles.forEach(p => p.visible = true);           // messenger sits unread
-          fireStatus.textContent = 'Message arrives but the receptors can’t catch it';
-        } else if(releaseMode === 'pileup'){
-          particles.forEach(p => p.visible = true);           // not cleared from the gap
-          glow('receptors', 1.6);
-          fireStatus.textContent = 'Messenger piles up in the gap';
-        } else if(releaseMode === 'overload'){
-          particles.forEach(p => p.visible = bt < 0.6);
-          glow('receptors', 3.0); glow('postsyn', 1.6*Math.abs(Math.sin(bt*Math.PI*3)));
-          fireStatus.textContent = 'Receiving side overexcited';
-        } else {
-          particles.forEach(p => p.visible = bt < 0.55);       // cleared as signal passes on
-          glow('receptors', 2.4*(1 - bt));
-          glow('postsyn', 0.8*(1 - bt));
-          fireStatus.textContent = 'Signal received';
+
+      // ---- neurotransmitter molecules cross the (thin) cleft with Brownian jitter ----
+      const spawned = fused && (t >= P_FUSE + (P_DIFF - P_FUSE)*0.45);
+      if(ntInst){
+        for(let i=0;i<NT_N;i++){
+          const mm = ntMol[i]; let x=0, y=-999, z=0, s=0.0001, show=false;
+          if(spawned){
+            const cp = (t < P_DIFF) ? 0 : (t < P_BIND ? ease((t - P_DIFF)/(P_BIND - P_DIFF)) : 1);
+            show = true; s = 1;
+            const bx = mm.target.x, bz = mm.target.z;
+            x = THREE.MathUtils.lerp(mm.sx, bx, cp);
+            z = THREE.MathUtils.lerp(mm.sz, bz, cp);
+            y = THREE.MathUtils.lerp(ACTIVE_Y, mm.target.y, cp);   // spawn just inside AZ, descend across CLEFT_W to the PSD
+            const damp = 1 - cp*0.7;
+            x += Math.sin(now*0.004*mm.jx + mm.phase) * 0.03 * damp;
+            z += Math.cos(now*0.004*mm.jz + mm.phase) * 0.03 * damp;
+            y += Math.sin(now*0.006 + mm.phase) * 0.015 * damp;
+            if(t >= P_BIND){
+              const at = THREE.MathUtils.clamp((t - P_BIND)/(1 - P_BIND), 0, 1);
+              if(mode === 'noreceive'){
+                y = mm.target.y + 0.06 + Math.sin(now*0.005 + mm.phase)*0.02;   // curare: hover just above, unbound
+              } else if(mode === 'pileup' || mode === 'overload' || mode === 'ssri'){
+                show = true;                                                     // never cleared: lingers / piles up
+              } else if(at > 0.35){                                              // normal: reuptake vacuums leftovers
+                const rt = ease((at-0.35)/0.65);
+                x = THREE.MathUtils.lerp(bx, 0, rt); z = THREE.MathUtils.lerp(bz, 0, rt);
+                y = THREE.MathUtils.lerp(mm.target.y, AZ_Y-0.02, rt); s = 1 - rt;
+                if(rt > 0.98) show = false;
+              }
+            }
+          }
+          if(show){ _dummy.position.set(x,y,z); _dummy.scale.setScalar(Math.max(0.001, s)); }
+          else { _dummy.position.set(0,-999,0); _dummy.scale.setScalar(0.0001); }
+          _dummy.quaternion.identity(); _dummy.updateMatrix();
+          ntInst.setMatrixAt(i, _dummy.matrix);
         }
+        ntInst.instanceMatrix.needsUpdate = true;
       }
+
+      // ---- glows + status by phase / scenario ----
+      if(t < P_FUSE){
+        glow('presyn', 1.2*(t/P_FUSE)); glow('vesicles', 1.3*(t/P_FUSE));
+        fireStatus.textContent = 'Signal arrives at the terminal';
+      } else if(t < P_DIFF){
+        glow('presyn', 1.0); glow('vesicles', 0.7);
+        fireStatus.textContent = fused ? 'Vesicles fusing, releasing messenger' : 'Fusion blocked — no messenger released';
+      } else if(t < P_BIND){
+        glow('vesicles', 0.35);
+        fireStatus.textContent = fused ? 'Neurotransmitter crossing the gap' : 'No neurotransmitter released';
+      } else {
+        if(mode === 'blocked'){ fireStatus.textContent = 'No neurotransmitter released'; }
+        else if(mode === 'noreceive'){ fireStatus.textContent = 'Message arrives but the receptors can’t catch it'; }
+        else if(mode === 'pileup'){ glow('receptors', 1.8); glow('cleft', 0.6); fireStatus.textContent = 'Messenger piles up in the gap'; }
+        else if(mode === 'overload'){ const bt = (t-P_BIND)/(1-P_BIND); glow('receptors', 3.0); glow('postsyn', 1.6*Math.abs(Math.sin(bt*Math.PI*3))); fireStatus.textContent = 'Receiving side overexcited'; }
+        else if(mode === 'ssri'){ glow('receptors', 1.8); glow('postsyn', 0.9); fireStatus.textContent = 'Messenger lingers in the gap'; }
+        else { const bt = (t-P_BIND)/(1-P_BIND); glow('receptors', 2.2*(1-bt*0.5)); glow('postsyn', 0.8*(1-bt*0.5)); if(t >= P_CLEAR) glow('reuptake', 1.6); fireStatus.textContent = (t >= P_CLEAR) ? 'Reuptake clears the gap' : 'Signal received'; }
+      }
+      meterUpdate(mode, t);
       needsRender = true;
     }
     function endRelease(){
       releasing = false;
-      particles.forEach(p => p.visible = false);
+      if(ntInst) ntInst.visible = false;
+      restoreDocked();
       setTimeout(() => { if(!releasing) fireStatus.textContent = ''; }, 1500);
       refresh();
       updateAutoRotate();
+      needsRender = true;
+    }
+    // ---- drug-scenario segmented control ----
+    function setScenario(id){
+      if(!scenById[id]) id = 'normal';
+      scenario = id;
+      document.querySelectorAll('.brain-scen').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.scen === id)));
+      updateScenarioNote();
+    }
+    function updateScenarioNote(){
+      const note = document.getElementById('scenario-note'); if(!note) return;
+      const s = scenById[scenario];
+      if(!s || s.id === 'normal' || !s.dmgKey || !DAMAGE[s.dmgKey]){ note.classList.remove('is-visible'); note.innerHTML = ''; return; }
+      const d = DAMAGE[s.dmgKey];
+      let h = '<span class="brain-scenario-note__tag">'+s.label+' &middot; '+s.full+'</span>';
+      h += '<strong>'+d.condition+'.</strong> '+d.symptoms;
+      if(d.source) h += ' <a href="'+d.source.url+'" target="_blank" rel="noopener">Source: '+d.source.title+'</a>';
+      note.innerHTML = h; note.classList.add('is-visible');
     }
 
     // ---------- deep-linking ----------
@@ -586,8 +1024,9 @@
         renderer.domElement.style.cursor = m ? 'pointer' : 'grab';
         if(m && m.userData.partKey){ const rect = renderer.domElement.getBoundingClientRect(); tooltipEl.textContent = byKey[m.userData.partKey].label; tooltipEl.style.left = (e.clientX-rect.left)+'px'; tooltipEl.style.top = (e.clientY-rect.top)+'px'; tooltipEl.style.opacity='1'; }
         else tooltipEl.style.opacity = '0';
+        setHover(m && m.userData.partKey ? m.userData.partKey : null);
       });
-      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; });
+      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; setHover(null); });
       renderer.domElement.addEventListener('keydown', e => {
         if(e.key === 'Escape') resetView();
         else if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); cycle(1); }
@@ -600,11 +1039,71 @@
     document.getElementById('tool-fire').addEventListener('click', release);
     document.getElementById('tool-fit').addEventListener('click', () => { if(state.selected) defocus(); else frameAll(); });
     document.getElementById('tool-reset').addEventListener('click', resetView);
+    document.getElementById('tool-realistic').addEventListener('click', () => setViewMode('realistic'));
+    document.getElementById('tool-labeled').addEventListener('click', () => setViewMode('labeled'));
+    document.querySelectorAll('.brain-scen').forEach(b => b.addEventListener('click', () => setScenario(b.dataset.scen)));
+    setScenario('normal');   // initial aria-pressed + hide the note
+    meterReset();            // flat baseline until the first Release
 
-    function onResize(){ if(!renderer) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); needsRender = true; }
+    function onResize(){ if(!renderer) return; if(SHOT) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); needsRender = true; }
     if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
     addEventListener('resize', onResize);
     rm.addEventListener('change', () => { updateAutoRotate(); needsRender = true; });
+
+    // ---------- dev-only preview-card export ( ?shot=1 ) ----------
+    // Renders a TRANSPARENT, fixed-size PNG of the rebuilt synapse for img/synapse-preview.png.
+    // Everything here runs only when SHOT is true; the normal explorer path never enters it.
+    // Re-tint every part toward its code color at `strength` (reuses the same baseColor/glowColor
+    // userData + bio->code lerp the select branch uses) so the thumbnail reads as upgraded tissue
+    // yet stays legible at card size instead of a grey blob.
+    function shotTintAll(strength){
+      Object.keys(parts).forEach(k => parts[k].meshes.forEach(m => {
+        if(m.userData.isImpulse || m.userData.isParticle) return;
+        const glow = m.userData.glowColor, bio = m.userData.baseColor;
+        if(!glow || !bio) return;
+        m.material.color.copy(bio).lerp(glow, strength);
+        m.material.emissive.copy(glow).multiplyScalar(0.18); m.material.emissiveIntensity = 0.22;   // gentle all-parts rim
+      }));
+    }
+    // Canonical hero pose: near front-on view (faint 3/4) showing terminal (top), cleft (middle), and the
+    // postsynaptic spine head (bottom). The build centers the synaptic CORE at world y=0 and lets the neck
+    // trail below, so we crop the frame symmetrically about y=0 (halfH = presynaptic top) to keep the neck
+    // off-frame — matching the explorer's own fit — and fill the portrait card aspect + padding.
+    function shotPose(aspect){
+      const box = new THREE.Box3().setFromObject(synapse);
+      const halfH = box.max.y;                                         // presynaptic top; core is symmetric about y=0
+      const halfW = Math.max(box.max.x, -box.min.x);
+      const halfD = Math.max(box.max.z, -box.min.z);
+      const center = new THREE.Vector3(0, 0, 0);
+      const dir = new THREE.Vector3(0.06, 0.05, 1).normalize();
+      const vHalf = THREE.MathUtils.degToRad(camera.fov/2), hHalf = Math.atan(Math.tan(vHalf)*aspect);
+      const dV = halfH/Math.tan(vHalf), dH = halfW/Math.tan(hHalf);
+      const dist = Math.max(dV, dH)*1.14 + halfD;
+      controls.target.copy(center); camera.up.set(0,1,0);
+      camera.position.copy(center).addScaledVector(dir, dist); camera.lookAt(center);
+      camera.updateProjectionMatrix(); controls.update();
+    }
+    function scheduleShot(){
+      const W = 1000, H = 1400;                                        // synapse preview: portrait ~0.66:1
+      state.selected = null; state.hovered = null; state.damaged.clear();
+      viewMode = 'realistic';
+      if(controls){ controls.autoRotate = false; controls.enableDamping = false; }
+      scene.background = null; renderer.setClearColor(0x000000, 0);    // transparent capture
+      renderer.setPixelRatio(2); renderer.setSize(W, H, false);        // fixed export size @ DPR 2 (buffer 2000x2800)
+      camera.clearViewOffset(); camera.aspect = W/H; camera.updateProjectionMatrix();
+      shotPose(W/H);
+      refresh(); shotTintAll(0.35);                                    // realistic rest, then ~0.35 re-tint on ALL parts
+      const capture = () => {
+        if(shotDone) return; shotDone = true;
+        renderer.render(scene, camera);
+        window.__shotPNG = renderer.domElement.toDataURL('image/png');
+        console.log('SHOT_READY ' + window.__shotPNG.length);
+      };
+      const settle = () => requestAnimationFrame(() => { renderer.render(scene, camera);
+        requestAnimationFrame(() => requestAnimationFrame(capture)); });   // let PMREM/env + a couple frames settle
+      if(document.fonts && document.fonts.ready){ document.fonts.ready.then(settle); } else { settle(); }
+    }
+    if(SHOT && webglOk()) scheduleShot();
 
     function animate(){
       requestAnimationFrame(animate);

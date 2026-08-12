@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Copyright (c) 2026 The Neuroscience Review (theneuroreview.com). Original interactive and 3D model, all rights reserved. Not to be copied, redistributed, or reused without permission. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -66,6 +67,19 @@
     .brain-tool:focus-visible{ outline:2px solid var(--accent,#2f6f8f); outline-offset:2px; }
     .brain-toolbar__spacer{ flex:1 1 auto; }
     .brain-toolbar__read{ font-family:var(--sans,Inter); font-size:.78rem; color:var(--brain-glass-mut,#7a756c); }
+    .brain-seg{ display:inline-flex; align-items:center; gap:.3rem; }
+
+    /* live action-potential voltage gauge (Phase C) */
+    .brain-gauge{ display:inline-flex; align-items:center; gap:.45rem; }
+    .brain-gauge svg{ display:block; overflow:visible; }
+    .vg-base{ stroke:var(--brain-glass-mut,#7a756c); stroke-width:1; opacity:.32; }
+    .vg-live{ stroke:#d98a3a; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .vg-dot{ fill:#d98a3a; stroke:#fff; stroke-width:.8; }
+    .vg-thr{ stroke:var(--accent,#2f6f8f); stroke-width:.8; stroke-dasharray:2 2; opacity:.6; }
+    .vg-rest{ stroke:var(--brain-glass-mut,#7a756c); stroke-width:.7; stroke-dasharray:1 3; opacity:.4; }
+    .vg-read{ font-family:var(--sans,Inter); font-size:.72rem; font-weight:600; color:var(--brain-glass-mut,#7a756c); min-width:3.6rem; font-variant-numeric:tabular-nums; }
+    [data-theme="dark"] .vg-dot{ stroke:#0a0e13; }
+    @media(max-width:560px){ .brain-gauge svg{ width:120px; } .vg-read{ min-width:3.1rem; } }
 
     .brain-info{ position:absolute; top:.7rem; right:.7rem; z-index:6; width:min(350px,44%); max-height:calc(100% - 1.4rem); overflow-y:auto; border:1px solid var(--brain-glass-bd); border-radius:14px; background:var(--brain-glass); backdrop-filter:blur(11px); padding:1.15rem 1.25rem 1.25rem; color:var(--brain-glass-fg); opacity:0; visibility:hidden; transform:translateX(10px); transition:opacity .2s ease, transform .2s ease, visibility .2s; }
     .brain-info.is-visible{ opacity:1; visibility:visible; transform:none; }
@@ -125,7 +139,21 @@
         <button class="brain-tool brain-tool--fire" id="tool-fire" type="button" title="Send an action potential down the axon">Fire signal</button>
         <button class="brain-tool" id="tool-fit" type="button" title="Zoom out to see the whole neuron">Fit view</button>
         <button class="brain-tool" id="tool-reset" type="button" title="Back to the whole neuron">Reset</button>
+        <span class="brain-seg" role="group" aria-label="Appearance">
+          <button class="brain-tool" id="tool-realistic" type="button" aria-pressed="true" title="Muted, wet-tissue look; a part lights up in its color when you touch it">Realistic</button>
+          <button class="brain-tool" id="tool-labeled" type="button" aria-pressed="false" title="Show every part in its bright key color">Labeled</button>
+        </span>
         <span class="brain-toolbar__spacer"></span>
+        <span class="brain-gauge" id="volt-gauge" title="Membrane voltage at the axon hillock: signals sum here, and if they cross the −55 mV threshold the neuron fires an all-or-nothing spike to +30 mV.">
+          <svg viewBox="0 0 150 44" width="150" height="44" role="img" aria-label="Action potential voltage trace: rest −70 mV, threshold −55 mV, peak +30 mV.">
+            <line id="vg-rest" class="vg-rest"></line>
+            <line id="vg-thr" class="vg-thr"></line>
+            <path id="vg-base" class="vg-base" fill="none"></path>
+            <path id="vg-live" class="vg-live" fill="none"></path>
+            <circle id="vg-dot" class="vg-dot" r="2.6"></circle>
+          </svg>
+          <span class="vg-read" id="vg-read">−70 mV</span>
+        </span>
         <span class="brain-toolbar__read" id="fire-status"></span>
       </div>
     </section>
@@ -151,6 +179,7 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+    import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
     // ---- Part data: fact-checked plain-English blurbs + sources ----
     const PARTS = [
@@ -205,6 +234,13 @@
 
     let renderer, scene, camera, controls, pmrem, neuron;
     let hemi, key, fill, rimL;
+    let noiseTex = null;           // shared value-noise texture (bump + roughness)
+    let viewMode = 'realistic';    // 'realistic' (muted tissue) | 'labeled' (bright code colors)
+    // appearance tuning (Phase A — owner tunes muting strength at preview)
+    const GHOST_DIM = new THREE.Color(0x2a2b2e);  // non-selected parts dim toward this
+    const DIM_OP = 0.3;            // opacity of non-selected parts (was harsh 0.08)
+    const EMPH_LERP = 0.82;        // selected part: how far albedo lerps bio -> code color
+    const HOVER_LERP = 0.5;        // hovered part: partial warm toward code color
     const parts = {};          // key -> { region, group, meshes:[] }
     let modelScale = 1;
     let needsRender = true, focusing = false;
@@ -214,7 +250,7 @@
     const DEFAULT_CAM = new THREE.Vector3(0,0.6,7);
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
-    const state = { selected: null, damaged: new Set() };
+    const state = { selected: null, damaged: new Set(), hovered: null };
 
     // axon path (shared by geometry + the fire animation), in model space
     const axonPts = [
@@ -226,11 +262,30 @@
     const myelinSegs = [[0.06,0.20],[0.26,0.40],[0.46,0.60],[0.66,0.80],[0.86,0.97]];
     const nodeTs = [0.23,0.43,0.63,0.83];
 
+    // ---- saltatory fire timeline (ms) — declared here (above init/buildNeuron/animate) to avoid TDZ ----
+    const F_DEND = 700;                       // dendrites receive/summate
+    const F_SOMA = 520;                       // soma sums -> hillock decides (threshold)
+    const F_TERM = 620;                       // terminals release
+    const SALT_LEAP = 130;                    // fast internode leap between nodes
+    const SALT_DWELL = 190;                   // dwell/flash at each node of Ranvier
+    const SALT_STOPS = [0, nodeTs[0], nodeTs[1], nodeTs[2], nodeTs[3], 1];   // start, 4 nodes, terminals
+    const F_AXON = SALT_LEAP*(SALT_STOPS.length-1) + SALT_DWELL*nodeTs.length; // 5 leaps + 4 dwells
+    const F_DUR  = F_DEND + F_SOMA + F_AXON + F_TERM;
+    // ---- voltage-gauge geometry (SVG user units) ----
+    const VG_X0 = 5, VG_X1 = 145, VG_YTOP = 7, VG_YBOT = 34, VG_VMAX = 35, VG_VMIN = -85;
+    let vgBasePts = null;                      // sampled AP backdrop, built once in initGauge()
+
     function showFallback(msg){ if(msg) document.getElementById('brain-fallback-msg').textContent = msg; loadingEl.style.display='none'; fallbackEl.style.display='flex'; }
 
+    // must be initialized before buildNeuron/buildSynapse runs (TDZ fix)
+    const THICK_PARTS = { soma:1, nucleus:1, myelin:1, hillock:1 };
+    // dev-only preview-card export flag ( ?shot=1 ) — declared ABOVE init/build/animate (TDZ) so the
+    // hoisted updateAutoRotate()/onResize() can see it. Fully inert when the URL has no ?shot=1.
+    const SHOT = (function(){ try { return new URLSearchParams(location.search).get('shot') === '1'; } catch(e){ return false; } })();
+    let shotDone = false;
     if(!webglOk()){ showFallback(); }
     else { init(); buildNeuron(); animate(); }
-    buildChips(); buildLegend();
+    buildChips(); buildLegend(); initGauge();
 
     function init(){
       renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, preserveDrawingBuffer:true });
@@ -241,6 +296,7 @@
       renderer.domElement.tabIndex = 0; renderer.domElement.setAttribute('role','application');
       renderer.domElement.setAttribute('aria-label','Interactive 3D neuron. Use the part buttons above, arrow keys to cycle parts, Escape to reset, F to fire a signal.');
       scene = new THREE.Scene();
+      noiseTex = makeNoiseTexture();
       pmrem = new THREE.PMREMGenerator(renderer);
       scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
       camera = new THREE.PerspectiveCamera(45, stageEl.clientWidth/stageEl.clientHeight, 0.01, 200);
@@ -248,7 +304,7 @@
       hemi = new THREE.HemisphereLight(0xeaf1f7, 0x3a2f2a, 0.6); scene.add(hemi);
       key = new THREE.DirectionalLight(0xfff4e8, 1.4); key.position.set(3,4,4); scene.add(key);
       fill = new THREE.DirectionalLight(0xcfe0f0, 0.55); fill.position.set(-4,1,2); scene.add(fill);
-      rimL = new THREE.DirectionalLight(0xbcd6ff, 0.9); rimL.position.set(-2,1.5,-4); scene.add(rimL);
+      rimL = new THREE.DirectionalLight(0xffbfae, 1.1); rimL.position.set(-2,1.5,-4); scene.add(rimL);  // warm back-rim = fake SSS for thin parts
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true; controls.dampingFactor = 0.08;
       controls.minDistance = 2.5; controls.maxDistance = 20; controls.enablePan = true;
@@ -268,94 +324,282 @@
     new MutationObserver(applyStageTheme).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
 
     // ---------- procedural neuron ----------
-    function mat(hex){ return new THREE.MeshPhysicalMaterial({ color:new THREE.Color(hex), roughness:0.5, metalness:0.0, clearcoat:0.3, clearcoatRoughness:0.5, sheen:0.35, sheenColor:new THREE.Color(0xffe4d6), envMapIntensity:0.5, transparent:false, opacity:1, depthWrite:true }); }
+    // Parts thick enough to carry a subsurface (transmission) pass; thin parts skip it for perf.
+
+    // Vivid code color -> muted wet-tissue tone: same hue, saturation crushed, lightness lifted,
+    // then pulled toward a fleshy pink-grey so every part reads as one continuous tissue.
+    function bioTone(hex){
+      const c = new THREE.Color(hex); const hsl = {}; c.getHSL(hsl);
+      const s = hsl.s * 0.42;   // MUTING KNOB 1: saturation kept (lower = greyer)
+      const l = THREE.MathUtils.clamp(0.60 + (hsl.l - 0.5) * 0.30, 0.5, 0.78);
+      const out = new THREE.Color().setHSL(hsl.h, s, l);
+      out.lerp(new THREE.Color(0xcaa79c), 0.20);   // MUTING KNOB 2: pull toward flesh (higher = more uniform)
+      return out;
+    }
+    // One 512x512 value-noise texture, reused as bumpMap + roughnessMap on every material.
+    function makeNoiseTexture(){
+      const size = 512, cell = 8, gw = size/cell;
+      const grid = new Float32Array((gw+1)*(gw+1));
+      for(let i=0;i<grid.length;i++) grid[i] = Math.random();
+      const gv = (x,y)=> grid[y*(gw+1)+x];
+      const cv = document.createElement('canvas'); cv.width = cv.height = size;
+      const ctx = cv.getContext('2d'); const img = ctx.createImageData(size, size);
+      for(let y=0;y<size;y++){ for(let x=0;x<size;x++){
+        const fx=x/cell, fy=y/cell, x0=Math.floor(fx), y0=Math.floor(fy);
+        const tx=fx-x0, ty=fy-y0, sx=tx*tx*(3-2*tx), sy=ty*ty*(3-2*ty);
+        const top = gv(x0,y0)+(gv(x0+1,y0)-gv(x0,y0))*sx;
+        const bot = gv(x0,y0+1)+(gv(x0+1,y0+1)-gv(x0,y0+1))*sx;
+        let v = top+(bot-top)*sy;
+        let h = Math.sin(x*12.9898 + y*78.233)*43758.5453; h = h - Math.floor(h);
+        v = v*0.82 + h*0.18;
+        const g = Math.max(0, Math.min(255, Math.round((0.6 + v*0.4)*255)));
+        const o=(y*size+x)*4; img.data[o]=g; img.data[o+1]=g; img.data[o+2]=g; img.data[o+3]=255;
+      }}
+      ctx.putImageData(img,0,0);
+      const tex = new THREE.CanvasTexture(cv);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(3,3); tex.colorSpace = THREE.NoColorSpace;
+      return tex;
+    }
+    // Tissue material factory. albedo = bioTone(code); wet-not-glossy; optional fake subsurface on thick parts.
+    function mat(hex, opts){
+      opts = opts || {};
+      const tr = opts.op != null && opts.op < 1;
+      const m = new THREE.MeshPhysicalMaterial({
+        color: bioTone(hex),
+        roughness: opts.rough != null ? opts.rough : 0.48,
+        metalness: 0.0, clearcoat: 0.0, sheen: 0.0,
+        specularColor: new THREE.Color(0xffe9dc), specularIntensity: 0.6,
+        envMapIntensity: 0.5,
+        transparent: tr, opacity: opts.op != null ? opts.op : 1, depthWrite: !tr
+      });
+      if(noiseTex){ m.bumpMap = noiseTex; m.bumpScale = 0.004; m.roughnessMap = noiseTex; }
+      if(opts.thick){ m.transmission = 0.55; m.thickness = 0.6; m.ior = 1.37; m.attenuationColor = new THREE.Color(0xd98a76); m.attenuationDistance = 2.5; }
+      return m;
+    }
     function tubeMesh(points, radius, m){ const c = new THREE.CatmullRomCurve3(points); const g = new THREE.TubeGeometry(c, Math.max(16, points.length*8), radius, 10, false); return new THREE.Mesh(g, m); }
     function ball(pos, r, m){ const s = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 18), m); s.position.copy(pos); return s; }
     function perp(v){ const a = Math.abs(v.y) < 0.99 ? new THREE.Vector3(0,1,0) : new THREE.Vector3(1,0,0); return new THREE.Vector3().crossVectors(v, a).normalize(); }
 
-    function makePart(key){ const region = byKey[key]; const group = new THREE.Group(); const meshes = []; parts[key] = { region, group, meshes }; return { region, group, meshes, m: mat(region.color) }; }
-    function addMesh(part, mesh){ mesh.userData.partKey = part.region.key; part.meshes.push(mesh); part.group.add(mesh); mesh.material.userData = mesh.material.userData || {}; mesh.userData.baseColor = mesh.material.color.clone(); }
+    function makePart(key){ const region = byKey[key]; const group = new THREE.Group(); const meshes = []; parts[key] = { region, group, meshes }; return { region, group, meshes, m: mat(region.color, THICK_PARTS[key] ? { thick:true } : {}) }; }
+    function addMesh(part, mesh){ mesh.userData.partKey = part.region.key; part.meshes.push(mesh); part.group.add(mesh); mesh.material.userData = mesh.material.userData || {}; mesh.userData.baseColor = mesh.material.color.clone(); mesh.userData.glowColor = new THREE.Color(part.region.color); mesh.userData.baseTransmission = mesh.material.transmission || 0; }
 
-    // recursive dendrite branch
-    function dendrite(part, start, dir, len, radius, gen){
+    // ---------- organic geometry helpers (Phase B) ----------
+    // Smooth, deterministic pseudo-noise in ~[-1,1]. Continuous everywhere, so no seams on a surface.
+    function fbm3(x,y,z){
+      let v=0, a=0.5, px=x, py=y, pz=z;
+      for(let o=0;o<3;o++){ v += a*Math.sin(px*1.7 + Math.cos(py*1.3) + Math.sin(pz*1.1)*1.4); px*=1.9; py*=2.1; pz*=1.7; a*=0.55; }
+      return v*0.7;
+    }
+    // Noise-displaced icosahedron — no sphere poles. squash = optional THREE.Vector3 scale.
+    function organicBlob(radius, detail, amp, freq, squash){
+      const g = new THREE.IcosahedronGeometry(radius, detail);
+      const pos = g.attributes.position, v = new THREE.Vector3(), sq = squash || null;
+      for(let i=0;i<pos.count;i++){
+        v.fromBufferAttribute(pos,i);
+        const n = v.clone().normalize();
+        v.multiplyScalar(1 + amp*fbm3(n.x*freq+11, n.y*freq+3, n.z*freq+7));
+        if(sq) v.multiply(sq);
+        pos.setXYZ(i, v.x, v.y, v.z);
+      }
+      g.computeVertexNormals();
+      return g;
+    }
+    // Tapered/noisy tube swept on the curve's Frenet frames. radiusFn(u)->multiplier; noise wobbles the radius.
+    function organicTube(curve, opts){
+      opts = opts || {};
+      const tub = opts.segments || Math.max(20, Math.round(curve.getLength()*40));
+      const rad = opts.radial || 8;
+      const baseR = opts.radius != null ? opts.radius : 0.05;
+      const rf = opts.radiusFn || (()=>1);
+      const namp = opts.noise || 0;
+      const frames = curve.computeFrenetFrames(tub, false);
+      const P = new THREE.Vector3(), positions=[], uvs=[], indices=[];
+      for(let i=0;i<=tub;i++){
+        const u = i/tub; curve.getPointAt(u, P);
+        const N = frames.normals[i], B = frames.binormals[i];
+        const r = baseR * rf(u);
+        for(let j=0;j<=rad;j++){
+          const ang = j/rad*Math.PI*2, sn = Math.sin(ang), cs = -Math.cos(ang);
+          let rr = r; if(namp) rr *= 1 + namp*fbm3(u*9, cs*2+u*3, sn*2);
+          const nx = cs*N.x + sn*B.x, ny = cs*N.y + sn*B.y, nz = cs*N.z + sn*B.z;
+          positions.push(P.x+rr*nx, P.y+rr*ny, P.z+rr*nz);
+          uvs.push(u, j/rad);
+        }
+      }
+      for(let i=1;i<=tub;i++){ for(let j=1;j<=rad;j++){
+        const a=(rad+1)*(i-1)+(j-1), b=(rad+1)*i+(j-1), c=(rad+1)*i+j, d=(rad+1)*(i-1)+j;
+        indices.push(a,b,d, b,c,d);
+      }}
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+      g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs,2));
+      g.setIndex(indices); g.computeVertexNormals();
+      return g;
+    }
+    // Merge a part's geometries into ONE BufferGeometry, wired as a single pickable mesh (keeps one-object-per-partKey).
+    function addMerged(part, geos){
+      const norm = geos.map(g => g.index ? g.toNonIndexed() : g);   // icosa is native non-indexed; convert the rest
+      const merged = mergeGeometries(norm, false) || norm[0];
+      addMesh(part, new THREE.Mesh(merged, part.m));
+    }
+    // Soma: teardrop/pyramid — organic blob whose top narrows and lifts into the apical shaft (not a smooth ellipsoid).
+    function makeSomaGeo(){
+      const g = new THREE.IcosahedronGeometry(0.5, 4);
+      const pos = g.attributes.position, v = new THREE.Vector3();
+      for(let i=0;i<pos.count;i++){
+        v.fromBufferAttribute(pos,i);
+        const n = v.clone().normalize();
+        v.multiplyScalar(1 + 0.10*fbm3(n.x*2.4+5, n.y*2.4+1, n.z*2.4+9));   // gentle organic wobble
+        const yn = v.y/0.5;
+        if(yn > 0){ const t = Math.min(1,yn); const k = 1 - 0.70*t*t; v.x*=k; v.z*=k; v.y += 0.34*t*t; }  // apex tapers up
+        else { v.x*=1.05; v.z*=1.05; v.y*=0.94; }                                                          // base widens/flattens
+        pos.setXYZ(i, v.x, v.y, v.z);
+      }
+      g.computeVertexNormals();
+      return g;
+    }
+    // Recursive dendrite branch: meanders between control points, tapers with branch order, jitters into true 3D,
+    // scatters tiny spines on the distal (2nd/3rd-gen) branches, and pushes every piece into `geos` for merging.
+    function dendriteBranch(dir, start, len, radius, gen, spread, geos, spineBudget){
       const d = dir.clone().normalize();
       const end = start.clone().addScaledVector(d, len);
-      const mid = start.clone().addScaledVector(d, len*0.5).addScaledVector(perp(d), len*0.14);
-      addMesh(part, tubeMesh([start, mid, end], radius, part.m));
+      const pA = perp(d), pB = new THREE.Vector3().crossVectors(d, pA).normalize();
+      const seed = start.x*3.1 + start.y*1.7 + start.z*2.3 + len*5;
+      const pts = [start.clone()];
+      for(let s=1;s<3;s++){ const f=s/3; const q = start.clone().addScaledVector(d, len*f);
+        q.addScaledVector(pA, Math.sin(f*3.3+seed)*len*0.13).addScaledVector(pB, Math.cos(f*2.7+seed*1.3)*len*0.11);
+        pts.push(q); }
+      pts.push(end);
+      const curve = new THREE.CatmullRomCurve3(pts);
+      const endScale = 0.62;   // within-branch taper; children start at radius*endScale so widths meet
+      geos.push(organicTube(curve, { radius, radiusFn:u=>1-(1-endScale)*u, noise:0.06, radial: gen>=2?8:6, segments: Math.max(14, Math.round(len*36)) }));
+      if(gen <= 1 && spineBudget.count < spineBudget.max){                       // spines only on thin distal branches
+        const nSp = 3 + Math.floor(Math.random()*4);
+        for(let s=0;s<nSp && spineBudget.count<spineBudget.max; s++){
+          const u = 0.2 + Math.random()*0.72, pt = curve.getPointAt(u), rr = radius*(1-(1-endScale)*u);
+          const ang = Math.random()*Math.PI*2;
+          const off = pA.clone().multiplyScalar(Math.cos(ang)).addScaledVector(pB, Math.sin(ang)).normalize();
+          const spR = 0.012 + Math.random()*0.008;                              // 0.012–0.020 spine head
+          const sph = new THREE.SphereGeometry(spR, 8, 6);
+          sph.translate(pt.x + off.x*(rr+spR*0.6), pt.y + off.y*(rr+spR*0.6), pt.z + off.z*(rr+spR*0.6));
+          geos.push(sph); spineBudget.count++;
+        }
+      }
       if(gen > 0){
-        const p = perp(d);
-        const a1 = d.clone().applyAxisAngle(p, 0.5).applyAxisAngle(d.clone(), 0).normalize();
-        const a2 = d.clone().applyAxisAngle(p, -0.55).normalize();
-        const a3 = d.clone().applyAxisAngle(new THREE.Vector3(0,0,1), 0.5).normalize();
-        dendrite(part, end, a1, len*0.7, radius*0.68, gen-1);
-        dendrite(part, end, a2, len*0.7, radius*0.68, gen-1);
-        if(gen === 2) dendrite(part, end, a3, len*0.6, radius*0.6, gen-1);
+        const nChildren = gen>=3 ? 2 : (Math.random()<0.5 ? 3 : 2);
+        for(let k=0;k<nChildren;k++){
+          const axis = pA.clone().applyAxisAngle(d, Math.random()*Math.PI*2);
+          let ang = spread*(0.45+Math.random()*0.7);
+          if(k===0 && gen>=2) ang = spread*0.28;                                 // one child continues the trunk
+          const nd2 = d.clone().applyAxisAngle(axis, ang).normalize();
+          dendriteBranch(nd2, end, len*0.72, radius*endScale, gen-1, spread*0.95, geos, spineBudget);
+        }
       } else {
-        addMesh(part, ball(end, radius*1.1, part.m)); // rounded tip
+        const tip = new THREE.SphereGeometry(radius*endScale*1.05, 8, 6);
+        tip.translate(end.x, end.y, end.z); geos.push(tip);                      // rounded tip
+      }
+    }
+    // Recursive axon terminal: fine, forward-biased telodendria ending in irregular boutons + a few boutons en passant.
+    function terminalBranch(dir, start, len, radius, gen, geos){
+      const d = dir.clone().normalize();
+      const end = start.clone().addScaledVector(d, len);
+      const pA = perp(d), pB = new THREE.Vector3().crossVectors(d, pA).normalize();
+      const seed = start.x*2.3 + start.z*1.9 + len*7;
+      const pts = [start.clone(),
+        start.clone().addScaledVector(d, len*0.5).addScaledVector(pA, Math.sin(seed)*len*0.1).addScaledVector(pB, Math.cos(seed*1.2)*len*0.08),
+        end];
+      const curve = new THREE.CatmullRomCurve3(pts);
+      geos.push(organicTube(curve, { radius, radiusFn:u=>1-0.4*u, noise:0.05, radial:6, segments:Math.max(12, Math.round(len*40)) }));
+      if(gen<=1 && Math.random()<0.6){                                           // bouton en passant on a passing branch
+        const pt = curve.getPointAt(0.5+Math.random()*0.3);
+        const b = organicBlob(0.03+Math.random()*0.015, 1, 0.30, 4);
+        b.translate(pt.x, pt.y, pt.z); geos.push(b);
+      }
+      if(gen > 0){
+        const nChildren = Math.random()<0.5 ? 3 : 2;
+        for(let k=0;k<nChildren;k++){
+          const axis = pA.clone().applyAxisAngle(d, Math.random()*Math.PI*2);
+          const ang = 0.5 + Math.random()*0.6;
+          const nd2 = d.clone().applyAxisAngle(axis, ang).normalize().lerp(d, 0.35).normalize();   // keep forward bias
+          terminalBranch(nd2, end, len*0.66, radius*0.72, gen-1, geos);
+        }
+      } else {
+        const bouton = organicBlob(0.05+Math.random()*0.03, 1, 0.32, 3);         // irregular terminal bouton
+        bouton.translate(end.x, end.y, end.z); geos.push(bouton);
       }
     }
 
     function buildNeuron(){
       neuron = new THREE.Group();
+      const R = Math.random;   // organic jitter (a non-deterministic look per load is fine)
 
-      // soma
+      // ---- soma: teardrop/pyramid, apex tapering up into the apical shaft ----
       const soma = makePart('soma');
-      const somaMesh = ball(new THREE.Vector3(0,0,0), 0.5, soma.m); somaMesh.scale.set(1.15,1.0,0.95);
-      addMesh(soma, somaMesh);
+      addMesh(soma, new THREE.Mesh(makeSomaGeo(), soma.m));
       neuron.add(soma.group);
 
-      // nucleus
+      // ---- nucleus (~47% of soma) + tiny darker nucleolus seen through the translucent soma ----
       const nuc = makePart('nucleus');
-      addMesh(nuc, ball(new THREE.Vector3(-0.03,0.02,0), 0.24, nuc.m));
+      const nucGeo = organicBlob(0.235, 3, 0.06, 2.6); nucGeo.translate(-0.02,-0.03,0.02);   // 0.235/0.5 ≈ 47%
+      addMesh(nuc, new THREE.Mesh(nucGeo, nuc.m));
+      const nlMat = nuc.m.clone(); nlMat.color = bioTone(nuc.region.color).multiplyScalar(0.42); nlMat.transmission = 0.12;
+      const nlGeo = organicBlob(0.06, 2, 0.12, 3); nlGeo.translate(-0.05,-0.06,0.05);          // nucleolus, inside the nucleus
+      addMesh(nuc, new THREE.Mesh(nlGeo, nlMat));
       neuron.add(nuc.group);
 
-      // dendrites (from soma surface, pointing up/left)
+      // ---- dendrites: ONE thick apical trunk (up) + a basal skirt (down/out) + spines, all merged ----
       const den = makePart('dendrites');
-      const dirs = [ new THREE.Vector3(-0.6,0.85,0.05), new THREE.Vector3(-0.95,0.4,0.25), new THREE.Vector3(-0.9,0.1,-0.3),
-                     new THREE.Vector3(-0.4,1.0,0.2), new THREE.Vector3(-0.8,0.65,-0.35), new THREE.Vector3(0.05,1.0,0.15) ];
-      dirs.forEach(dir => { const dn = dir.clone().normalize(); dendrite(den, dn.clone().multiplyScalar(0.48), dn, 0.95, 0.075, 2); });
+      const denGeos = []; const spineBudget = { count:0, max:44 };
+      dendriteBranch(new THREE.Vector3(0.05,1,0.06), new THREE.Vector3(0.02,0.6,0.0), 0.92, 0.12, 3, 0.55, denGeos, spineBudget);  // apical trunk
+      const basalDirs = [
+        new THREE.Vector3(-0.85,-0.5,0.18),  new THREE.Vector3(-0.5,-0.72,-0.5),
+        new THREE.Vector3(-0.15,-0.9,0.5),   new THREE.Vector3(0.1,-0.86,-0.5),
+        new THREE.Vector3(-0.92,-0.32,-0.32),new THREE.Vector3(-0.32,-0.62,0.72),
+        new THREE.Vector3(0.34,-0.8,0.25)
+      ];
+      basalDirs.forEach(dir => { const d = dir.clone().normalize(); dendriteBranch(d, d.clone().multiplyScalar(0.42), 0.55+R()*0.12, 0.07, 2, 0.9, denGeos, spineBudget); });
+      addMerged(den, denGeos);
       neuron.add(den.group);
 
-      // axon hillock (cone at +x of soma)
+      // ---- axon hillock: short tube smoothly tapering soma -> axon (no stuck-on cone) ----
       const hill = makePart('hillock');
-      const cone = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.5, 20), hill.m);
-      cone.position.set(0.42,-0.02,0); cone.rotation.z = -Math.PI/2;
-      cone.userData.baseColor = cone.material.color.clone(); cone.userData.partKey = 'hillock';
-      hill.meshes.push(cone); hill.group.add(cone);
+      const hillCurve = new THREE.CatmullRomCurve3([ new THREE.Vector3(0.30,-0.06,0.03), new THREE.Vector3(0.45,-0.03,0.0), new THREE.Vector3(0.55,-0.02,0) ]);
+      addMesh(hill, new THREE.Mesh(organicTube(hillCurve, { radius:0.19, radiusFn:u=>1-0.78*u, noise:0.04, radial:12, segments:22 }), hill.m));
       neuron.add(hill.group);
 
-      // axon (thin tube along the curve)
+      // ---- axon: thinnest, longest, most uniform process; faint distal taper (travels axonCurve for the fire anim) ----
       const ax = makePart('axon');
-      addMesh(ax, tubeMesh(axonPts, 0.07, ax.m));
+      addMesh(ax, new THREE.Mesh(organicTube(axonCurve, { radius:0.045, radiusFn:u=>1-0.2*u, noise:0.03, radial:8, segments:120 }), ax.m));
       neuron.add(ax.group);
 
-      // myelin sheath (fat segments over the axon)
+      // ---- myelin: long spindle internodes with a paranodal pinch to ~axon radius at each node ----
       const my = makePart('myelin');
+      const myGeos = [];
       myelinSegs.forEach(([t0,t1]) => {
-        const n = 10, pts = [];
+        const n = 14, pts = [];
         for(let i=0;i<=n;i++){ pts.push(axonCurve.getPointAt(t0 + (t1-t0)*i/n)); }
-        addMesh(my, tubeMesh(pts, 0.17, my.m));
+        const c = new THREE.CatmullRomCurve3(pts);
+        myGeos.push(organicTube(c, { radius:0.16, radiusFn:u=> 0.28 + 0.72*Math.pow(Math.sin(Math.PI*u),0.55), noise:0.05, radial:14, segments: Math.max(22, Math.round((t1-t0)*280)) }));
       });
+      addMerged(my, myGeos);
       neuron.add(my.group);
 
-      // nodes of Ranvier (thin bright bands in the gaps)
+      // ---- nodes of Ranvier: 4 thin BARE slivers at exposed-axon radius; own materials so the anim lights one at a time ----
       const nd = makePart('nodes');
       nodeTs.forEach(t => {
-        const p0 = axonCurve.getPointAt(Math.max(0,t-0.012)), p1 = axonCurve.getPointAt(Math.min(1,t+0.012));
-        addMesh(nd, tubeMesh([p0, axonCurve.getPointAt(t), p1], 0.095, nd.m));
+        const t0 = Math.max(0,t-0.011), t1 = Math.min(1,t+0.011);
+        const c = new THREE.CatmullRomCurve3([ axonCurve.getPointAt(t0), axonCurve.getPointAt(t), axonCurve.getPointAt(t1) ]);
+        addMesh(nd, new THREE.Mesh(organicTube(c, { radius:0.052, radiusFn:u=>1, noise:0.02, radial:8, segments:8 }), nd.m.clone()));
       });
       neuron.add(nd.group);
 
-      // axon terminals (branch at the end, boutons)
+      // ---- terminals: recursive telodendria -> irregular boutons + boutons en passant (not lollipops), merged ----
       const term = makePart('terminals');
+      const termGeos = [];
       const tip = axonCurve.getPointAt(1);
-      const tdirs = [ new THREE.Vector3(0.7,0.55,0.35), new THREE.Vector3(0.8,-0.1,-0.5), new THREE.Vector3(0.6,-0.7,0.2), new THREE.Vector3(0.75,-0.35,0.55), new THREE.Vector3(0.7,0.25,-0.4) ];
-      tdirs.forEach(dir => {
-        const d = dir.clone().normalize(); const end = tip.clone().addScaledVector(d, 0.75);
-        const mid = tip.clone().addScaledVector(d, 0.4).addScaledVector(perp(d), 0.08);
-        addMesh(term, tubeMesh([tip, mid, end], 0.05, term.m));
-        addMesh(term, ball(end, 0.11, term.m));
-      });
+      const tdirs = [ new THREE.Vector3(0.82,0.5,0.34), new THREE.Vector3(0.85,-0.16,-0.5), new THREE.Vector3(0.72,-0.6,0.26), new THREE.Vector3(0.76,-0.3,0.6), new THREE.Vector3(0.9,0.22,-0.3) ];
+      tdirs.forEach(dir => terminalBranch(dir.clone().normalize(), tip.clone(), 0.46, 0.05, 2, termGeos));
+      addMerged(term, termGeos);
       neuron.add(term.group);
 
       // scale + center to fit
@@ -374,28 +618,71 @@
     }
 
     // ---------- appearance resolver ----------
+    // Every visual state routes through here. Realistic = muted tissue at rest, code color blooms
+    // on select/hover. Labeled = every surface at its bright code color, highlight/hover on top.
     function refresh(){
       const selKey = state.selected;
+      const labeled = viewMode === 'labeled';
+      const something = !!selKey;
+      const GREY = new THREE.Color(0x515151);
       Object.keys(parts).forEach(k => {
-        const on = !selKey || k === selKey;
-        const emphasize = selKey && k === selKey;
+        const isSel = something && k === selKey;
+        const isHover = !something && state.hovered === k;
+        const isGhost = something && !isSel;
+        const damaged = state.damaged.has(k);
         parts[k].meshes.forEach(m => {
           if(m.userData.isImpulse) return;
-          const opacity = on ? 1 : 0.08;
+          const glow = m.userData.glowColor, bio = m.userData.baseColor;
+          const atRest = labeled ? glow : bio;                 // resting albedo depends on mode
+          const baseOp = m.userData.baseOpacity != null ? m.userData.baseOpacity : 1;
+          const baseTrans = m.userData.baseTransmission || 0;
+          const hasTrans = ('transmission' in m.material);
+
+          // opacity: non-selected parts dim but stay visible as tissue context (not ghosted to nothing)
+          const opacity = isGhost ? Math.min(baseOp, DIM_OP) : baseOp;
           const translucent = opacity < 0.999;
           m.material.transparent = translucent; m.material.opacity = opacity; m.material.depthWrite = !translucent;
-          m.material.color.copy(m.userData.baseColor);
-          if(state.damaged.has(k)){
-            m.material.color.lerp(new THREE.Color(0x515151), 0.8);   // greyed / dead
+
+          const col = m.material.color;
+          if(damaged){
+            col.copy(atRest).lerp(GREY, 0.85);
             m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = 0.12;
-          } else if(emphasize){ m.material.emissive.copy(m.userData.baseColor).multiplyScalar(0.5); m.material.emissiveIntensity = 0.5; m.material.envMapIntensity = 0.75; }
-          else { m.material.emissive.setHex(0x000000); m.material.envMapIntensity = translucent ? 0.06 : 0.5; }
+            if(hasTrans) m.material.transmission = 0;            // let grey/opacity actually show
+          } else if(isSel){
+            col.copy(atRest).lerp(glow, labeled ? 0 : EMPH_LERP);
+            m.material.emissive.copy(glow).multiplyScalar(0.45); m.material.emissiveIntensity = 0.55; m.material.envMapIntensity = 0.8;
+            if(hasTrans) m.material.transmission = baseTrans;
+          } else if(isHover){
+            col.copy(atRest).lerp(glow, labeled ? 0 : HOVER_LERP);
+            m.material.emissive.copy(glow).multiplyScalar(0.28); m.material.emissiveIntensity = 0.3; m.material.envMapIntensity = 0.6;
+            if(hasTrans) m.material.transmission = baseTrans;
+          } else if(isGhost){
+            col.copy(atRest).lerp(GHOST_DIM, 0.6);              // desaturate + dim into background tissue
+            m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = 0.18;
+            if(hasTrans) m.material.transmission = 0;            // transmission ignores opacity, so zero it to darken
+          } else {                                              // at rest
+            col.copy(atRest);
+            m.material.emissive.setHex(0x000000); m.material.emissiveIntensity = 0; m.material.envMapIntensity = translucent ? 0.3 : 0.5;
+            if(hasTrans) m.material.transmission = baseTrans;
+          }
         });
       });
       updateAutoRotate();
       needsRender = true;
     }
-    function updateAutoRotate(){ if(controls) controls.autoRotate = !rm.matches && !state.selected && !firing; }
+    function setHover(key){
+      const eff = (!state.selected && !firing) ? (key || null) : null;
+      if(state.hovered === eff) return;
+      state.hovered = eff; refresh();
+    }
+    function setViewMode(mode){
+      viewMode = mode;
+      const rb = document.getElementById('tool-realistic'), lb = document.getElementById('tool-labeled');
+      if(rb) rb.setAttribute('aria-pressed', String(mode === 'realistic'));
+      if(lb) lb.setAttribute('aria-pressed', String(mode === 'labeled'));
+      refresh();
+    }
+    function updateAutoRotate(){ if(!controls) return; if(SHOT){ controls.autoRotate = false; return; } controls.autoRotate = !rm.matches && !state.selected && !firing; }
 
     function partCenter(key){ const b = new THREE.Box3(); parts[key].meshes.forEach(m => b.expandByObject(m)); return b.getBoundingSphere(new THREE.Sphere()); }
     function framingDist(r){ return r / Math.sin(THREE.MathUtils.degToRad(camera.fov/2)); }
@@ -434,7 +721,7 @@
 
     function selectPart(region, opts){
       opts = opts || {}; if(!region) return;
-      state.selected = region.key;
+      state.selected = region.key; state.hovered = null;
       refresh();
       if(controls && parts[region.key]){
         const sph = partCenter(region.key); targetFocus.copy(sph.center);
@@ -466,15 +753,89 @@
       PARTS.forEach(r => { const b = document.createElement('button'); b.type='button'; b.innerHTML = '<span class="brain-legend__sw" style="background:'+r.color+'"></span>'+r.label; b.addEventListener('click', () => selectPart(r)); el.appendChild(b); });
     }
 
-    // ---------- fire: an action potential travels the axon ----------
+    // ---------- fire: an action potential HOPS node-to-node down the axon (saltatory) ----------
+    // Impulse blob sized to the new thin axon (r~0.045) instead of the old 0.34; it expands at each node.
     function makeImpulse(){
-      const g = new THREE.SphereGeometry(0.34, 20, 16);
+      const g = new THREE.SphereGeometry(0.08, 18, 14);
       const m = new THREE.MeshBasicMaterial({ color:0xfff4c2 });
       impulse = new THREE.Mesh(g, m); impulse.userData.isImpulse = true; impulse.visible = false;
       impulse.renderOrder = 5;
       neuron.add(impulse);
-      const halo = new THREE.Mesh(new THREE.SphereGeometry(0.6,20,16), new THREE.MeshBasicMaterial({ color:0xffdd66, transparent:true, opacity:0.3, depthWrite:false }));
-      impulse.add(halo);
+      const halo = new THREE.Mesh(new THREE.SphereGeometry(0.15,18,14), new THREE.MeshBasicMaterial({ color:0xffdd66, transparent:true, opacity:0.3, depthWrite:false }));
+      impulse.add(halo); impulse.userData.halo = halo;
+    }
+    // Reset the blob to its small, travelling look (called on leaps + when the fire ends).
+    function resetImpulse(){
+      if(!impulse) return;
+      impulse.scale.setScalar(1);
+      impulse.material.color.setHex(0xfff4c2);
+      const halo = impulse.userData.halo;
+      if(halo){ halo.scale.setScalar(1); halo.material.opacity = 0.3; halo.material.color.setHex(0xffdd66); }
+    }
+    // Piecewise saltatory position along the axon. Given ms into the axon phase, returns where the
+    // impulse is (axon-curve T), whether it's mid-leap, and — when dwelling — which node + dwell progress.
+    // Sequence: leap 0->node0, dwell, leap ->node1, dwell, ... leap ->node3, dwell, leap ->terminals.
+    function saltAt(e){
+      const stops = SALT_STOPS, nN = nodeTs.length;
+      for(let k=0;k<stops.length-1;k++){
+        if(e < SALT_LEAP){                                   // fast internode leap
+          const p = e/SALT_LEAP, ease = p*p*(3-2*p);
+          return { t: stops[k] + (stops[k+1]-stops[k])*ease, node:-1, dwellP:0, leaping:true, snapT: stops[k+1] };
+        }
+        e -= SALT_LEAP;
+        if(k < nN){                                          // arrived at node k -> dwell/flash
+          if(e < SALT_DWELL) return { t: stops[k+1], node:k, dwellP: e/SALT_DWELL, leaping:false };
+          e -= SALT_DWELL;
+        }
+      }
+      return { t: 1, node:-1, dwellP:0, leaping:false };
+    }
+
+    // ---------- live voltage gauge (SVG action-potential trace in the toolbar) ----------
+    function vgX(g){ return VG_X0 + g*(VG_X1-VG_X0); }
+    function vgY(v){ return VG_YTOP + (VG_VMAX - v)/(VG_VMAX-VG_VMIN)*(VG_YBOT-VG_YTOP); }
+    // Membrane voltage as a function of overall fire progress g (0..1), phase boundaries matched to the
+    // fire timeline: EPSP rise -> threshold at the hillock -> spike to +30 -> repolarize/undershoot -> rest.
+    function apVoltage(g){
+      const pD = F_DEND / F_DUR;                             // end of dendrite summation
+      const pS = (F_DEND + F_SOMA) / F_DUR;                  // end of soma phase = threshold crossing (hillock)
+      const pA = (F_DEND + F_SOMA + F_AXON) / F_DUR;         // end of axon travel
+      const upEnd = pS + 0.12*(pA - pS);                     // steep upstroke sits right at the hillock decision
+      if(g <= 0)     return -70;
+      if(g < pD)     return -70 + 8*(g/pD);                  // -70 -> -62 (EPSPs summate)
+      if(g < pS)     return -62 + 7*((g-pD)/(pS-pD));        // -62 -> -55 (climb to threshold)
+      if(g < upEnd)  return -55 + 85*((g-pS)/(upEnd-pS));    // -55 -> +30 (all-or-nothing spike)
+      if(g < pA)     return 30 - 110*((g-upEnd)/(pA-upEnd)); // +30 -> -80 (repolarize + undershoot)
+      return -80 + 10*Math.min(1,(g-pA)/(1-pA));             // -80 -> -70 (recovery to rest)
+    }
+    function initGauge(){
+      const svg = document.getElementById('volt-gauge'); if(!svg) return;
+      const base = document.getElementById('vg-base'), thr = document.getElementById('vg-thr'), rest = document.getElementById('vg-rest');
+      const N = 90; let d = ''; vgBasePts = [];
+      for(let i=0;i<=N;i++){ const g=i/N, x=vgX(g), y=vgY(apVoltage(g)); vgBasePts.push([g,x,y]); d += (i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1); }
+      if(base) base.setAttribute('d', d);
+      if(thr){ const y=vgY(-55).toFixed(1); thr.setAttribute('x1',VG_X0); thr.setAttribute('x2',VG_X1); thr.setAttribute('y1',y); thr.setAttribute('y2',y); }
+      if(rest){ const y=vgY(-70).toFixed(1); rest.setAttribute('x1',VG_X0); rest.setAttribute('x2',VG_X1); rest.setAttribute('y1',y); rest.setAttribute('y2',y); }
+      resetGauge();
+    }
+    function updateGauge(g){
+      if(!vgBasePts) return;
+      const live = document.getElementById('vg-live'), dot = document.getElementById('vg-dot'), read = document.getElementById('vg-read');
+      g = Math.max(0, Math.min(1, g));
+      let d = '';
+      for(let i=0;i<vgBasePts.length;i++){ const p=vgBasePts[i]; if(p[0] > g) break; d += (i?'L':'M')+p[1].toFixed(1)+' '+p[2].toFixed(1); }
+      const v = apVoltage(g), x = vgX(g), y = vgY(v);
+      d += (d?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+      if(live) live.setAttribute('d', d);
+      if(dot){ dot.setAttribute('cx', x.toFixed(1)); dot.setAttribute('cy', y.toFixed(1)); }
+      if(read){ const mv = Math.round(v); read.textContent = (mv<0?'−':'')+Math.abs(mv)+' mV'; }
+    }
+    function resetGauge(){
+      const live=document.getElementById('vg-live'), dot=document.getElementById('vg-dot'), read=document.getElementById('vg-read');
+      const x=vgX(0), y=vgY(-70);
+      if(live) live.setAttribute('d','M'+x.toFixed(1)+' '+y.toFixed(1));
+      if(dot){ dot.setAttribute('cx',x.toFixed(1)); dot.setAttribute('cy',y.toFixed(1)); }
+      if(read) read.textContent = '−70 mV';
     }
     function fire(){
       if(!neuron || firing) return;
@@ -493,45 +854,64 @@
       needsRender = true;
     }
     function tickFire(now){
-      const DUR = 4600; // ms
-      let t = (now - fireStart) / DUR;
-      if(t >= 1){ endFire(); return; }
-      // phases: 0-0.15 dendrites glow, 0.15-0.25 soma+hillock, 0.25-0.9 down axon, 0.9-1 terminals
-      const glow = (key, amt) => parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isImpulse) return; m.material.emissive.copy(m.userData.baseColor); m.material.emissiveIntensity = amt; });
-      const clear = (key) => parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isImpulse) return; m.material.emissiveIntensity = 0; m.material.emissive.setHex(0x000000); });
-      ['dendrites','soma','nucleus','hillock','axon','myelin','nodes','terminals'].forEach(clear);
-      if(t < 0.16){ glow('dendrites', 1.7*(1 - Math.abs(t-0.08)/0.08)); impulse.visible=false; }
-      else if(t < 0.26){
-        glow('soma', 1.8); glow('hillock', 2.2); impulse.visible=false;
-        if(fireBlock === 0){                           // hillock/soma damaged: can't even fire
+      const elapsed = now - fireStart;
+      if(elapsed >= F_DUR){ endFire(); return; }
+      updateGauge(elapsed / F_DUR);                    // voltage trace advances with the impulse
+      const reduce = rm.matches;                       // reduced motion: snap/flash, no smooth glide
+      const clearGlow = (key) => parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isImpulse) return; m.material.emissiveIntensity = 0; m.material.emissive.setHex(0x000000); });
+      const setGlow = (key, amt) => parts[key] && parts[key].meshes.forEach(m => { if(m.userData.isImpulse) return; m.material.emissive.copy(m.userData.glowColor); m.material.emissiveIntensity = amt; });
+      ['dendrites','soma','nucleus','hillock','axon','myelin','nodes','terminals'].forEach(clearGlow);
+
+      if(elapsed < F_DEND){                            // 1) dendrites receive
+        const u = elapsed / F_DEND;
+        setGlow('dendrites', 1.7*(1 - Math.abs(u-0.5)*1.4));
+        impulse.visible = false;
+      } else if(elapsed < F_DEND + F_SOMA){            // 2) soma sums -> hillock crosses threshold
+        setGlow('soma', 1.8); setGlow('nucleus', 0.7); setGlow('hillock', 2.2);
+        impulse.visible = false;
+        if(fireBlock === 0){                           // hillock/soma damaged: can't even reach threshold
           parts.hillock.meshes.forEach(m => { m.material.emissive.setHex(0xd93030); m.material.emissiveIntensity = 2.6; });
           fireStatus.textContent = "Signal can't start";
-          if(t > 0.22) endFire();
+          if(elapsed > F_DEND + F_SOMA*0.7){ endFire(); }
           needsRender = true; return;
         }
-      }
-      else if(t < 0.9){
-        const at = (t - 0.26) / 0.64;                 // 0..1 along axon
-        if(fireBlock != null && fireBlock > 0 && at >= fireBlock){   // demyelination / cut axon: signal stalls
-          impulse.visible = true; impulse.position.copy(axonCurve.getPointAt(fireBlock));
+      } else if(elapsed < F_DEND + F_SOMA + F_AXON){   // 3) saltatory hops node-to-node down the axon
+        const s = saltAt(elapsed - (F_DEND + F_SOMA));
+        setGlow('myelin', 0.3);
+        if(fireBlock != null && fireBlock > 0 && s.t >= fireBlock){   // demyelination / cut axon: signal stalls
+          impulse.visible = true; resetImpulse();
+          impulse.position.copy(axonCurve.getPointAt(fireBlock));
           impulse.material.color.setHex(0xd93030);
           fireStatus.textContent = 'Signal blocked';
-          if(at >= fireBlock + 0.08 || t > 0.86) endFire();
+          if(s.t >= fireBlock + 0.1 || elapsed > F_DEND + F_SOMA + F_AXON*0.9){ endFire(); }
           needsRender = true; return;
         }
-        impulse.visible = true; impulse.position.copy(axonCurve.getPointAt(at));
-        // saltatory: light the node the impulse is nearest to
-        nodeTs.forEach((nt, i) => { if(Math.abs(at - nt) < 0.06){ parts.nodes.meshes[i] && (parts.nodes.meshes[i].material.emissive.copy(parts.nodes.meshes[i].userData.baseColor), parts.nodes.meshes[i].material.emissiveIntensity = 2.4); } });
-        glow('myelin', 0.35);
-      } else {
-        impulse.visible = false;
+        impulse.visible = true;
+        const posT = reduce ? (s.leaping ? s.snapT : s.t) : s.t;      // snap over internodes when reduced-motion
+        impulse.position.copy(axonCurve.getPointAt(Math.min(1, posT)));
+        if(s.node >= 0){                               // dwell: bright expanding flash at this node
+          const fa = Math.sin(s.dwellP*Math.PI);       // 0 -> 1 -> 0 across the dwell
+          const nodeMesh = parts.nodes.meshes[s.node];
+          const gc = (nodeMesh && nodeMesh.userData.glowColor) || new THREE.Color(0xffdd66);
+          if(nodeMesh){ nodeMesh.material.emissive.copy(gc); nodeMesh.material.emissiveIntensity = 0.6 + 3.4*fa; }
+          impulse.material.color.copy(gc).lerp(new THREE.Color(0xffffff), 0.35);
+          impulse.scale.setScalar(1 + 0.5*fa);
+          const halo = impulse.userData.halo;
+          if(halo){ halo.scale.setScalar(1 + 2.4*s.dwellP); halo.material.opacity = 0.42*(1 - 0.85*s.dwellP); halo.material.color.copy(gc); }
+        } else {                                       // mid-leap: small, fast, bright bead
+          resetImpulse();
+        }
+      } else {                                         // 4) terminals: neurotransmitter release
+        impulse.visible = false; resetImpulse();
+        const u = (elapsed - (F_DEND + F_SOMA + F_AXON)) / F_TERM;
         if(fireNoRelease){ fireStatus.textContent = 'No neurotransmitter released'; }
-        else glow('terminals', 2.4*(1 - (t-0.9)/0.1));      // terminals flash = neurotransmitter release
+        else { setGlow('terminals', 2.4*(1 - u)); }
       }
       needsRender = true;
     }
     function endFire(){
-      firing = false; if(impulse){ impulse.visible = false; impulse.material.color.setHex(0xfff4c2); }
+      firing = false; if(impulse){ impulse.visible = false; resetImpulse(); }
+      resetGauge();
       setTimeout(() => { if(!firing) fireStatus.textContent = ''; }, 1400);   // let block/failure messages linger
       refresh();                 // restore normal appearance (keeps damaged parts greyed)
       updateAutoRotate();
@@ -568,8 +948,9 @@
         renderer.domElement.style.cursor = m ? 'pointer' : 'grab';
         if(m && m.userData.partKey){ const rect = renderer.domElement.getBoundingClientRect(); tooltipEl.textContent = byKey[m.userData.partKey].label; tooltipEl.style.left = (e.clientX-rect.left)+'px'; tooltipEl.style.top = (e.clientY-rect.top)+'px'; tooltipEl.style.opacity='1'; }
         else tooltipEl.style.opacity = '0';
+        setHover(m && m.userData.partKey ? m.userData.partKey : null);
       });
-      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; });
+      renderer.domElement.addEventListener('pointerleave', () => { tooltipEl.style.opacity = '0'; setHover(null); });
       renderer.domElement.addEventListener('keydown', e => {
         if(e.key === 'Escape') resetView();
         else if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); cycle(1); }
@@ -582,11 +963,63 @@
     document.getElementById('tool-fire').addEventListener('click', fire);
     document.getElementById('tool-fit').addEventListener('click', () => { if(state.selected) defocus(); else frameAll(); });
     document.getElementById('tool-reset').addEventListener('click', resetView);
+    document.getElementById('tool-realistic').addEventListener('click', () => setViewMode('realistic'));
+    document.getElementById('tool-labeled').addEventListener('click', () => setViewMode('labeled'));
 
-    function onResize(){ if(!renderer) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); needsRender = true; }
+    function onResize(){ if(!renderer) return; if(SHOT) return; const w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w||!h) return; renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix(); setViewBias(infoEl.classList.contains('is-visible')); needsRender = true; }
     if(window.ResizeObserver){ new ResizeObserver(onResize).observe(stageEl); }
     addEventListener('resize', onResize);
     rm.addEventListener('change', () => { updateAutoRotate(); needsRender = true; });
+
+    // ---------- dev-only preview-card export ( ?shot=1 ) ----------
+    // Renders a TRANSPARENT, fixed-size PNG of the rebuilt neuron for img/neuron-preview.png.
+    // Everything here runs only when SHOT is true; the normal explorer path never enters it.
+    // Re-tint every part toward its code color at `strength` (reuses the same baseColor/glowColor
+    // userData + bio->code lerp the select branch uses) so the thumbnail reads as upgraded tissue
+    // yet stays legible at card size instead of a grey blob.
+    function shotTintAll(strength){
+      Object.keys(parts).forEach(k => parts[k].meshes.forEach(m => {
+        if(m.userData.isImpulse || m.userData.isParticle) return;
+        const glow = m.userData.glowColor, bio = m.userData.baseColor;
+        if(!glow || !bio) return;
+        m.material.color.copy(bio).lerp(glow, strength);
+        m.material.emissive.copy(glow).multiplyScalar(0.18); m.material.emissiveIntensity = 0.22;   // gentle all-parts rim
+      }));
+    }
+    // Canonical hero pose: near side-on view (faint 3/4 + slight elevation) showing the whole cell —
+    // dendrites, soma, hillock, axon, myelin/nodes, terminals — framed to fill the card aspect + padding.
+    function shotPose(aspect){
+      const box = new THREE.Box3().setFromObject(neuron);
+      const center = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
+      const dir = new THREE.Vector3(0.05, 0.10, 1).normalize();
+      const vHalf = THREE.MathUtils.degToRad(camera.fov/2), hHalf = Math.atan(Math.tan(vHalf)*aspect);
+      const dV = (size.y/2)/Math.tan(vHalf), dH = (size.x/2)/Math.tan(hHalf);
+      const dist = Math.max(dV, dH)*1.14 + size.z/2;
+      controls.target.copy(center); camera.up.set(0,1,0);
+      camera.position.copy(center).addScaledVector(dir, dist); camera.lookAt(center);
+      camera.updateProjectionMatrix(); controls.update();
+    }
+    function scheduleShot(){
+      const W = 1600, H = 880;                                         // neuron preview: landscape ~1.8:1
+      state.selected = null; state.hovered = null; state.damaged.clear();
+      viewMode = 'realistic';
+      if(controls){ controls.autoRotate = false; controls.enableDamping = false; }
+      scene.background = null; renderer.setClearColor(0x000000, 0);    // transparent capture
+      renderer.setPixelRatio(2); renderer.setSize(W, H, false);        // fixed export size @ DPR 2 (buffer 3200x1760)
+      camera.clearViewOffset(); camera.aspect = W/H; camera.updateProjectionMatrix();
+      shotPose(W/H);
+      refresh(); shotTintAll(0.35);                                    // realistic rest, then ~0.35 re-tint on ALL parts
+      const capture = () => {
+        if(shotDone) return; shotDone = true;
+        renderer.render(scene, camera);
+        window.__shotPNG = renderer.domElement.toDataURL('image/png');
+        console.log('SHOT_READY ' + window.__shotPNG.length);
+      };
+      const settle = () => requestAnimationFrame(() => { renderer.render(scene, camera);
+        requestAnimationFrame(() => requestAnimationFrame(capture)); });   // let PMREM/env + a couple frames settle
+      if(document.fonts && document.fonts.ready){ document.fonts.ready.then(settle); } else { settle(); }
+    }
+    if(SHOT && webglOk()) scheduleShot();
 
     function animate(){
       requestAnimationFrame(animate);
