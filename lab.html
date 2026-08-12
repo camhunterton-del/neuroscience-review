@@ -3030,6 +3030,320 @@
       <div class="bench-group">
         <h2 class="bench-section-kicker">Maps and methods</h2>
         <div class="bench-grid">
+          <!-- Companion to the peptides deep dive (Aug 12 2026) -->
+          <style>
+
+            .d-appetite-switch{
+              --ground:#08110f; --panel:#0d1a17; --panel-2:#102420; --panel-3:#0a1613; --line:#20322e; --line-2:#2c433d;
+              --ink:#eef6f2; --soft:#b3c6bf; --faint:#8ea69e;
+              --teal:#37d3b7; --teal-bright:#77f4dd; --teal-deep:#0f3630;
+              --hunger:#e79a45; --hunger-bright:#f4b869; --hunger-deep:#3a2410;
+              --reward:#b98be0; --reward-bright:#d3b3f2; --reward-deep:#2a1c3a;
+              --nausea:#df6b5c; --nausea-deep:#3a1f1b;
+              --serif:Georgia,"Times New Roman",serif;
+              --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+              --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+            }
+            .d-appetite-switch *{box-sizing:border-box}
+            .d-appetite-switch{background:radial-gradient(130% 90% at 72% -10%,#0c1a17 0%,var(--ground) 62%);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;border-radius:16px;overflow:hidden}
+            .d-appetite-switch .wrap{max-width:940px;margin:0 auto;padding:clamp(26px,5vw,54px) clamp(16px,4vw,30px) 70px}
+
+            .d-appetite-switch .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin:0 0 13px}
+            .d-appetite-switch .aps-title{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,5.6vw,2.9rem);line-height:1.02;letter-spacing:-.02em;margin:0;text-wrap:balance}
+            .d-appetite-switch .tagline{font-family:var(--serif);font-size:clamp(1rem,2.2vw,1.18rem);color:var(--soft);max-width:56ch;margin:13px 0 0}
+
+            .d-appetite-switch .modes{margin:26px 0 0;display:inline-flex;background:var(--panel-3);border:1px solid var(--line);border-radius:12px;padding:5px;gap:4px;flex-wrap:wrap}
+            .d-appetite-switch .mode-btn{appearance:none;border:0;background:transparent;color:var(--soft);font-family:var(--sans);font-size:.92rem;font-weight:600;padding:9px 16px;border-radius:8px;cursor:pointer;transition:background .25s,color .25s;letter-spacing:-.01em}
+            .d-appetite-switch .mode-btn small{display:block;font-family:var(--mono);font-weight:400;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:2px}
+            .d-appetite-switch .mode-btn[aria-pressed="true"]{background:var(--teal-deep);color:var(--teal-bright)}
+            .d-appetite-switch .mode-btn[aria-pressed="true"] small{color:var(--teal)}
+            .d-appetite-switch .mode-btn:focus-visible{outline:2px solid var(--teal-bright);outline-offset:2px}
+
+            .d-appetite-switch .grid{margin:22px 0 0;display:grid;grid-template-columns:1fr;gap:18px}
+            @media(min-width:820px){.d-appetite-switch .grid{grid-template-columns:1.55fr 1fr}}
+
+            .d-appetite-switch .panel{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:16px;overflow:hidden}
+            .d-appetite-switch .map-wrap{padding:6px 6px 0}
+            .d-appetite-switch .map{display:block;width:100%;height:auto}
+
+            .d-appetite-switch .region{fill:var(--panel-3);stroke:var(--line-2);stroke-width:1;rx:12}
+            .d-appetite-switch .region-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;fill:var(--faint)}
+            .d-appetite-switch .edge{fill:none;stroke:var(--line-2);stroke-width:1.6;transition:stroke .5s,opacity .5s;opacity:.5}
+            .d-appetite-switch .edge.dash{stroke-dasharray:3 6}
+            .d-appetite-switch .edge.hot{stroke:var(--teal);opacity:.8}
+            .d-appetite-switch .edge.hot-r{stroke:var(--reward);opacity:.8}
+            .d-appetite-switch .e-label{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;fill:var(--faint);transition:fill .5s}
+
+            .d-appetite-switch .node{cursor:pointer}
+            .d-appetite-switch .node .body{transition:fill .5s,stroke .5s,opacity .5s}
+            .d-appetite-switch .node .ring{fill:none;stroke-width:2;opacity:0;transition:opacity .5s}
+            .d-appetite-switch .node .cap{font-family:var(--sans);font-size:14px;font-weight:600;fill:var(--ink);pointer-events:none}
+            .d-appetite-switch .node .sub{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;fill:var(--soft);pointer-events:none}
+            .d-appetite-switch .node:hover .body{stroke:var(--teal-bright)}
+            .d-appetite-switch .node.sel .ring{opacity:1}
+            .d-appetite-switch .node:focus .ring{opacity:1}
+            .d-appetite-switch .node:focus-visible{outline:none}
+            .d-appetite-switch .node:focus-visible .ring{opacity:1;stroke-dasharray:2 3}
+
+            .d-appetite-switch .n-neutral .body{fill:#123029;stroke:#2f4a43}
+            .d-appetite-switch .n-hunger  .body{fill:var(--hunger-deep);stroke:var(--hunger)}
+            .d-appetite-switch .n-hunger  .ring{stroke:var(--hunger)}
+            .d-appetite-switch .n-teal    .body{fill:var(--teal-deep);stroke:var(--teal)}
+            .d-appetite-switch .n-teal    .ring{stroke:var(--teal)}
+            .d-appetite-switch .n-reward  .body{fill:var(--reward-deep);stroke:var(--reward)}
+            .d-appetite-switch .n-reward  .ring{stroke:var(--reward)}
+            .d-appetite-switch .glow{opacity:0;transition:opacity .6s}
+
+            .d-appetite-switch .flow{opacity:0;transition:opacity .4s}
+            .d-appetite-switch .flow.show{opacity:1}
+            .d-appetite-switch .flow circle{fill:var(--teal-bright)}
+            .d-appetite-switch .flow.reward circle{fill:var(--reward-bright)}
+
+            .d-appetite-switch .info{padding:20px clamp(16px,3vw,22px);display:flex;flex-direction:column;min-height:100%}
+            .d-appetite-switch .info__tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin:0 0 8px}
+            .d-appetite-switch .info__title{font-family:var(--serif);font-size:1.28rem;font-weight:600;margin:0 0 8px;color:var(--ink);letter-spacing:-.01em}
+            .d-appetite-switch .info__body{font-size:.94rem;color:var(--soft);margin:0}
+            .d-appetite-switch .info__hint{margin-top:auto;padding-top:16px;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;color:var(--faint)}
+
+            .d-appetite-switch .dash{margin:18px 0 0;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:8px clamp(12px,2.5vw,20px) 16px}
+            .d-appetite-switch .dash__row{display:grid;grid-template-columns:1fr;gap:0}
+            @media(min-width:640px){.d-appetite-switch .dash__row{grid-template-columns:1fr 1fr;column-gap:34px}}
+            .d-appetite-switch .gauge{padding:13px 0;border-bottom:1px solid var(--line)}
+            .d-appetite-switch .gauge__top{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+            .d-appetite-switch .gauge__name{color:var(--soft)}
+            .d-appetite-switch .gauge__val{color:var(--ink);font-variant-numeric:tabular-nums}
+            .d-appetite-switch .track{margin-top:8px;height:9px;border-radius:99px;background:#0a1613;border:1px solid var(--line);overflow:hidden}
+            .d-appetite-switch .fill{height:100%;width:50%;border-radius:99px;transition:width .9s cubic-bezier(.4,0,.2,1),background .5s}
+            .d-appetite-switch .f-hunger{background:linear-gradient(90deg,var(--hunger-deep),var(--hunger-bright))}
+            .d-appetite-switch .f-teal{background:linear-gradient(90deg,var(--teal-deep),var(--teal-bright))}
+            .d-appetite-switch .f-reward{background:linear-gradient(90deg,var(--reward-deep),var(--reward-bright))}
+            .d-appetite-switch .f-nausea{background:linear-gradient(90deg,var(--nausea-deep),var(--nausea))}
+
+            .d-appetite-switch .explain{margin:20px 0 0;font-size:1.02rem;color:var(--ink);max-width:70ch;min-height:3em;transition:opacity .3s}
+            .d-appetite-switch .explain b{color:var(--teal-bright);font-weight:600}
+            .d-appetite-switch .explain .hot{color:var(--hunger-bright);font-weight:600}
+            .d-appetite-switch .explain .rew{color:var(--reward-bright);font-weight:600}
+            .d-appetite-switch .caveat{margin:20px 0 0;padding-top:15px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.72rem;line-height:1.75;letter-spacing:.02em;color:var(--faint);max-width:74ch}
+
+            @media (prefers-reduced-motion: reduce){.d-appetite-switch *{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+          </style>
+          <div class="d-appetite-switch" id="appetite-switch" data-mode="base" style="grid-column:1 / -1">
+            <div class="wrap">
+              <p class="kicker">Weight drugs &middot; the real target</p>
+              <h3 class="aps-title">The appetite switch</h3>
+              <p class="tagline">Everyone says the weight drugs work on your stomach. Trace the real signal, and tap any part of the circuit to see what it does.</p>
+
+              <div class="modes" role="group" aria-label="Signal source">
+                <button class="mode-btn" data-mode="base" aria-pressed="true">Baseline<small>no GLP-1</small></button>
+                <button class="mode-btn" data-mode="meal" aria-pressed="false">A meal<small>your own GLP-1</small></button>
+                <button class="mode-btn" data-mode="drug" aria-pressed="false">The drug<small>semaglutide</small></button>
+              </div>
+
+              <div class="grid">
+                <div class="panel">
+                  <div class="map-wrap">
+                    <svg class="map" id="aps-map" viewBox="0 0 660 600" role="group" aria-label="Signalling map from gut to the brain's appetite and reward circuits. Tap a node to read what it does.">
+                      <defs>
+                        <marker id="aps-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--line-2)"/></marker>
+                      </defs>
+
+                      <rect class="region" x="300" y="44" width="336" height="176" rx="13"/>
+                      <text class="region-label" x="312" y="64">Hypothalamus</text>
+                      <rect class="region" x="300" y="258" width="150" height="150" rx="13"/>
+                      <text class="region-label" x="312" y="278">Brainstem</text>
+                      <rect class="region" x="54" y="440" width="340" height="120" rx="13"/>
+                      <text class="region-label" x="66" y="462">Reward system</text>
+
+                      <path class="edge" data-route="vagus" d="M118 300 C 200 300, 280 305, 349 308" marker-end="url(#aps-ah)"/>
+                      <text class="e-label" data-route="vagus" x="210" y="290">vagus nerve</text>
+                      <path class="edge dash" data-route="blood" d="M118 328 C 190 372, 270 372, 335 358" marker-end="url(#aps-ah)"/>
+                      <text class="e-label" data-route="blood" x="205" y="392">bloodstream</text>
+                      <path class="edge" data-route="core" d="M372 282 C 366 240, 366 214, 366 196" marker-end="url(#aps-ah)"/>
+                      <path class="edge" data-route="core" d="M383 110 C 430 114, 458 116, 480 118" marker-end="url(#aps-ah)"/>
+                      <text class="e-label" data-route="core" x="432" y="99">&#945;-MSH</text>
+                      <path class="edge" data-route="core" d="M365 126 L 365 147"/>
+                      <path class="edge dash" data-route="reward" d="M352 372 C 250 400, 178 440, 150 476" marker-end="url(#aps-ah)"/>
+                      <path class="edge" data-route="out" d="M518 120 C 535 120, 545 120, 554 120" marker-end="url(#aps-ah)"/>
+                      <text class="e-label" x="560" y="124">eat less</text>
+
+                      <g class="flow" id="aps-flow-vagus">
+                        <circle r="4"><animateMotion dur="2.1s" repeatCount="indefinite" path="M118 300 C 200 300, 280 305, 349 308"/></circle>
+                        <circle r="4"><animateMotion dur="2.1s" begin="0.7s" repeatCount="indefinite" path="M118 300 C 200 300, 280 305, 349 308"/></circle>
+                        <circle r="4"><animateMotion dur="2.1s" begin="1.4s" repeatCount="indefinite" path="M118 300 C 200 300, 280 305, 349 308"/></circle>
+                      </g>
+                      <g class="flow" id="aps-flow-blood">
+                        <circle r="4"><animateMotion dur="2.4s" repeatCount="indefinite" path="M118 328 C 190 372, 270 372, 335 358"/></circle>
+                        <circle r="4"><animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite" path="M118 328 C 190 372, 270 372, 335 358"/></circle>
+                        <circle r="4"><animateMotion dur="2.4s" begin="1.6s" repeatCount="indefinite" path="M118 328 C 190 372, 270 372, 335 358"/></circle>
+                      </g>
+                      <g class="flow" id="aps-flow-core">
+                        <circle r="3.6"><animateMotion dur="1.9s" repeatCount="indefinite" path="M372 282 C 366 240, 366 214, 366 196"/></circle>
+                        <circle r="3.6"><animateMotion dur="1.9s" begin="0.9s" repeatCount="indefinite" path="M372 282 C 366 240, 366 214, 366 196"/></circle>
+                      </g>
+                      <g class="flow reward" id="aps-flow-reward">
+                        <circle r="3.6"><animateMotion dur="2.6s" repeatCount="indefinite" path="M352 372 C 250 400, 178 440, 150 476"/></circle>
+                        <circle r="3.6"><animateMotion dur="2.6s" begin="1.3s" repeatCount="indefinite" path="M352 372 C 250 400, 178 440, 150 476"/></circle>
+                      </g>
+
+                      <g class="node n-neutral" data-node="gut" tabindex="0" role="button" aria-label="Gut L-cells">
+                        <circle class="ring" cx="90" cy="300" r="34"/>
+                        <circle class="body" cx="90" cy="300" r="28"/>
+                        <text class="cap" x="90" y="352" text-anchor="middle">Gut L-cells</text>
+                        <text class="sub" x="90" y="366" text-anchor="middle">release GLP-1</text>
+                      </g>
+                      <g class="node n-neutral" data-node="dpp4" tabindex="0" role="button" aria-label="DPP-4 enzyme">
+                        <rect x="207" y="273" width="44" height="48" fill="transparent"/>
+                        <rect class="ring" x="209" y="285" width="40" height="24" rx="6"/>
+                        <rect class="body" x="214" y="290" width="30" height="14" rx="4"/>
+                        <text class="sub" x="229" y="280" text-anchor="middle">DPP-4</text>
+                      </g>
+                      <g class="node n-neutral" data-node="nts" tabindex="0" role="button" aria-label="NTS relay">
+                        <circle class="ring" cx="375" cy="300" r="24"/>
+                        <circle class="body" cx="375" cy="300" r="18"/>
+                        <text class="cap" x="401" y="304" text-anchor="start">NTS</text>
+                      </g>
+                      <g class="node n-neutral" data-node="ap" tabindex="0" role="button" aria-label="Area postrema">
+                        <circle class="ring" cx="360" cy="352" r="24"/>
+                        <circle class="body" cx="360" cy="352" r="18"/>
+                        <text class="cap" x="360" y="392" text-anchor="middle">Area postrema</text>
+                        <text class="sub" x="360" y="405" text-anchor="middle">the way in &middot; nausea</text>
+                      </g>
+                      <g class="node n-teal" data-node="pomc" tabindex="0" role="button" aria-label="POMC satiety neurons">
+                        <circle class="glow" cx="365" cy="106" r="30" fill="var(--teal)"/>
+                        <circle class="ring" cx="365" cy="106" r="24"/>
+                        <circle class="body" cx="365" cy="106" r="18"/>
+                        <text class="cap" x="365" y="83" text-anchor="middle">POMC</text>
+                        <text class="sub" x="365" y="141" text-anchor="middle">fullness</text>
+                      </g>
+                      <g class="node n-hunger" data-node="agrp" tabindex="0" role="button" aria-label="AgRP hunger neurons">
+                        <circle class="ring" cx="365" cy="165" r="24"/>
+                        <circle class="body" cx="365" cy="165" r="18"/>
+                        <text class="cap" x="365" y="200" text-anchor="middle">AgRP</text>
+                        <text class="sub" x="365" y="213" text-anchor="middle">hunger</text>
+                      </g>
+                      <g class="node n-teal" data-node="pvn" tabindex="0" role="button" aria-label="PVN MC4R neurons">
+                        <circle class="ring" cx="500" cy="120" r="22"/>
+                        <circle class="body" cx="500" cy="120" r="16"/>
+                        <text class="sub" x="500" y="152" text-anchor="middle">PVN &middot; MC4R</text>
+                      </g>
+                      <g class="node n-reward" data-node="reward" tabindex="0" role="button" aria-label="Reward system VTA to NAc">
+                        <circle class="glow" cx="135" cy="495" r="28" fill="var(--reward)"/>
+                        <circle class="ring" cx="135" cy="495" r="22"/>
+                        <circle class="body" cx="135" cy="495" r="16"/>
+                        <circle class="ring" cx="240" cy="495" r="22"/>
+                        <circle class="body" cx="240" cy="495" r="16"/>
+                        <path class="edge" d="M153 495 L 224 495" marker-end="url(#aps-ah)" opacity="0.6"/>
+                        <text class="sub" x="135" y="527" text-anchor="middle">VTA</text>
+                        <text class="sub" x="240" y="527" text-anchor="middle">NAc &middot; food noise</text>
+                      </g>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="panel">
+                  <div class="info" id="aps-info" aria-live="polite">
+                    <p class="info__tag" id="aps-infoTag">The circuit</p>
+                    <p class="info__title" id="aps-infoTitle">Where these drugs actually work</p>
+                    <p class="info__body" id="aps-infoBody">Pick a source above to send a signal through the circuit, or tap any node to see what it does. The whole path runs from your gut to your brain, and never through your stomach's size or your metabolism.</p>
+                    <p class="info__hint" id="aps-infoHint">Tap a node &rarr;</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dash">
+                <div class="dash__row">
+                  <div class="gauge"><div class="gauge__top"><span class="gauge__name">Hunger drive &middot; AgRP</span><span class="gauge__val" id="aps-v-hunger">high</span></div><div class="track"><div class="fill f-hunger" id="aps-f-hunger" style="width:85%"></div></div></div>
+                  <div class="gauge"><div class="gauge__top"><span class="gauge__name">Fullness &middot; POMC / MC4R</span><span class="gauge__val" id="aps-v-full">low</span></div><div class="track"><div class="fill f-teal" id="aps-f-full" style="width:20%"></div></div></div>
+                  <div class="gauge"><div class="gauge__top"><span class="gauge__name">Food noise &middot; reward</span><span class="gauge__val" id="aps-v-rew">loud</span></div><div class="track"><div class="fill f-reward" id="aps-f-rew" style="width:80%"></div></div></div>
+                  <div class="gauge"><div class="gauge__top"><span class="gauge__name">Stomach emptying</span><span class="gauge__val" id="aps-v-gastric">fast</span></div><div class="track"><div class="fill f-teal" id="aps-f-gastric" style="width:82%"></div></div></div>
+                  <div class="gauge"><div class="gauge__top"><span class="gauge__name">Nausea risk &middot; area postrema</span><span class="gauge__val" id="aps-v-nausea">none</span></div><div class="track"><div class="fill f-nausea" id="aps-f-nausea" style="width:5%"></div></div></div>
+                </div>
+              </div>
+
+              <p class="explain" id="aps-explain" aria-live="polite">No extra GLP-1 in the system. The <span class="hot">hunger neurons</span> run loud, the reward circuit flags food as urgent, and the stomach empties fast. The drive to eat stays high.</p>
+
+              <p class="caveat">A schematic of a circuit neuroscientists are still mapping, simplified to show route and direction rather than exact wiring. GLP-1 also acts on the gut and pancreas, and the reduced eating, not any boost to metabolism, is what drives the weight loss. Built by The Neuroscience Review.</p>
+            </div>
+          </div>
+          <script>
+          (function(){
+            function __apsInit(){
+
+            var bench = document.getElementById('appetite-switch');
+            var map = document.getElementById('aps-map');
+            var explain = document.getElementById('aps-explain');
+            var infoTag = document.getElementById('aps-infoTag'), infoTitle = document.getElementById('aps-infoTitle'),
+                infoBody = document.getElementById('aps-infoBody'), infoHint = document.getElementById('aps-infoHint');
+
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches && map.pauseAnimations) map.pauseAnimations();
+
+            var NODES = {
+              gut:{t:'Gut', n:'Gut L-cells', b:'When food arrives, L-cells lining your intestine release GLP-1, a short-lived hormone that announces a meal is underway. It\'s the natural signal every one of these drugs is built to imitate.'},
+              dpp4:{t:'Enzyme', n:'DPP-4', b:'An enzyme that chops up your own GLP-1 within a minute or two. Semaglutide and its cousins are engineered to resist DPP-4 and to cling to a protein in your blood, and together those two tricks stretch a single dose to about a week instead of a couple of minutes.'},
+              ap:{t:'Brainstem', n:'Area postrema', b:'A deliberate gap in the blood-brain barrier where the brainstem tastes the blood directly. It\'s one of the main ways the long-acting drug gets in, though the drug also reaches the hypothalamus more directly. And because this same sensor watches for toxins, it\'s a key trigger of the nausea many people feel at first.'},
+              nts:{t:'Brainstem', n:'NTS relay', b:'The nucleus tractus solitarius gathers both incoming signals, the one carried up the vagus nerve and the one sensed at the area postrema, and even makes its own GLP-1. From here the message is relayed up to the hypothalamus.'},
+              agrp:{t:'Hypothalamus', n:'AgRP neurons', b:'These neurons drive hunger and push you toward the next meal. GLP-1 signaling turns them down, largely in an indirect way, through the fullness neurons and other cells that inhibit them.'},
+              pomc:{t:'Hypothalamus', n:'POMC neurons', b:'These carry GLP-1 receptors directly. Switched on, they release a messenger called alpha-MSH that carries the fullness signal forward. This is the clearest spot where GLP-1 acts on appetite.'},
+              pvn:{t:'Hypothalamus', n:'PVN and MC4R', b:'Alpha-MSH acts on MC4R receptors on neurons here. This is close to the master dial for feeling satisfied. Rare mutations that break MC4R cause severe, lifelong obesity, which is how we know this node matters.'},
+              reward:{t:'Reward', n:'VTA to nucleus accumbens', b:'GLP-1 receptors also sit in the dopamine reward circuit that decides what feels worth chasing. Quieting it is the likely reason people describe the constant food noise fading, and why early studies hint the pull of alcohol and nicotine can dim too.'}
+            };
+
+            var MODES = {
+              base:{hunger:85,full:20,rew:80,gastric:82,nausea:5, hv:'high',fv:'low',rv:'loud',gv:'fast',nv:'none',
+                routes:[],
+                x:'No extra GLP-1 in the system. The <span class="hot">hunger neurons</span> run loud, the reward circuit flags food as urgent, and the stomach empties fast. The drive to eat stays high.'},
+              meal:{hunger:52,full:56,rew:70,gastric:60,nausea:6, hv:'easing',fv:'rising',rv:'loud',gv:'slower',nv:'none',
+                routes:['vagus','core','out'],
+                x:'Your own GLP-1, released by a meal. It\'s destroyed within minutes, so it acts locally on the <b>vagus nerve</b>, which carries the message to the brainstem and up to the hypothalamus. Fullness rises for a while, then fades. This is the brief, natural signal a drug is built to imitate and outlast.'},
+              drug:{hunger:24,full:86,rew:26,gastric:30,nausea:46, hv:'low',fv:'high',rv:'quiet',gv:'slow',nv:'raised',
+                routes:['blood','core','reward','out'],
+                x:'A GLP-1 agonist like semaglutide, a drug built to mimic the real hormone. Long-acting and carried in the <b>blood</b>, it reaches the brainstem through the <b>area postrema</b>, drives the fullness circuit hard, and quiets the <span class="rew">reward system</span>, which is likely why the food noise fades. The catch comes in through that same door, <b>nausea</b>. And notice none of this is your stomach getting smaller, the weight loss is a brain effect.'}
+            };
+
+            var selected = null;
+            function selectNode(id){
+              bench.querySelectorAll('.node').forEach(function(n){ n.classList.toggle('sel', n.dataset.node===id); });
+              var d = NODES[id];
+              infoTag.textContent = d.t; infoTitle.textContent = d.n; infoBody.textContent = d.b;
+              infoHint.textContent = 'Node ' + (Object.keys(NODES).indexOf(id)+1) + ' of ' + Object.keys(NODES).length;
+              selected = id;
+            }
+
+            function setFill(id,val){ document.getElementById('aps-'+id).style.width = val + '%'; }
+            function setMode(mode){
+              var m = MODES[mode];
+              bench.dataset.mode = mode;
+              bench.querySelectorAll('.mode-btn').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.mode===mode); });
+              setFill('f-hunger',m.hunger); setFill('f-full',m.full); setFill('f-rew',m.rew); setFill('f-gastric',m.gastric); setFill('f-nausea',m.nausea);
+              document.getElementById('aps-v-hunger').textContent=m.hv; document.getElementById('aps-v-full').textContent=m.fv;
+              document.getElementById('aps-v-rew').textContent=m.rv; document.getElementById('aps-v-gastric').textContent=m.gv; document.getElementById('aps-v-nausea').textContent=m.nv;
+              var active = m.routes;
+              bench.querySelectorAll('.edge[data-route]').forEach(function(e){
+                var r=e.dataset.route; e.classList.toggle('hot', active.indexOf(r)>-1 && r!=='reward'); e.classList.toggle('hot-r', r==='reward' && active.indexOf(r)>-1);
+              });
+              bench.querySelectorAll('.e-label[data-route]').forEach(function(e){ e.style.fill = active.indexOf(e.dataset.route)>-1 ? 'var(--soft)' : ''; });
+              ['vagus','blood','core','reward'].forEach(function(r){
+                document.getElementById('aps-flow-'+r).classList.toggle('show', active.indexOf(r)>-1);
+              });
+              bench.querySelector('[data-node="pomc"] .glow').style.opacity = mode==='drug'?0.5:(mode==='meal'?0.28:0);
+              bench.querySelector('[data-node="agrp"] .body').style.opacity = mode==='drug'?0.4:(mode==='meal'?0.7:1);
+              bench.querySelector('[data-node="reward"] .glow').style.opacity = mode==='drug'?0:0.45;
+              explain.style.opacity=0; setTimeout(function(){ explain.innerHTML=m.x; explain.style.opacity=1; },170);
+            }
+
+            bench.querySelectorAll('.mode-btn').forEach(function(b){ b.addEventListener('click',function(){ setMode(b.dataset.mode); }); });
+            bench.querySelectorAll('.node').forEach(function(n){
+              n.addEventListener('click',function(){ selectNode(n.dataset.node); });
+              n.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selectNode(n.dataset.node);} });
+            });
+
+            setMode('base');
+
+            }
+            if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',__apsInit);}else{__apsInit();}
+          })();
+          </script>
 
           <article class="d-place-grid">
               <p class="pg-kicker">The brain GPS</p>
