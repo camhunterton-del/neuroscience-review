@@ -78,7 +78,7 @@
     /* full-bleed oscilloscope */
     .lab-bench .scope-wrap{ width:100%; }
     .lab-bench .scope{ position:relative; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:linear-gradient(180deg,#0c1615,#0a1211); overflow:hidden; }
-    .lab-bench .scope canvas{ display:block; width:100%; height:clamp(190px,30vw,300px); touch-action:none; }
+    .lab-bench .scope canvas{ display:block; width:100%; height:clamp(96px,14vw,140px); touch-action:none; }
     .lab-bench .scope__read{ position:absolute; left:clamp(14px,3vw,26px); bottom:14px; font-family:var(--mono); font-size:.82rem; color:var(--soft); letter-spacing:.02em; }
     .lab-bench .scope__read b{ color:var(--teal); font-weight:500; font-variant-numeric:tabular-nums; }
     .lab-bench .scope__hint{ position:absolute; right:clamp(14px,3vw,26px); top:14px; font-family:var(--mono); font-size:.72rem; color:var(--faint); }
@@ -236,6 +236,22 @@
     }
   </style>
 <style id="bench-demo-styles">
+    /* ===== Compact Lab: sticky category nav + collapsible demos ===== */
+    .lab-bench .lab-nav{ position:sticky; top:0; z-index:200; background:rgba(10,17,16,.94); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .lab-bench .lab-nav__inner{ display:flex; gap:.2rem; align-items:stretch; max-width:1180px; margin:0 auto; padding:0 clamp(1rem,4vw,2.4rem); overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .lab-bench .lab-nav__inner::-webkit-scrollbar{ display:none; }
+    .lab-bench .lab-nav__link{ flex:0 0 auto; font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); text-decoration:none; padding:.9rem .8rem; border-bottom:2px solid transparent; white-space:nowrap; transition:color .15s, border-color .15s; }
+    .lab-bench .lab-nav__link:hover{ color:var(--teal); }
+    .lab-bench .lab-nav__link.is-active{ color:var(--teal); border-bottom-color:var(--teal); }
+
+    /* collapsible demo cards */
+    .lab-bench .demo-toggle{ display:inline-flex; align-items:center; gap:.5rem; margin-top:1rem; font-family:var(--mono); font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); background:transparent; border:1px solid var(--teal-dim); border-radius:8px; padding:.5rem 1.05rem; cursor:pointer; transition:color .15s, border-color .15s, background .15s; }
+    .lab-bench .demo-toggle:hover{ color:var(--teal-bright); border-color:var(--teal); background:var(--panel2); }
+    .lab-bench .demo-toggle span{ display:inline-block; transition:transform .18s ease; }
+    .lab-bench .is-open > .demo-toggle span,
+    .lab-bench .is-open .demo-toggle span{ transform:rotate(90deg); }
+    .lab-bench .demo-collapse{ margin-top:1.1rem; }
+    .lab-bench .demo-collapse[hidden]{ display:none; }
     /* ============================================================
        Integrated demo cards. Each block below is a demo's own scoped
        CSS (harness/body chrome dropped); everything is under a unique
@@ -2035,6 +2051,18 @@
       </div>
     </section>
 
+    <!-- ============ STICKY CATEGORY NAV ============ -->
+    <nav class="lab-nav" aria-label="Jump to a section of the Lab">
+      <div class="lab-nav__inner">
+        <a class="lab-nav__link" href="#explore-3d">3D</a>
+        <a class="lab-nav__link" href="#perception">Perception</a>
+        <a class="lab-nav__link" href="#neurons">Neurons &amp; synapses</a>
+        <a class="lab-nav__link" href="#signals">Signals &amp; rhythms</a>
+        <a class="lab-nav__link" href="#memory">Memory &amp; decision</a>
+        <a class="lab-nav__link" href="#maps">Maps &amp; methods</a>
+      </div>
+    </nav>
+
     <div class="trace-divider" role="presentation" aria-hidden="true">
       <svg viewBox="0 0 1200 24" preserveAspectRatio="none"><polyline points="0,12 470,12 486,12 496,6 505,18 515,12 590,12 600,12 610,3 619,21 628,12 720,12 736,12 746,8 754,16 763,12 1200,12"></polyline></svg>
     </div>
@@ -2110,39 +2138,47 @@
     <!-- ============ EDITORIAL GRID ============ -->
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
-      <div class="bench-group">
+      <div class="bench-group" id="perception">
         <h2 class="bench-section-kicker">Perception and illusions</h2>
         <div class="bench-grid">
 
-          <article class="demo-card demo-card--wide reveal">
+          <article data-labdemo="stroop" class="demo-card demo-card--wide reveal">
                       <div class="demo-card__head">
                         <p class="demo-card__kicker">Reaction time &middot; since 1935</p>
                         <h3 class="demo-card__title">The Stroop test</h3>
                         <p class="demo-card__note">One of the oldest demonstrations in psychology. It takes about a minute and measures how much your brain slows down when the word and the ink disagree.</p>
                       </div>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
                       <section class="labdemo" aria-label="Stroop reaction-time experiment">
                         <div class="labdemo__stage" id="stroop-stage"></div>
                       </section>
                       <p class="demo-card__cite">Stroop, J. R. (1935). Studies of interference in serial verbal reactions.</p>
+        </div>
                     </article>
 
-          <article class="demo-card reveal">
+          <article data-labdemo="afterimage" class="demo-card reveal">
                       <div class="demo-card__head">
                         <p class="demo-card__kicker">Visual adaptation</p>
                         <h3 class="demo-card__title">The afterimage</h3>
                         <p class="demo-card__note">The colour-coding cells in your visual system adapt, and you can feel it on a blank gray field.</p>
                       </div>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
                       <section class="labdemo" aria-label="Afterimage experiment">
                         <div class="labdemo__stage" id="ai-stage"></div>
                       </section>
                       <p class="demo-card__cite">Opponent-process adaptation in retinal and cortical colour channels.</p>
+        </div>
                     </article>
 
-          <div class="d-motion-aftereffect">
+          <div data-labdemo="motion-aftereffect" class="d-motion-aftereffect">
               <article class="ma-card">
                 <p class="ma-kicker">Motion adaptation</p>
                 <h3 class="ma-title">The motion aftereffect</h3>
                 <p class="ma-note">Lock your eyes on the dot in the middle while the rings move for thirty seconds. When they stop, most people see the still image drift the other way for a few seconds. That is direction-selective cells in area MT (also called V5) recovering.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
                 <div class="ma-stage">
                   <div class="ma-screen">
@@ -2187,14 +2223,17 @@
                 <p class="ma-cite">Waterfall illusion first described by Robert Addams (1834). Two-population opponent account drawn from Mather, Verstraten and Anstis, The Motion Aftereffect (MIT Press, 1998).</p>
           
                 <noscript><p class="ma-muted">This demo needs JavaScript for the moving rings. The motion aftereffect is the illusion that a still scene appears to drift backward after you watch steady motion, like the rocks beside a waterfall seeming to creep upward.</p></noscript>
+        </div>
               </article>
             </div>
 
-          <div class="d-checker-shadow">
+          <div data-labdemo="checker-shadow" class="d-checker-shadow">
             <article class="cs-card">
               <p class="cs-kicker">Lightness and context</p>
               <h3 class="cs-title">The checker-shadow illusion</h3>
               <p class="cs-note">Square A reads as a dark tile and square B as a pale one, but every pixel in them is the exact same gray. Drag the bar down to lay that gray between the two squares and watch them line up, then let go and your brain pulls them apart again.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <div class="cs-stage">
                 <canvas id="checker-shadow-canvas" class="cs-canvas" width="680" height="470" tabindex="0" role="img"
@@ -2227,13 +2266,16 @@
               <p class="cs-limit">This is a hand-built copy of Adelson's figure, not his original image, and it does not read anything off your brain. The grays are set in code so square&nbsp;A in the light and square&nbsp;B in the shadow render at the exact same value, and the readout samples the real canvas pixels so you can check that claim yourself.</p>
           
               <p class="cs-cite">Adelson, E. H. (1995). Checker-shadow illusion. Massachusetts Institute of Technology.</p>
+        </div>
             </article>
           </div>
 
-          <article class="d-blind-spot">
+          <article data-labdemo="blind-spot" class="d-blind-spot">
             <p class="bs-kicker">The optic disc</p>
             <h3 class="bs-title">Your blind spot</h3>
             <p class="bs-note">Where the optic nerve leaves each eye there are no photoreceptors, so a small patch of your vision is truly blank. Cover one eye, lock the other on the +, and slide the dot outward until it drops into that hole. Then swap it for a line or a speckled field and watch your brain paper over the gap.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
             <ol class="bs-steps">
               <li><b>1</b> cover one eye</li>
@@ -2307,14 +2349,17 @@
             <p class="bs-cite">
               Based on Edme Mariotte's 1668 discovery of the blind spot, the point where the optic nerve exits the retina and there are no rods or cones. It sits roughly 15&deg; to the side of where you look and spans about 5&deg;. The seamless completion is filling-in by the visual brain. Your own single run, n = 1, not a clinical test.
             </p>
+        </div>
           </article>
 
-          <article class="demo-card reveal">
+          <article data-labdemo="edges" class="demo-card reveal">
                       <div class="demo-card__head">
                         <p class="demo-card__kicker">Lateral inhibition</p>
                         <h3 class="demo-card__title">Edges that aren&rsquo;t there</h3>
                         <p class="demo-card__note">Lateral inhibition, painting in shading the screen never showed.</p>
                       </div>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
                       <section class="labdemo" aria-label="Edge-enhancement experiment">
                         <div class="labdemo__stage" style="min-height:auto">
                           <p style="margin-bottom:0.8rem">Each band below is one flat, uniform gray. But each looks darker on its bright edge and brighter on its dark edge. Click any band to check its true color.</p>
@@ -2323,13 +2368,16 @@
                         </div>
                       </section>
                       <p class="demo-card__cite">Mach bands &middot; edge enhancement by lateral inhibition.</p>
+        </div>
                     </article>
 
-          <div class="d-stereogram">
+          <div data-labdemo="stereogram" class="d-stereogram">
             <article class="card" aria-label="The random-dot stereogram experiment">
               <p class="kicker">Stereopsis</p>
               <h3 class="title">The random-dot stereogram</h3>
               <p class="note">Two fields of dots. Each eye on its own sees only noise, but the two views differ by a small sideways shift inside one hidden region, and your brain turns that shift into depth. Let your eyes relax past the screen until a shape lifts out. If free fusing will not click, switch to the red and cyan view.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <div class="stage">
                 <div class="screen">
@@ -2415,13 +2463,16 @@
               <p class="caption">This is a simplified digital demo, not a vision test. Free fusing is a knack that not everyone has, and by some estimates around one in twenty people have little or no stereo depth vision and may see nothing pop out even with glasses. That is completely normal. Real depth also leans on cues this strips away on purpose, like shading, motion, and focus, so that only the shift between your two eyes is left to carry it.</p>
           
               <p class="cite">Julesz, B. (1971). Foundations of Cyclopean Perception. University of Chicago Press. Random-dot stereograms were first shown by Julesz in 1960. Dots are pseudo-random from your browser, so every run looks different.</p>
+        </div>
             </article>
           </div>
 
-          <article class="d-change-blindness demo-card--wide" aria-label="Change blindness experiment">
+          <article data-labdemo="change-blindness" class="d-change-blindness demo-card--wide" aria-label="Change blindness experiment">
               <p class="cb-kicker">Attention and change</p>
               <h3 class="cb-title">Change blindness</h3>
               <p class="cb-note">Two versions of one scene swap back and forth with a blank flash between them, and one big thing keeps changing. The blank hides the flicker your eye would jump straight to, so a large change can sit in plain view and stay invisible.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <div class="cb-stage">
                 <canvas id="change-blindness-canvas" class="cb-canvas" width="760" height="360" role="img"
@@ -2449,18 +2500,21 @@
               <p class="cb-muted">This scene is built from simple shapes, not photographs. With real photos the effect runs even deeper. The blank stands in for a blink or a quick flick of the eyes, the moments that normally wipe the change away before you notice it. The flicker follows the classic timing, each version held for about a quarter second with a short blank between. The time and flips shown are your own single run, not data.</p>
           
               <p class="cb-cite">Based on Rensink, R. A., O&rsquo;Regan, J. K., and Clark, J. J. (1997). To see or not to see, the need for attention to perceive changes in scenes. <em>Psychological Science</em>, 8(5), 368&ndash;373. <a href="https://doi.org/10.1111/j.1467-9280.1997.tb00427.x">doi.org/10.1111/j.1467-9280.1997.tb00427.x</a></p>
+        </div>
             </article>
 
         </div>
       </div>
-      <div class="bench-group">
+      <div class="bench-group" id="neurons">
         <h2 class="bench-section-kicker">Neurons and synapses</h2>
         <div class="bench-grid">
 
-          <section class="d-ssri-synapse demo-card--wide" aria-labelledby="ssri-synapse-title">
+          <section data-labdemo="ssri-synapse" class="d-ssri-synapse demo-card--wide" aria-labelledby="ssri-synapse-title">
               <p class="dss-kicker">Reuptake inhibition</p>
               <h3 class="dss-title" id="ssri-synapse-title">The synapse and reuptake</h3>
               <p class="dss-note">Watch serotonin spill into the gap between two neurons, drift across, tap the receptors, and get pulled back up by reuptake transporters. Drag the dose and an SSRI plugs those transporters, so serotonin lingers and piles up instead of clearing.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <div class="dss-stage">
                 <canvas class="dss-canvas" id="ssri-synapse-canvas"
@@ -2540,13 +2594,16 @@
               </div>
           
               <p class="dss-cite">Transporter occupancy near 80 percent at standard doses, Meyer et al. (2004), Am J Psychiatry 161(5), 826&ndash;835, [11C]DASB PET. Mechanism is blockade of the serotonin transporter (SERT). Model relations, not measured concentrations.</p>
+        </div>
             </section>
 
-          <div class="d-myelin demo-card--wide">
+          <div data-labdemo="myelin" class="d-myelin demo-card--wide">
               <article class="mn-card">
                 <p class="mn-kicker">Conduction velocity</p>
                 <h3 class="mn-title">The myelin race</h3>
                 <p class="mn-note">Two spikes leave their cell bodies at the same instant. The top axon keeps its myelin. Strip myelin off the patch on the bottom axon and watch its spike slow down, stutter, and finally die before it reaches the end. That failure to arrive is how multiple sclerosis produces its symptoms.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
                 <div class="mn-stage">
                   <div class="mn-screen">
@@ -2602,13 +2659,16 @@
                 <p class="mn-cite">Saltatory conduction, Huxley and Stämpfli (1949). Velocity and fiber diameter, Hursh (1939). Demyelination and conduction block, McDonald and Sears (1970) and Koles and Rasminsky (1972).</p>
           
                 <noscript><p class="mn-muted">This demo needs JavaScript to race the spikes. Myelin is the fatty wrapping around an axon that lets a nerve signal jump from gap to gap instead of creeping along, which is far faster. In multiple sclerosis the immune system strips that wrapping, so signals slow, stutter, and can fail to arrive.</p></noscript>
+        </div>
               </article>
             </div>
 
-          <article class="d-dendritic">
+          <article data-labdemo="dendritic" class="d-dendritic">
               <p class="d-dendritic__kicker">Dendritic summation</p>
               <h3 class="d-dendritic__title">A democracy of inputs</h3>
               <p class="d-dendritic__note">One excitatory input nudges the neuron but cannot fire it. Switch on a second and fire them at the same moment, or one just after another, and the nudges add up until they cross the line and the neuron spikes. Switch on the inhibitory input and it pushes back down, so a single veto can cancel the vote. It is a simplified model, not a recording.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <section class="d-dendritic__stage" aria-label="Excitatory and inhibitory inputs summing at a model neuron.">
                 <div class="den-scope">
@@ -2639,12 +2699,15 @@
               </section>
           
               <p class="d-dendritic__cite">A simplified model of dendritic integration, the spatial and temporal summation of excitatory and inhibitory postsynaptic potentials at the cell body. See any systems-neuroscience text, for example Kandel et al., Principles of Neural Science.</p>
+        </div>
             </article>
 
-          <article class="d-ltp">
+          <article data-labdemo="ltp" class="d-ltp">
               <p class="d-ltp__kicker">Hebbian plasticity</p>
               <h3 class="d-ltp__title">A memory forming</h3>
               <p class="d-ltp__note">Send a weak input on its own and the neuron barely stirs. Pair that same input with the neuron a few times, the synapse strengthens and holds, and now the weak input alone sets off a spike. A second input you never pair does not change at all. It is a simplified model, not a recording.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <section class="d-ltp__stage" aria-label="Long-term potentiation model">
           
@@ -2696,18 +2759,21 @@
               </section>
           
               <p class="d-ltp__cite">Model based on Bliss, T. V. P. and Lomo, T. (1973). Long-lasting potentiation of synaptic transmission in the dentate area of the anaesthetised rabbit following stimulation of the perforant path. J. Physiol. 232(2), 331-356.</p>
+        </div>
             </article>
 
         </div>
       </div>
-      <div class="bench-group">
+      <div class="bench-group" id="signals">
         <h2 class="bench-section-kicker">Signals and rhythms</h2>
         <div class="bench-grid">
 
-          <article class="d-brain-waves demo-card--wide" aria-labelledby="brain-waves-title">
+          <article data-labdemo="brain-waves" class="d-brain-waves demo-card--wide" aria-labelledby="brain-waves-title">
               <p class="bw-kicker">EEG rhythms</p>
               <h3 class="bw-title" id="brain-waves-title">Brain waves and sleep</h3>
               <p class="bw-note">A brain wave is never one rhythm. It is many stacked together. Slide the five EEG bands and watch the trace change character, then walk a whole night and see the same bands rearrange from deep sleep to dreaming.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <div class="bw-modes" role="tablist" aria-label="Choose a mode">
                 <button class="bw-mode" id="brain-waves-mode-mix" role="tab" aria-selected="true" aria-controls="brain-waves-panel-mix" type="button">Mix the bands</button>
@@ -2797,12 +2863,15 @@
               <p class="bw-cite">Frequency bands and sleep-stage signatures follow standard EEG references, including Berger's 1929 report of the alpha rhythm and the AASM Manual for the Scoring of Sleep and Associated Events. This is an idealized synthetic model, not a real recording. Nothing here is saved and nothing is graded.</p>
           
               <span class="bw-sr" id="brain-waves-live" aria-live="polite"></span>
+        </div>
             </article>
 
-          <article class="d-synchrony demo-card--wide">
+          <article data-labdemo="synchrony" class="d-synchrony demo-card--wide">
               <p class="d-synchrony__kicker">Coupled oscillators</p>
               <h3 class="d-synchrony__title">Synchrony and binding</h3>
               <p class="d-synchrony__note">Twenty-four units, each blinking at its own slightly different pace, so at first the ring is a mess. Raise the coupling and let them feel each other, and they slide into one shared beat. Neuroscientists think a pull like this is how far-apart cells lock together into the rhythms tied to attention and to binding the parts of a scene into one thing.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <section class="d-synchrony__stage" aria-label="A ring of coupled oscillators. Raising the coupling slider pulls them into synchrony.">
                 <div class="syn-scope">
@@ -2829,19 +2898,22 @@
               </section>
           
               <p class="d-synchrony__cite">Model after Kuramoto, Y. (1975). Self-entrainment of a population of coupled non-linear oscillators. International Symposium on Mathematical Problems in Theoretical Physics. Framing follows work on gamma-band neural synchrony and the binding problem (for example Singer and Gray, 1995).</p>
+        </div>
             </article>
 
         </div>
       </div>
-      <div class="bench-group">
+      <div class="bench-group" id="memory">
         <h2 class="bench-section-kicker">Memory and decision</h2>
         <div class="bench-grid">
 
-          <article class="d-drift-diffusion demo-card--wide" aria-labelledby="drift-diffusion-title">
+          <article data-labdemo="drift-diffusion" class="d-drift-diffusion demo-card--wide" aria-labelledby="drift-diffusion-title">
           
             <p class="dd-kicker">Evidence to a bound</p>
             <h3 class="dd-title" id="drift-diffusion-title">A decision, accumulating</h3>
             <p class="dd-note">A field of dots drifts left or right and you call the direction. The bar next to it is a model that adds up the same noisy motion until it reaches a threshold, and where you set that threshold is what trades speed against mistakes.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
             <div class="dd-stage">
               <div class="dd-panel">
@@ -2918,13 +2990,16 @@
           
             <p class="dd-cite">Model and task after Gold, J. I., and Shadlen, M. N. (2007). The neural basis of decision making. Annual Review of Neuroscience, 30, 535 to 574. Closed forms for error rate and decision time after Palmer, Huk, and Shadlen (2005) and Bogacz et al. (2006).</p>
           
+        </div>
           </article>
 
-          <div class="d-drm-false-memory">
+          <div data-labdemo="drm-false-memory" class="d-drm-false-memory">
                 <article class="drm-card">
                   <p class="drm-kicker">Reconstructive memory</p>
                   <h3 class="drm-title">The false memory</h3>
                   <p class="drm-note">Read a short list of themed words, then take a quick memory test. One test word fits the theme perfectly but was never shown, and most people are sure they saw it.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
                   <div class="drm-stage" id="drm-false-memory-stage">
                     
@@ -2945,10 +3020,11 @@
                   </div>
           
                   <p class="drm-cite">Roediger, H. L., and McDermott, K. B. (1995). Creating false memories, remembering words not presented in lists. Journal of Experimental Psychology, Learning, Memory, and Cognition, 21(4), 803 to 814. <a href="https://doi.org/10.1037/0278-7393.21.4.803" target="_blank" rel="noopener">doi.org/10.1037/0278-7393.21.4.803</a></p>
+        </div>
                 </article>
               </div>
 
-          <article class="d-hopfield" aria-labelledby="hopfield-title">
+          <article data-labdemo="hopfield" class="d-hopfield" aria-labelledby="hopfield-title">
             <p class="d-hopfield__kicker">Associative memory</p>
             <h3 class="d-hopfield__title" id="hopfield-title">Pattern completion</h3>
             <p class="d-hopfield__note">
@@ -2956,6 +3032,8 @@
               checking its neighbors and flips to match the crowd, so the grid slides step by step
               back to the closest memory it holds.
             </p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
             <div class="d-hopfield__stage">
               <div class="d-hopfield__gridwrap">
@@ -3023,11 +3101,12 @@
               computational abilities. Proceedings of the National Academy of Sciences 79 (8),
               2554-2558. doi 10.1073/pnas.79.8.2554
             </p>
+        </div>
           </article>
 
         </div>
       </div>
-      <div class="bench-group">
+      <div class="bench-group" id="maps">
         <h2 class="bench-section-kicker">Maps and methods</h2>
         <div class="bench-grid">
           <!-- Companion to the peptides deep dive (Aug 12 2026) -->
@@ -3128,11 +3207,13 @@
             @media (prefers-reduced-motion: reduce){.d-appetite-switch *{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 
           </style>
-          <div class="d-appetite-switch" id="appetite-switch" data-mode="base" style="grid-column:1 / -1">
+          <div class="d-appetite-switch" id="appetite-switch" data-labdemo="appetite-switch" data-mode="base" style="grid-column:1 / -1">
             <div class="wrap">
               <p class="kicker">Weight drugs &middot; the real target</p>
               <h3 class="aps-title">The appetite switch</h3>
               <p class="tagline">Everyone says the weight drugs work on your stomach. Trace the real signal, and tap any part of the circuit to see what it does.</p>
+              <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+              <div class="demo-collapse" hidden>
 
               <div class="modes" role="group" aria-label="Signal source">
                 <button class="mode-btn" data-mode="base" aria-pressed="true">Baseline<small>no GLP-1</small></button>
@@ -3264,91 +3345,16 @@
               <p class="explain" id="aps-explain" aria-live="polite">No extra GLP-1 in the system. The <span class="hot">hunger neurons</span> run loud, the reward circuit flags food as urgent, and the stomach empties fast. The drive to eat stays high.</p>
 
               <p class="caveat">A schematic of a circuit neuroscientists are still mapping, simplified to show route and direction rather than exact wiring. GLP-1 also acts on the gut and pancreas, and the reduced eating, not any boost to metabolism, is what drives the weight loss. Built by The Neuroscience Review.</p>
+              </div>
             </div>
           </div>
-          <script>
-          (function(){
-            function __apsInit(){
 
-            var bench = document.getElementById('appetite-switch');
-            var map = document.getElementById('aps-map');
-            var explain = document.getElementById('aps-explain');
-            var infoTag = document.getElementById('aps-infoTag'), infoTitle = document.getElementById('aps-infoTitle'),
-                infoBody = document.getElementById('aps-infoBody'), infoHint = document.getElementById('aps-infoHint');
-
-            if (matchMedia('(prefers-reduced-motion: reduce)').matches && map.pauseAnimations) map.pauseAnimations();
-
-            var NODES = {
-              gut:{t:'Gut', n:'Gut L-cells', b:'When food arrives, L-cells lining your intestine release GLP-1, a short-lived hormone that announces a meal is underway. It\'s the natural signal every one of these drugs is built to imitate.'},
-              dpp4:{t:'Enzyme', n:'DPP-4', b:'An enzyme that chops up your own GLP-1 within a minute or two. Semaglutide and its cousins are engineered to resist DPP-4 and to cling to a protein in your blood, and together those two tricks stretch a single dose to about a week instead of a couple of minutes.'},
-              ap:{t:'Brainstem', n:'Area postrema', b:'A deliberate gap in the blood-brain barrier where the brainstem tastes the blood directly. It\'s one of the main ways the long-acting drug gets in, though the drug also reaches the hypothalamus more directly. And because this same sensor watches for toxins, it\'s a key trigger of the nausea many people feel at first.'},
-              nts:{t:'Brainstem', n:'NTS relay', b:'The nucleus tractus solitarius gathers both incoming signals, the one carried up the vagus nerve and the one sensed at the area postrema, and even makes its own GLP-1. From here the message is relayed up to the hypothalamus.'},
-              agrp:{t:'Hypothalamus', n:'AgRP neurons', b:'These neurons drive hunger and push you toward the next meal. GLP-1 signaling turns them down, largely in an indirect way, through the fullness neurons and other cells that inhibit them.'},
-              pomc:{t:'Hypothalamus', n:'POMC neurons', b:'These carry GLP-1 receptors directly. Switched on, they release a messenger called alpha-MSH that carries the fullness signal forward. This is the clearest spot where GLP-1 acts on appetite.'},
-              pvn:{t:'Hypothalamus', n:'PVN and MC4R', b:'Alpha-MSH acts on MC4R receptors on neurons here. This is close to the master dial for feeling satisfied. Rare mutations that break MC4R cause severe, lifelong obesity, which is how we know this node matters.'},
-              reward:{t:'Reward', n:'VTA to nucleus accumbens', b:'GLP-1 receptors also sit in the dopamine reward circuit that decides what feels worth chasing. Quieting it is the likely reason people describe the constant food noise fading, and why early studies hint the pull of alcohol and nicotine can dim too.'}
-            };
-
-            var MODES = {
-              base:{hunger:85,full:20,rew:80,gastric:82,nausea:5, hv:'high',fv:'low',rv:'loud',gv:'fast',nv:'none',
-                routes:[],
-                x:'No extra GLP-1 in the system. The <span class="hot">hunger neurons</span> run loud, the reward circuit flags food as urgent, and the stomach empties fast. The drive to eat stays high.'},
-              meal:{hunger:52,full:56,rew:70,gastric:60,nausea:6, hv:'easing',fv:'rising',rv:'loud',gv:'slower',nv:'none',
-                routes:['vagus','core','out'],
-                x:'Your own GLP-1, released by a meal. It\'s destroyed within minutes, so it acts locally on the <b>vagus nerve</b>, which carries the message to the brainstem and up to the hypothalamus. Fullness rises for a while, then fades. This is the brief, natural signal a drug is built to imitate and outlast.'},
-              drug:{hunger:24,full:86,rew:26,gastric:30,nausea:46, hv:'low',fv:'high',rv:'quiet',gv:'slow',nv:'raised',
-                routes:['blood','core','reward','out'],
-                x:'A GLP-1 agonist like semaglutide, a drug built to mimic the real hormone. Long-acting and carried in the <b>blood</b>, it reaches the brainstem through the <b>area postrema</b>, drives the fullness circuit hard, and quiets the <span class="rew">reward system</span>, which is likely why the food noise fades. The catch comes in through that same door, <b>nausea</b>. And notice none of this is your stomach getting smaller, the weight loss is a brain effect.'}
-            };
-
-            var selected = null;
-            function selectNode(id){
-              bench.querySelectorAll('.node').forEach(function(n){ n.classList.toggle('sel', n.dataset.node===id); });
-              var d = NODES[id];
-              infoTag.textContent = d.t; infoTitle.textContent = d.n; infoBody.textContent = d.b;
-              infoHint.textContent = 'Node ' + (Object.keys(NODES).indexOf(id)+1) + ' of ' + Object.keys(NODES).length;
-              selected = id;
-            }
-
-            function setFill(id,val){ document.getElementById('aps-'+id).style.width = val + '%'; }
-            function setMode(mode){
-              var m = MODES[mode];
-              bench.dataset.mode = mode;
-              bench.querySelectorAll('.mode-btn').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.mode===mode); });
-              setFill('f-hunger',m.hunger); setFill('f-full',m.full); setFill('f-rew',m.rew); setFill('f-gastric',m.gastric); setFill('f-nausea',m.nausea);
-              document.getElementById('aps-v-hunger').textContent=m.hv; document.getElementById('aps-v-full').textContent=m.fv;
-              document.getElementById('aps-v-rew').textContent=m.rv; document.getElementById('aps-v-gastric').textContent=m.gv; document.getElementById('aps-v-nausea').textContent=m.nv;
-              var active = m.routes;
-              bench.querySelectorAll('.edge[data-route]').forEach(function(e){
-                var r=e.dataset.route; e.classList.toggle('hot', active.indexOf(r)>-1 && r!=='reward'); e.classList.toggle('hot-r', r==='reward' && active.indexOf(r)>-1);
-              });
-              bench.querySelectorAll('.e-label[data-route]').forEach(function(e){ e.style.fill = active.indexOf(e.dataset.route)>-1 ? 'var(--soft)' : ''; });
-              ['vagus','blood','core','reward'].forEach(function(r){
-                document.getElementById('aps-flow-'+r).classList.toggle('show', active.indexOf(r)>-1);
-              });
-              bench.querySelector('[data-node="pomc"] .glow').style.opacity = mode==='drug'?0.5:(mode==='meal'?0.28:0);
-              bench.querySelector('[data-node="agrp"] .body').style.opacity = mode==='drug'?0.4:(mode==='meal'?0.7:1);
-              bench.querySelector('[data-node="reward"] .glow').style.opacity = mode==='drug'?0:0.45;
-              explain.style.opacity=0; setTimeout(function(){ explain.innerHTML=m.x; explain.style.opacity=1; },170);
-            }
-
-            bench.querySelectorAll('.mode-btn').forEach(function(b){ b.addEventListener('click',function(){ setMode(b.dataset.mode); }); });
-            bench.querySelectorAll('.node').forEach(function(n){
-              n.addEventListener('click',function(){ selectNode(n.dataset.node); });
-              n.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selectNode(n.dataset.node);} });
-            });
-
-            setMode('base');
-
-            }
-            if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',__apsInit);}else{__apsInit();}
-          })();
-          </script>
-
-          <article class="d-place-grid">
+          <article data-labdemo="place-grid" class="d-place-grid">
               <p class="pg-kicker">The brain GPS</p>
               <h3 class="pg-title">Place cells and grid cells</h3>
               <p class="pg-note">Drag the animal around the box, or focus it and walk it with the arrow keys. Switch between two real cell types. One fires only when the animal crosses a single spot. The other fires in a repeating hexagon of spots that tiles the whole floor. Every amber dot is one spike, dropped where the animal stood, so the firing map draws itself as you move.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <div class="pg-stage">
                 <div class="pg-toolbar">
@@ -3382,12 +3388,15 @@
               </div>
           
               <p class="pg-cite">O&rsquo;Keefe and Dostrovsky (1971) found place cells in the hippocampus. Hafting, Fyhn, Molden, Moser and Moser (2005), Nature 436, 801, found grid cells in the entorhinal cortex. Firing here comes from a three cosine grid model and a Gaussian place field.</p>
+        </div>
             </article>
 
-          <article class="d-dopamine-rpe">
+          <article data-labdemo="dopamine-rpe" class="d-dopamine-rpe">
               <p class="dr-kicker">Reward prediction error</p>
               <h3 class="dr-title">Dopamine and prediction error</h3>
               <p class="dr-note">Deliver a reward after the cue light a few times, then withhold it once. The modeled dopamine signal bursts at whatever it did not see coming, moves back onto the cue as the cue learns to predict the reward, and dips below baseline when a promised reward never arrives.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <div class="dr-stage">
                 <div class="dr-plotcap">
@@ -3428,12 +3437,15 @@
               <p class="dr-caveat">This is a temporal-difference learning model in arbitrary units. It is not a recording and it is not your dopamine. It shows the sign and timing of the reward prediction error the way Schultz and colleagues modeled it, not real firing rates, and the recordings come from dopamine neurons in the monkey midbrain. The slow backward creep of the burst from the reward to the cue is a quirk of this particular model, cleaner in the math than in the animal.</p>
           
               <p class="dr-cite">Schultz, W., Dayan, P., &amp; Montague, P. R. (1997). A neural substrate of prediction and reward. Science, 275(5306), 1593-1599. <a href="https://doi.org/10.1126/science.275.5306.1593">doi.org/10.1126/science.275.5306.1593</a>. Modeled here with temporal-difference learning.</p>
+        </div>
             </article>
 
-          <section class="d-fmri-bold demo-card--wide" aria-label="What fMRI measures, an interactive model of the BOLD signal">
+          <section data-labdemo="fmri-bold" class="d-fmri-bold demo-card--wide" aria-label="What fMRI measures, an interactive model of the BOLD signal">
             <p class="fb-kicker">The BOLD signal</p>
             <h3 class="fb-title">What fMRI measures</h3>
             <p class="fb-note">Click to fire a neural spike. The spike is instant, but the thing fMRI actually reads, the blood-oxygen response, oozes up to its peak about 5 seconds later and slowly falls. Then move the noise and threshold sliders and watch the same blob light up or vanish.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
             <div class="fb-plotwrap">
               <canvas class="fb-scope" id="fmri-bold-scope" width="620" height="230"
@@ -3491,12 +3503,15 @@
             <p class="fb-caveat">This is the standard double-gamma model of the response, not real scanner data. Real fMRI measures blood oxygenation, an indirect stand-in for neural activity that trails it by seconds, and real activation maps come from statistics run across the whole scan, not one raw cutoff on a single voxel.</p>
           
             <p class="fb-cite">Response model from Glover, G. H. (1999), Deconvolution of impulse response in event-related BOLD fMRI, NeuroImage 9(4), 416-429. Indirect neural basis from Logothetis, N. K. et al. (2001), Neurophysiological investigation of the basis of the fMRI signal, Nature 412, 150-157.</p>
+        </div>
           </section>
 
-          <article class="d-owl demo-card--wide">
+          <article data-labdemo="owl" class="d-owl demo-card--wide">
               <p class="d-owl__kicker">Sound localization</p>
               <h3 class="d-owl__title">The barn owl map of space</h3>
               <p class="d-owl__note">A barn owl strikes in the dark by ear. Drag the mouse around and watch two tiny differences do the work. The sound reaches the near ear a hair sooner, which fixes the left to right angle, and its lopsided ears make it a touch louder above or below, which fixes the height. Together they light up one spot on a built-in map of space. Then put prism goggles on the owl and watch that map slowly slide to a new home.</p>
+        <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+        <div class="demo-collapse" hidden>
           
               <section class="d-owl__stage" aria-label="Drag the prey around the owl to see how timing and loudness differences at the two ears locate it.">
                 <div class="owl-scope">
@@ -3532,6 +3547,7 @@
               </section>
           
               <p class="d-owl__cite">After Knudsen, E. I. work on the barn owl auditory space map and its plasticity, for example Knudsen (2002), Instructed learning in the auditory localization pathway of the barn owl, Nature 417, 322-328.</p>
+        </div>
             </article>
 
         </div>
@@ -3651,7 +3667,7 @@
 </script>
 
 <!-- ============ Stroop test (carried over, unchanged logic) ============ -->
-<script>
+<script type="text/plain" data-labdemo="stroop">
 (function(){
   var stage = document.getElementById('stroop-stage');
   var COLORS = [
@@ -3758,7 +3774,7 @@
 </script>
 
 <!-- ============ afterimage + drive-a-neuron + illusory edges (carried over, unchanged logic) ============ -->
-<script>
+<script type="text/plain" data-labdemo="afterimage">
 // The afterimage (opponent-color adaptation)
 (function(){
   var stage = document.getElementById('ai-stage'); if(!stage) return;
@@ -3781,6 +3797,8 @@
   }
   intro();
 })();
+</script>
+<script>
 
 // Drive a neuron to threshold (leaky integrate-and-fire)
 (function(){
@@ -3831,6 +3849,8 @@
   if(reduce.matches){ seedStatic(); slider.addEventListener('input', seedStatic); }
   else { requestAnimationFrame(loop); }
 })();
+</script>
+<script type="text/plain" data-labdemo="edges">
 
 // Edges that aren't there (lateral inhibition / edge enhancement)
 (function(){
@@ -3848,7 +3868,7 @@
 })();
 </script>
 <!-- demo: motion-aftereffect -->
-<script>
+<script type="text/plain" data-labdemo="motion-aftereffect">
 (function(){
   var root = document.querySelector('.d-motion-aftereffect'); if(!root) return;
   function $(id){ return document.getElementById('motion-aftereffect-'+id); }
@@ -4071,7 +4091,7 @@
 })();
 </script>
 <!-- demo: checker-shadow -->
-<script>
+<script type="text/plain" data-labdemo="checker-shadow">
 (function(){
   var root = document.querySelector('.d-checker-shadow');
   if(!root) return;
@@ -4295,7 +4315,7 @@
 })();
 </script>
 <!-- demo: blind-spot -->
-<script>
+<script type="text/plain" data-labdemo="blind-spot">
 (function(){
   var svg = document.getElementById('blind-spot-stage');
   if(!svg) return;
@@ -4523,7 +4543,7 @@
 })();
 </script>
 <!-- demo: change-blindness -->
-<script>
+<script type="text/plain" data-labdemo="change-blindness">
   (function(){
     var canvas = document.getElementById('change-blindness-canvas');
     if(!canvas || !canvas.getContext) return;
@@ -4829,7 +4849,7 @@
   })();
   </script>
 <!-- demo: stereogram -->
-<script>
+<script type="text/plain" data-labdemo="stereogram">
 (function(){
   var root = document.querySelector('.d-stereogram');
   if(!root || !root.querySelector('#stereogram-left')) return;
@@ -5058,7 +5078,7 @@
 })();
 </script>
 <!-- demo: drift-diffusion -->
-<script>
+<script type="text/plain" data-labdemo="drift-diffusion">
 (function(){
   "use strict";
   var root = document.querySelector('.d-drift-diffusion');
@@ -5515,7 +5535,7 @@
 })();
 </script>
 <!-- demo: drm-false-memory -->
-<script>
+<script type="text/plain" data-labdemo="drm-false-memory">
 (function(){
   var root = document.querySelector('.d-drm-false-memory');
   var stage = document.getElementById('drm-false-memory-stage');
@@ -5704,7 +5724,7 @@
 })();
 </script>
 <!-- demo: ltp -->
-<script>
+<script type="text/plain" data-labdemo="ltp">
 (function(){
   var root = document.querySelector('.d-ltp');
   if(!root) return;
@@ -5941,7 +5961,7 @@
 })();
 </script>
 <!-- demo: hopfield -->
-<script>
+<script type="text/plain" data-labdemo="hopfield">
 (function(){
   "use strict";
   var grid = document.getElementById('hopfield-grid');
@@ -6360,7 +6380,7 @@
 })();
 </script>
 <!-- demo: ssri-synapse -->
-<script>
+<script type="text/plain" data-labdemo="ssri-synapse">
 (function(){
   var root = document.querySelector('.d-ssri-synapse');
   if(!root) return;
@@ -6703,7 +6723,7 @@
 })();
 </script>
 <!-- demo: dopamine-rpe -->
-<script>
+<script type="text/plain" data-labdemo="dopamine-rpe">
 (function(){
   "use strict";
   var canvas = document.getElementById('dopamine-rpe-canvas');
@@ -7005,7 +7025,7 @@
 })();
 </script>
 <!-- demo: myelin -->
-<script>
+<script type="text/plain" data-labdemo="myelin">
 (function(){
   var root = document.querySelector('.d-myelin'); if(!root) return;
   function $(id){ return document.getElementById('myelin-'+id); }
@@ -7356,7 +7376,7 @@
 })();
 </script>
 <!-- demo: fmri-bold -->
-<script>
+<script type="text/plain" data-labdemo="fmri-bold">
 (function(){
   "use strict";
   var root = document.querySelector('.d-fmri-bold');
@@ -7602,7 +7622,7 @@
 })();
 </script>
 <!-- demo: brain-waves -->
-<script>
+<script type="text/plain" data-labdemo="brain-waves">
 (function(){
   "use strict";
   var root = document.querySelector('.d-brain-waves');
@@ -7950,7 +7970,7 @@
 })();
 </script>
 <!-- demo: place-grid -->
-<script>
+<script type="text/plain" data-labdemo="place-grid">
 (function(){
   var root = document.querySelector('.d-place-grid');
   if(!root) return;
@@ -8299,7 +8319,7 @@
 })();
 </script>
 <!-- demo: dendritic -->
-<script>
+<script type="text/plain" data-labdemo="dendritic">
 (function(){
   var root=document.querySelector('.d-dendritic');
   if(!root) return;
@@ -8441,7 +8461,7 @@
 })();
 </script>
 <!-- demo: synchrony -->
-<script>
+<script type="text/plain" data-labdemo="synchrony">
 (function(){
   var root=document.querySelector('.d-synchrony');
   if(!root) return;
@@ -8565,7 +8585,7 @@
 })();
 </script>
 <!-- demo: barn-owl -->
-<script>
+<script type="text/plain" data-labdemo="owl">
 (function(){
   var root=document.querySelector('.d-owl');
   if(!root) return;
@@ -8729,6 +8749,156 @@
   window.addEventListener('resize', function(){ clearTimeout(rt); rt=setTimeout(function(){ setup(); draw(); }, 150); });
 })();
 </script>
+          <script type="text/plain" data-labdemo="appetite-switch">
+          (function(){
+            function __apsInit(){
+
+            var bench = document.getElementById('appetite-switch');
+            var map = document.getElementById('aps-map');
+            var explain = document.getElementById('aps-explain');
+            var infoTag = document.getElementById('aps-infoTag'), infoTitle = document.getElementById('aps-infoTitle'),
+                infoBody = document.getElementById('aps-infoBody'), infoHint = document.getElementById('aps-infoHint');
+
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches && map.pauseAnimations) map.pauseAnimations();
+
+            var NODES = {
+              gut:{t:'Gut', n:'Gut L-cells', b:'When food arrives, L-cells lining your intestine release GLP-1, a short-lived hormone that announces a meal is underway. It\'s the natural signal every one of these drugs is built to imitate.'},
+              dpp4:{t:'Enzyme', n:'DPP-4', b:'An enzyme that chops up your own GLP-1 within a minute or two. Semaglutide and its cousins are engineered to resist DPP-4 and to cling to a protein in your blood, and together those two tricks stretch a single dose to about a week instead of a couple of minutes.'},
+              ap:{t:'Brainstem', n:'Area postrema', b:'A deliberate gap in the blood-brain barrier where the brainstem tastes the blood directly. It\'s one of the main ways the long-acting drug gets in, though the drug also reaches the hypothalamus more directly. And because this same sensor watches for toxins, it\'s a key trigger of the nausea many people feel at first.'},
+              nts:{t:'Brainstem', n:'NTS relay', b:'The nucleus tractus solitarius gathers both incoming signals, the one carried up the vagus nerve and the one sensed at the area postrema, and even makes its own GLP-1. From here the message is relayed up to the hypothalamus.'},
+              agrp:{t:'Hypothalamus', n:'AgRP neurons', b:'These neurons drive hunger and push you toward the next meal. GLP-1 signaling turns them down, largely in an indirect way, through the fullness neurons and other cells that inhibit them.'},
+              pomc:{t:'Hypothalamus', n:'POMC neurons', b:'These carry GLP-1 receptors directly. Switched on, they release a messenger called alpha-MSH that carries the fullness signal forward. This is the clearest spot where GLP-1 acts on appetite.'},
+              pvn:{t:'Hypothalamus', n:'PVN and MC4R', b:'Alpha-MSH acts on MC4R receptors on neurons here. This is close to the master dial for feeling satisfied. Rare mutations that break MC4R cause severe, lifelong obesity, which is how we know this node matters.'},
+              reward:{t:'Reward', n:'VTA to nucleus accumbens', b:'GLP-1 receptors also sit in the dopamine reward circuit that decides what feels worth chasing. Quieting it is the likely reason people describe the constant food noise fading, and why early studies hint the pull of alcohol and nicotine can dim too.'}
+            };
+
+            var MODES = {
+              base:{hunger:85,full:20,rew:80,gastric:82,nausea:5, hv:'high',fv:'low',rv:'loud',gv:'fast',nv:'none',
+                routes:[],
+                x:'No extra GLP-1 in the system. The <span class="hot">hunger neurons</span> run loud, the reward circuit flags food as urgent, and the stomach empties fast. The drive to eat stays high.'},
+              meal:{hunger:52,full:56,rew:70,gastric:60,nausea:6, hv:'easing',fv:'rising',rv:'loud',gv:'slower',nv:'none',
+                routes:['vagus','core','out'],
+                x:'Your own GLP-1, released by a meal. It\'s destroyed within minutes, so it acts locally on the <b>vagus nerve</b>, which carries the message to the brainstem and up to the hypothalamus. Fullness rises for a while, then fades. This is the brief, natural signal a drug is built to imitate and outlast.'},
+              drug:{hunger:24,full:86,rew:26,gastric:30,nausea:46, hv:'low',fv:'high',rv:'quiet',gv:'slow',nv:'raised',
+                routes:['blood','core','reward','out'],
+                x:'A GLP-1 agonist like semaglutide, a drug built to mimic the real hormone. Long-acting and carried in the <b>blood</b>, it reaches the brainstem through the <b>area postrema</b>, drives the fullness circuit hard, and quiets the <span class="rew">reward system</span>, which is likely why the food noise fades. The catch comes in through that same door, <b>nausea</b>. And notice none of this is your stomach getting smaller, the weight loss is a brain effect.'}
+            };
+
+            var selected = null;
+            function selectNode(id){
+              bench.querySelectorAll('.node').forEach(function(n){ n.classList.toggle('sel', n.dataset.node===id); });
+              var d = NODES[id];
+              infoTag.textContent = d.t; infoTitle.textContent = d.n; infoBody.textContent = d.b;
+              infoHint.textContent = 'Node ' + (Object.keys(NODES).indexOf(id)+1) + ' of ' + Object.keys(NODES).length;
+              selected = id;
+            }
+
+            function setFill(id,val){ document.getElementById('aps-'+id).style.width = val + '%'; }
+            function setMode(mode){
+              var m = MODES[mode];
+              bench.dataset.mode = mode;
+              bench.querySelectorAll('.mode-btn').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.mode===mode); });
+              setFill('f-hunger',m.hunger); setFill('f-full',m.full); setFill('f-rew',m.rew); setFill('f-gastric',m.gastric); setFill('f-nausea',m.nausea);
+              document.getElementById('aps-v-hunger').textContent=m.hv; document.getElementById('aps-v-full').textContent=m.fv;
+              document.getElementById('aps-v-rew').textContent=m.rv; document.getElementById('aps-v-gastric').textContent=m.gv; document.getElementById('aps-v-nausea').textContent=m.nv;
+              var active = m.routes;
+              bench.querySelectorAll('.edge[data-route]').forEach(function(e){
+                var r=e.dataset.route; e.classList.toggle('hot', active.indexOf(r)>-1 && r!=='reward'); e.classList.toggle('hot-r', r==='reward' && active.indexOf(r)>-1);
+              });
+              bench.querySelectorAll('.e-label[data-route]').forEach(function(e){ e.style.fill = active.indexOf(e.dataset.route)>-1 ? 'var(--soft)' : ''; });
+              ['vagus','blood','core','reward'].forEach(function(r){
+                document.getElementById('aps-flow-'+r).classList.toggle('show', active.indexOf(r)>-1);
+              });
+              bench.querySelector('[data-node="pomc"] .glow').style.opacity = mode==='drug'?0.5:(mode==='meal'?0.28:0);
+              bench.querySelector('[data-node="agrp"] .body').style.opacity = mode==='drug'?0.4:(mode==='meal'?0.7:1);
+              bench.querySelector('[data-node="reward"] .glow').style.opacity = mode==='drug'?0:0.45;
+              explain.style.opacity=0; setTimeout(function(){ explain.innerHTML=m.x; explain.style.opacity=1; },170);
+            }
+
+            bench.querySelectorAll('.mode-btn').forEach(function(b){ b.addEventListener('click',function(){ setMode(b.dataset.mode); }); });
+            bench.querySelectorAll('.node').forEach(function(n){
+              n.addEventListener('click',function(){ selectNode(n.dataset.node); });
+              n.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selectNode(n.dataset.node);} });
+            });
+
+            setMode('base');
+
+            }
+            if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',__apsInit);}else{__apsInit();}
+          })();
+          </script>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
+  <!-- ============ COMPACT-LAB FRAMEWORK (sticky nav + lazy-init on expand) ============ -->
+  <script>
+  (function(){
+    function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
+    ready(function(){
+      // ----- sticky category nav: smooth scroll + active highlight -----
+      var nav = document.querySelector('.lab-nav');
+      if(nav){
+        // keep the sticky nav docked below the (also-sticky) site header, at any width
+        var hdr = document.querySelector('.site-header, header');
+        var syncTop = function(){ if(hdr) nav.style.top = hdr.offsetHeight + 'px'; };
+        syncTop(); window.addEventListener('resize', syncTop);
+        var links = [].slice.call(nav.querySelectorAll('.lab-nav__link'));
+        var targets = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+        links.forEach(function(a, i){
+          a.addEventListener('click', function(e){
+            var t = targets[i];
+            if(t){
+              e.preventDefault();
+              var y = t.getBoundingClientRect().top + window.pageYOffset - (nav.offsetHeight + (hdr ? hdr.offsetHeight : 0) + 10);
+              window.scrollTo({ top: y, behavior: 'smooth' });
+              if(history.replaceState) history.replaceState(null, '', a.getAttribute('href'));
+            }
+          });
+        });
+        if('IntersectionObserver' in window){
+          var io = new IntersectionObserver(function(entries){
+            entries.forEach(function(en){
+              if(en.isIntersecting){
+                var idx = targets.indexOf(en.target);
+                if(idx > -1){ links.forEach(function(l){ l.classList.remove('is-active'); }); links[idx].classList.add('is-active'); }
+              }
+            });
+          }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+          targets.forEach(function(t){ if(t) io.observe(t); });
+        }
+      }
+
+      // ----- lazy-init a demo: inject its inert script so it runs now -----
+      function initDemo(card){
+        if(card.getAttribute('data-labdemo-ready')) return;
+        card.setAttribute('data-labdemo-ready', '1');
+        var slug = card.getAttribute('data-labdemo');
+        var tmpl = document.querySelector('script[type="text/plain"][data-labdemo="' + slug + '"]');
+        if(!tmpl) return;
+        var s = document.createElement('script');
+        s.textContent = tmpl.textContent;
+        document.body.appendChild(s);
+      }
+
+      // ----- wire each collapsible card -----
+      var cards = [].slice.call(document.querySelectorAll('[data-labdemo]')).filter(function(el){ return el.tagName !== 'SCRIPT'; });
+      cards.forEach(function(card){
+        var btn = card.querySelector('.demo-toggle');
+        var body = card.querySelector('.demo-collapse');
+        if(!btn || !body) return;
+        btn.addEventListener('click', function(){
+          var open = card.classList.toggle('is-open');
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          if(open){
+            body.hidden = false;
+            if(btn.firstChild && btn.firstChild.nodeType === 3) btn.firstChild.nodeValue = 'Hide ';
+            initDemo(card);
+          } else {
+            body.hidden = true;
+            if(btn.firstChild && btn.firstChild.nodeType === 3) btn.firstChild.nodeValue = 'Try it ';
+          }
+        });
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
