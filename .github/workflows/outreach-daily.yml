@@ -1,0 +1,60 @@
+name: Daily contributor outreach
+
+on:
+  schedule:
+    - cron: '17 14 * * 1-5'   # weekdays ~10:17am ET (14:17 UTC), staggered after the news cron
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "dry_run: 'true' drafts + reports but sends nothing; 'false' actually sends"
+        required: false
+        default: 'true'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: outreach-daily
+
+jobs:
+  outreach:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Skip if secrets not configured yet
+        id: guard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ] || [ -z "$GMAIL_APP_PASSWORD" ]; then
+            echo "ANTHROPIC_API_KEY and/or GMAIL_APP_PASSWORD secret is not set — skipping. Add them in repo Settings to enable."
+            echo "ready=false" >> $GITHUB_OUTPUT
+          else
+            echo "ready=true" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.ready == 'true'
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        if: steps.guard.outputs.ready == 'true'
+        run: npm install @anthropic-ai/sdk nodemailer imapflow --no-save --silent
+
+      - name: Run outreach pipeline
+        if: steps.guard.outputs.ready == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          GMAIL_USER: theneuroreview@gmail.com
+          OUTREACH_TO: theneuroreview@gmail.com
+          # Optional: emails / name fragments already contacted from other accounts
+          # (e.g. the Columbia address). Keeps that contact list out of the public repo.
+          OUTREACH_EXCLUDE: ${{ secrets.OUTREACH_EXCLUDE }}
+          # workflow_dispatch input when present, else default to dry-run for the cron.
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
+          MAX_SENDS: '3'
+        run: node .github/scripts/outreach_pipeline.mjs

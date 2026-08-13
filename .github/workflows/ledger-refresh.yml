@@ -1,0 +1,47 @@
+name: Outreach ledger refresh
+
+on:
+  schedule:
+    - cron: '0 13,18,23 * * *'   # 3x/day (13:00, 18:00, 23:00 UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ledger-refresh
+
+jobs:
+  ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Skip if Gmail password not configured yet
+        id: guard
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          if [ -z "$GMAIL_APP_PASSWORD" ]; then
+            echo "GMAIL_APP_PASSWORD secret is not set — skipping. Add it in repo Settings to enable."
+            echo "ready=false" >> $GITHUB_OUTPUT
+          else
+            echo "ready=true" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.ready == 'true'
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        if: steps.guard.outputs.ready == 'true'
+        run: npm install imapflow nodemailer --no-save --silent
+
+      - name: Run ledger refresh
+        if: steps.guard.outputs.ready == 'true'
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          GMAIL_USER: theneuroreview@gmail.com
+          LEDGER_TO: theneuroreview@gmail.com
+        run: node .github/scripts/ledger_refresh.mjs
