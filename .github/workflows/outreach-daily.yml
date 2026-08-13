@@ -54,7 +54,8 @@ jobs:
           # Optional: emails / name fragments already contacted from other accounts
           # (e.g. the Columbia address). Keeps that contact list out of the public repo.
           OUTREACH_EXCLUDE: ${{ secrets.OUTREACH_EXCLUDE }}
-          # workflow_dispatch input when present, else default to dry-run for the cron.
-          DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
+          # LIVE: the scheduled cron sends for real. A manual workflow_dispatch still
+          # defaults to dry-run (its input default is 'true') unless you pass 'false'.
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           MAX_SENDS: '3'
         run: node .github/scripts/outreach_pipeline.mjs
