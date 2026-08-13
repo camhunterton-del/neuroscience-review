@@ -105,19 +105,23 @@
     .brain-band__title { font-family: var(--serif); font-size: clamp(1.55rem, 3.2vw, 2.15rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.01em; color: #eef6f2; margin: 0 0 0.6rem; }
     .brain-band__lede { font-family: var(--serif); font-size: 1.03rem; line-height: 1.55; color: #b9c6cf; margin: 0 0 1rem; max-width: 54ch; }
     .brain-band__cue { font-family: var(--sans); font-size: 0.85rem; font-weight: 600; color: #5bd0c4; }
+    .lab-duo .brain-band__eyebrow{ color: var(--accent); }
+    .lab-duo .brain-band__title{ color: var(--text); }
+    .lab-duo .brain-band__lede{ color: var(--text-muted); }
+    .lab-duo .brain-band__cue{ color: var(--accent); }
     @media (max-width: 700px) { .brain-band { grid-template-columns: 1fr; } .brain-band__media img { max-width: 240px; } }
     /* two-explorer Lab spotlight (brain + neuron) */
-    .lab-duo { background: radial-gradient(130% 130% at 28% 18%, #17232e 0%, #0c1319 72%); border: 1px solid #22323f; border-radius: 18px; padding: clamp(1.1rem, 2.6vw, 1.6rem) clamp(1.3rem, 3vw, 1.9rem); display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr); gap: clamp(1.1rem, 3vw, 2rem); align-items: center; }
+    .lab-duo { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 18px; padding: clamp(1.1rem, 2.6vw, 1.6rem) clamp(1.3rem, 3vw, 1.9rem); display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr); gap: clamp(1.1rem, 3vw, 2rem); align-items: center; }
     .lab-duo__head { max-width: 46ch; }
     .lab-duo__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(.55rem, 1.6vw, 1rem); margin-top: 0; }
-    .lab-duo__card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .45rem; text-decoration: none; background: rgba(255,255,255,.02); border: 1px solid #22323f; border-radius: 14px; padding: clamp(1rem, 2.4vw, 1.5rem); transition: border-color .2s, transform .2s, background .2s; }
-    .lab-duo__card:hover { border-color: #2f6f8f; transform: translateY(-3px); background: rgba(255,255,255,.04); }
+    .lab-duo__card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .45rem; text-decoration: none; background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: clamp(1rem, 2.4vw, 1.5rem); transition: border-color .2s, transform .2s, background .2s; }
+    .lab-duo__card:hover { border-color: var(--accent); transform: translateY(-3px); }
     .lab-duo__media { display: flex; align-items: center; justify-content: center; width: 100%; height: clamp(96px, 11.5vw, 124px); overflow: hidden; }
-    .lab-duo__media img { max-width: 190px; max-height: 100%; width: auto; height: auto; object-fit: contain; transform: scale(1.34); filter: drop-shadow(0 8px 16px rgba(0,0,0,.45)); }
+    .lab-duo__media img { max-width: 190px; max-height: 100%; width: auto; height: auto; object-fit: contain; transform: scale(1.34); filter: drop-shadow(0 6px 14px rgba(0,0,0,.2)); }
     .lab-duo__card[href="brain.html"] .lab-duo__media img { transform: scale(1.62); }
     .lab-duo__card[href="synapse.html"] .lab-duo__media img { transform: scale(1.46); }
     .lab-duo__card { padding: clamp(.4rem, 1vw, .55rem); gap: .28rem; }
-    .lab-duo__cardtitle { font-family: var(--serif); font-size: .98rem; font-weight: 600; color: #eef6f2; margin-top: .28rem; }
+    .lab-duo__cardtitle { font-family: var(--serif); font-size: .98rem; font-weight: 600; color: var(--text); margin-top: .28rem; }
     @media (max-width: 760px) { .lab-duo { grid-template-columns: 1fr; } .lab-duo__cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lab-duo__card { min-width: 0; padding: clamp(.3rem, 1.4vw, .5rem); } .lab-duo__media { height: clamp(64px, 20vw, 92px); } .lab-duo__media img { max-width: 100%; transform: scale(1.12); } .lab-duo__card[href="brain.html"] .lab-duo__media img, .lab-duo__card[href="synapse.html"] .lab-duo__media img { transform: scale(1.2); } }
   </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
