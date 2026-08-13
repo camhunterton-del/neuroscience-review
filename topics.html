@@ -17,6 +17,21 @@
     .post-list { max-width: 860px; }
     .post-card { padding: 1.6rem 0; }
     .post-card:first-child { padding-top: 0.2rem; }
+  
+    .topic-group { max-width: 760px; margin: 0 auto 2.6rem; }
+    .topic-group__name { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; letter-spacing: -.01em; margin: 0 0 .2rem; }
+    .topic-group__intro { color: var(--text-muted); font-size: .98rem; margin: 0 0 1rem; }
+    .topic-post-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+    .topic-post { padding: .7rem 0; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .8rem; }
+    .topic-post a { font-family: var(--serif); font-size: 1.06rem; font-weight: 600; color: var(--text); text-decoration: none; line-height: 1.3; }
+    .topic-post a:hover { color: var(--accent); }
+    .topic-post__meta { font-family: var(--sans); font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); }
+    .topic-nav { max-width: 760px; margin: 0 auto 2.2rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+    .topic-nav a { font-family: var(--sans); font-size: .82rem; font-weight: 600; color: var(--accent); text-decoration: none; border: 1px solid var(--border); border-radius: 999px; padding: .3rem .85rem; transition: border-color .15s, background .15s; }
+    .topic-nav a:hover { border-color: var(--accent); background: var(--bg-alt); }
+    .topic-formats { max-width: 760px; margin: 0 auto 2.4rem; color: var(--text-faint); font-family: var(--sans); font-size: .86rem; }
+    .topic-formats a { color: var(--accent); text-decoration: none; }
+
   </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -55,51 +70,64 @@
     <article class="post">
       <header class="post-header post-header--compact">
         <div class="post-header__eyebrow">Topics</div>
-        <h1 class="post-header__title">Browse by format.</h1>
-        <p class="post-header__subtitle">Every piece is written in one of three formats. Pick the one that fits how you want to read.</p>
+        <h1 class="post-header__title">Browse by topic.</h1>
+        <p class="post-header__subtitle">Five threads run through the Review. Follow whichever one pulls you.</p>
       </header>
     </article>
 
-    <section>
-      <ul class="post-list">
-        <li class="post-card">
-          <a href="topics/first-principles.html">
-            <div class="post-card__thumb"><img src="img/photo-neuron.jpg" alt="" loading="lazy"></div>
-            <div class="post-card__body">
-              <div class="post-card__meta">
-                <span>6 pieces</span>
-              </div>
-              <h2 class="post-card__title">First principles</h2>
-              <p class="post-card__lede">Starts from scratch and builds a single idea about the brain from the ground up, with no jargon assumed.</p>
-            </div>
-          </a>
-        </li>
-        <li class="post-card">
-          <a href="topics/paper-breakdown.html">
-            <div class="post-card__thumb"><img src="img/barn-owl.jpg" alt="" loading="lazy"></div>
-            <div class="post-card__body">
-              <div class="post-card__meta">
-                <span>3 pieces</span>
-              </div>
-              <h2 class="post-card__title">Paper breakdown</h2>
-              <p class="post-card__lede">Takes a single real study and walks through what the researchers did, what they found, and what it actually means.</p>
-            </div>
-          </a>
-        </li>
-        <li class="post-card">
-          <a href="topics/myth-busting.html">
-            <div class="post-card__thumb"><img src="img/photo-dopamine.jpg" alt="" loading="lazy"></div>
-            <div class="post-card__body">
-              <div class="post-card__meta">
-                <span>2 pieces</span>
-              </div>
-              <h2 class="post-card__title">Myth-busting</h2>
-              <p class="post-card__lede">Takes a popular claim about the brain and checks it against the actual research.</p>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </section>
+      <nav class="topic-nav" aria-label="Jump to a topic">
+        <a href="#brain-basics">Brain basics</a>
+        <a href="#memory-and-sleep">Memory & sleep</a>
+        <a href="#mental-health-and-reward">Mental health & reward</a>
+        <a href="#drugs-and-the-brain">Drugs & the brain</a>
+        <a href="#neurotech-and-methods">Neurotech & methods</a>
+      </nav>
+      <p class="topic-formats">Prefer to browse by format? <a href="topics/first-principles.html">First principles</a>, <a href="topics/paper-breakdown.html">Paper breakdowns</a>, <a href="topics/myth-busting.html">Myth-busting</a>.</p>
+      <section class="topic-group" id="brain-basics">
+        <h2 class="topic-group__name">Brain basics</h2>
+        <p class="topic-group__intro">How the brain is built, and what its parts actually do.</p>
+        <ul class="topic-post-list">
+          <li class="topic-post"><a href="posts/what-is-a-neuron.html">What is a neuron, really?</a><span class="topic-post__meta">June 1, 2026 &middot; First principles</span></li>
+          <li class="topic-post"><a href="posts/the-blood-brain-barrier.html">Why can't most drugs reach your brain?</a><span class="topic-post__meta">June 17, 2026 &middot; First principles</span></li>
+          <li class="topic-post"><a href="posts/aggression-switch-in-the-brain.html">Scientists found an aggression switch in the mouse brain</a><span class="topic-post__meta">July 1, 2026 &middot; Paper breakdown</span></li>
+          <li class="topic-post"><a href="posts/you-use-all-of-your-brain.html">You use all of your brain.</a><span class="topic-post__meta">July 15, 2026 &middot; Myth-busting</span></li>
+        </ul>
+      </section>
+      <section class="topic-group" id="memory-and-sleep">
+        <h2 class="topic-group__name">Memory & sleep</h2>
+        <p class="topic-group__intro">What your brain does with experience, awake and asleep.</p>
+        <ul class="topic-post-list">
+          <li class="topic-post"><a href="posts/how-memory-works.html">How does memory actually work?</a><span class="topic-post__meta">June 9, 2026 &middot; First principles</span></li>
+          <li class="topic-post"><a href="posts/why-we-sleep.html">Why do you need to sleep?</a><span class="topic-post__meta">June 24, 2026 &middot; First principles</span></li>
+          <li class="topic-post"><a href="posts/barn-owl-prism-experiment.html">What happens when you put prism glasses on a barn owl?</a><span class="topic-post__meta">July 22, 2026 &middot; Paper breakdown</span></li>
+        </ul>
+      </section>
+      <section class="topic-group" id="mental-health-and-reward">
+        <h2 class="topic-group__name">Mental health & reward</h2>
+        <p class="topic-group__intro">Mood, motivation, and the chemistry we tend to get wrong.</p>
+        <ul class="topic-post-list">
+          <li class="topic-post"><a href="posts/how-one-drug-treats-depression-and-anxiety.html">How can one drug treat both depression and anxiety?</a><span class="topic-post__meta">July 29, 2026 &middot; First principles</span></li>
+          <li class="topic-post"><a href="posts/dopamine-doesnt-do-what-you-think.html">Dopamine doesn't do what you think it does.</a><span class="topic-post__meta">June 1, 2026 &middot; Myth-busting</span></li>
+        </ul>
+      </section>
+      <section class="topic-group" id="drugs-and-the-brain">
+        <h2 class="topic-group__name">Drugs & the brain</h2>
+        <p class="topic-group__intro">What medicines and molecules really do inside your head.</p>
+        <ul class="topic-post-list">
+          <li class="topic-post"><a href="posts/what-to-know-before-peptides.html">What to know before you try peptides</a><span class="topic-post__meta">August 12, 2026 &middot; The honest guide</span></li>
+          <li class="topic-post"><a href="posts/do-the-new-alzheimers-drugs-work.html">Do the new Alzheimer's drugs actually work?</a><span class="topic-post__meta">July 8, 2026 &middot; Paper breakdown</span></li>
+          <li class="topic-post"><a href="posts/how-one-drug-treats-depression-and-anxiety.html">How can one drug treat both depression and anxiety?</a><span class="topic-post__meta">July 29, 2026 &middot; First principles</span></li>
+          <li class="topic-post"><a href="posts/the-blood-brain-barrier.html">Why can't most drugs reach your brain?</a><span class="topic-post__meta">June 17, 2026 &middot; First principles</span></li>
+        </ul>
+      </section>
+      <section class="topic-group" id="neurotech-and-methods">
+        <h2 class="topic-group__name">Neurotech & methods</h2>
+        <p class="topic-group__intro">How we measure the brain, and begin to interface with it.</p>
+        <ul class="topic-post-list">
+          <li class="topic-post"><a href="posts/brain-implant-inner-voice.html">Can a brain implant read the voice in your head?</a><span class="topic-post__meta">August 5, 2026 &middot; Paper breakdown</span></li>
+          <li class="topic-post"><a href="posts/what-fmri-measures.html">What does an fMRI actually measure?</a><span class="topic-post__meta">June 10, 2026 &middot; First principles</span></li>
+        </ul>
+      </section>
 
     <section class="cta" id="subscribe">
       <h3>Get one brain-science deep dive every Wednesday.</h3>

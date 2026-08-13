@@ -854,3 +854,9 @@ article.post {
 .decode-demo__out { color: var(--text); }
 .decode-demo__err { color: #c0392b; font-weight: 600; }
 [data-theme="dark"] .decode-demo__err { color: #ec9b8f; }
+
+/* Subject chips on articles: link each post back to its topic sections */
+.post-topics { font-family: var(--sans); font-size: .85rem; margin: 2.25rem 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.post-topics__label { color: var(--text-faint); text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; font-weight: 600; }
+.topic-chip { color: var(--accent); text-decoration: none; border: 1px solid var(--border); border-radius: 999px; padding: .25rem .7rem; font-weight: 600; transition: border-color .15s, background .15s; }
+.topic-chip:hover { border-color: var(--accent); background: var(--bg-alt); }
