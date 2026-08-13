@@ -118,7 +118,7 @@
     .lab-duo__card[href="synapse.html"] .lab-duo__media img { transform: scale(1.46); }
     .lab-duo__card { padding: clamp(.4rem, 1vw, .55rem); gap: .28rem; }
     .lab-duo__cardtitle { font-family: var(--serif); font-size: .98rem; font-weight: 600; color: #eef6f2; margin-top: .28rem; }
-    @media (max-width: 760px) { .lab-duo { grid-template-columns: 1fr; } .lab-duo__cards { grid-template-columns: repeat(3, 1fr); } .lab-duo__media { height: clamp(64px, 20vw, 92px); } }
+    @media (max-width: 760px) { .lab-duo { grid-template-columns: 1fr; } .lab-duo__cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lab-duo__card { min-width: 0; padding: clamp(.3rem, 1.4vw, .5rem); } .lab-duo__media { height: clamp(64px, 20vw, 92px); } .lab-duo__media img { max-width: 100%; transform: scale(1.12); } .lab-duo__card[href="brain.html"] .lab-duo__media img, .lab-duo__card[href="synapse.html"] .lab-duo__media img { transform: scale(1.2); } }
   </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
