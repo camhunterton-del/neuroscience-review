@@ -516,6 +516,9 @@ article.post {
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
 .theme-toggle{background:none;border:1px solid var(--border);border-radius:999px;width:2rem;height:2rem;cursor:pointer;line-height:1;color:var(--text-muted);font-size:.95rem;padding:0;display:inline-flex;align-items:center;justify-content:center;transition:color .15s,border-color .15s;align-self:center;}
 .theme-toggle:hover{color:var(--accent);border-color:var(--accent);}
+.site-nav a.site-nav__search{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;padding:0;border:1px solid var(--border);border-radius:999px;color:var(--text-muted);align-self:center;transition:color .15s,border-color .15s;}
+.site-nav a.site-nav__search:hover{color:var(--accent);border-color:var(--accent);background:none;}
+.site-nav a.site-nav__search svg{width:1rem;height:1rem;display:block;}
 .post-body{max-width:66ch;margin-left:auto;margin-right:auto;}
 .post-body > p:first-of-type::first-letter{font-family:var(--serif);font-weight:600;float:left;font-size:3.3em;line-height:.78;padding:.04em .12em 0 0;color:var(--accent);}
 .pull-quote{font-family:var(--serif);font-size:1.5rem;line-height:1.35;font-style:italic;color:var(--text);border:0;padding:0;margin:2.5rem auto;max-width:60ch;}
