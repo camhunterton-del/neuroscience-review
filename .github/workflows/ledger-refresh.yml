@@ -1,8 +1,9 @@
 name: Outreach ledger refresh
 
 on:
-  schedule:
-    - cron: '0 13,18,23 * * *'   # 3x/day (13:00, 18:00, 23:00 UTC)
+  # The outreach ledger is now folded into the daily digest (daily-digest.yml),
+  # so its standalone schedule has been retired to keep one daily automated email.
+  # Kept as workflow_dispatch for manual, on-demand ledger pulls.
   workflow_dispatch: {}
 
 permissions:

@@ -1,25 +1,25 @@
 // Autonomous weekday-morning contributor-outreach engine for The Neuroscience Review.
-// Runs in GitHub Actions: researches NEW outreach targets (Feature journalists +
-// student "Commons" orgs) with the Claude API + web search, dedups against everyone
-// we have ever emailed (via IMAP on the Sent folder), drafts a personalized pitch,
-// double-verifies each one, and — unless DRY_RUN — sends up to MAX_SENDS of them,
-// then emails a plain-text digest of what was sent and what was held.
+// Researches NEW outreach targets (Feature journalists + student "Commons" orgs)
+// with the Claude API + web search, dedups against everyone we have ever emailed
+// (via IMAP on the Sent folder) plus an OUTREACH_EXCLUDE list, drafts a personalized
+// pitch, double-verifies each one, and — unless dryRun — sends up to maxSends of them.
+//
+// This file is now a reusable module: `runOutreach({ dryRun, maxSends })` runs the
+// FULL vetted flow and RETURNS { sent, held, imapOk, imapError }. It NO LONGER emails
+// its own digest — the daily digest owns all outbound email. It is still runnable
+// standalone (see the bottom of the file) so manual `workflow_dispatch` keeps working.
 //
 // Requires env ANTHROPIC_API_KEY, GMAIL_APP_PASSWORD. Never throws, never exits
 // non-zero: a failure anywhere degrades to "held" rather than a double-contact.
-// Writes sent=<n> to GITHUB_OUTPUT and a structured .github/outreach-latest.json.
 
 import Anthropic from '@anthropic-ai/sdk'
 import nodemailer from 'nodemailer'
 import { ImapFlow } from 'imapflow'
+import { pathToFileURL } from 'url'
 import fs from 'fs'
 
 const MODEL = process.env.OUTREACH_MODEL || 'claude-sonnet-5'
 const GMAIL_USER = process.env.GMAIL_USER || 'theneuroreview@gmail.com'
-const OUTREACH_TO = process.env.OUTREACH_TO || 'theneuroreview@gmail.com'
-// Any value other than the exact string 'false' keeps us in dry-run (fail safe).
-const DRY_RUN = process.env.DRY_RUN !== 'false'
-const MAX_SENDS = Math.max(0, parseInt(process.env.MAX_SENDS || '3', 10) || 0)
 // App passwords are shown with spaces in Google's UI; strip them before use.
 const GMAIL_PASS = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '')
 
@@ -176,7 +176,18 @@ function buildTransport() {
   })
 }
 
-async function main() {
+// --- ORCHESTRATOR: the full vetted flow, returned (never emails a digest) ----
+// Runs research -> IMAP Sent-folder dedup + OUTREACH_EXCLUDE list -> draft ->
+// verify1 -> verify2 -> gated send capped at maxSends, and RETURNS the result.
+// A send happens ONLY when: the candidate has an email AND is not already
+// contacted AND is not on the exclude list AND IMAP dedup succeeded AND verify1
+// passed AND verify2 passed AND we are under the cap AND dryRun is false.
+export async function runOutreach({ dryRun = true, maxSends = 3 } = {}) {
+  // Any value other than an explicit boolean false keeps us in dry-run (fail safe),
+  // preserving the original `process.env.DRY_RUN !== 'false'` semantics.
+  const DRY_RUN = dryRun !== false
+  const MAX_SENDS = Math.max(0, parseInt(maxSends, 10) || 0)
+
   const candidates = await research()
   console.log(`Research surfaced ${candidates.length} candidate(s).`)
 
@@ -248,60 +259,58 @@ async function main() {
     }
   }
 
-  // --- 6/7. REPORT -----------------------------------------------------------
-  const sentVerb = DRY_RUN ? 'WOULD-SEND (dry run)' : 'SENT'
-  const lines = []
-  lines.push(`Outreach run ${niceDate}`)
-  lines.push(DRY_RUN ? 'Mode: DRY RUN (nothing was actually emailed to targets)' : 'Mode: LIVE')
-  lines.push(`Cap: ${MAX_SENDS} per run.`)
-  if (!imap.ok) lines.push(`WARNING: IMAP dedup was unavailable this run, so nothing was sent (fail safe). Error: ${imap.error}`)
-  lines.push('')
-  lines.push(`== ${sentVerb} (${sent.length}) ==`)
-  if (sent.length === 0) lines.push('  (none)')
-  for (const s of sent) lines.push(`  - ${s.name} <${s.email}> [${s.kind}] — ${s.subject}`)
-  lines.push('')
-  lines.push(`== HELD / SKIPPED (${held.length}) ==`)
-  if (held.length === 0) lines.push('  (none)')
-  for (const h of held) lines.push(`  - ${h.name}${h.email ? ` <${h.email}>` : ''} — ${h.reason}`)
-  const digest = lines.join('\n')
-  console.log('\n' + digest + '\n')
-
-  // Email the digest to OUTREACH_TO (best effort — a digest failure is non-fatal).
-  try {
-    if (!transporter) transporter = buildTransport()
-    await transporter.sendMail({
-      from: GMAIL_USER,
-      to: OUTREACH_TO,
-      subject: `Outreach run ${niceDate} — ${sent.length} ${DRY_RUN ? 'would-send' : 'sent'}, ${held.length} held`,
-      text: digest,
-    })
-    console.log('Digest emailed to', OUTREACH_TO)
-  } catch (e) {
-    console.error('Could not email digest:', e.message)
-  }
-
-  // Structured result for later inspection / handoff.
-  try {
-    fs.writeFileSync('.github/outreach-latest.json', JSON.stringify({
-      date: niceDate,
-      dryRun: DRY_RUN,
-      maxSends: MAX_SENDS,
-      imapOk: imap.ok,
-      imapError: imap.error,
-      sent,
-      held,
-    }, null, 2))
-  } catch (e) {
-    console.error('Could not write outreach-latest.json:', e.message)
-  }
-
   console.log(`Outreach: ${sent.length} ${DRY_RUN ? 'would-send' : 'sent'}, ${held.length} held.`)
-  try { fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/stdout', `sent=${sent.length}\n`) } catch (e) { /* non-fatal */ }
+  return { sent, held, imapOk: imap.ok, imapError: imap.error }
 }
 
-// Never throw, never exit non-zero: a broken run must not fail the workflow or
-// leave state that could cause a double-contact next time.
-main().catch((e) => {
-  console.error('Outreach pipeline error:', e && e.stack ? e.stack : e)
-  process.exit(0)
-})
+// --- STANDALONE ENTRY: preserve manual `workflow_dispatch` use ---------------
+// When this file is run directly (not imported by the daily digest), run the
+// pipeline with DRY_RUN / MAX_SENDS from env and just print a plain-text summary.
+// No email is sent here anymore — the daily digest owns all outbound email.
+// pathToFileURL handles paths that contain spaces safely (a plain
+// `file://${process.argv[1]}` string comparison would miss %20-encoded paths).
+const invokedDirectly = import.meta.url === pathToFileURL(process.argv[1] || '').href
+if (invokedDirectly) {
+  const dryRun = process.env.DRY_RUN !== 'false'
+  const maxSends = process.env.MAX_SENDS || '3'
+  runOutreach({ dryRun, maxSends })
+    .then((res) => {
+      const sentVerb = dryRun ? 'WOULD-SEND (dry run)' : 'SENT'
+      const lines = []
+      lines.push(`Outreach run ${niceDate}`)
+      lines.push(dryRun ? 'Mode: DRY RUN (nothing was actually emailed to targets)' : 'Mode: LIVE')
+      lines.push(`Cap: ${maxSends} per run.`)
+      if (!res.imapOk) lines.push(`WARNING: IMAP dedup was unavailable this run, so nothing was sent (fail safe). Error: ${res.imapError}`)
+      lines.push('')
+      lines.push(`== ${sentVerb} (${res.sent.length}) ==`)
+      if (res.sent.length === 0) lines.push('  (none)')
+      for (const s of res.sent) lines.push(`  - ${s.name} <${s.email}> [${s.kind}] — ${s.subject}`)
+      lines.push('')
+      lines.push(`== HELD / SKIPPED (${res.held.length}) ==`)
+      if (res.held.length === 0) lines.push('  (none)')
+      for (const h of res.held) lines.push(`  - ${h.name}${h.email ? ` <${h.email}>` : ''} — ${h.reason}`)
+      console.log('\n' + lines.join('\n') + '\n')
+
+      // Structured result for later inspection / handoff (not committed).
+      try {
+        fs.writeFileSync('.github/outreach-latest.json', JSON.stringify({
+          date: niceDate,
+          dryRun,
+          maxSends: Math.max(0, parseInt(maxSends, 10) || 0),
+          imapOk: res.imapOk,
+          imapError: res.imapError,
+          sent: res.sent,
+          held: res.held,
+        }, null, 2))
+      } catch (e) {
+        console.error('Could not write outreach-latest.json:', e.message)
+      }
+      try { fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/stdout', `sent=${res.sent.length}\n`) } catch (e) { /* non-fatal */ }
+    })
+    // Never throw, never exit non-zero: a broken run must not fail the workflow or
+    // leave state that could cause a double-contact next time.
+    .catch((e) => {
+      console.error('Outreach pipeline error:', e && e.stack ? e.stack : e)
+      process.exit(0)
+    })
+}

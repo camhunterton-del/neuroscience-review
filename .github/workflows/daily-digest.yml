@@ -1,13 +1,18 @@
-name: Daily contributor outreach
+name: Daily digest
+
+# The single morning email for The Neuroscience Review. Folds the contributor
+# outreach engine, an inbox reply-concierge (draft only), the Wednesday-post
+# guardian, and the subscriber / Bluesky numbers into ONE weekday email, so the
+# inbox is not flooded with several separate automated reports. Outreach now runs
+# LIVE here on the cron (its own scheduled workflow has been retired).
 
 on:
-  # Scheduled outreach now runs inside daily-digest.yml (the single morning email).
-  # This workflow is kept for manual dry-runs / one-off live sends via the Actions
-  # tab; its cron has been retired so there is exactly one daily automated email.
+  schedule:
+    - cron: '30 14 * * 1-5'   # weekdays ~10:30am ET (14:30 UTC)
   workflow_dispatch:
     inputs:
       dry_run:
-        description: "dry_run: 'true' drafts + reports but sends nothing; 'false' actually sends"
+        description: "dry_run: 'true' drafts + reports but sends no outreach; 'false' sends live outreach"
         required: false
         default: 'true'
 
@@ -15,10 +20,10 @@ permissions:
   contents: read
 
 concurrency:
-  group: outreach-daily
+  group: daily-digest
 
 jobs:
-  outreach:
+  digest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,18 +50,21 @@ jobs:
         if: steps.guard.outputs.ready == 'true'
         run: npm install @anthropic-ai/sdk nodemailer imapflow --no-save --silent
 
-      - name: Run outreach pipeline
+      - name: Run daily digest
         if: steps.guard.outputs.ready == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           GMAIL_USER: theneuroreview@gmail.com
-          OUTREACH_TO: theneuroreview@gmail.com
-          # Optional: emails / name fragments already contacted from other accounts
-          # (e.g. the Columbia address). Keeps that contact list out of the public repo.
+          DIGEST_TO: theneuroreview@gmail.com
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          BLUESKY_HANDLE: theneuroreview.bsky.social
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          # Emails / name fragments already contacted from other accounts (e.g. the
+          # Columbia address). Keeps that contact list out of the public repo.
           OUTREACH_EXCLUDE: ${{ secrets.OUTREACH_EXCLUDE }}
-          # LIVE: the scheduled cron sends for real. A manual workflow_dispatch still
-          # defaults to dry-run (its input default is 'true') unless you pass 'false'.
+          # LIVE on the scheduled cron (outreach is now folded in here). A manual
+          # workflow_dispatch still defaults to dry-run unless you pass 'false'.
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           MAX_SENDS: '3'
-        run: node .github/scripts/outreach_pipeline.mjs
+        run: node .github/scripts/daily_digest.mjs
