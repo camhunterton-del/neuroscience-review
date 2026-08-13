@@ -243,6 +243,9 @@
     .lab-bench .lab-nav__link{ flex:0 0 auto; font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); text-decoration:none; padding:.9rem .8rem; border-bottom:2px solid transparent; white-space:nowrap; transition:color .15s, border-color .15s; }
     .lab-bench .lab-nav__link:hover{ color:var(--teal); }
     .lab-bench .lab-nav__link.is-active{ color:var(--teal); border-bottom-color:var(--teal); }
+    /* Photosensitive-epilepsy notice: a few demos flash / move fast */
+    .lab-bench .lab-safety{ max-width:1180px; margin:0 auto; padding:.7rem clamp(1rem,4vw,2.4rem); font-family:var(--mono); font-size:.72rem; line-height:1.5; letter-spacing:.03em; color:var(--soft); border-bottom:1px solid var(--line); display:flex; gap:.6rem; align-items:baseline; }
+    .lab-bench .lab-safety__key{ flex:0 0 auto; text-transform:uppercase; letter-spacing:.14em; color:var(--faint); }
 
     /* collapsible demo cards */
     .lab-bench .demo-toggle{ display:inline-flex; align-items:center; gap:.5rem; margin-top:1rem; font-family:var(--mono); font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); background:transparent; border:1px solid var(--teal-dim); border-radius:8px; padding:.5rem 1.05rem; cursor:pointer; transition:color .15s, border-color .15s, background .15s; }
@@ -2063,6 +2066,12 @@
         <a class="lab-nav__link" href="#maps">Maps &amp; methods</a>
       </div>
     </nav>
+
+    <!-- Photosensitive-epilepsy safety notice -->
+    <p class="lab-safety" role="note">
+      <span class="lab-safety__key">Heads up</span>
+      <span>A few demos below use flashing or rapid motion. If you&rsquo;re sensitive to flashing light, skip those or turn on Reduce Motion.</span>
+    </p>
 
     <div class="trace-divider" role="presentation" aria-hidden="true">
       <svg viewBox="0 0 1200 24" preserveAspectRatio="none"><polyline points="0,12 470,12 486,12 496,6 505,18 515,12 590,12 600,12 610,3 619,21 628,12 720,12 736,12 746,8 754,16 763,12 1200,12"></polyline></svg>

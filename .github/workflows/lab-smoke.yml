@@ -1,0 +1,71 @@
+name: Lab smoke tests
+
+# Drives a real headless browser through the 3D explorers (brain / neuron / synapse)
+# to prove they actually boot: Three.js imports, WebGL starts, chips open the info
+# panel, and the CDN-block fallback appears. See tests/lab-smoke.mjs.
+
+on:
+  push:
+    paths:
+      - 'lab.html'
+      - 'brain.html'
+      - 'neuron.html'
+      - 'synapse.html'
+      - 'tests/**'
+      - '.github/workflows/lab-smoke.yml'
+  pull_request:
+    paths:
+      - 'lab.html'
+      - 'brain.html'
+      - 'neuron.html'
+      - 'synapse.html'
+      - 'tests/**'
+      - '.github/workflows/lab-smoke.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lab-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lab-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright + Chromium
+        run: |
+          npm i -D playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve the checkout
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 &
+          echo "server_pid=$!" >> "$GITHUB_ENV"
+
+      - name: Wait for the static server
+        run: |
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null "http://localhost:8000/lab.html"; then
+              echo "server is up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "static server did not come up on :8000"; exit 1
+
+      - name: Run Lab smoke tests
+        env:
+          BASE: http://localhost:8000
+        run: node tests/lab-smoke.mjs
+
+      - name: Stop the static server
+        if: always()
+        run: |
+          if [ -n "${server_pid:-}" ]; then kill "$server_pid" 2>/dev/null || true; fi
