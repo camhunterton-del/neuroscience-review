@@ -214,19 +214,19 @@ main { padding: 3rem 1.5rem 4rem; }
 }
 
 /* Articles archive: keep the newest 6 as full cards; auto-compact every older
-   post to a one-line row (format + date + title, no thumbnail or lede) so the
-   archive stays short as posts pile up. Presentational only — the publish
-   workflow keeps inserting new cards at the top of .post-list. */
-.post-list .post-card:nth-child(n+7){ padding:.4rem 0; }
+   post to a compact row (small thumbnail + one-line meta + title, no lede) so
+   the archive stays short as posts pile up. Presentational only. */
+.post-list .post-card:nth-child(n+7){ padding:.5rem 0; }
 .post-list .post-card:nth-child(n+7) .post-card__lede{ display:none; }
-.post-list .post-card:nth-child(n+7) a{ align-items:center; gap:.65rem; }
-.post-list .post-card:nth-child(n+7) .post-card__thumb{ flex:0 0 38px; aspect-ratio:4/3; border-radius:5px; }
-.post-list .post-card:nth-child(n+7) .post-card__body{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.2rem .8rem; min-width:0; }
-.post-list .post-card:nth-child(n+7) .post-card__meta{ margin:0; }
+.post-list .post-card:nth-child(n+7) a{ align-items:center; gap:.75rem; }
+.post-list .post-card:nth-child(n+7) .post-card__thumb{ flex:0 0 40px; aspect-ratio:4/3; border-radius:5px; }
+.post-list .post-card:nth-child(n+7) .post-card__body{ display:block; min-width:0; }
+.post-list .post-card:nth-child(n+7) .post-card__meta{ margin:0 0 .12rem; flex-wrap:nowrap; }
+.post-list .post-card:nth-child(n+7) .post-card__meta span{ white-space:nowrap; }
 .post-list .post-card:nth-child(n+7) .post-card__meta span:nth-child(n+4){ display:none; }
-.post-list .post-card:nth-child(n+7) .post-card__title{ font-size:.92rem; line-height:1.3; margin:0; letter-spacing:-.005em; }
+.post-list .post-card:nth-child(n+7) .post-card__title{ font-size:.95rem; line-height:1.3; margin:0; letter-spacing:-.005em; }
 .post-list .post-card:nth-child(7)::before{ content:"Earlier"; display:block; font-family:var(--sans); font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em; color:var(--text-faint); margin:1.4rem 0; padding-bottom:.6rem; border-bottom:1px solid var(--border); }
-@media (max-width: 620px) { .post-list .post-card:nth-child(n+7) a{ flex-direction:row; align-items:center; gap:.7rem; } .post-list .post-card:nth-child(n+7) .post-card__thumb{ width:34px; flex:0 0 34px; aspect-ratio:4/3; } }
+@media (max-width: 620px) { .post-list .post-card:nth-child(n+7) a{ flex-direction:row; align-items:center; gap:.65rem; } .post-list .post-card:nth-child(n+7) .post-card__thumb{ width:36px; flex:0 0 36px; aspect-ratio:4/3; } }
 
 /* Article (post page) */
 article.post {
