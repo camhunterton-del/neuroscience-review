@@ -42,15 +42,26 @@ function onExcludeList(c) {
 // A distinctive 2-word phrase from a candidate's org (or name), used to search the
 // Sent folder for a prior contact under a DIFFERENT email address (same-org dedup).
 // Returns '' when the source is too short/generic to search on safely.
+// Generic institutional words that carry no identifying signal on their own, so
+// they must never form the search phrase (otherwise "University of" matches
+// basically every sent email and holds every university-affiliated candidate).
+const ORG_STOPWORDS = new Set([
+  'university', 'college', 'school', 'of', 'the', 'and', 'for', 'at', 'in', 'on',
+  'journal', 'journals', 'magazine', 'review', 'club', 'society', 'association',
+  'undergraduate', 'graduate', 'student', 'students', 'science', 'sciences',
+  'neuroscience', 'department', 'institute', 'national', 'international', 'high',
+  'division', 'chapter', 'center', 'centre', 'group', 'program', 'project',
+  'organization', 'inc', 'dept',
+])
 function orgSearchTerm(c) {
   const words = String(c.org || c.name || '')
     .replace(/\([^)]*\)/g, ' ')       // drop parentheticals like "(University of Washington)"
     .replace(/[^\w\s]/g, ' ')
-    .replace(/^the\s+/i, '')          // drop a leading "The"
     .replace(/\s+/g, ' ').trim()
-    .split(' ').filter(Boolean)
-  if (words.length < 2) return ''     // a single word is too generic to match on safely
-  return words.slice(0, 2).join(' ')  // e.g. "Grey Matters", "Berkeley Science"
+    .split(' ')
+    .filter((w) => w.length >= 3 && !ORG_STOPWORDS.has(w.toLowerCase()))
+  if (words.length < 2) return ''     // need 2 DISTINCTIVE tokens to search safely
+  return words.slice(0, 2).join(' ')  // e.g. "Grey Matters" (not "University of")
 }
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
