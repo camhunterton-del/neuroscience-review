@@ -35,8 +35,22 @@ const excludeNames = EXCLUDE.filter((s) => s && !s.includes('@'))
 function onExcludeList(c) {
   const email = String(c.email || '').trim().toLowerCase()
   if (email && excludeEmails.has(email)) return true
-  const name = String(c.name || '').toLowerCase()
-  return excludeNames.some((n) => n.length >= 4 && name.includes(n))
+  const hay = `${c.name || ''} ${c.org || ''}`.toLowerCase()
+  return excludeNames.some((n) => n.length >= 4 && hay.includes(n))
+}
+
+// A distinctive 2-word phrase from a candidate's org (or name), used to search the
+// Sent folder for a prior contact under a DIFFERENT email address (same-org dedup).
+// Returns '' when the source is too short/generic to search on safely.
+function orgSearchTerm(c) {
+  const words = String(c.org || c.name || '')
+    .replace(/\([^)]*\)/g, ' ')       // drop parentheticals like "(University of Washington)"
+    .replace(/[^\w\s]/g, ' ')
+    .replace(/^the\s+/i, '')          // drop a leading "The"
+    .replace(/\s+/g, ' ').trim()
+    .split(' ').filter(Boolean)
+  if (words.length < 2) return ''     // a single word is too generic to match on safely
+  return words.slice(0, 2).join(' ')  // e.g. "Grey Matters", "Berkeley Science"
 }
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -109,7 +123,21 @@ async function dedup(candidates) {
     for (const c of withEmail) {
       try {
         const hits = await imap.search({ to: c.email })
-        c.alreadyContacted = Array.isArray(hits) ? hits.length > 0 : Boolean(hits)
+        let contacted = Array.isArray(hits) ? hits.length > 0 : Boolean(hits)
+        // Same-org guard: if the exact address is clean, still check whether this
+        // org (or person) already appears in a Sent email, i.e. was contacted at a
+        // DIFFERENT address. Dedup errs toward holding, so a broad match is the safe side.
+        if (!contacted) {
+          const term = orgSearchTerm(c)
+          if (term) {
+            const orgHits = await imap.search({ body: term })
+            if (Array.isArray(orgHits) ? orgHits.length > 0 : Boolean(orgHits)) {
+              contacted = true
+              console.error(`org-dedup: "${term}" already appears in Sent — holding ${c.email}`)
+            }
+          }
+        }
+        c.alreadyContacted = contacted
       } catch (e) {
         // A single failed search shouldn't fail the whole run, but we must be
         // conservative: treat an unknown result as "already contacted" so we
