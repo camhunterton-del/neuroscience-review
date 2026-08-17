@@ -136,6 +136,7 @@ async function draft(c) {
 Recipient: ${c.name}${c.org ? ` at ${c.org}` : ''}. Lane: ${c.kind}. Their beat/work: ${c.beat || 'unknown'}. Reference for personalizing: ${c.bioUrl || 'n/a'}. Why they fit: ${c.whyFit || 'n/a'}.
 ${laneBrief}
 HARD VOICE RULES (follow every one):
+- Open with a greeting that addresses the recipient directly, followed by a comma. If the recipient is a person, greet them by name (for example "Hi Dr. Skelly,"). If the recipient is an organization, journal, magazine, or club with no specific named person, greet the team by the organization's real name (for example "Hi Berkeley Scientific Journal team,"). NEVER open with a generic greeting like "Hi there" or "To whom it may concern".
 - No em-dashes anywhere. No colons or semicolons used as prose punctuation.
 - Contractions are fine. Warm, plain, and human. No hype.
 - Describe Cameron as "studies neuroscience at Columbia". Never "undergrad" or "undergraduate".
