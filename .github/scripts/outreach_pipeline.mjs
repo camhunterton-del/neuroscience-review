@@ -155,7 +155,7 @@ Return ONLY JSON {"subject":..., "body":...}. The body is plain text with real l
 async function verify1(c) {
   const prompt = `You are validating a contributor-outreach target before we email them. Target: name "${c.name}", kind "${c.kind}", email "${c.email}", org "${c.org}", beat "${c.beat}".
 Return ONLY JSON {"pass":true|false,"reason":"one line"}. Pass ONLY if all hold: this reads as a real, identifiable person or organization; the email looks plausibly correct for them; the lane fits (feature = a credentialed non-student journalist or author; commons = a student, student org, university magazine, or club journal); and nothing screams that this is already a known contact or a duplicate. When in doubt, fail.`
-  return extractJson(await ask(prompt, { maxTokens: 500 }))
+  return extractJson(await ask(prompt, { maxTokens: 2000 }))
 }
 
 // --- 5. VERIFY 2: does the draft actually pass muster? ----------------------
@@ -165,7 +165,7 @@ SUBJECT: ${c.draft.subject}
 BODY:
 ${c.draft.body}
 Return ONLY JSON {"pass":true|false,"reason":"one line"}. Pass ONLY if ALL hold: it is addressed to the correct person by the correct name; it invents no facts about them; it follows every voice rule (no em-dashes; no colons or semicolons as prose punctuation; describes Cameron as "studies neuroscience at Columbia" never "undergrad"; never calls the publication "small" or "a newsletter"); a Feature pitch mentions NO pay or money; it has a proper sign-off as Cameron / The Neuroscience Review / theneuroreview.com; and it contains no leftover placeholder or bracket text. When in doubt, fail.`
-  return extractJson(await ask(prompt, { maxTokens: 500 }))
+  return extractJson(await ask(prompt, { maxTokens: 2000 }))
 }
 
 function buildTransport() {
