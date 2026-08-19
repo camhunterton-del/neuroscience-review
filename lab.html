@@ -3516,6 +3516,101 @@
         </div>
           </section>
 
+          <!-- Companion to the midlife-risk dementia deep dive (Aug 19 2026): the paper made operable -->
+          <style>
+            .d-buyback{
+              --teal:#37cbb6; --teal-bright:#5fe0cd; --teal-dim:#1f6f64;
+              --panel:#101a18; --panel2:#152622; --line:rgba(120,170,155,.16);
+              --ink:#e6f0ea; --soft:#93a8a0; --faint:#7c8f86; --amber:#ec7f4c;
+              --serif:'Newsreader',Georgia,'Times New Roman',serif;
+              --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+              --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,Consolas,monospace;
+            }
+            .d-buyback *{ box-sizing:border-box; }
+            .d-buyback .bb-kicker{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--teal); margin:0 0 .55rem; }
+            .d-buyback .bb-title{ font-family:var(--serif); font-weight:600; font-size:clamp(1.4rem,3.2vw,1.9rem); color:#eaf4f0; margin:0; line-height:1.14; }
+            .d-buyback .bb-note{ font-family:var(--serif); color:var(--soft); font-size:1.02rem; line-height:1.5; max-width:62ch; margin:.85rem 0 0; }
+
+            .d-buyback .bb-stage{ margin:.4rem 0 0; }
+            .d-buyback .bb-switches{ display:flex; flex-wrap:wrap; gap:.6rem; }
+            .d-buyback .bb-switch{ display:inline-flex; align-items:center; gap:.55rem; font-family:var(--sans); font-weight:600; font-size:.9rem; color:var(--soft); background:var(--panel2); border:1px solid var(--line); border-radius:999px; padding:.5rem 1.05rem .5rem .8rem; cursor:pointer; transition:border-color .15s, color .15s, background .15s; }
+            .d-buyback .bb-switch__dot{ width:.85rem; height:.85rem; border-radius:50%; border:2px solid var(--faint); background:transparent; transition:background .15s, border-color .15s, box-shadow .15s; flex:0 0 auto; }
+            .d-buyback .bb-switch:hover{ border-color:var(--teal-dim); color:var(--ink); }
+            .d-buyback .bb-switch[aria-pressed="true"]{ border-color:var(--amber); color:#ffe4d5; background:rgba(236,127,76,.10); }
+            .d-buyback .bb-switch[aria-pressed="true"] .bb-switch__dot{ background:var(--amber); border-color:var(--amber); box-shadow:0 0 8px rgba(236,127,76,.6); }
+
+            .d-buyback .bb-readout{ margin:1.35rem 0 0; }
+            .d-buyback .bb-gap{ font-family:var(--serif); margin:0; color:var(--ink); font-size:1.15rem; line-height:1.2; }
+            .d-buyback .bb-gap__num{ font-family:var(--sans); font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(2.4rem,7vw,3.3rem); color:var(--teal-bright); line-height:1; display:inline-block; vertical-align:-.05em; margin-right:.45rem; transition:color .15s; }
+            .d-buyback .bb-gap--none .bb-gap__num{ color:var(--teal); }
+            .d-buyback .bb-gap__lab{ color:var(--soft); }
+            .d-buyback .bb-abs{ font-family:var(--mono); font-size:.82rem; color:var(--faint); margin:.55rem 0 0; }
+            .d-buyback .bb-abs b{ color:var(--soft); font-weight:600; font-variant-numeric:tabular-nums; }
+
+            .d-buyback .bb-runway{ margin:1.2rem 0 0; }
+            .d-buyback .bb-runway__track{ position:relative; height:1.5rem; background:var(--panel2); border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+            .d-buyback .bb-runway__fill{ position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg,var(--teal-dim),var(--teal)); border-radius:6px 0 0 6px; transition:width .45s cubic-bezier(.4,0,.2,1); }
+            .d-buyback .bb-runway__scale{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:.68rem; color:var(--faint); margin:.3rem 0 0; }
+
+            .d-buyback .bb-mech{ margin:1.3rem 0 0; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:.85rem 1rem; }
+            .d-buyback .bb-mech__head{ font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin:0 0 .55rem; }
+            .d-buyback .bb-mech__list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.5rem; }
+            .d-buyback .bb-mech__list li{ font-family:var(--serif); font-size:.95rem; line-height:1.45; color:var(--soft); padding-left:1.05rem; position:relative; }
+            .d-buyback .bb-mech__list li::before{ content:''; position:absolute; left:0; top:.5em; width:.4rem; height:.4rem; border-radius:50%; background:var(--amber); }
+            .d-buyback .bb-mech__list b{ color:var(--ink); font-weight:600; }
+
+            .d-buyback .bb-equity{ margin:1rem 0 0; border-left:3px solid var(--teal-dim); padding:.2rem 0 .2rem 1rem; }
+            .d-buyback .bb-equity p{ font-family:var(--serif); font-size:.95rem; line-height:1.5; color:var(--soft); margin:0; }
+            .d-buyback .bb-equity strong{ color:var(--ink); font-weight:600; }
+
+            .d-buyback .bb-caveat{ font-family:var(--serif); color:var(--soft); font-size:.92rem; line-height:1.55; max-width:64ch; margin:1.5rem 0 0; }
+            .d-buyback .bb-caveat b{ color:var(--ink); font-weight:600; }
+            .d-buyback .bb-cite{ font-family:var(--mono); font-size:.72rem; line-height:1.5; color:var(--faint); margin:.8rem 0 0; }
+            .d-buyback .bb-more{ display:inline-flex; align-items:center; gap:.4rem; margin:1.1rem 0 0; font-family:var(--sans); font-weight:600; font-size:.92rem; color:var(--teal); text-decoration:none; border-bottom:1px solid var(--teal-dim); padding-bottom:2px; transition:color .15s, border-color .15s; }
+            .d-buyback .bb-more:hover{ color:var(--teal-bright); border-color:var(--teal); }
+            @media (prefers-reduced-motion:reduce){ .d-buyback .bb-runway__fill{ transition:none; } }
+          </style>
+
+          <section id="buy-back-the-years" data-labdemo="buy-back-the-years" class="d-buyback demo-card--wide" aria-label="Buy back the years, an interactive panel showing how three midlife risk factors relate to dementia-free years">
+            <p class="bb-kicker">The paper, made operable</p>
+            <h3 class="bb-title">Buy back the years</h3>
+            <p class="bb-note">The study sorted people by how many of three midlife risks they carried. Flip them on and off and watch the dementia-free years move across the four figures it reported. These are group averages across thousands of people, not a prediction about any one person.</p>
+
+            <button class="demo-toggle" type="button" aria-expanded="false">Try it <span aria-hidden="true">&rarr;</span></button>
+            <div class="demo-collapse" hidden>
+              <div class="bb-stage">
+                <div class="bb-switches" role="group" aria-label="Midlife vascular risk factors">
+                  <button type="button" class="bb-switch" id="bb-bp" aria-pressed="false"><span class="bb-switch__dot" aria-hidden="true"></span><span class="bb-switch__lab">High blood pressure</span></button>
+                  <button type="button" class="bb-switch" id="bb-dm" aria-pressed="false"><span class="bb-switch__dot" aria-hidden="true"></span><span class="bb-switch__lab">Diabetes</span></button>
+                  <button type="button" class="bb-switch" id="bb-sm" aria-pressed="false"><span class="bb-switch__dot" aria-hidden="true"></span><span class="bb-switch__lab">Current smoking</span></button>
+                </div>
+
+                <div class="bb-readout" aria-live="polite">
+                  <p class="bb-gap bb-gap--none" id="bb-gap"><b class="bb-gap__num" id="bb-gap-num">0</b><span class="bb-gap__lab" id="bb-gap-lab">years given up, a clean midlife</span></p>
+                  <p class="bb-abs">Group average <b id="bb-abs-num">30.1</b> dementia-free years, ages 55 to 95</p>
+                </div>
+
+                <div class="bb-runway">
+                  <div class="bb-runway__track"><span class="bb-runway__fill" id="bb-fill" style="width:75.25%"></span></div>
+                  <div class="bb-runway__scale"><span>age 55</span><span>75</span><span>95</span></div>
+                </div>
+
+                <div class="bb-mech" id="bb-mech" hidden>
+                  <p class="bb-mech__head">How the active risks hit the small vessels</p>
+                  <ul class="bb-mech__list" id="bb-mech-list"></ul>
+                </div>
+
+                <div class="bb-equity" id="bb-equity" hidden>
+                  <p><strong>Who carries the gap.</strong> Among people with all three, the study reported 18.1 dementia-free years for women and 16.6 for men, and 19.6 for white participants and 16.0 for Black participants. The people with the most vascular risk and the least sustained treatment stand to regain the most.</p>
+                </div>
+              </div>
+
+              <p class="bb-caveat"><b>What this leaves out.</b> These are group averages, not a personal forecast. Each risk was measured once in midlife, so it is a snapshot, not a lifetime. Dementia-free years also fold in earlier death, since the same vascular damage drives heart attacks and strokes, so part of the gap is lost years of life, not only lost memory. The link is observational for all three, and only for blood pressure has a trial, SPRINT MIND, shown that treatment actually protects thinking. And a yes-or-no count of three risks is blunt, so it groups every two-of-three together, whichever two they are.</p>
+              <p class="bb-cite">Figures from Hu, Coresh, et al., &ldquo;Midlife Vascular Risk Burden and Dementia-Free Survival Years,&rdquo; <em>Neurology Open Access</em> 2026.</p>
+              <a class="bb-more" href="posts/midlife-risk-factors-dementia.html">Read the piece <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </section>
+
           <article data-labdemo="owl" class="d-owl demo-card--wide">
               <p class="d-owl__kicker">Sound localization</p>
               <h3 class="d-owl__title">The barn owl map of space</h3>
@@ -8839,6 +8934,71 @@
           </script>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
   <!-- ============ COMPACT-LAB FRAMEWORK (sticky nav + lazy-init on expand) ============ -->
+  <script type="text/plain" data-labdemo="buy-back-the-years">
+  (function(){
+    var root = document.getElementById('buy-back-the-years');
+    if(!root || root.getAttribute('data-bb-init')) return;
+    root.setAttribute('data-bb-init', '1');
+    var VALUES = [30.1, 26.3, 21.0, 17.5];
+    var DELTAS = ['0', '3.8', '9.1', '12.6'];
+    var WINDOW = 40;
+    var factors = [
+      { id:'bb-bp', name:'High blood pressure', mech:'thickens and stiffens the small vessels and breaks the on-demand delivery of blood to firing neurons.' },
+      { id:'bb-dm', name:'Diabetes', mech:'high blood sugar drives oxidative stress and inflammation that injure the cells lining and wrapping the vessels.' },
+      { id:'bb-sm', name:'Current smoking', mech:'loads the same vessels with oxidants that damage their lining directly.' }
+    ];
+    var btns = factors.map(function(f){ return root.querySelector('#'+f.id); });
+    var gap    = root.querySelector('#bb-gap');
+    var gapNum = root.querySelector('#bb-gap-num');
+    var gapLab = root.querySelector('#bb-gap-lab');
+    var absNum = root.querySelector('#bb-abs-num');
+    var fill   = root.querySelector('#bb-fill');
+    var mech   = root.querySelector('#bb-mech');
+    var mechList = root.querySelector('#bb-mech-list');
+    var equity = root.querySelector('#bb-equity');
+    if(!gap || !gapNum || !fill) return;
+
+    function render(){
+      var on = [];
+      factors.forEach(function(f, i){
+        if(btns[i] && btns[i].getAttribute('aria-pressed') === 'true') on.push(f);
+      });
+      var count = on.length;
+      gapNum.textContent = DELTAS[count];
+      if(count === 0){
+        gap.classList.add('bb-gap--none');
+        gapLab.textContent = 'years given up, a clean midlife';
+      } else {
+        gap.classList.remove('bb-gap--none');
+        gapLab.textContent = 'fewer years than a clean midlife';
+      }
+      absNum.textContent = VALUES[count].toFixed(1);
+      fill.style.width = (VALUES[count] / WINDOW * 100) + '%';
+      if(count === 0){
+        mech.hidden = true;
+        mechList.innerHTML = '';
+      } else {
+        mech.hidden = false;
+        mechList.innerHTML = on.map(function(f){
+          return '<li><b>' + f.name + '</b> ' + f.mech + '</li>';
+        }).join('');
+      }
+      equity.hidden = (count !== 3);
+    }
+
+    btns.forEach(function(b){
+      if(!b) return;
+      b.addEventListener('click', function(){
+        var nowOn = b.getAttribute('aria-pressed') === 'true';
+        b.setAttribute('aria-pressed', nowOn ? 'false' : 'true');
+        render();
+      });
+    });
+
+    render();
+  })();
+  </script>
+
   <script>
   (function(){
     function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
@@ -8908,6 +9068,27 @@
         });
       });
     });
+  })();
+  </script>
+
+  <script>
+  (function(){
+    // If the page is opened at a demo's anchor (e.g. from an article's
+    // "try it in the Lab" link), expand that demo and scroll it into view.
+    function openFromHash(){
+      var h = location.hash;
+      if(!h || h.length < 2) return;
+      var el;
+      try{ el = document.querySelector(h); }catch(e){ return; }
+      if(!el) return;
+      var card = el.closest ? el.closest('[data-labdemo]') : null;
+      if(!card || card.tagName === 'SCRIPT') return;
+      var btn = card.querySelector('.demo-toggle');
+      if(btn && !card.classList.contains('is-open')){ btn.click(); }
+      setTimeout(function(){ try{ card.scrollIntoView({ behavior:'smooth', block:'start' }); }catch(e){} }, 90);
+    }
+    window.addEventListener('load', openFromHash);
+    window.addEventListener('hashchange', openFromHash);
   })();
   </script>
 </body>
