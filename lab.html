@@ -2152,6 +2152,24 @@
         <h2 class="bench-section-kicker">Perception and illusions</h2>
         <div class="bench-grid">
 
+          <style>
+            .ybg-links{ display:flex; flex-direction:column; gap:.55rem; margin:.9rem 0 .2rem; }
+            .ybg-link{ display:block; font-family:var(--mono,'Inter',system-ui,sans-serif); font-size:.9rem; line-height:1.4; color:var(--teal,#2d5d7b); text-decoration:none; border:1px solid var(--teal-dim,rgba(45,93,123,.35)); border-radius:8px; padding:.6rem .85rem; transition:background .15s,border-color .15s; }
+            .ybg-link:hover{ background:var(--panel2,rgba(45,93,123,.08)); border-color:var(--teal,#2d5d7b); }
+          </style>
+          <section id="your-brain-is-guessing" class="demo-card demo-card--wide reveal" aria-label="Your brain is guessing, this week's deep dive">
+            <div class="demo-card__head">
+              <p class="demo-card__kicker">Perception &middot; this week's deep dive</p>
+              <h3 class="demo-card__title">Your brain is guessing</h3>
+              <p class="demo-card__note">What you see isn't a recording of the world, it's your brain's best guess, corrected on the fly by the parts the guess got wrong. The article is <a href="posts/your-brain-is-guessing.html">Your brain is guessing</a>. All three of its demonstrations live right here in this section, so you can run each one on yourself.</p>
+            </div>
+            <div class="ybg-links">
+              <a class="ybg-link" href="#ybg-blindspot">1 &middot; Find your own blind spot and watch your brain paint over the gap &rarr;</a>
+              <a class="ybg-link" href="#ybg-triangle">2 &middot; Meet the triangle that is not there &rarr;</a>
+              <a class="ybg-link" href="#ybg-grays">3 &middot; Check the two grays that refuse to look the same shade &rarr;</a>
+            </div>
+          </section>
+
           <article data-labdemo="stroop" class="demo-card demo-card--wide reveal">
                       <div class="demo-card__head">
                         <p class="demo-card__kicker">Reaction time &middot; since 1935</p>
@@ -2237,7 +2255,7 @@
               </article>
             </div>
 
-          <div data-labdemo="checker-shadow" class="d-checker-shadow">
+          <div id="ybg-grays" data-labdemo="checker-shadow" class="d-checker-shadow">
             <article class="cs-card">
               <p class="cs-kicker">Lightness and context</p>
               <h3 class="cs-title">The checker-shadow illusion</h3>
@@ -2280,7 +2298,7 @@
             </article>
           </div>
 
-          <article data-labdemo="blind-spot" class="d-blind-spot">
+          <article id="ybg-blindspot" data-labdemo="blind-spot" class="d-blind-spot">
             <p class="bs-kicker">The optic disc</p>
             <h3 class="bs-title">Your blind spot</h3>
             <p class="bs-note">Where the optic nerve leaves each eye there are no photoreceptors, so a small patch of your vision is truly blank. Cover one eye, lock the other on the +, and slide the dot outward until it drops into that hole. Then swap it for a line or a speckled field and watch your brain paper over the gap.</p>
@@ -2362,7 +2380,7 @@
         </div>
           </article>
 
-          <article data-labdemo="edges" class="demo-card reveal">
+          <article id="ybg-triangle" data-labdemo="edges" class="demo-card reveal">
                       <div class="demo-card__head">
                         <p class="demo-card__kicker">Lateral inhibition</p>
                         <h3 class="demo-card__title">Edges that aren&rsquo;t there</h3>
