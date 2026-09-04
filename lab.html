@@ -2148,6 +2148,70 @@
     <!-- ============ EDITORIAL GRID ============ -->
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
+      <div class="bench-group" id="ptb-group">
+        <h2 class="bench-section-kicker">This week's deep dive</h2>
+        <div class="bench-grid">
+          <style>
+            .ptb-wrap{ margin:.9rem 0 .2rem; }
+            .ptb-canvas{ width:100%; max-width:640px; height:auto; display:block; margin:0 auto; border:1px solid var(--teal-dim,rgba(45,93,123,.35)); border-radius:10px; background:var(--panel2,rgba(45,93,123,.05)); }
+            .ptb-controls{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; margin:.85rem 0 0; }
+            .ptb-btn{ font-family:'Inter',system-ui,sans-serif; font-size:.9rem; font-weight:600; color:#fff; background:var(--teal,#2d5d7b); border:0; border-radius:8px; padding:.55rem .95rem; cursor:pointer; transition:opacity .15s; }
+            .ptb-btn:hover{ opacity:.9; }
+            .ptb-btn.ptb-btn--ghost{ color:var(--teal,#2d5d7b); background:transparent; border:1px solid var(--teal-dim,rgba(45,93,123,.4)); }
+            .ptb-status{ font-family:'Inter',system-ui,sans-serif; font-size:.86rem; line-height:1.4; color:var(--text-muted,#6b7178); flex:1 1 220px; min-width:180px; }
+          </style>
+          <section id="psychedelics-tune-the-brain" class="demo-card demo-card--wide reveal" aria-label="Why averaging hid the order in the psychedelic brain">
+            <div class="demo-card__head">
+              <p class="demo-card__kicker">Brain dynamics &middot; this week's deep dive</p>
+              <h3 class="demo-card__title">Why averaging hid the order</h3>
+              <p class="demo-card__note">A new study found that psilocybin doesn't turn the brain to noise. It reorganizes activity into a structured path through time, a "latent order missed by time-averaged measures." Here is that catch in one picture. Watch a clearly patterned trajectory, then average it over time and see the structure collapse into a shapeless cloud, which is the mistake the old entropy measures made. Pairs with the article <a href="posts/psychedelics-tune-the-brain.html">Psychedelics don't scramble your brain. They tune it to the room.</a></p>
+            </div>
+            <div class="ptb-wrap">
+              <canvas id="ptb-canvas" class="ptb-canvas" width="1024" height="576" role="img" aria-label="An animated brain-activity trajectory that traces a clear looping shape, and a button that averages it into a formless cloud."></canvas>
+              <div class="ptb-controls">
+                <button id="ptb-toggle" type="button" class="ptb-btn">Average it over time</button>
+                <button id="ptb-replay" type="button" class="ptb-btn ptb-btn--ghost">Replay</button>
+                <span id="ptb-status" class="ptb-status">Following the trajectory over time, the order is obvious.</span>
+              </div>
+            </div>
+            <p class="demo-card__cite">Illustrates Stoliker et al., <em>Nature</em> 2026 &middot; time-averaging can hide latent, context-aligned structure the brain really has.</p>
+          </section>
+          <script>
+          (function(){
+            var cv=document.getElementById('ptb-canvas'); if(!cv||!cv.getContext) return;
+            var ctx=cv.getContext('2d'); var W=cv.width, H=cv.height;
+            var toggle=document.getElementById('ptb-toggle'), replay=document.getElementById('ptb-replay'), status=document.getElementById('ptb-status');
+            var reduce=false; try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+            function dark(){ var d=document.documentElement.getAttribute('data-theme'); if(d) return d==='dark'; try{return matchMedia('(prefers-color-scheme: dark)').matches;}catch(e){return false;} }
+            function COL(){ return dark()
+              ? {teal:'#77a7c6', line:'rgba(119,167,198,0.9)', cloud:'rgba(150,160,168,0.5)', dot:'#e9e7e1', txt:'#9aa0a6'}
+              : {teal:'#2d5d7b', line:'rgba(45,93,123,0.9)', cloud:'rgba(120,128,136,0.42)', dot:'#232b2f', txt:'#6b7178'}; }
+            // structured trajectory (a Lissajous curve): clearly ordered
+            var N=520, pts=[], cx=W/2, cy=H/2, ax=W*0.34, ay=H*0.34;
+            for(var i=0;i<N;i++){ var t=i/N*Math.PI*2; pts.push([cx+ax*Math.sin(3*t+0.6), cy+ay*Math.sin(2*t)]); }
+            // a fixed jitter cloud for the averaged view (looks like formless noise)
+            var cloud=[]; var seed=7; function rnd(){ seed=(seed*9301+49297)%233280; return seed/233280; }
+            for(var k=0;k<N;k++){ cloud.push([cx+(rnd()-0.5)*ax*1.9, cy+(rnd()-0.5)*ay*1.9]); }
+            var mode='traj', prog=0, raf=null;
+            function clear(){ ctx.clearRect(0,0,W,H); }
+            function drawTraj(upto){ var c=COL(); ctx.lineWidth=4; ctx.strokeStyle=c.line; ctx.lineJoin='round'; ctx.lineCap='round'; ctx.beginPath();
+              for(var i=0;i<=upto;i++){ var p=pts[i]; if(i===0)ctx.moveTo(p[0],p[1]); else ctx.lineTo(p[0],p[1]); } ctx.stroke();
+              if(upto<pts.length){ var h=pts[Math.max(0,upto)]; ctx.fillStyle=c.dot; ctx.beginPath(); ctx.arc(h[0],h[1],9,0,7); ctx.fill(); } }
+            function drawCloud(){ var c=COL(); ctx.fillStyle=c.cloud; for(var i=0;i<cloud.length;i++){ ctx.beginPath(); ctx.arc(cloud[i][0],cloud[i][1],4,0,7); ctx.fill(); }
+              // the single time-averaged point
+              ctx.fillStyle=c.teal; ctx.beginPath(); ctx.arc(cx,cy,11,0,7); ctx.fill(); }
+            function frame(){ clear(); if(mode==='traj'){ if(reduce){ drawTraj(pts.length-1); } else { prog+=6; if(prog>pts.length-1) prog=pts.length-1; drawTraj(prog); if(prog<pts.length-1){ raf=requestAnimationFrame(frame); return; } } } else { drawCloud(); } }
+            function setMode(m){ mode=m; if(raf){cancelAnimationFrame(raf); raf=null;}
+              if(m==='traj'){ prog=0; toggle.textContent='Average it over time'; status.textContent='Following the trajectory over time, the order is obvious.'; frame(); }
+              else { toggle.textContent='Show the trajectory'; status.textContent='Averaged over time, the same activity is a shapeless cloud. This is the disorder the old entropy measures reported.'; frame(); } }
+            toggle.addEventListener('click', function(){ setMode(mode==='traj'?'avg':'traj'); });
+            replay.addEventListener('click', function(){ setMode('traj'); });
+            setMode('traj');
+            try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){ frame(); }); }catch(e){}
+          })();
+          </script>
+        </div>
+      </div>
       <div class="bench-group" id="perception">
         <h2 class="bench-section-kicker">Perception and illusions</h2>
         <div class="bench-grid">
@@ -2159,7 +2223,7 @@
           </style>
           <section id="your-brain-is-guessing" class="demo-card demo-card--wide reveal" aria-label="Your brain is guessing, this week's deep dive">
             <div class="demo-card__head">
-              <p class="demo-card__kicker">Perception &middot; this week's deep dive</p>
+              <p class="demo-card__kicker">Perception</p>
               <h3 class="demo-card__title">Your brain is guessing</h3>
               <p class="demo-card__note">What you see isn't a recording of the world, it's your brain's best guess, corrected on the fly by the parts the guess got wrong. The article is <a href="posts/your-brain-is-guessing.html">Your brain is guessing</a>. All three of its demonstrations live right here in this section, so you can run each one on yourself.</p>
             </div>
