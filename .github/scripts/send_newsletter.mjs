@@ -66,14 +66,14 @@ function toMarkdown(bodyHtml) {
 
   const out = [];
   // Walk the known top-level blocks in order.
-  const blockRe = /<figure>([\s\S]*?)<\/figure>|<aside class="callout[^"]*">([\s\S]*?)<\/aside>|<h2>([\s\S]*?)<\/h2>|<h3>([\s\S]*?)<\/h3>|<p class="pull-quote">([\s\S]*?)<\/p>|<ul>([\s\S]*?)<\/ul>|<ol>([\s\S]*?)<\/ol>|<p>([\s\S]*?)<\/p>/gi;
+  const blockRe = /<figure[^>]*>([\s\S]*?)<\/figure>|<aside class="callout[^"]*">([\s\S]*?)<\/aside>|<h2>([\s\S]*?)<\/h2>|<h3>([\s\S]*?)<\/h3>|<p class="pull-quote">([\s\S]*?)<\/p>|<ul>([\s\S]*?)<\/ul>|<ol>([\s\S]*?)<\/ol>|<p>([\s\S]*?)<\/p>/gi;
   let m;
   while ((m = blockRe.exec(h)) !== null) {
     if (m[1] !== undefined) { // figure
       const fig = m[1];
       let src = (fig.match(/<img[^>]*\bsrc="([^"]*)"/i) || [])[1] || '';
       const alt = (fig.match(/<img[^>]*\balt="([^"]*)"/i) || [])[1] || '';
-      const cap = inline((fig.match(/<figcaption>([\s\S]*?)<\/figcaption>/i) || [])[1] || '');
+      const cap = inline((fig.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/i) || [])[1] || '');
       // Email clients don't render SVG. If an SVG figure has a same-named PNG in
       // the repo, use the PNG; otherwise drop the image (raster only) so no broken
       // figure ships, and the caption still carries the point.
