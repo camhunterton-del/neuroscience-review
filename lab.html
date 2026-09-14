@@ -2148,8 +2148,89 @@
     <!-- ============ EDITORIAL GRID ============ -->
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
-      <div class="bench-group" id="ptb-group">
+      <div class="bench-group" id="bpf-group">
         <h2 class="bench-section-kicker">This week's deep dive</h2>
+        <div class="bench-grid">
+          <style>
+            .bpf-wrap{ margin:.9rem 0 .2rem; }
+            .bpf-canvas{ width:100%; max-width:680px; height:auto; display:block; margin:0 auto; border:1px solid var(--teal-dim,rgba(45,93,123,.35)); border-radius:10px; background:var(--panel2,rgba(45,93,123,.05)); }
+            .bpf-controls{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; margin:.85rem 0 0; }
+            .bpf-btn{ font-family:'Inter',system-ui,sans-serif; font-size:.9rem; font-weight:600; color:var(--teal,#2d5d7b); background:transparent; border:1px solid var(--teal-dim,rgba(45,93,123,.4)); border-radius:8px; padding:.55rem .95rem; cursor:pointer; transition:opacity .15s, background .15s, color .15s; }
+            .bpf-btn:hover{ opacity:.9; }
+            .bpf-btn[aria-pressed="true"]{ color:#fff; background:var(--teal,#2d5d7b); border-color:var(--teal,#2d5d7b); }
+            .bpf-status{ font-family:'Inter',system-ui,sans-serif; font-size:.86rem; line-height:1.45; color:var(--text-muted,#6b7178); margin:.7rem 0 0; }
+          </style>
+          <section id="brain-plumbing-plays-favorites" class="demo-card demo-card--wide reveal" aria-label="Neural activity versus blood flow across cortical layers">
+            <div class="demo-card__head">
+              <p class="demo-card__kicker">Brain imaging &middot; this week's deep dive</p>
+              <h3 class="demo-card__title">The same neurons, a different blood-flow map</h3>
+              <p class="demo-card__note">fMRI assumes blood flow tracks how hard neurons fire. A new study in mice shows it doesn't, because different arterioles feed different layers in different ways. Pick an input and compare the two columns. The neural activity is on the left, the blood flow an fMRI would see is on the right, and they don't line up. Pairs with the article <a href="posts/brain-plumbing-plays-favorites.html">Your brain's plumbing plays favorites.</a></p>
+            </div>
+            <div class="bpf-wrap">
+              <canvas id="bpf-canvas" class="bpf-canvas" width="1024" height="560" role="img" aria-label="Two cortical columns side by side, one showing neural activity by layer and one showing blood flow, which differ."></canvas>
+              <div class="bpf-controls">
+                <button class="bpf-btn" type="button" data-input="touch" aria-pressed="true">Touch</button>
+                <button class="bpf-btn" type="button" data-input="pain">Pain</button>
+                <button class="bpf-btn" type="button" data-input="movement">Movement</button>
+              </div>
+              <p id="bpf-status" class="bpf-status">Touch drives the superficial layers. The shallow arteriole tracks it closely up top, but the deep arteriole still reports a broad average below, so the blood-flow map is already smeared out of step with the firing.</p>
+            </div>
+            <p class="demo-card__cite">Illustrates Malescot et al., <em>Science</em> 2026 &middot; arteriole type and cortical layer decouple blood flow from local neural activity.</p>
+          </section>
+          <script>
+          (function(){
+            var cv=document.getElementById('bpf-canvas'); if(!cv||!cv.getContext) return;
+            var ctx=cv.getContext('2d'); var status=document.getElementById('bpf-status');
+            var btns=Array.prototype.slice.call(document.querySelectorAll('#bpf-group .bpf-btn'));
+            var W=cv.width, H=cv.height, layers=['L1','L2/3','L4','L5','L6'];
+            var data={
+              touch:{neural:[0.20,0.92,0.68,0.30,0.20], note:'Touch drives the superficial layers. The shallow arteriole tracks it closely up top, but the deep arteriole still reports a broad average below, so the blood-flow map is already smeared out of step with the firing.'},
+              pain:{neural:[0.15,0.38,0.52,0.90,0.62], note:'Pain peaks deep, in layer 5. But the deep arteriole integrates across everything, so the blood-flow map is a broad smear that misses the sharp peak. An fMRI blob here would point to the wrong layer.'},
+              movement:{neural:[0.30,0.62,0.55,0.72,0.50], note:'Movement spreads activity across layers. Shallow and deep arterioles respond on their own schedules, so the brightest blood-flow band lands off the brightest firing. Same activity, shifted map.'}
+            };
+            function bloodFrom(n){ var sup=(n[0]+n[1]+n[2])/3, all=(n[0]+n[1]+n[2]+n[3]+n[4])/5; return [0.35+0.6*sup,0.35+0.6*sup,0.30+0.6*sup,0.35+0.6*all,0.35+0.6*all]; }
+            var shown={neural:data.touch.neural.slice(), blood:bloodFrom(data.touch.neural)};
+            var target={neural:data.touch.neural.slice(), blood:bloodFrom(data.touch.neural)};
+            var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches, raf=null;
+            function dark(){ var d=document.documentElement.getAttribute('data-theme'); return d==='dark'||(!d&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches); }
+            function rr(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+            function peak(a){ var m=-1,mi=0; for(var i=0;i<a.length;i++){ if(a[i]>m){m=a[i];mi=i;} } return mi; }
+            function draw(){
+              var dk=dark(), ink=dk?'#e9e7e1':'#232b2f', muted=dk?'#9aa0a6':'#6b7178';
+              var tR=dk?119:45, tG=dk?167:93, tB=dk?198:123;
+              ctx.clearRect(0,0,W,H);
+              var colW=300, gap=150, top=132, cellH=62, cellGap=8;
+              var leftX=(W/2)-gap/2-colW, rightX=(W/2)+gap/2;
+              ctx.textAlign='center'; ctx.fillStyle=ink; ctx.font='600 27px Newsreader,Georgia,serif';
+              ctx.fillText('Neural activity', leftX+colW/2, 60); ctx.fillText('Blood flow (BOLD)', rightX+colW/2, 60);
+              ctx.font='400 15px Inter,system-ui,sans-serif'; ctx.fillStyle=muted;
+              ctx.fillText('what the neurons do', leftX+colW/2, 88); ctx.fillText('what an fMRI sees', rightX+colW/2, 88);
+              function col(x,vals){ for(var i=0;i<5;i++){ var y=top+i*(cellH+cellGap), v=vals[i]; ctx.fillStyle='rgba('+tR+','+tG+','+tB+','+(0.12+0.85*Math.max(0,Math.min(1,v)))+')'; rr(x,y,colW,cellH,8); ctx.fill(); ctx.strokeStyle='rgba('+tR+','+tG+','+tB+',0.5)'; ctx.lineWidth=1; rr(x,y,colW,cellH,8); ctx.stroke(); } }
+              col(leftX,shown.neural); col(rightX,shown.blood);
+              ctx.fillStyle=muted; ctx.font='600 14px Inter,system-ui,sans-serif'; ctx.textAlign='center';
+              for(var i=0;i<5;i++){ ctx.fillText(layers[i], W/2, top+i*(cellH+cellGap)+cellH/2+5); }
+              ctx.font='400 12px Inter,system-ui,sans-serif'; ctx.fillStyle=muted;
+              ctx.fillText('surface', W/2, top-16); ctx.fillText('deep', W/2, top+5*(cellH+cellGap)+10);
+              var pn=peak(shown.neural), pb=peak(shown.blood);
+              ctx.strokeStyle=dk?'#d9ac63':'#c68a2b'; ctx.lineWidth=3;
+              rr(leftX,top+pn*(cellH+cellGap),colW,cellH,8); ctx.stroke();
+              rr(rightX,top+pb*(cellH+cellGap),colW,cellH,8); ctx.stroke();
+              ctx.textAlign='center'; ctx.font='600 15px Inter,system-ui,sans-serif';
+              if(pn!==pb){ ctx.fillStyle=dk?'#d9ac63':'#8f5e17'; ctx.fillText('Peak firing and peak blood flow sit in different layers.', W/2, H-22); }
+              else { ctx.fillStyle=muted; ctx.font='400 15px Inter,system-ui,sans-serif'; ctx.fillText('Even where the peaks align, the flow below is a broad average.', W/2, H-22); }
+            }
+            function animate(){ var done=true; for(var i=0;i<5;i++){ shown.neural[i]+=(target.neural[i]-shown.neural[i])*0.18; shown.blood[i]+=(target.blood[i]-shown.blood[i])*0.18; if(Math.abs(target.neural[i]-shown.neural[i])>0.004||Math.abs(target.blood[i]-shown.blood[i])>0.004) done=false; } draw(); raf = done?null:requestAnimationFrame(animate); }
+            function setInput(key){ var d=data[key]; if(!d) return; target.neural=d.neural.slice(); target.blood=bloodFrom(d.neural); btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-input')===key?'true':'false'); }); if(status) status.textContent=d.note; if(reduce){ shown.neural=target.neural.slice(); shown.blood=target.blood.slice(); draw(); } else if(!raf){ raf=requestAnimationFrame(animate); } }
+            btns.forEach(function(b){ b.addEventListener('click', function(){ setInput(b.getAttribute('data-input')); }); });
+            draw();
+            try{ new MutationObserver(function(){ draw(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']}); }catch(e){}
+          })();
+          </script>
+        </div>
+      </div>
+
+      <div class="bench-group" id="ptb-group">
+        <h2 class="bench-section-kicker">Brain states and psychedelics</h2>
         <div class="bench-grid">
           <style>
             .ptb-wrap{ margin:.9rem 0 .2rem; }
@@ -2162,7 +2243,7 @@
           </style>
           <section id="psychedelics-tune-the-brain" class="demo-card demo-card--wide reveal" aria-label="Why averaging hid the order in the psychedelic brain">
             <div class="demo-card__head">
-              <p class="demo-card__kicker">Brain dynamics &middot; this week's deep dive</p>
+              <p class="demo-card__kicker">Brain dynamics</p>
               <h3 class="demo-card__title">Why averaging hid the order</h3>
               <p class="demo-card__note">A new study found that psilocybin doesn't turn the brain to noise. It reorganizes activity into a structured path through time, a "latent order missed by time-averaged measures." Here is that catch in one picture. Watch a clearly patterned trajectory, then average it over time and see the structure collapse into a shapeless cloud, which is the mistake the old entropy measures made. Pairs with the article <a href="posts/psychedelics-tune-the-brain.html">Psychedelics don't scramble your brain. They tune it to the room.</a></p>
             </div>
