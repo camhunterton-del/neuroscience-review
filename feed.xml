@@ -5,8 +5,15 @@
   <link href="https://theneuroreview.com/feed.xml" rel="self"/>
   <link href="https://theneuroreview.com/"/>
   <id>https://theneuroreview.com/</id>
-  <updated>2026-09-09T13:13:00Z</updated>
+  <updated>2026-09-16T13:13:00Z</updated>
   <author><name>Cameron Hunterton</name></author>
+  <entry>
+    <title>Your brain's plumbing plays favorites</title>
+    <link href="https://theneuroreview.com/posts/brain-plumbing-plays-favorites.html"/>
+    <id>https://theneuroreview.com/posts/brain-plumbing-plays-favorites.html</id>
+    <updated>2026-09-16T13:13:00Z</updated>
+    <summary>Every fMRI headline rests on one quiet assumption, that blood flow tracks how hard neurons fire. A new study in mice finds the brain's plumbing is wired by the type of input and the cortical layer, so the same amount of activity can move very different amounts of blood.</summary>
+  </entry>
   <entry>
     <title>Psychedelics don't scramble your brain. They tune it to the room.</title>
     <link href="https://theneuroreview.com/posts/psychedelics-tune-the-brain.html"/>
