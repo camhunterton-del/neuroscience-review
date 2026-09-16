@@ -45,12 +45,13 @@
         <a href="../lab.html">Lab</a>
         <a href="../commons.html">The Commons</a>
         <a class="site-nav__cta" href="#subscribe">Subscribe</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
       </nav>
-      <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
     </div>
   </header>
 
   <main id="main">
+    <div class="reading-shell">
 
     <article class="post">
       <header class="post-header">
@@ -158,6 +159,7 @@
               <p class="post-disclaimer">Educational content, not medical advice. <a href="../disclaimer.html">Read the full disclaimer</a>.</p>
 </footer>
     </article>
+    </div>
 
     <nav class="read-next" aria-label="Read next">
       <p class="read-next__label">Read next</p>
