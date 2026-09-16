@@ -1,0 +1,107 @@
+name: Publish guard
+
+# Safety net for the scheduled Wednesday post publish.
+#
+# GitHub's scheduled crons are best-effort and can silently fail to fire (this
+# happened on 2026-09-16, when the 9:13am publish cron never ran and the post only
+# went live via a manual trigger). This guard runs late each Wednesday morning and,
+# if a dated publish-*-post.yml workflow was due TODAY but its post is not live yet,
+# opens an alert issue so a missed publish never goes unnoticed.
+#
+# Belt-and-suspenders: publish workflows now also fire several times across the
+# morning (a retry window — see .github/PUBLISH-POST-TEMPLATE.md), so this guard
+# should rarely trigger. The publish workflow is idempotent, so the extra fires and
+# any manual trigger are all safe no-ops once the post is live.
+
+on:
+  schedule:
+    - cron: '30 15 * * 3'   # 15:30 UTC Wed (~11:30am EDT / 10:30am EST) — after the morning publish window
+    - cron: '30 16 * * 3'   # 16:30 UTC Wed — second check
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: publish-guard
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Flag any post that was due today but is not live
+        id: check
+        run: |
+          today_m=$(date -u +%-m); today_d=$(date -u +%-d)
+          late=""
+          for wf in .github/workflows/publish-*-post.yml; do
+            [ -f "$wf" ] || continue
+            due=0
+            while read -r line; do
+              c=$(printf '%s' "$line" | sed "s/.*cron: *'//; s/'.*//")
+              cd=$(printf '%s' "$c" | awk '{print $3}')   # day of month
+              cm=$(printf '%s' "$c" | awk '{print $4}')   # month
+              case "$cm" in ''|*[!0-9]*) continue;; esac   # only dated (numeric month+day) crons count
+              case "$cd" in ''|*[!0-9]*) continue;; esac
+              if [ "$cm" = "$today_m" ] && [ "$cd" = "$today_d" ]; then due=1; fi
+            done < <(grep -E "cron: *'" "$wf")
+            [ "$due" = "1" ] || continue
+            post=$(grep -oE "posts/[A-Za-z0-9._-]+\.html" "$wf" | head -1)
+            [ -z "$post" ] && continue
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 25 "https://theneuroreview.com/$post?cb=$(date +%s)" || echo 000)
+            if [ "$code" = "200" ]; then
+              echo "ok   $wf -> $post is live"
+            else
+              echo "LATE $wf -> $post NOT live (HTTP $code)"
+              late="$late$(printf '\n- %s -> https://theneuroreview.com/%s (HTTP %s)' "$wf" "$post" "$code")"
+            fi
+          done
+          if [ -n "$late" ]; then
+            {
+              echo "has_late=1"
+              echo "late<<GUARD_EOF"
+              printf '%s\n' "$late"
+              echo "GUARD_EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "has_late=0" >> "$GITHUB_OUTPUT"
+            echo "All posts due today are live (or none were due). Nothing to flag."
+          fi
+
+      - name: Open or update alert issue
+        if: steps.check.outputs.has_late == '1'
+        uses: actions/github-script@v7
+        env:
+          LATE: ${{ steps.check.outputs.late }}
+        with:
+          script: |
+            const late = process.env.LATE || '';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const title = '🔴 Wednesday post did not publish on time';
+            const body = [
+              "A post was scheduled to publish today but is not live yet — GitHub's scheduled cron most likely did not fire.",
+              '',
+              'Late:' + late,
+              '',
+              'Fix: publish it manually (safe — the publish workflow is idempotent):',
+              '`gh workflow run <the matching publish-...-post.yml> --ref main`',
+              'or GitHub → Actions → that workflow → Run workflow.',
+              '',
+              `Guard run: ${runUrl}`,
+            ].join('\n');
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo, state: 'open', per_page: 100,
+            });
+            const existing = issues.find(i => i.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo, issue_number: existing.number, body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo, title, body,
+              });
+            }
