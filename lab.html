@@ -2148,83 +2148,360 @@
     <!-- ============ EDITORIAL GRID ============ -->
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
-      <div class="bench-group" id="bpf-group">
+      <div class="bench-group" id="bts-group">
         <h2 class="bench-section-kicker">This week's deep dive</h2>
         <div class="bench-grid">
           <style>
-            .bpf-wrap{ margin:.9rem 0 .2rem; }
-            .bpf-canvas{ width:100%; max-width:680px; height:auto; display:block; margin:0 auto; border:1px solid var(--teal-dim,rgba(45,93,123,.35)); border-radius:10px; background:var(--panel2,rgba(45,93,123,.05)); }
-            .bpf-controls{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; margin:.85rem 0 0; }
-            .bpf-btn{ font-family:'Inter',system-ui,sans-serif; font-size:.9rem; font-weight:600; color:var(--teal,#2d5d7b); background:transparent; border:1px solid var(--teal-dim,rgba(45,93,123,.4)); border-radius:8px; padding:.55rem .95rem; cursor:pointer; transition:opacity .15s, background .15s, color .15s; }
-            .bpf-btn:hover{ opacity:.9; }
-            .bpf-btn[aria-pressed="true"]{ color:#fff; background:var(--teal,#2d5d7b); border-color:var(--teal,#2d5d7b); }
-            .bpf-status{ font-family:'Inter',system-ui,sans-serif; font-size:.86rem; line-height:1.45; color:var(--text-muted,#6b7178); margin:.7rem 0 0; }
+            .bts-stage{ margin:1.1rem 0 .2rem; }
+            .bts-prompt{ font-family:'Newsreader',Georgia,serif; font-size:1.12rem; font-weight:600; color:var(--text,#232b2f); margin:.2rem 0 .7rem; min-height:1.5em; }
+            .bts-canvas{ width:100%; max-width:560px; height:auto; display:block; margin:0 auto; border:1px solid var(--teal-dim,rgba(45,93,123,.35)); border-radius:10px; background:var(--panel2,rgba(45,93,123,.05)); touch-action:manipulation; }
+            .bts-controls{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem .8rem; margin:.95rem 0 0; justify-content:center; }
+            .bts-row{ display:flex; align-items:center; gap:.6rem; flex:1 1 320px; min-width:260px; }
+            .bts-row label{ font-family:'Inter',system-ui,sans-serif; font-size:.85rem; font-weight:600; color:var(--text-muted,#6b7178); white-space:nowrap; }
+            #bts-group input[type=range]{ flex:1; accent-color:var(--teal,#2d5d7b); height:22px; cursor:pointer; }
+            .bts-slider-ends{ display:flex; justify-content:space-between; font-family:'Inter',system-ui,sans-serif; font-size:.72rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text-muted,#6b7178); margin:.15rem auto 0; max-width:560px; }
+            .bts-btn{ font-family:'Inter',system-ui,sans-serif; font-size:.9rem; font-weight:600; color:#fff; background:var(--teal,#2d5d7b); border:0; border-radius:8px; padding:.6rem 1.05rem; cursor:pointer; transition:opacity .15s; }
+            .bts-btn:hover{ opacity:.9; }
+            .bts-btn:disabled{ opacity:.4; cursor:default; }
+            .bts-btn--ghost{ color:var(--teal,#2d5d7b); background:transparent; border:1px solid var(--teal-dim,rgba(45,93,123,.4)); }
+            .bts-btn[aria-pressed="true"]{ color:#fff; background:var(--teal,#2d5d7b); border-color:var(--teal,#2d5d7b); }
+            .bts-status{ font-family:'Inter',system-ui,sans-serif; font-size:.9rem; line-height:1.5; color:var(--text-muted,#6b7178); margin:.85rem auto 0; max-width:560px; text-align:center; }
+            .bts-verdict{ color:var(--text,#232b2f); font-weight:600; }
+            .bts-score{ display:flex; flex-wrap:wrap; gap:.6rem 1.2rem; justify-content:center; font-family:'Inter',system-ui,sans-serif; font-size:.82rem; color:var(--text-muted,#6b7178); margin:.7rem 0 0; }
+            .bts-score b{ color:var(--text,#232b2f); }
+            #bts-group [hidden]{ display:none!important; }
           </style>
-          <section id="brain-plumbing-plays-favorites" class="demo-card demo-card--wide reveal" aria-label="Neural activity versus blood flow across cortical layers">
+          <section id="brain-plumbing-plays-favorites" class="demo-card demo-card--wide reveal" aria-label="Be the Scanner, an interactive on reading fMRI">
             <div class="demo-card__head">
               <p class="demo-card__kicker">Brain imaging &middot; this week's deep dive</p>
-              <h3 class="demo-card__title">The same neurons, a different blood-flow map</h3>
-              <p class="demo-card__note">fMRI assumes blood flow tracks how hard neurons fire. A new study in mice shows it doesn't, because different arterioles feed different layers in different ways. Pick an input and compare the two columns. The neural activity is on the left, the blood flow an fMRI would see is on the right, and they don't line up. Pairs with the article <a href="posts/brain-plumbing-plays-favorites.html">Your brain's plumbing plays favorites.</a></p>
+              <h3 class="demo-card__title">Be the scanner</h3>
+              <p class="demo-card__note">An fMRI never sees neurons. It sees blood, and reads activity off it. For one trial, you get to be the scanner. Learn the rule, place a bet, then peel the blood away and see what was really firing. Pairs with the article <a href="posts/brain-plumbing-plays-favorites.html">Your brain's plumbing plays favorites.</a></p>
             </div>
-            <div class="bpf-wrap">
-              <canvas id="bpf-canvas" class="bpf-canvas" width="1024" height="560" role="img" aria-label="Two cortical columns side by side, one showing neural activity by layer and one showing blood flow, which differ."></canvas>
-              <div class="bpf-controls">
-                <button class="bpf-btn" type="button" data-input="touch" aria-pressed="true">Touch</button>
-                <button class="bpf-btn" type="button" data-input="pain">Pain</button>
-                <button class="bpf-btn" type="button" data-input="movement">Movement</button>
-              </div>
-              <p id="bpf-status" class="bpf-status">Touch drives the superficial layers. The shallow arteriole tracks it closely up top, but the deep arteriole still reports a broad average below, so the blood-flow map is already smeared out of step with the firing.</p>
+            <div class="bts-stage">
+              <p class="bts-prompt" id="bts-prompt" aria-live="polite">Teach yourself the rule. Drag the touch up and watch blood follow the firing.</p>
+              <canvas id="bts-canvas" class="bts-canvas" width="1120" height="620" role="img" aria-label="A cortical column in five layers, surface at top to deep at bottom, showing neural firing and the blood-flow scan."></canvas>
+              <div class="bts-controls" id="bts-controls"></div>
+              <div class="bts-slider-ends" id="bts-slider-ends" hidden><span>Blood flow (what you see)</span><span>Neural truth (what fired)</span></div>
+              <p class="bts-status" id="bts-status" aria-live="polite"></p>
+              <div class="bts-score" id="bts-score" hidden></div>
             </div>
-            <p class="demo-card__cite">Illustrates Malescot et al., <em>Science</em> 2026 &middot; arteriole type and cortical layer decouple blood flow from local neural activity.</p>
+            <p class="demo-card__cite">Illustrates Malescot et al., Rungta lab, <em>Science</em> 2026 &middot; firing and coupling values are illustrative, scaled to the paper's relative effects, not a reading of your brain.</p>
           </section>
           <script>
-          (function(){
-            var cv=document.getElementById('bpf-canvas'); if(!cv||!cv.getContext) return;
-            var ctx=cv.getContext('2d'); var status=document.getElementById('bpf-status');
-            var btns=Array.prototype.slice.call(document.querySelectorAll('#bpf-group .bpf-btn'));
-            var W=cv.width, H=cv.height, layers=['L1','L2/3','L4','L5','L6'];
-            var data={
-              touch:{neural:[0.20,0.92,0.68,0.30,0.20], note:'Touch drives the superficial layers. The shallow arteriole tracks it closely up top, but the deep arteriole still reports a broad average below, so the blood-flow map is already smeared out of step with the firing.'},
-              pain:{neural:[0.15,0.38,0.52,0.90,0.62], note:'Pain peaks deep, in layer 5. But the deep arteriole integrates across everything, so the blood-flow map is a broad smear that misses the sharp peak. An fMRI blob here would point to the wrong layer.'},
-              movement:{neural:[0.30,0.62,0.55,0.72,0.50], note:'Movement spreads activity across layers. Shallow and deep arterioles respond on their own schedules, so the brightest blood-flow band lands off the brightest firing. Same activity, shifted map.'}
-            };
-            function bloodFrom(n){ var sup=(n[0]+n[1]+n[2])/3, all=(n[0]+n[1]+n[2]+n[3]+n[4])/5; return [0.35+0.6*sup,0.35+0.6*sup,0.30+0.6*sup,0.35+0.6*all,0.35+0.6*all]; }
-            var shown={neural:data.touch.neural.slice(), blood:bloodFrom(data.touch.neural)};
-            var target={neural:data.touch.neural.slice(), blood:bloodFrom(data.touch.neural)};
-            var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches, raf=null;
-            function dark(){ var d=document.documentElement.getAttribute('data-theme'); return d==='dark'||(!d&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches); }
-            function rr(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
-            function peak(a){ var m=-1,mi=0; for(var i=0;i<a.length;i++){ if(a[i]>m){m=a[i];mi=i;} } return mi; }
-            function draw(){
-              var dk=dark(), ink=dk?'#e9e7e1':'#232b2f', muted=dk?'#9aa0a6':'#6b7178';
-              var tR=dk?119:45, tG=dk?167:93, tB=dk?198:123;
-              ctx.clearRect(0,0,W,H);
-              var colW=300, gap=150, top=132, cellH=62, cellGap=8;
-              var leftX=(W/2)-gap/2-colW, rightX=(W/2)+gap/2;
-              ctx.textAlign='center'; ctx.fillStyle=ink; ctx.font='600 27px Newsreader,Georgia,serif';
-              ctx.fillText('Neural activity', leftX+colW/2, 60); ctx.fillText('Blood flow (BOLD)', rightX+colW/2, 60);
-              ctx.font='400 15px Inter,system-ui,sans-serif'; ctx.fillStyle=muted;
-              ctx.fillText('what the neurons do', leftX+colW/2, 88); ctx.fillText('what an fMRI sees', rightX+colW/2, 88);
-              function col(x,vals){ for(var i=0;i<5;i++){ var y=top+i*(cellH+cellGap), v=vals[i]; ctx.fillStyle='rgba('+tR+','+tG+','+tB+','+(0.12+0.85*Math.max(0,Math.min(1,v)))+')'; rr(x,y,colW,cellH,8); ctx.fill(); ctx.strokeStyle='rgba('+tR+','+tG+','+tB+',0.5)'; ctx.lineWidth=1; rr(x,y,colW,cellH,8); ctx.stroke(); } }
-              col(leftX,shown.neural); col(rightX,shown.blood);
-              ctx.fillStyle=muted; ctx.font='600 14px Inter,system-ui,sans-serif'; ctx.textAlign='center';
-              for(var i=0;i<5;i++){ ctx.fillText(layers[i], W/2, top+i*(cellH+cellGap)+cellH/2+5); }
-              ctx.font='400 12px Inter,system-ui,sans-serif'; ctx.fillStyle=muted;
-              ctx.fillText('surface', W/2, top-16); ctx.fillText('deep', W/2, top+5*(cellH+cellGap)+10);
-              var pn=peak(shown.neural), pb=peak(shown.blood);
-              ctx.strokeStyle=dk?'#d9ac63':'#c68a2b'; ctx.lineWidth=3;
-              rr(leftX,top+pn*(cellH+cellGap),colW,cellH,8); ctx.stroke();
-              rr(rightX,top+pb*(cellH+cellGap),colW,cellH,8); ctx.stroke();
-              ctx.textAlign='center'; ctx.font='600 15px Inter,system-ui,sans-serif';
-              if(pn!==pb){ ctx.fillStyle=dk?'#d9ac63':'#8f5e17'; ctx.fillText('Peak firing and peak blood flow sit in different layers.', W/2, H-22); }
-              else { ctx.fillStyle=muted; ctx.font='400 15px Inter,system-ui,sans-serif'; ctx.fillText('Even where the peaks align, the flow below is a broad average.', W/2, H-22); }
-            }
-            function animate(){ var done=true; for(var i=0;i<5;i++){ shown.neural[i]+=(target.neural[i]-shown.neural[i])*0.18; shown.blood[i]+=(target.blood[i]-shown.blood[i])*0.18; if(Math.abs(target.neural[i]-shown.neural[i])>0.004||Math.abs(target.blood[i]-shown.blood[i])>0.004) done=false; } draw(); raf = done?null:requestAnimationFrame(animate); }
-            function setInput(key){ var d=data[key]; if(!d) return; target.neural=d.neural.slice(); target.blood=bloodFrom(d.neural); btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-input')===key?'true':'false'); }); if(status) status.textContent=d.note; if(reduce){ shown.neural=target.neural.slice(); shown.blood=target.blood.slice(); draw(); } else if(!raf){ raf=requestAnimationFrame(animate); } }
-            btns.forEach(function(b){ b.addEventListener('click', function(){ setInput(b.getAttribute('data-input')); }); });
-            draw();
-            try{ new MutationObserver(function(){ draw(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']}); }catch(e){}
-          })();
+(function(){
+  var cv=document.getElementById('bts-canvas'); if(!cv||!cv.getContext) return;
+  var ctx=cv.getContext('2d');
+  var promptEl=document.getElementById('bts-prompt');
+  var controls=document.getElementById('bts-controls');
+  var statusEl=document.getElementById('bts-status');
+  var scoreEl=document.getElementById('bts-score');
+  var endsEl=document.getElementById('bts-slider-ends');
+  var W=cv.width, H=cv.height;
+  var layers=['L1','L2/3','L4','L5','L6'];
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- vetted per-layer neural firing (from the reviewed data), surface -> deep ----
+  var neural={
+    touch:   [0.20,0.92,0.68,0.30,0.20],
+    pain:    [0.15,0.38,0.52,0.90,0.62],
+    movement:[0.30,0.62,0.55,0.72,0.50]
+  };
+  // ---- modality- and layer-dependent coupling gain (the article's mechanism) ----
+  // shallow arterioles couple strongly near the surface; deep firing is discounted
+  var gain={
+    touch:   [1.25,1.20,1.00,0.75,0.60],
+    pain:    [1.20,1.30,0.90,0.50,0.40],
+    movement:[1.10,1.15,1.05,0.85,0.70]
+  };
+  var labelFor={touch:'Gentle touch',pain:'Pain',movement:'Self-movement'};
+
+  // blood = draining/integrating smear of (firing x coupling), on a fixed shared scale
+  function bloodFrom(n, g){
+    var raw=[]; for(var i=0;i<5;i++) raw[i]=Math.max(0,n[i])*g[i];
+    var mean=(raw[0]+raw[1]+raw[2]+raw[3]+raw[4])/5, out=[];
+    for(var i=0;i<5;i++){
+      var deeper = raw[Math.min(i+1,4)];       // veins drain upward: deep signal shows up shallower
+      out[i] = 0.60*raw[i] + 0.25*deeper + 0.15*mean;
+    }
+    for(var i=0;i<5;i++) out[i]=Math.max(0,Math.min(1, out[i]/1.15));
+    return out;
+  }
+  function clamp01(v){ return Math.max(0,Math.min(1,v)); }
+  function peak(a){ var m=-1,mi=0; for(var i=0;i<a.length;i++){ if(a[i]>m){m=a[i];mi=i;} } return mi; }
+  function ordinal(n){ return ['1st','2nd','3rd','4th','5th'][n]||(n+1)+'th'; }
+  function rank(vals, idx){ var c=0; for(var i=0;i<vals.length;i++) if(vals[i]>vals[idx]) c++; return c; } // 0 = highest
+
+  function dark(){ var d=document.documentElement.getAttribute('data-theme'); return d==='dark'||(!d&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches); }
+  function rr(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+  // hot look-up table on one clamped shared scale: cool panel -> teal -> hot gold
+  function hot(v){
+    v=clamp01(v);
+    var dk=dark();
+    var r0=dk?40:225, g0=dk?54:232, b0=dk?60:222;        // cool floor
+    var r1=dk?119:45, g1=dk?167:93, b1=dk?198:123;        // teal mid
+    var r2=245, g2=176, b2=70;                            // hot gold
+    var R,G,B;
+    if(v<0.55){ var t=v/0.55; R=r0+(r1-r0)*t; G=g0+(g1-g0)*t; B=b0+(b1-b0)*t; }
+    else{ var t=(v-0.55)/0.45; R=r1+(r2-r1)*t; G=g1+(g2-g1)*t; B=b1+(b2-b1)*t; }
+    return 'rgb('+(R|0)+','+(G|0)+','+(B|0)+')';
+  }
+
+  // ---------- state ----------
+  var trials=['pain','movement','touch'], trialIx=0;
+  var phase='calibrate';       // calibrate -> bet -> reveal -> foreclose -> cycle
+  var touchT=0.15;             // calibrate intensity 0..1
+  var mod='touch';             // current trial modality
+  var crown=-1;                // reader's bet (layer index)
+  var reveal=0;                // 0 blood .. 1 neural
+  var focusLayer=2;            // keyboard focus for crown
+  var deeperUnlocked=false;
+  var forecSlope=0.5;          // foreclosure conversion slope 0..1
+  var locked=false, lockNeural=null, cycleMod='pain';
+  var score={found:0,fa:0,miss:0};
+  var settled=false;
+
+  // geometry of the single column
+  function colGeom(){
+    var cw=Math.min(300, W*0.30), gap=0;
+    var x=(W-cw)/2, top=118, ch=(H-top-96)/5, cg=8;
+    return {x:x, top:top, cw:cw, ch:ch-cg, cg:cg};
+  }
+
+  function drawColumn(vals, opts){
+    opts=opts||{};
+    var g=colGeom(), dk=dark(), ink=dk?'#e9e7e1':'#232b2f', muted=dk?'#9aa0a6':'#6b7178';
+    for(var i=0;i<5;i++){
+      var y=g.top+i*(g.ch+g.cg);
+      ctx.fillStyle=hot(vals[i]); rr(g.x,y,g.cw,g.ch,8); ctx.fill();
+      ctx.strokeStyle='rgba('+(dk?'127,178,212':'45,93,123')+',0.45)'; ctx.lineWidth=1; rr(g.x,y,g.cw,g.ch,8); ctx.stroke();
+      // layer label centered on band
+      ctx.fillStyle = vals[i]>0.62 ? (dk?'#15181a':'#fff') : muted;
+      ctx.font='600 15px Inter,system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(layers[i], g.x+g.cw/2, y+g.ch/2);
+    }
+    ctx.textBaseline='alphabetic';
+    // surface / deep guides
+    ctx.fillStyle=muted; ctx.font='400 13px Inter,system-ui,sans-serif'; ctx.textAlign='center';
+    ctx.fillText('surface', g.x+g.cw/2, g.top-14);
+    ctx.fillText('deep', g.x+g.cw/2, g.top+5*(g.ch+g.cg)+6);
+    // crown marker
+    if(opts.crown>=0 && opts.crown<5){
+      var cy=g.top+opts.crown*(g.ch+g.cg);
+      ctx.strokeStyle=dk?'#d9ac63':'#c68a2b'; ctx.lineWidth=3; rr(g.x-4,cy-4,g.cw+8,g.ch+8,10); ctx.stroke();
+      ctx.fillStyle=dk?'#d9ac63':'#8f5e17'; ctx.font='700 13px Inter,system-ui,sans-serif'; ctx.textAlign='right';
+      ctx.fillText('your call ▸', g.x-12, cy+g.ch/2+4);
+    }
+    // focus ring (keyboard) when betting
+    if(opts.showFocus && opts.focus>=0){
+      var fy=g.top+opts.focus*(g.ch+g.cg);
+      ctx.strokeStyle=dk?'#7fb2d4':'#2d5d7b'; ctx.setLineDash([5,4]); ctx.lineWidth=2; rr(g.x-2,fy-2,g.cw+4,g.ch+4,9); ctx.stroke(); ctx.setLineDash([]);
+    }
+    // true-peak marker on reveal
+    if(opts.truePeak>=0){
+      var py=g.top+opts.truePeak*(g.ch+g.cg);
+      ctx.strokeStyle=dk?'#7bc0a0':'#2f6f52'; ctx.lineWidth=3; rr(g.x-4,py-4,g.cw+8,g.ch+8,10); ctx.stroke();
+      ctx.fillStyle=dk?'#7bc0a0':'#2f6f52'; ctx.font='700 13px Inter,system-ui,sans-serif'; ctx.textAlign='left';
+      ctx.fillText('◂ fired hardest', g.x+g.cw+12, py+g.ch/2+4);
+    }
+    return g;
+  }
+
+  function header(title, sub){
+    var dk=dark(), ink=dk?'#e9e7e1':'#232b2f', muted=dk?'#9aa0a6':'#6b7178';
+    ctx.textAlign='center'; ctx.fillStyle=ink; ctx.font='600 26px Newsreader,Georgia,serif';
+    ctx.fillText(title, W/2, 54);
+    if(sub){ ctx.font='400 15px Inter,system-ui,sans-serif'; ctx.fillStyle=muted; ctx.fillText(sub, W/2, 82); }
+  }
+
+  // ---------- renderers per phase ----------
+  function render(){
+    ctx.clearRect(0,0,W,H);
+    if(phase==='calibrate'){
+      var n=neural.touch.map(function(v){return v*touchT;});
+      var b=bloodFrom(n, gain.touch);
+      // two columns: firing (left) and blood (right)
+      twoCol(n,b,'Neural firing','Blood-flow scan');
+      header('Learn the rule', 'more touch means more firing, and the scan brightens with it');
+    } else if(phase==='bet'){
+      var b=bloodFrom(neural[mod], gain[mod]);
+      header('Read the scan', 'you only see blood now. Which layer fired hardest?');
+      drawColumn(b,{crown:crown, showFocus:true, focus:focusLayer});
+      colLabel('Blood-flow scan (BOLD)');
+    } else if(phase==='reveal'){
+      var b=bloodFrom(neural[mod], gain[mod]);
+      var n=neural[mod];
+      var shown=[]; for(var i=0;i<5;i++) shown[i]=b[i]+(n[i]-b[i])*reveal;
+      var truePeak = reveal>0.6 ? peak(n) : -1;
+      header(reveal<0.5?'Peel the blood away':'The neurons underneath', '');
+      drawColumn(shown,{crown:crown, truePeak:truePeak});
+      colLabel(reveal<0.5?'mostly blood':'mostly neural truth');
+    } else if(phase==='foreclose'){
+      drawScatter();
+    } else if(phase==='cycle'){
+      var n=lockNeural, b=bloodFrom(n, gain[cycleMod]);
+      twoCol(n,b,'Neural firing (locked)','Blood-flow scan');
+      header('Same neurons, new input', 'the firing is frozen. Only the input type changed');
+    }
+  }
+
+  function twoCol(n,b,ltitle,rtitle){
+    var dk=dark(), ink=dk?'#e9e7e1':'#232b2f', muted=dk?'#9aa0a6':'#6b7178';
+    var top=156, cw=Math.min(250,W*0.26), gap=Math.min(170,W*0.17), ch=(H-top-84)/5, cg=10;
+    var lx=(W/2)-gap/2-cw, rx=(W/2)+gap/2;
+    function one(x,vals){ for(var i=0;i<5;i++){ var y=top+i*ch; ctx.fillStyle=hot(vals[i]); rr(x,y,cw,ch-cg,8); ctx.fill(); ctx.strokeStyle='rgba('+(dk?'127,178,212':'45,93,123')+',0.4)'; ctx.lineWidth=1; rr(x,y,cw,ch-cg,8); ctx.stroke(); } }
+    one(lx,n); one(rx,b);
+    // column titles
+    ctx.textAlign='center'; ctx.fillStyle=ink; ctx.font='600 18px Newsreader,Georgia,serif';
+    ctx.fillText(ltitle, lx+cw/2, top-16); ctx.fillText(rtitle, rx+cw/2, top-16);
+    // layer labels down the middle
+    ctx.fillStyle=muted; ctx.font='600 13px Inter,system-ui,sans-serif'; ctx.textBaseline='middle';
+    for(var i=0;i<5;i++){ ctx.fillText(layers[i], W/2, top+i*ch+(ch-cg)/2); }
+    ctx.textBaseline='alphabetic';
+    // peak mismatch note
+    var pn=peak(n), pb=peak(b);
+    if(pn!==pb){
+      ctx.fillStyle=dk?'#d9ac63':'#8f5e17'; ctx.font='600 15px Inter,system-ui,sans-serif'; ctx.textAlign='center';
+      ctx.fillText('Brightest firing: '+layers[pn]+'.   Brightest blood: '+layers[pb]+'.', W/2, H-24);
+    }
+  }
+  function colLabel(txt){
+    var dk=dark(); ctx.fillStyle=dk?'#9aa0a6':'#6b7178'; ctx.font='400 15px Inter,system-ui,sans-serif'; ctx.textAlign='center';
+    ctx.fillText(txt, W/2, H-34);
+  }
+
+  function drawScatter(){
+    var dk=dark(), ink=dk?'#e9e7e1':'#232b2f', muted=dk?'#9aa0a6':'#6b7178';
+    header('Try to convert blood back to neurons', 'one line has to fit all three inputs at once');
+    var ox=W*0.20, oy=H-120, pw=W*0.6, ph=H-230;
+    // axes
+    ctx.strokeStyle=muted; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox,oy-ph); ctx.moveTo(ox,oy); ctx.lineTo(ox+pw,oy); ctx.stroke();
+    ctx.fillStyle=muted; ctx.font='400 13px Inter,system-ui,sans-serif'; ctx.textAlign='center';
+    ctx.fillText('blood-flow signal', ox+pw/2, oy+34);
+    ctx.save(); ctx.translate(ox-38, oy-ph/2); ctx.rotate(-Math.PI/2); ctx.fillText('neurons that actually fired', 0,0); ctx.restore();
+    var cols={touch:'#4f9ad6', pain:'#d9534f', movement:'#59a869'};
+    var mods=['touch','pain','movement']; var resid=0;
+    for(var m=0;m<3;m++){ var mm=mods[m], n=neural[mm], b=bloodFrom(n,gain[mm]);
+      for(var i=0;i<5;i++){ var px=ox+b[i]*pw, py=oy-n[i]*ph;
+        ctx.fillStyle=cols[mm]; ctx.beginPath(); ctx.arc(px,py,5,0,6.283); ctx.fill();
+        var pred=forecSlope*b[i]; resid += (n[i]-pred)*(n[i]-pred);
+      }
+    }
+    // conversion line
+    ctx.strokeStyle=dk?'#d9ac63':'#8f5e17'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+pw, oy-clamp01(forecSlope)*ph); ctx.stroke();
+    // legend + residual
+    ctx.textAlign='left'; ctx.font='600 13px Inter,system-ui,sans-serif';
+    var lx=ox+pw-120, ly=oy-ph+6;
+    ctx.fillStyle=cols.touch; ctx.fillText('● touch', lx, ly);
+    ctx.fillStyle=cols.pain; ctx.fillText('● pain', lx, ly+18);
+    ctx.fillStyle=cols.movement; ctx.fillText('● movement', lx, ly+36);
+    ctx.fillStyle=dk?'#d9ac63':'#8f5e17'; ctx.textAlign='center'; ctx.font='600 15px Inter,system-ui,sans-serif';
+    ctx.fillText('Best this line can do: still off by '+resid.toFixed(2)+'. No single slope fits all three.', W/2, H-24);
+  }
+
+  // ---------- controls per phase ----------
+  function setPrompt(t){ promptEl.textContent=t; }
+  function setStatus(html){ statusEl.innerHTML=html; }
+  function btn(txt,cls,fn,attrs){ var b=document.createElement('button'); b.type='button'; b.className='bts-btn'+(cls?' '+cls:''); b.textContent=txt; if(attrs) for(var k in attrs) b.setAttribute(k,attrs[k]); b.addEventListener('click',fn); return b; }
+
+  function buildControls(){
+    controls.innerHTML=''; endsEl.hidden=true; scoreEl.hidden=true;
+    if(phase==='calibrate'){
+      setPrompt('Teach yourself the rule. Drag the touch up and watch the blood follow the firing.');
+      var row=document.createElement('div'); row.className='bts-row';
+      var lab=document.createElement('label'); lab.textContent='Touch intensity'; lab.setAttribute('for','bts-touch');
+      var s=document.createElement('input'); s.type='range'; s.id='bts-touch'; s.min=0; s.max=100; s.value=Math.round(touchT*100);
+      s.addEventListener('input',function(){ touchT=clamp01(s.value/100); render(); });
+      row.appendChild(lab); row.appendChild(s); controls.appendChild(row);
+      controls.appendChild(btn('I’ve got it → read a real scan','',startBet));
+      setStatus('Blood rises right along with the firing. Easy. Now hold onto that rule.');
+    } else if(phase==='bet'){
+      setPrompt('You only see blood now. Tap the layer you think fired hardest.');
+      controls.appendChild(btn('Reveal the neurons','',function(){ if(crown<0){ setStatus('Tap a layer first to place your bet.'); return;} startReveal(); }, {id:'bts-revealbtn'}));
+      setStatus('Use your rule: brightest blood should be the busiest neurons. Tap a band (or use ↑↓ and Enter).');
+    } else if(phase==='reveal'){
+      endsEl.hidden=false;
+      var row=document.createElement('div'); row.className='bts-row';
+      var lab=document.createElement('label'); lab.textContent='Peel'; lab.setAttribute('for','bts-reveal');
+      var s=document.createElement('input'); s.type='range'; s.id='bts-reveal'; s.min=0; s.max=100; s.value=Math.round(reveal*100);
+      s.addEventListener('input',function(){ reveal=clamp01(s.value/100); render(); if(reveal>=0.999){ if(!settled) settleVerdict(); } else { updateRevealStatus(); } });
+      row.appendChild(lab); row.appendChild(s); controls.appendChild(row);
+      var deep=btn('Go deeper →','bts-btn--ghost',startForeclose); if(!settled) deep.disabled=true; deep.id='bts-deep';
+      controls.appendChild(deep);
+      controls.appendChild(btn('New trial','bts-btn--ghost',newTrial));
+      updateRevealStatus();
+    } else if(phase==='foreclose'){
+      setPrompt('Drag the conversion line. Try to make it hit every point.');
+      var row=document.createElement('div'); row.className='bts-row';
+      var lab=document.createElement('label'); lab.textContent='Conversion'; lab.setAttribute('for','bts-slope');
+      var s=document.createElement('input'); s.type='range'; s.id='bts-slope'; s.min=0; s.max=100; s.value=Math.round(forecSlope*100);
+      s.addEventListener('input',function(){ forecSlope=clamp01(s.value/100); render(); });
+      row.appendChild(lab); row.appendChild(s); controls.appendChild(row);
+      controls.appendChild(btn('Last thing → lock the neurons','',startCycle));
+      setStatus('Pain sits above any line you pick, deep touch below it. The miss is not one number you can divide out. It changes with the input and the layer.');
+    } else if(phase==='cycle'){
+      setPrompt('The neurons are locked. Flip the input and watch only the scan move.');
+      ['touch','pain','movement'].forEach(function(m){
+        controls.appendChild(btn(labelFor[m],'bts-btn--ghost',function(){ cycleMod=m; syncCycleBtns(); render(); updateCycleStatus(); }, {'data-cyc':m, 'aria-pressed': m===cycleMod?'true':'false'}));
+      });
+      controls.appendChild(btn('Start over','bts-btn--ghost',function(){ trialIx=0; startCalibrate(); }));
+      updateCycleStatus();
+    }
+  }
+  function syncCycleBtns(){ Array.prototype.forEach.call(controls.querySelectorAll('[data-cyc]'),function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-cyc')===cycleMod?'true':'false'); }); }
+
+  // ---------- phase transitions ----------
+  function startCalibrate(){ phase='calibrate'; touchT=0.15; render(); buildControls(); }
+  function startBet(){ phase='bet'; mod=trials[trialIx%trials.length]; crown=-1; focusLayer=2; render(); buildControls(); }
+  function startReveal(){ phase='reveal'; reveal=0; settled=false;
+    render(); buildControls();
+    if(reduce){ reveal=1; var s=document.getElementById('bts-reveal'); if(s) s.value=100; render(); settleVerdict(); }
+  }
+  function startForeclose(){ phase='foreclose'; forecSlope=0.5; render(); buildControls(); }
+  function startCycle(){ phase='cycle'; locked=true; lockNeural=neural[mod].slice(); cycleMod='touch'; render(); buildControls(); }
+  function newTrial(){ trialIx++; score={found:0,fa:0,miss:0}; startBet(); }
+
+  function fullyRevealed(){ return reveal>=0.999; }
+  function updateRevealStatus(){
+    if(!settled) setStatus(reveal<0.5 ? 'Drag toward neural truth to see what actually fired.' : 'Almost there. Keep going to the end.');
+  }
+  function settleVerdict(){
+    settled=true;
+    var n=neural[mod], b=bloodFrom(n,gain[mod]);
+    var tp=peak(n), r=rank(n, crown);
+    var deep=document.getElementById('bts-deep'); if(deep) deep.disabled=false;
+    // scoreboard: false alarms (bright blood, quiet neurons) and misses (dark blood, busy neurons)
+    var fa=0, miss=0; for(var i=0;i<5;i++){ if(b[i]>0.6 && n[i]<0.45) fa++; if(b[i]<0.45 && n[i]>0.6) miss++; }
+    score={found:(crown===tp?1:0), fa:fa, miss:miss};
+    scoreEl.hidden=false;
+    scoreEl.innerHTML='<span>Your call: <b>'+layers[crown]+'</b></span><span>Truth: <b>'+layers[tp]+'</b></span><span>Blood “blobs” that were quiet: <b>'+fa+'</b></span><span>Busy layers the scan missed: <b>'+miss+'</b></span>';
+    if(crown===tp){
+      setStatus('<span class="bts-verdict">You got it, but look what the scan hid.</span> Even here the blood is bright in layers that barely fired. On '+labelFor[mod].toLowerCase()+', the coupling ran high in the superficial layers, so the scan flatters them.');
+    } else {
+      setStatus('<span class="bts-verdict">You crowned '+layers[crown]+'. It only fired '+ordinal(r)+' hardest.</span> The real peak was '+layers[tp]+'. On '+labelFor[mod].toLowerCase()+', deep firing couples weakly and drains upward, so the brightest blood landed in the wrong layer. You read the plumbing, not the neurons.');
+    }
+  }
+  function updateCycleStatus(){
+    var n=lockNeural, b=bloodFrom(n,gain[cycleMod]);
+    setStatus('Firing is frozen. Switched the input to <b>'+labelFor[cycleMod].toLowerCase()+'</b> and the scan changed anyway. Brightest blood now: <b>'+layers[peak(b)]+'</b>. Same neurons, a different scan, just because the input type changed.');
+  }
+
+  // ---------- canvas interaction (bet crown) ----------
+  function layerAt(clientY){
+    var rect=cv.getBoundingClientRect(), g=colGeom();
+    var y=(clientY-rect.top)*(H/rect.height);
+    for(var i=0;i<5;i++){ var top=g.top+i*(g.ch+g.cg); if(y>=top-4 && y<=top+g.ch+4) return i; }
+    return -1;
+  }
+  cv.addEventListener('click',function(e){ if(phase!=='bet') return; var i=layerAt(e.clientY); if(i>=0){ crown=i; focusLayer=i; render(); var rb=document.getElementById('bts-revealbtn'); if(rb) rb.focus(); setStatus('You crowned '+layers[i]+'. Change it, or reveal the neurons.'); } });
+  cv.setAttribute('tabindex','0');
+  cv.addEventListener('keydown',function(e){ if(phase!=='bet') return;
+    if(e.key==='ArrowUp'||e.key==='ArrowDown'){ e.preventDefault(); focusLayer=Math.max(0,Math.min(4, focusLayer+(e.key==='ArrowDown'?1:-1))); render(); }
+    else if(e.key==='Enter'||e.key===' '){ e.preventDefault(); crown=focusLayer; render(); setStatus('You crowned '+layers[crown]+'. Reveal the neurons when ready.'); }
+  });
+
+  try{ new MutationObserver(function(){ render(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']}); }catch(e){}
+  startCalibrate();
+})();
           </script>
         </div>
       </div>
