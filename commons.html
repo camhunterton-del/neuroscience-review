@@ -64,7 +64,7 @@
         <a href="posts.html">Articles</a>
         <a href="news.html">News</a>
         <a href="lab.html">Lab</a>
-        <a href="commons.html">The Commons</a>
+        <a aria-current="page" href="commons.html">The Commons</a>
         <a class="site-nav__cta" href="index.html#subscribe">Subscribe</a>
         <a class="site-nav__search" href="search.html" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
         <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
@@ -157,13 +157,14 @@
         <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
         <button type="submit" class="cta__button">Subscribe</button>
       </form>
-      <p class="cta__fine">We use your email only to send the newsletter (via Buttondown) and never share it. <a href="privacy.html">Privacy</a>.</p>
+      <p class="cta__fine">We use your email only to send you new posts (via Buttondown) and never share it. <a href="privacy.html">Privacy</a>.</p>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="site-footer__inner">
       <p>&copy; 2026 The Neuroscience Review</p>
+      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
       <p><a href="index.html">Home</a> &middot; <a href="posts.html">Articles</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="commons.html">The Commons</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
       <p><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a> &middot; <a href="disclaimer.html">Disclaimer</a></p>
     </div>
