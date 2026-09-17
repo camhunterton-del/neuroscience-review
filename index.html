@@ -128,15 +128,7 @@
     .lab-duo__card[href="synapse.html"] .lab-duo__media img { transform: scale(1.46); }
     .lab-duo__card { padding: clamp(.4rem, 1vw, .55rem); gap: .28rem; }
     .lab-duo__cardtitle { font-family: var(--serif); font-size: .98rem; font-weight: 600; color: var(--text); margin-top: .28rem; }
-    /* Alzheimer's campaign band */
-    .alz-band { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 1.6rem; background: var(--bg-alt); border: 1px solid var(--border); border-left: 5px solid var(--accent); border-radius: 14px; padding: 1.4rem 1.7rem; text-decoration: none; }
-    .alz-band__body { max-width: 62ch; }
-    .alz-band__eyebrow { font-family: var(--sans); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.4rem; }
-    .alz-band__title { font-family: var(--serif); font-size: clamp(1.2rem, 2.4vw, 1.5rem); font-weight: 600; line-height: 1.2; margin: 0 0 0.45rem; color: var(--text); }
-    .alz-band__text { font-family: var(--sans); font-size: 0.94rem; line-height: 1.5; color: var(--text-muted); margin: 0; }
-    .alz-band__btn { flex: 0 0 auto; display: inline-block; background: #2d5d7b; color: #fff; font-family: var(--sans); font-weight: 600; font-size: 0.92rem; padding: 0.7rem 1.4rem; border-radius: 9px; white-space: nowrap; }
-    .alz-band:hover .alz-band__btn { background: #24506b; }
-    @media (max-width: 640px) { .alz-band__btn { align-self: flex-start; } }
+    /* Alzheimer's campaign band styles live in css/styles.css (.alz-band) */
     @media (max-width: 760px) { .lab-duo { grid-template-columns: 1fr; } .lab-duo__cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lab-duo__card { min-width: 0; padding: clamp(.3rem, 1.4vw, .5rem); } .lab-duo__media { height: clamp(64px, 20vw, 92px); } .lab-duo__media img { max-width: 100%; transform: scale(1.12); } .lab-duo__card[href="brain.html"] .lab-duo__media img, .lab-duo__card[href="synapse.html"] .lab-duo__media img { transform: scale(1.2); } }
   </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
@@ -218,7 +210,8 @@
 
       <!-- Alzheimer's campaign band -->
       <section class="home-block">
-        <a class="alz-band" href="https://act.alz.org/site/TR?team_id=1106062&amp;pg=team&amp;fr_id=19807" target="_blank" rel="noopener">
+        <a class="alz-band" href="https://act.alz.org/goto/TeamNeuroscienceReview" target="_blank" rel="noopener">
+          <svg class="alz-band__mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g stroke="#fafaf6" stroke-width="3.4" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="#fafaf6"><circle cx="16" cy="20" r="3.4"/><circle cx="26" cy="12" r="3.4"/><circle cx="48" cy="18" r="3.4"/><circle cx="44" cy="48" r="3.4"/><circle cx="20" cy="46" r="3.4"/></g><circle cx="32" cy="32" r="8" fill="#fafaf6"/></svg>
           <div class="alz-band__body">
             <div class="alz-band__eyebrow">Team Neuroscience Review</div>
             <div class="alz-band__title">We're walking to end Alzheimer's</div>
