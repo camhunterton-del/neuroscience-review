@@ -578,14 +578,15 @@ article.post {
 .post-donate-cta strong{color:var(--text);}
 .post-donate-cta__btn{display:inline-block;background:#2d5d7b;color:#fff;font-weight:600;font-size:.9rem;padding:.6rem 1.15rem;border-radius:8px;text-decoration:none;}
 .post-donate-cta__btn:hover{background:#24506b;}
-.alz-band{display:flex;flex-wrap:wrap;align-items:center;gap:1.15rem 1.7rem;background:radial-gradient(135% 150% at 12% 15%,#5a3d8f 0%,#34557f 48%,#1f4459 100%);border:1px solid #3d3a6e;border-radius:16px;padding:1.5rem 1.9rem;text-decoration:none;}
+.alz-band{display:flex;flex-wrap:wrap;align-items:center;gap:1.15rem 1.7rem;background:radial-gradient(140% 160% at 12% 12%,#6b5590 0%,#473762 52%,#2a2142 100%);border:1px solid #453a5e;border-radius:6px;padding:1.5rem 1.9rem;text-decoration:none;}
 .alz-band__mark{flex:0 0 auto;width:58px;height:58px;}
 .alz-band__body{flex:1 1 320px;min-width:230px;}
-.alz-band__eyebrow{font-family:var(--sans);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.13em;color:#cbb6ec;margin-bottom:.4rem;}
-.alz-band__title{font-family:var(--serif);font-size:clamp(1.2rem,2.4vw,1.55rem);font-weight:600;line-height:1.18;margin:0 0 .45rem;color:#f3eefb;}
-.alz-band__text{font-family:var(--sans);font-size:.94rem;line-height:1.5;color:#cdd6ea;margin:0;}
-.alz-band__btn{flex:0 0 auto;display:inline-block;background:#fafaf6;color:#2d5d7b;font-family:var(--sans);font-weight:700;font-size:.92rem;padding:.7rem 1.4rem;border-radius:9px;white-space:nowrap;}
-.alz-band:hover .alz-band__btn{background:#fff;}
+.alz-band__eyebrow{font-family:var(--sans);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.13em;color:#dcc6f5;margin-bottom:.4rem;}
+.alz-band__title{font-family:var(--serif);font-size:clamp(1.2rem,2.4vw,1.55rem);font-weight:600;line-height:1.18;margin:0 0 .45rem;color:#f6f0fc;}
+.alz-band__text{font-family:var(--sans);font-size:.94rem;line-height:1.5;color:#dad0ee;margin:0;}
+.alz-band__btn{flex:0 0 auto;display:inline-block;background:#fafaf6;color:#5a2f95;font-family:var(--sans);font-weight:700;font-size:.9rem;letter-spacing:.01em;padding:.72rem 1.3rem;border-radius:4px;white-space:nowrap;transition:background .15s,transform .15s;}
+.alz-band__btn::after{content:"\00a0\2192";}
+.alz-band:hover .alz-band__btn{background:#fff;transform:translateX(2px);}
 @media (max-width:640px){.alz-band__btn{align-self:flex-start;}}
 .byline{color:var(--text-muted);}
 [data-theme="dark"]{--bg:#16151a;--bg-alt:#1f1e25;--text:#e9e7e0;--text-muted:#a8a69e;--text-faint:#9a988f;--accent:#7fb2d4;--accent-hover:#a3c9e3;--border:#2e2c35;}
