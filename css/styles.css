@@ -573,6 +573,19 @@ article.post {
 .post-lab-pointer{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:1.05rem 1.25rem;margin:2.4rem 0;font-family:var(--sans);background:var(--bg-alt);}
 .post-lab-pointer p{font-size:.94rem;line-height:1.55;color:var(--text-muted);margin:0;}
 .post-lab-pointer a{color:var(--accent);font-weight:600;}
+.post-donate-cta{border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:1.15rem 1.35rem;margin:2.4rem 0;font-family:var(--sans);background:var(--bg-alt);}
+.post-donate-cta p{font-size:.95rem;line-height:1.55;color:var(--text-muted);margin:0 0 .85rem;}
+.post-donate-cta strong{color:var(--text);}
+.post-donate-cta__btn{display:inline-block;background:#2d5d7b;color:#fff;font-weight:600;font-size:.9rem;padding:.6rem 1.15rem;border-radius:8px;text-decoration:none;}
+.post-donate-cta__btn:hover{background:#24506b;}
+.alz-band{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem 1.6rem;background:var(--bg-alt);border:1px solid var(--border);border-left:5px solid var(--accent);border-radius:14px;padding:1.4rem 1.7rem;text-decoration:none;}
+.alz-band__body{max-width:62ch;}
+.alz-band__eyebrow{font-family:var(--sans);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:.4rem;}
+.alz-band__title{font-family:var(--serif);font-size:clamp(1.2rem,2.4vw,1.5rem);font-weight:600;line-height:1.2;margin:0 0 .45rem;color:var(--text);}
+.alz-band__text{font-family:var(--sans);font-size:.94rem;line-height:1.5;color:var(--text-muted);margin:0;}
+.alz-band__btn{flex:0 0 auto;display:inline-block;background:#2d5d7b;color:#fff;font-family:var(--sans);font-weight:600;font-size:.92rem;padding:.7rem 1.4rem;border-radius:9px;white-space:nowrap;}
+.alz-band:hover .alz-band__btn{background:#24506b;}
+@media (max-width:640px){.alz-band__btn{align-self:flex-start;}}
 .byline{color:var(--text-muted);}
 [data-theme="dark"]{--bg:#16151a;--bg-alt:#1f1e25;--text:#e9e7e0;--text-muted:#a8a69e;--text-faint:#9a988f;--accent:#7fb2d4;--accent-hover:#a3c9e3;--border:#2e2c35;}
 [data-theme="dark"] .site-header{background:rgba(22,21,26,.9);}
