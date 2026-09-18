@@ -578,7 +578,7 @@ article.post {
 .post-donate-cta strong{color:var(--text);}
 .post-donate-cta__btn{display:inline-block;background:#2d5d7b;color:#fff;font-weight:600;font-size:.9rem;padding:.6rem 1.15rem;border-radius:8px;text-decoration:none;}
 .post-donate-cta__btn:hover{background:#24506b;}
-.alz-band{display:flex;flex-wrap:wrap;align-items:center;gap:1.15rem 1.7rem;background:linear-gradient(160deg,#f7f1fd 0%,#e8dcf6 100%);border:1px solid #d9c9ef;border-radius:6px;padding:1.5rem 1.9rem;text-decoration:none;}
+.alz-band{display:flex;flex-wrap:wrap;align-items:center;gap:1.15rem 1.7rem;background:linear-gradient(160deg,#fbf7fe 0%,#eee5fa 100%);border:1px solid #d9c9ef;border-radius:6px;padding:1.5rem 1.9rem;text-decoration:none;}
 .alz-band__mark{flex:0 0 auto;width:58px;height:58px;}
 .alz-band__body{flex:1 1 320px;min-width:230px;}
 .alz-band__eyebrow{font-family:var(--sans);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.13em;color:#7a4bc0;margin-bottom:.4rem;}
