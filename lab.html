@@ -2148,8 +2148,154 @@
     <!-- ============ EDITORIAL GRID ============ -->
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
-      <div class="bench-group" id="bts-group">
+      <div class="bench-group" id="astro-group">
         <h2 class="bench-section-kicker">This week's deep dive</h2>
+        <div class="bench-grid">
+          <style>
+            .astro-demo{max-width:640px;margin:1rem auto 0;font-family:'Inter',system-ui,sans-serif;color:var(--text,#232b2f);}
+            .astro-demo__stage{background:var(--panel2,rgba(45,93,123,.05));border:1px solid var(--teal-dim,rgba(45,93,123,.35));border-radius:10px;padding:12px;}
+            .astro-demo canvas{display:block;width:100%;height:auto;border-radius:8px;background:transparent;touch-action:manipulation;}
+            .astro-demo__status{font-size:.9rem;line-height:1.5;color:var(--text-muted,#6b7178);margin:.85rem auto .2rem;min-height:2.6em;text-align:center;max-width:560px;}
+            .astro-demo__status b{color:var(--text,#232b2f);font-weight:600;}
+            .astro-demo__controls{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.6rem;justify-content:center;}
+            .astro-btn{font-family:'Inter',system-ui,sans-serif;font-weight:600;font-size:.9rem;padding:.6rem 1.1rem;border-radius:8px;border:1px solid var(--teal,#2d5d7b);background:var(--teal,#2d5d7b);color:#fff;cursor:pointer;transition:opacity .15s;}
+            .astro-btn:hover{opacity:.9;}
+            .astro-btn--ghost{background:transparent;color:var(--teal,#2d5d7b);}
+            .astro-btn:disabled{opacity:.4;cursor:default;}
+            .astro-demo__legend{font-size:.78rem;color:var(--text-muted,#6b7178);margin:.7rem auto 0;max-width:560px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;}
+            .astro-demo__legend span{display:inline-flex;align-items:center;gap:6px;}
+            .astro-demo__dot{width:10px;height:10px;border-radius:50%;background:#e0a52e;flex:none;}
+          </style>
+          <section id="astrocytes-keep-time" class="demo-card demo-card--wide reveal" aria-label="Watch astrocytes keep time, an interactive on this week's deep dive">
+            <div class="demo-card__head">
+              <p class="demo-card__kicker">Glia &middot; this week's deep dive</p>
+              <h3 class="demo-card__title">Watch astrocytes keep time</h3>
+              <p class="demo-card__note">Astrocytes were filed under support staff for a century. Give a model mouse a foot shock and watch them fire calcium in a fixed order, then send it back to the same box and into a new one, and watch the sequence replay in one and dissolve into noise in the other. Pairs with the article <a href="posts/astrocytes-keep-time.html">Your brain's support cells keep their own time.</a></p>
+            </div>
+            <div class="astro-demo" id="astro-demo">
+              <div class="astro-demo__stage">
+                <canvas id="astro-canvas" width="1000" height="560" role="img" aria-label="Eight astrocytes in the CA1 hippocampus and a timeline below them. Deliver a shock and each cell lights up with calcium in a fixed order, tracing a diagonal on the timeline. In the same box the order returns; in a new box it scatters into noise."></canvas>
+              </div>
+              <p class="astro-demo__status" id="astro-status">Eight astrocytes, sitting quiet in the CA1 hippocampus. Give the mouse a brief foot shock and watch their calcium rise.</p>
+              <div class="astro-demo__controls" id="astro-controls">
+                <button class="astro-btn" id="astro-shock" type="button">Deliver foot shock</button>
+                <button class="astro-btn astro-btn--ghost" id="astro-same" type="button" disabled>Next day &middot; same box</button>
+                <button class="astro-btn astro-btn--ghost" id="astro-new" type="button" disabled>Next day &middot; new box</button>
+                <button class="astro-btn astro-btn--ghost" id="astro-reset" type="button" disabled>Reset</button>
+              </div>
+              <div class="astro-demo__legend">
+                <span><span class="astro-demo__dot"></span> a calcium peak</span>
+                <span>Timeline runs left (shock) to right (about five seconds later)</span>
+              </div>
+            </div>
+            <p class="demo-card__cite">Illustrates Senne et al., Ramirez lab, <em>Nature Neuroscience</em> 2026 &middot; cell count, timing and order are illustrative of the finding, not a reading of real data.</p>
+          </section>
+          <script>
+(function(){
+  var cv=document.getElementById('astro-canvas'); if(!cv||!cv.getContext) return;
+  var ctx=cv.getContext('2d'); var W=cv.width, H=cv.height;
+  var statusEl=document.getElementById('astro-status');
+  var bShock=document.getElementById('astro-shock'), bSame=document.getElementById('astro-same'),
+      bNew=document.getElementById('astro-new'), bReset=document.getElementById('astro-reset');
+  var N=8, SPAN=5.0;
+  var accent, glow, ink, muted, line;
+  function readColors(){
+    var s=getComputedStyle(document.getElementById('astro-demo'));
+    accent=(s.getPropertyValue('--teal')||'').trim()||'#2d5d7b';
+    ink=(s.getPropertyValue('--text')||'').trim()||'#232b2f';
+    muted=(s.getPropertyValue('--text-muted')||'').trim()||'#6b7178';
+    line=(s.getPropertyValue('--line')||'').trim()||'#e3ded2';
+    glow='#e0a52e';
+  }
+  var trueOrder=[0,1,2,3,4,5,6,7];
+  var pos=[[0.12,0.34],[0.24,0.66],[0.36,0.28],[0.46,0.60],[0.57,0.35],[0.67,0.68],[0.79,0.40],[0.89,0.62]];
+  var cells=[];
+  var fieldH=360, timelineY=fieldH+40, timelineH=H-timelineY-30, timelineX0=70, timelineX1=W-40;
+  function buildTimes(order, jitter){
+    var times=new Array(N);
+    for(var k=0;k<N;k++){
+      var frac=(k+0.5)/N, t=0.35+frac*(SPAN-0.7);
+      if(jitter) t+=(Math.sin(k*12.9898+order[k]*4.1)*0.5)*0.28;
+      times[order[k]]=Math.max(0.15,Math.min(SPAN-0.1,t));
+    }
+    return times;
+  }
+  function makeCells(order, jitter){
+    var times=buildTimes(order,jitter); cells=[];
+    for(var i=0;i<N;i++){ cells.push({x:timelineX0+pos[i][0]*(timelineX1-timelineX0), y:40+pos[i][1]*(fieldH-70), peakT:times[i], lit:0, idx:i}); }
+  }
+  function cellColor(i){ var hue=200-(i/(N-1))*150; return 'hsl('+hue+',55%,52%)'; }
+  var anim=null, phase='idle', t0=0, plotted=[];
+  function drawStar(x,y,r,fill,alpha,haloAlpha){
+    ctx.save(); ctx.globalAlpha=alpha;
+    if(haloAlpha>0){ ctx.globalAlpha=haloAlpha; ctx.beginPath(); ctx.arc(x,y,r*2.6,0,7); ctx.fillStyle=glow; ctx.fill(); ctx.globalAlpha=alpha; }
+    ctx.strokeStyle=fill; ctx.lineWidth=2; ctx.lineCap='round';
+    for(var a=0;a<7;a++){ var ang=a/7*Math.PI*2+0.5; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+Math.cos(ang)*r*1.7,y+Math.sin(ang)*r*1.7); ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fillStyle=fill; ctx.fill(); ctx.restore();
+  }
+  function frame(ts){
+    if(!t0) t0=ts; var el=(ts-t0)/1000;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle=muted; ctx.font='13px Inter, sans-serif'; ctx.textAlign='left';
+    ctx.fillText('CA1 hippocampus · 8 astrocytes', timelineX0, 24);
+    for(var i=0;i<N;i++){
+      var c=cells[i], peaked=el>=c.peakT, d=el-c.peakT, g=0;
+      if(d>=-0.15 && d<1.2){ g=d<0?(d+0.15)/0.15:Math.exp(-d*1.8); g=Math.max(0,Math.min(1,g)); }
+      c.lit=g; var r=9+g*7;
+      drawStar(c.x,c.y,r, g>0.05?cellColor(c.idx):(peaked?cellColor(c.idx):accent), peaked?1:0.42, g*0.5);
+      if(peaked && plotted.indexOf(i)===-1){ plotted.push(i); }
+    }
+    ctx.strokeStyle=line; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(timelineX0,timelineY); ctx.lineTo(timelineX1,timelineY); ctx.stroke();
+    ctx.fillStyle=muted; ctx.font='12px Inter, sans-serif';
+    ctx.textAlign='left'; ctx.fillText('shock', timelineX0, timelineY+timelineH+18);
+    ctx.textAlign='right'; ctx.fillText('~5 s later', timelineX1, timelineY+timelineH+18);
+    ctx.textAlign='left'; ctx.fillText('peak time of each astrocyte', timelineX0, timelineY-10);
+    for(var j=0;j<plotted.length;j++){
+      var cc=cells[plotted[j]];
+      var px=timelineX0+(cc.peakT/SPAN)*(timelineX1-timelineX0), py=timelineY+(cc.idx/(N-1))*timelineH;
+      ctx.beginPath(); ctx.arc(px,py,5.5,0,7); ctx.fillStyle=cellColor(cc.idx); ctx.fill();
+    }
+    if(el<SPAN+0.6){ anim=requestAnimationFrame(frame); } else { anim=null; onSequenceEnd(); }
+  }
+  function runSequence(order, msg){
+    readColors(); makeCells(order, true); plotted=[]; t0=0;
+    statusEl.innerHTML=msg;
+    bShock.disabled=true; bSame.disabled=true; bNew.disabled=true; bReset.disabled=true;
+    if(anim) cancelAnimationFrame(anim); anim=requestAnimationFrame(frame);
+  }
+  function onSequenceEnd(){
+    bReset.disabled=false;
+    if(phase==='learned'){ bSame.disabled=false; bNew.disabled=false;
+      statusEl.innerHTML='<b>An ordered wave.</b> Each astrocyte peaked at its own reliable time, tracing a diagonal, a compressed timeline of the few seconds after the shock. Now the next day, put the mouse back in the same box, or drop it in a new one.'; }
+    else if(phase==='same'){ statusEl.innerHTML='<b>The pattern came back.</b> Same box, no shock this time, and the same timed sequence replayed, the diagonal returns. This is the part that looks like memory.'; }
+    else if(phase==='new'){ statusEl.innerHTML='<b>Just noise.</b> New box, and the peaks scatter with no reliable order. The timed pattern belonged to that one place, not to any shock.'; }
+  }
+  bShock.addEventListener('click',function(){ phase='learned'; runSequence(trueOrder.slice(),'A foot shock. Watch the calcium rise in the astrocytes one after another, in a fixed order.'); });
+  bSame.addEventListener('click',function(){ phase='same'; runSequence(trueOrder.slice(),'Same box, the next day. No shock now.'); });
+  bNew.addEventListener('click',function(){ phase='new'; runSequence([0,5,2,7,1,4,6,3],'A brand new box, the next day.'); });
+  bReset.addEventListener('click',function(){ resetAll(); });
+  function resetAll(){
+    if(anim) cancelAnimationFrame(anim); anim=null; phase='idle'; plotted=[]; t0=0;
+    readColors(); makeCells(trueOrder.slice(), false);
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle=muted; ctx.font='13px Inter, sans-serif'; ctx.textAlign='left';
+    ctx.fillText('CA1 hippocampus · 8 astrocytes', timelineX0, 24);
+    for(var i=0;i<N;i++){ drawStar(cells[i].x,cells[i].y,9,accent,0.42,0); }
+    ctx.strokeStyle=line; ctx.beginPath(); ctx.moveTo(timelineX0,timelineY); ctx.lineTo(timelineX1,timelineY); ctx.stroke();
+    ctx.fillStyle=muted; ctx.font='12px Inter, sans-serif';
+    ctx.textAlign='left'; ctx.fillText('shock', timelineX0, timelineY+timelineH+18);
+    ctx.textAlign='right'; ctx.fillText('~5 s later', timelineX1, timelineY+timelineH+18);
+    statusEl.textContent='Eight astrocytes, sitting quiet in the CA1 hippocampus. Give the mouse a brief foot shock and watch their calcium rise.';
+    bShock.disabled=false; bSame.disabled=true; bNew.disabled=true; bReset.disabled=true;
+  }
+  readColors(); makeCells(trueOrder.slice(), false); resetAll();
+})();
+          </script>
+        </div>
+      </div>
+      <div class="bench-group" id="bts-group">
+        <h2 class="bench-section-kicker">Last week's deep dive</h2>
         <div class="bench-grid">
           <style>
             .bts-stage{ margin:1.1rem 0 .2rem; }
@@ -2173,7 +2319,7 @@
           </style>
           <section id="brain-plumbing-plays-favorites" class="demo-card demo-card--wide reveal" aria-label="Be the Scanner, an interactive on reading fMRI">
             <div class="demo-card__head">
-              <p class="demo-card__kicker">Brain imaging &middot; this week's deep dive</p>
+              <p class="demo-card__kicker">Brain imaging &middot; last week's deep dive</p>
               <h3 class="demo-card__title">Be the scanner</h3>
               <p class="demo-card__note">An fMRI never sees neurons. It sees blood, and reads activity off it. For one trial, you get to be the scanner. Learn the rule, place a bet, then peel the blood away and see what was really firing. Pairs with the article <a href="posts/brain-plumbing-plays-favorites.html">Your brain's plumbing plays favorites.</a></p>
             </div>
