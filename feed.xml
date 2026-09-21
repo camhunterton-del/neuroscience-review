@@ -5,8 +5,15 @@
   <link href="https://theneuroreview.com/feed.xml" rel="self"/>
   <link href="https://theneuroreview.com/"/>
   <id>https://theneuroreview.com/</id>
-  <updated>2026-09-16T13:13:00Z</updated>
+  <updated>2026-09-23T13:13:00Z</updated>
   <author><name>Cameron Hunterton</name></author>
+  <entry>
+    <title>Your brain's support cells keep their own time</title>
+    <link href="https://theneuroreview.com/posts/astrocytes-keep-time.html"/>
+    <id>https://theneuroreview.com/posts/astrocytes-keep-time.html</id>
+    <updated>2026-09-23T13:13:00Z</updated>
+    <summary>Astrocytes were written off as the brain's support cells. A new study in mice catches them forming ordered waves of calcium during a fear memory and replaying those waves when the memory returns.</summary>
+  </entry>
   <entry>
     <title>Your brain's plumbing plays favorites</title>
     <link href="https://theneuroreview.com/posts/brain-plumbing-plays-favorites.html"/>
