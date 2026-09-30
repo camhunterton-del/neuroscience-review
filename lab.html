@@ -2148,8 +2148,184 @@
     <!-- ============ EDITORIAL GRID ============ -->
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
-      <div class="bench-group" id="astro-group">
+      <div class="bench-group" id="fi-group">
         <h2 class="bench-section-kicker">This week's deep dive</h2>
+        <div class="bench-grid">
+          <style>
+            .fi-demo{max-width:660px;margin:1rem auto 0;font-family:'Inter',system-ui,sans-serif;color:var(--text,#232b2f);}
+            .fi-demo__stage{background:#10171d;border:1px solid var(--teal-dim,rgba(45,93,123,.35));border-radius:10px;padding:12px;}
+            .fi-demo canvas{display:block;width:100%;height:auto;border-radius:8px;background:transparent;touch-action:manipulation;}
+            .fi-demo__readout{display:flex;align-items:baseline;justify-content:center;gap:.5rem;margin:1rem auto .1rem;}
+            .fi-demo__readout-num{font-family:'Newsreader',Georgia,serif;font-size:2.5rem;font-weight:600;color:var(--teal,#2d5d7b);line-height:1;}
+            .fi-demo__readout-lab{font-family:'Inter',system-ui,sans-serif;font-size:.85rem;color:var(--text-muted,#6b7178);}
+            .fi-demo__controls{margin:1.05rem auto 0;max-width:560px;}
+            .fi-row{display:flex;align-items:center;gap:.75rem;}
+            .fi-row label{font-family:'Inter',system-ui,sans-serif;font-size:.9rem;font-weight:600;color:var(--text,#232b2f);white-space:nowrap;}
+            #fi-group input[type=range]{flex:1;accent-color:var(--teal,#2d5d7b);height:22px;cursor:pointer;}
+            .fi-slider-ends{display:flex;justify-content:space-between;font-family:'Inter',system-ui,sans-serif;font-size:.72rem;letter-spacing:.03em;text-transform:uppercase;color:var(--text-muted,#6b7178);margin:.2rem auto 0;max-width:560px;}
+            .fi-demo__status{font-family:'Inter',system-ui,sans-serif;font-size:.9rem;line-height:1.5;color:var(--text-muted,#6b7178);margin:.9rem auto 0;max-width:560px;text-align:center;min-height:4.2em;}
+            .fi-demo__status b{color:var(--text,#232b2f);font-weight:600;}
+            .fi-demo__legend{font-size:.78rem;color:var(--text-muted,#6b7178);margin:.75rem auto 0;max-width:560px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;}
+            .fi-demo__legend span{display:inline-flex;align-items:center;gap:6px;}
+            .fi-demo__swatch{width:12px;height:12px;border-radius:3px;flex:none;}
+          </style>
+          <section id="feature-interference" class="demo-card demo-card--wide reveal" aria-label="See the signals tangle, an interactive on this week's deep dive">
+            <div class="demo-card__head">
+              <p class="demo-card__kicker">Attention &middot; this week's deep dive</p>
+              <h3 class="demo-card__title">See the signals tangle</h3>
+              <p class="demo-card__note">When you know which feature matters, your brain keeps two things apart. When you don't, the one you should ignore swells and its axis swings into the one you need, until the two smear together. Drag task uncertainty up and watch the read-out accuracy fall, not because the brain runs out of room, but because the signals tangle. Pairs with the article <a href="posts/feature-interference.html">Your brain doesn't run out of room.</a></p>
+            </div>
+            <div class="fi-demo" id="fi-demo">
+              <div class="fi-demo__stage">
+                <canvas id="fi-canvas" width="1000" height="620" role="img" aria-label="A dark population-space plot. A relevant read-out axis runs horizontal and an irrelevant axis starts vertical. Two stimulus clouds, A and B, differ only along the relevant axis. As task uncertainty rises, the irrelevant axis rotates toward the relevant one and the clouds stretch and smear together, and a read-out accuracy number below falls."></canvas>
+              </div>
+              <div class="fi-demo__readout"><span class="fi-demo__readout-num" id="fi-acc">100%</span><span class="fi-demo__readout-lab">read-out accuracy (chance is 50%)</span></div>
+              <div class="fi-demo__controls">
+                <div class="fi-row">
+                  <label for="fi-uncertainty">Task uncertainty</label>
+                  <input type="range" id="fi-uncertainty" min="0" max="100" value="0" step="1" aria-label="Task uncertainty">
+                </div>
+                <div class="fi-slider-ends"><span>Sure which feature matters</span><span>No idea which matters</span></div>
+              </div>
+              <p class="fi-demo__status" id="fi-status">Two readout axes at right angles, two tight stimulus clouds. Drag task uncertainty up and watch what happens.</p>
+              <div class="fi-demo__legend">
+                <span><span class="fi-demo__swatch" style="background:#5ec8c4"></span> stimulus A</span>
+                <span><span class="fi-demo__swatch" style="background:#e0894a"></span> stimulus B</span>
+                <span><span class="fi-demo__swatch" style="background:#8fd0f0"></span> relevant axis</span>
+                <span><span class="fi-demo__swatch" style="background:#c9a24b"></span> irrelevant axis</span>
+              </div>
+            </div>
+            <p class="demo-card__cite">Illustrates Xue et al., Cohen lab, <em>Nature Neuroscience</em> 2026 &middot; the axes, spread and accuracy are illustrative of the mechanism, not a reading of real data.</p>
+          </section>
+          <script>
+(function(){
+  var cv=document.getElementById('fi-canvas'); if(!cv||!cv.getContext) return;
+  var ctx=cv.getContext('2d'); var W=cv.width, H=cv.height;
+  var slider=document.getElementById('fi-uncertainty');
+  var accNum=document.getElementById('fi-acc');
+  var statusEl=document.getElementById('fi-status');
+  if(!slider||!accNum||!statusEl) return;
+
+  // deterministic standard-normal samples, generated once so the cloud only reshapes, never jumps
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var rnd=mulberry32(20260930);
+  var NP=150, n1=[], n2=[], cls=[];
+  for(var i=0;i<NP;i++){
+    var u1=Math.max(rnd(),1e-9), u2=rnd();
+    var r=Math.sqrt(-2*Math.log(u1));
+    n1.push(r*Math.cos(2*Math.PI*u2));
+    n2.push(r*Math.sin(2*Math.PI*u2));
+    cls.push(i%2); // 0 = stimulus A, 1 = stimulus B
+  }
+
+  // fixed model constants (px are world units; accuracy is derived from them, not from drawing)
+  var cx=W/2, cy=250, D=140, SIG_REL=20, yAxis=560;
+
+  function erf(x){var s=x<0?-1:1;x=Math.abs(x);var t=1/(1+0.3275911*x);
+    var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+    return s*y;}
+  function ncdf(z){return 0.5*(1+erf(z/Math.SQRT2));}
+
+  function colors(){
+    var s=getComputedStyle(document.getElementById('fi-demo'));
+    return {
+      ink:(s.getPropertyValue('--text')||'').trim()||'#232b2f',
+      muted:(s.getPropertyValue('--text-muted')||'').trim()||'#6b7178'
+    };
+  }
+  var A_COL='#5ec8c4', B_COL='#e0894a', REL_AXIS='#8fd0f0', IRR_AXIS='#c9a24b', BG='#10171d', GRID='rgba(255,255,255,0.06)';
+
+  function drawArrow(x0,y0,x1,y1,col,wdt){
+    ctx.save();ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=wdt;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+    var ang=Math.atan2(y1-y0,x1-x0),h=11;
+    ctx.beginPath();ctx.moveTo(x1,y1);
+    ctx.lineTo(x1-h*Math.cos(ang-0.4),y1-h*Math.sin(ang-0.4));
+    ctx.lineTo(x1-h*Math.cos(ang+0.4),y1-h*Math.sin(ang+0.4));
+    ctx.closePath();ctx.fill();ctx.restore();
+  }
+
+  function render(){
+    var u=(+slider.value)/100;
+    var thetaDeg=90-80*u;                 // angle between the two readout axes
+    var theta=thetaDeg*Math.PI/180;
+    var cosT=Math.cos(theta), sinT=Math.sin(theta);
+    var sigIrr=SIG_REL*(1+7*u);           // spread along the irrelevant axis grows with uncertainty
+    var sigEff=Math.sqrt(SIG_REL*SIG_REL + (sigIrr*cosT)*(sigIrr*cosT)); // spread the irrelevant leaks onto the readout
+    var acc=ncdf(D/(2*sigEff));
+    var C=colors();
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle=BG; ctx.fillRect(0,0,W,H);
+
+    // faint reference grid
+    ctx.strokeStyle=GRID; ctx.lineWidth=1;
+    for(var gx=100;gx<W;gx+=100){ctx.beginPath();ctx.moveTo(gx,20);ctx.lineTo(gx,yAxis-70);ctx.stroke();}
+    for(var gy=60;gy<yAxis-70;gy+=90){ctx.beginPath();ctx.moveTo(60,gy);ctx.lineTo(W-60,gy);ctx.stroke();}
+
+    // the two readout axes through the centre
+    var axLen=200;
+    drawArrow(cx,cy,cx+axLen,cy,REL_AXIS,3);                                   // relevant (horizontal, the readout)
+    drawArrow(cx,cy,cx+axLen*cosT,cy-axLen*sinT,IRR_AXIS,3);                   // irrelevant (rotates down toward it)
+    ctx.font='13px Inter, sans-serif'; ctx.textAlign='left';
+    ctx.fillStyle=REL_AXIS; ctx.fillText('relevant feature  (what you read out)', cx+axLen+8, cy+4);
+    ctx.fillStyle=IRR_AXIS; ctx.textAlign=(u>0.45?'left':'center');
+    ctx.fillText('irrelevant feature', cx+axLen*cosT+8, cy-axLen*sinT-6);
+
+    // two stimulus sub-clouds: same shape, differing only along the relevant (horizontal) axis
+    for(var k=0;k<NP;k++){
+      var sign=cls[k]?1:-1;
+      var px=cx + sign*D/2 + n1[k]*SIG_REL + n2[k]*sigIrr*cosT;
+      var py=cy - n2[k]*sigIrr*sinT;
+      var rad=3.1;
+      ctx.beginPath(); ctx.arc(px,py,rad,0,7);
+      ctx.fillStyle=cls[k]?B_COL:A_COL; ctx.globalAlpha=0.72; ctx.fill(); ctx.globalAlpha=1;
+    }
+    // cloud centres
+    ctx.textAlign='center'; ctx.font='600 13px Inter, sans-serif';
+    ctx.fillStyle=A_COL; ctx.beginPath(); ctx.arc(cx-D/2,cy,4.5,0,7); ctx.fill(); ctx.fillText('A', cx-D/2, cy-sigIrr*sinT-14);
+    ctx.fillStyle=B_COL; ctx.beginPath(); ctx.arc(cx+D/2,cy,4.5,0,7); ctx.fill(); ctx.fillText('B', cx+D/2, cy-sigIrr*sinT-14);
+
+    // readout strip: project the two clouds onto the relevant axis as bell curves
+    ctx.strokeStyle='rgba(255,255,255,0.28)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(60,yAxis); ctx.lineTo(W-60,yAxis); ctx.stroke();
+    ctx.fillStyle=C.muted; ctx.font='12px Inter, sans-serif'; ctx.textAlign='left';
+    ctx.fillText('read-out of the relevant feature', 60, yAxis+22);
+    var peak=64;
+    function bell(mu,col){
+      ctx.beginPath();
+      for(var x=60;x<=W-60;x+=4){
+        var v=Math.exp(-0.5*((x-mu)/sigEff)*((x-mu)/sigEff));
+        var y=yAxis - v*peak;
+        if(x===60) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.lineTo(W-60,yAxis); ctx.lineTo(60,yAxis); ctx.closePath();
+      ctx.fillStyle=col; ctx.globalAlpha=0.30; ctx.fill(); ctx.globalAlpha=1;
+      ctx.strokeStyle=col; ctx.lineWidth=1.6; ctx.stroke();
+    }
+    bell(cx-D/2,A_COL);
+    bell(cx+D/2,B_COL);
+
+    accNum.textContent=Math.round(acc*100)+'%';
+    var pct=Math.round(acc*100);
+    if(u<0.06){
+      statusEl.innerHTML='<b>Certain.</b> The two readout axes sit at right angles and the stimulus stays a tight cloud, so telling A from B is easy. Nothing bleeds in.';
+    } else if(u<0.55){
+      statusEl.innerHTML='<b>Getting unsure.</b> The irrelevant axis is swinging toward the relevant one and the cloud is stretching along it. Its spread starts leaking into the read-out, and accuracy slips to <b>'+pct+'%</b>.';
+    } else {
+      statusEl.innerHTML='<b>Tangled.</b> The axes have nearly lined up and the irrelevant feature has swollen. A and B smear into each other on the read-out, dragging accuracy down to <b>'+pct+'%</b>. Not a full head, a tangle.';
+    }
+  }
+
+  slider.addEventListener('input',render);
+  slider.addEventListener('change',render);
+  render();
+})();
+          </script>
+        </div>
+      </div>
+      <div class="bench-group" id="astro-group">
+        <h2 class="bench-section-kicker">Last week's deep dive</h2>
         <div class="bench-grid">
           <style>
             .astro-demo{max-width:640px;margin:1rem auto 0;font-family:'Inter',system-ui,sans-serif;color:var(--text,#232b2f);}
@@ -2168,7 +2344,7 @@
           </style>
           <section id="astrocytes-keep-time" class="demo-card demo-card--wide reveal" aria-label="Watch astrocytes keep time, an interactive on this week's deep dive">
             <div class="demo-card__head">
-              <p class="demo-card__kicker">Glia &middot; this week's deep dive</p>
+              <p class="demo-card__kicker">Glia &middot; last week's deep dive</p>
               <h3 class="demo-card__title">Watch astrocytes keep time</h3>
               <p class="demo-card__note">Astrocytes were filed under support staff for a century. Give a model mouse a foot shock and watch them fire calcium in a fixed order, then send it back to the same box and into a new one, and watch the sequence replay in one and dissolve into noise in the other. Pairs with the article <a href="posts/astrocytes-keep-time.html">Your brain's support cells keep their own time.</a></p>
             </div>
@@ -2295,7 +2471,7 @@
         </div>
       </div>
       <div class="bench-group" id="bts-group">
-        <h2 class="bench-section-kicker">Last week's deep dive</h2>
+        <h2 class="bench-section-kicker">Brain imaging</h2>
         <div class="bench-grid">
           <style>
             .bts-stage{ margin:1.1rem 0 .2rem; }
@@ -2319,7 +2495,7 @@
           </style>
           <section id="brain-plumbing-plays-favorites" class="demo-card demo-card--wide reveal" aria-label="Be the Scanner, an interactive on reading fMRI">
             <div class="demo-card__head">
-              <p class="demo-card__kicker">Brain imaging &middot; last week's deep dive</p>
+              <p class="demo-card__kicker">Brain imaging &middot; earlier deep dive</p>
               <h3 class="demo-card__title">Be the scanner</h3>
               <p class="demo-card__note">An fMRI never sees neurons. It sees blood, and reads activity off it. For one trial, you get to be the scanner. Learn the rule, place a bet, then peel the blood away and see what was really firing. Pairs with the article <a href="posts/brain-plumbing-plays-favorites.html">Your brain's plumbing plays favorites.</a></p>
             </div>

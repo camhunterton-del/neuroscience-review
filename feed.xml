@@ -5,8 +5,15 @@
   <link href="https://theneuroreview.com/feed.xml" rel="self"/>
   <link href="https://theneuroreview.com/"/>
   <id>https://theneuroreview.com/</id>
-  <updated>2026-09-23T13:13:00Z</updated>
+  <updated>2026-09-30T13:13:00Z</updated>
   <author><name>Cameron Hunterton</name></author>
+  <entry>
+    <title>Your brain doesn't run out of room</title>
+    <link href="https://theneuroreview.com/posts/feature-interference.html"/>
+    <id>https://theneuroreview.com/posts/feature-interference.html</id>
+    <updated>2026-09-30T13:13:00Z</updated>
+    <summary>You get worse at things when you aren't sure which thing you're supposed to be doing. A new study says the reason isn't a lack of mental space. It's that the signal you're trying to ignore grows louder and tangles into the one you need.</summary>
+  </entry>
   <entry>
     <title>Your brain's support cells keep their own time</title>
     <link href="https://theneuroreview.com/posts/astrocytes-keep-time.html"/>
