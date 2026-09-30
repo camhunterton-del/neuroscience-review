@@ -18,8 +18,10 @@ on:
         description: 'Post slug to send (leave blank for the newest post)'
         required: false
         default: ''
-  schedule:
-    - cron: '0 16 * * 3'   # Wednesdays 16:00 UTC (12pm ET), after the morning publish
+  # Weekly per-post send DISABLED 2026-09-30 (Cameron): switching to a monthly "This Month at TNR" digest.
+  # To re-enable weekly, uncomment:
+  # schedule:
+  #   - cron: '0 16 * * 3'   # Wednesdays 16:00 UTC (12pm ET)
 
 permissions:
   contents: read
