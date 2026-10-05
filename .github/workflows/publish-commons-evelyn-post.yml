@@ -4,12 +4,12 @@ name: Publish Commons - Evelyn Nye
 # by Evelyn Nye (SUNY Geneseo). The finished post + all wiring (The Commons launch on commons.html,
 # homepage feature, feature-interference demoted to a card, Articles list, feed, sitemap, search index,
 # and the helmet thumbnail img/photo-concussion.jpg) is staged on branch post/commons-evelyn.
-# This workflow fires Oct 8, merges that branch into main, verifies the page went live, and notifies.
+# This workflow fires Oct 7, merges that branch into main, verifies the page went live, and notifies.
 # Idempotent (no-op if already published). Dry-run tests the merge without publishing.
 
 on:
   schedule:
-    - cron: '13 13 8 10 *'   # Oct 8, 13:13 UTC (~9:13am ET)
+    - cron: '13 13 7 10 *'   # Oct 7, 13:13 UTC (~9:13am ET)
   workflow_dispatch:
     inputs:
       dry_run:
@@ -57,7 +57,7 @@ jobs:
               echo "result=dryok" >> $GITHUB_OUTPUT
             else
               git merge --abort || true
-              echo "DRY RUN: merge would CONFLICT — needs a re-sync before Oct 8."
+              echo "DRY RUN: merge would CONFLICT — needs a re-sync before Oct 7."
               echo "result=conflict" >> $GITHUB_OUTPUT
               exit 1
             fi
@@ -111,5 +111,5 @@ jobs:
             await github.rest.issues.create({
               owner: context.repo.owner, repo: context.repo.repo,
               title: '🔴 Commons piece publish FAILED',
-              body: `The scheduled Oct 8 Commons publish did not complete (merge conflict or deploy issue). Needs a manual publish.\n\nRun log: ${runUrl}`
+              body: `The scheduled Oct 7 Commons publish did not complete (merge conflict or deploy issue). Needs a manual publish.\n\nRun log: ${runUrl}`
             });
