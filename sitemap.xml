@@ -2,9 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://theneuroreview.com/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://theneuroreview.com/posts/when-brain-development-and-brain-injury-collide.html</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://theneuroreview.com/posts/feature-interference.html</loc>
@@ -183,6 +189,7 @@
   </url>
   <url>
     <loc>https://theneuroreview.com/commons.html</loc>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
