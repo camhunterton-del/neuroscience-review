@@ -6,13 +6,24 @@
 //
 // Requires env ANTHROPIC_API_KEY. Writes `count=<n>` to GITHUB_OUTPUT.
 
-import Anthropic from '@anthropic-ai/sdk'
 import fs from 'fs'
+import { pathToFileURL } from 'node:url'
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+// The Anthropic SDK is loaded lazily (dynamic import inside getClient) so this
+// module can be imported for its pure helpers (itemHtml, slugify, injectNews)
+// in tests/fixtures WITHOUT the SDK installed. The daily workflow npm-installs
+// it and runs this file as the entry point, where getClient() resolves it.
+let _client = null
+async function getClient() {
+  if (!_client) {
+    const { default: Anthropic } = await import('@anthropic-ai/sdk')
+    _client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  }
+  return _client
+}
 const MODEL = process.env.NEWS_MODEL || 'claude-sonnet-5'
 const NEWS_FILE = 'news.html'
-const MAX_ITEMS_ON_PAGE = 40
+const MAX_ITEMS_ON_PAGE = 80 // raised from 40 (2026-10-08): every brief now has a permalink + a search-index entry, so trimming would 404 them; revisit with an archive page when the feed outgrows this
 const MAX_CANDIDATES_TO_CHECK = 10
 const MAX_TO_PUBLISH = 3
 const MAX_SCOUT_ROUNDS = 8
@@ -35,6 +46,16 @@ const targetMin = (now.getUTCDay() === 0 || now.getUTCDay() === 6) ? 1 : 2 // we
 const esc = (s) => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
+// Stable permalink id for a brief, matching the scheme the 50+ existing cards
+// already use: lowercase the headline, drop apostrophes, collapse every other
+// run of non-alphanumerics to a single hyphen, trim hyphens, prefix "n-". The
+// id is derived only from the headline, so it is stable and immutable per story.
+const slugify = (headline) => 'n-' + String(headline ?? '')
+  .toLowerCase()
+  .replace(/['‘’]/g, '')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '')
+
 function extractJson(text) {
   const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/)
   const raw = fence ? fence[1] : (text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/) || [])[1]
@@ -43,6 +64,7 @@ function extractJson(text) {
 }
 
 async function ask(prompt, { web = false, maxTokens = 1500, maxUses = 4 } = {}) {
+  const client = await getClient()
   const msg = await client.messages.create({
     model: MODEL,
     max_tokens: maxTokens,
@@ -83,11 +105,13 @@ async function ogImage(url) {
   }
 }
 
-// --- read existing page + already-published URLs (avoid dupes) ---
-const page = fs.readFileSync(NEWS_FILE, 'utf8')
+// --- existing page + already-published URLs (avoid dupes) ---
+// The actual news.html is read inside run(); these module-level bindings are
+// populated there and closed over by scoutRound(). normUrl stays a pure helper.
 const normUrl = (u) => String(u || '').replace(/&amp;/g, '&').trim().toLowerCase().replace(/#.*$/, '').replace(/\/+$/, '')
-const existingUrls = new Set([...page.matchAll(/<p class="news-item__meta">[\s\S]*?href="([^"]+)"/g)].map((m) => normUrl(m[1])))
-const existingHeadlines = [...page.matchAll(/<h[23]><a[^>]*>([^<]+)<\/a><\/h[23]>/g)].map((m) => m[1])
+let page = ''
+let existingUrls = new Set()
+let existingHeadlines = []
 
 // Near-duplicate guard: the same study often gets covered by several outlets on
 // different days (different URLs), so URL-dedup alone lets it re-post (this is how
@@ -176,141 +200,178 @@ async function vet(c) {
   }
 }
 
-// Scout + vet in rounds. Keep scouting a fresh, ever-wider batch and keep going
-// until we have up to MAX_TO_PUBLISH, or two straight rounds turn up nothing new
-// (the space is exhausted). A single weak batch can never leave the feed empty:
-// if the last few days are thin, later rounds widen to weeks and then a month.
-// Only items that clear all four checks are ever published.
-const finalItems = []
-let emptyStreak = 0
-for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < MAX_TO_PUBLISH; round++) {
-  const candidates = await scoutRound(round)
-  if (candidates.length === 0) {
-    emptyStreak += 1
-    if (emptyStreak >= 2) { console.log('Two rounds in a row surfaced nothing new; stopping the search.'); break }
-    continue
-  }
-  emptyStreak = 0
-  for (const c of candidates) {
-    if (finalItems.length >= MAX_TO_PUBLISH) break
-    const decision = await vet(c)
-    if (decision && decision.publish) {
-      if (nearDup(decision.headline, [...existingHeadlines, ...finalItems.map((f) => f.headline)])) {
-        console.log('SKIP (near-dup of an existing or already-chosen item):', decision.headline)
-        continue
-      }
-      // Same-URL guard: two items can share a source URL under different headlines
-      // (the headline near-dup check above can miss that), so also dedup by URL
-      // against both the live page and everything chosen this run.
-      const durl = normUrl(decision.sourceUrl || c.url)
-      if (durl && (existingUrls.has(durl) || finalItems.some((f) => normUrl(f.sourceUrl) === durl))) {
-        console.log('SKIP (same source URL as an existing or already-chosen item):', decision.headline)
-        continue
-      }
-      decision.imageUrl = c.imageUrl || null // public coverage page for the image fallback
-      // Normalize the date to "Month DD, YYYY" so the feed's date-sort (which only
-      // reads that format) can never bury a card that the model dated as ISO etc.
-      if (decision.date) {
-        const parsed = new Date(decision.date)
-        decision.date = Number.isNaN(parsed.getTime())
-          ? niceDate
-          : parsed.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-      }
-      finalItems.push(decision)
-      console.log('PUBLISH:', decision.headline)
-    } else {
-      console.log('SKIP:', c.headline, '-', decision && decision.reason)
-    }
-  }
-  if (finalItems.length === 0 && round < MAX_SCOUT_ROUNDS) {
-    console.log(`Round ${round}: still nothing cleared; widening the window and going again.`)
-  }
-}
+// --- 4. itemHtml + injectNews (PURE, exported so fixtures can exercise the
+// generator's card-emitting and splice logic with NO SDK and NO network) ---
 
-if (finalItems.length === 0) {
-  console.log('No items cleared all four checks today. Leaving the page unchanged.')
-  try { fs.writeFileSync('.github/news-latest.json', '[]') } catch (e) { /* non-fatal */ }
-  fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/stdout', 'count=0\n')
-  process.exit(0)
-}
+const START = '<!-- NEWS-FEED-START -->'
+const END = '<!-- NEWS-FEED-END -->'
 
-// Attach each item's source preview image. Try the primary source first; if it
-// blocks us or exposes none (common with paywalled journals like The Lancet, which
-// returns 403 to fetches), fall back to a public coverage page (press release /
-// ScienceDaily / university news) for the share image. Same mechanism either way:
-// only the publisher's own og:image, and the card still links to the primary source.
-// Cards render the thumb at 150x100, so ask hosts for a smaller variant than
-// full-res where the URL scheme allows. Safe: if a smaller variant 404s, the
-// <img onerror> handler already drops the thumbnail.
-const shrinkImage = (url) => url
-  .replace(/(media\.springernature\.com\/)m\d+(\/)/, '$1m312$2')
-  .replace(/([?&]w=)(\d{3,})/, (m, p, n) => (+n > 400 ? p + '400' : m))
-for (const it of finalItems) {
-  it.image = await ogImage(it.sourceUrl)
-  if (!it.image && it.imageUrl && normUrl(it.imageUrl) !== normUrl(it.sourceUrl)) {
-    it.image = await ogImage(it.imageUrl)
-  }
-  if (it.image) it.image = shrinkImage(it.image)
-}
-
-// --- 4. INJECT into news.html (newest first, capped) ---
+// Emit one news card. Every card now carries a stable permalink id (news.html#n-SLUG).
 function itemHtml(it) {
   const url = esc(it.sourceUrl)
+  const id = slugify(it.headline)
   const thumb = it.image
     ? `\n          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="${url}" target="_blank" rel="noopener"><img src="${esc(it.image)}" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>`
     : ''
   const caveat = it.caveat ? `\n          <p class="news-item__caveat"><em>${esc(it.caveat)}</em></p>` : ''
-  return `        <article class="news-item">${thumb}
+  return `        <article class="news-item" id="${id}">${thumb}
           <p class="news-item__meta">${esc(it.date || niceDate)} &middot; via <a href="${url}" target="_blank" rel="noopener">${esc(it.sourceName)}</a></p>
           <h2><a href="${url}" target="_blank" rel="noopener">${esc(it.headline)}</a></h2>
           <p>${esc(it.summary)}</p>${caveat}
         </article>`
 }
 
-const START = '<!-- NEWS-FEED-START -->'
-const END = '<!-- NEWS-FEED-END -->'
-const startIdx = page.indexOf(START)
-const endIdx = page.indexOf(END)
-if (startIdx === -1 || endIdx === -1) throw new Error('feed markers not found in news.html')
-
-const before = page.slice(0, startIdx + START.length)
-const after = page.slice(endIdx)
-const existingBlock = page.slice(startIdx + START.length, endIdx)
-
-// existing article blocks, oldest kept but capped
-const existingArticles = existingBlock.split(/(?=<article class="news-item">)/).map((s) => s.trim()).filter(Boolean)
-const newArticles = finalItems.map(itemHtml)
-// Keep the whole feed in date order, newest first, so displayed dates never jump around.
-// (Sort is stable, so same-date items keep new-before-existing order.)
+// Date each card by the visible "Month DD, YYYY" in its meta line, for sorting.
 const articleTime = (html) => {
   const m = html.match(/news-item__meta[^>]*>\s*([A-Za-z]+ \d{1,2}, \d{4})/)
   const t = m ? new Date(m[1]).getTime() : NaN
   return Number.isNaN(t) ? -Infinity : t
 }
-const combined = [...newArticles, ...existingArticles]
-  .sort((a, b) => articleTime(b) - articleTime(a))
-  .slice(0, MAX_ITEMS_ON_PAGE)
-  .map((s) => s.replace(/^\s*/, '        ')) // uniform 8-space indent on every <article> line
 
-const rebuilt = before + '\n' + combined.join('\n\n') + '\n        ' + after
-fs.writeFileSync(NEWS_FILE, rebuilt)
+// Splice finalItems into the feed, newest first and capped. Split the archive by
+// `<article class="news-item"` FOLLOWED BY optional attributes (every card now
+// carries an id="n-SLUG"), so it breaks into one block PER card instead of a
+// single combined block — which restores the per-item date sort and item cap.
+// Pure: no file or network side effects. Returns the rebuilt page + item count.
+function injectNews(pageHtml, finalItems) {
+  const startIdx = pageHtml.indexOf(START)
+  const endIdx = pageHtml.indexOf(END)
+  if (startIdx === -1 || endIdx === -1) throw new Error('feed markers not found in news.html')
 
-// Hand today's new items to the social poster (Bluesky posts up to 2 of these).
-// This file is a transient handoff and is not committed.
-try {
-  fs.writeFileSync('.github/news-latest.json', JSON.stringify(finalItems.map((it) => ({
-    headline: it.headline,
-    summary: it.summary,
-    caveat: it.caveat || '',
-    sourceName: it.sourceName,
-    sourceUrl: it.sourceUrl,
-    date: it.date || niceDate,
-    image: it.image || null,
-  })), null, 2))
-} catch (e) {
-  console.error('Could not write news-latest.json:', e.message)
+  const before = pageHtml.slice(0, startIdx + START.length)
+  const after = pageHtml.slice(endIdx)
+  const existingBlock = pageHtml.slice(startIdx + START.length, endIdx)
+
+  // existing article blocks, oldest kept but capped
+  const existingArticles = existingBlock.split(/(?=<article class="news-item"[\s>])/).map((s) => s.trim()).filter(Boolean)
+  const newArticles = finalItems.map(itemHtml)
+  // Keep the whole feed in date order, newest first, so displayed dates never jump around.
+  // (Sort is stable, so same-date items keep new-before-existing order.)
+  const combined = [...newArticles, ...existingArticles]
+    .sort((a, b) => articleTime(b) - articleTime(a))
+    .slice(0, MAX_ITEMS_ON_PAGE)
+    .map((s) => s.replace(/^\s*/, '        ')) // uniform 8-space indent on every <article> line
+
+  const rebuilt = before + '\n' + combined.join('\n\n') + '\n        ' + after
+  return { rebuilt, count: combined.length }
 }
 
-if (finalItems.length < targetMin) console.warn(`Note: published ${finalItems.length}, below today's target of ${targetMin}. Held the quality bar rather than adding filler.`)
-console.log(`Injected ${finalItems.length} new item(s); page now holds ${combined.length}.`)
-fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/stdout', `count=${finalItems.length}\n`)
+// Source preview-image URL shrinker (used in run()).
+const shrinkImage = (url) => url
+  .replace(/(media\.springernature\.com\/)m\d+(\/)/, '$1m312$2')
+  .replace(/([?&]w=)(\d{3,})/, (m, p, n) => (+n > 400 ? p + '400' : m))
+
+// --- main pipeline (runs only when this file is the entry point) ---
+async function run() {
+  // read existing page + already-published URLs (avoid dupes)
+  page = fs.readFileSync(NEWS_FILE, 'utf8')
+  existingUrls = new Set([...page.matchAll(/<p class="news-item__meta">[\s\S]*?href="([^"]+)"/g)].map((m) => normUrl(m[1])))
+  existingHeadlines = [...page.matchAll(/<h[23]><a[^>]*>([^<]+)<\/a><\/h[23]>/g)].map((m) => m[1])
+
+  // Scout + vet in rounds. Keep scouting a fresh, ever-wider batch and keep going
+  // until we have up to MAX_TO_PUBLISH, or two straight rounds turn up nothing new
+  // (the space is exhausted). A single weak batch can never leave the feed empty:
+  // if the last few days are thin, later rounds widen to weeks and then a month.
+  // Only items that clear all four checks are ever published.
+  const finalItems = []
+  let emptyStreak = 0
+  for (let round = 1; round <= MAX_SCOUT_ROUNDS && finalItems.length < MAX_TO_PUBLISH; round++) {
+    const candidates = await scoutRound(round)
+    if (candidates.length === 0) {
+      emptyStreak += 1
+      if (emptyStreak >= 2) { console.log('Two rounds in a row surfaced nothing new; stopping the search.'); break }
+      continue
+    }
+    emptyStreak = 0
+    for (const c of candidates) {
+      if (finalItems.length >= MAX_TO_PUBLISH) break
+      const decision = await vet(c)
+      if (decision && decision.publish) {
+        if (nearDup(decision.headline, [...existingHeadlines, ...finalItems.map((f) => f.headline)])) {
+          console.log('SKIP (near-dup of an existing or already-chosen item):', decision.headline)
+          continue
+        }
+        // Same-URL guard: two items can share a source URL under different headlines
+        // (the headline near-dup check above can miss that), so also dedup by URL
+        // against both the live page and everything chosen this run.
+        const durl = normUrl(decision.sourceUrl || c.url)
+        if (durl && (existingUrls.has(durl) || finalItems.some((f) => normUrl(f.sourceUrl) === durl))) {
+          console.log('SKIP (same source URL as an existing or already-chosen item):', decision.headline)
+          continue
+        }
+        decision.imageUrl = c.imageUrl || null // public coverage page for the image fallback
+        // Normalize the date to "Month DD, YYYY" so the feed's date-sort (which only
+        // reads that format) can never bury a card that the model dated as ISO etc.
+        if (decision.date) {
+          const parsed = new Date(decision.date)
+          decision.date = Number.isNaN(parsed.getTime())
+            ? niceDate
+            : parsed.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        }
+        finalItems.push(decision)
+        console.log('PUBLISH:', decision.headline)
+      } else {
+        console.log('SKIP:', c.headline, '-', decision && decision.reason)
+      }
+    }
+    if (finalItems.length === 0 && round < MAX_SCOUT_ROUNDS) {
+      console.log(`Round ${round}: still nothing cleared; widening the window and going again.`)
+    }
+  }
+
+  if (finalItems.length === 0) {
+    console.log('No items cleared all four checks today. Leaving the page unchanged.')
+    try { fs.writeFileSync('.github/news-latest.json', '[]') } catch (e) { /* non-fatal */ }
+    fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/stdout', 'count=0\n')
+    return
+  }
+
+  // Attach each item's source preview image. Try the primary source first; if it
+  // blocks us or exposes none (common with paywalled journals like The Lancet, which
+  // returns 403 to fetches), fall back to a public coverage page (press release /
+  // ScienceDaily / university news) for the share image. Same mechanism either way:
+  // only the publisher's own og:image, and the card still links to the primary source.
+  // Cards render the thumb at 150x100, so ask hosts for a smaller variant than
+  // full-res where the URL scheme allows. Safe: if a smaller variant 404s, the
+  // <img onerror> handler already drops the thumbnail.
+  for (const it of finalItems) {
+    it.image = await ogImage(it.sourceUrl)
+    if (!it.image && it.imageUrl && normUrl(it.imageUrl) !== normUrl(it.sourceUrl)) {
+      it.image = await ogImage(it.imageUrl)
+    }
+    if (it.image) it.image = shrinkImage(it.image)
+  }
+
+  // --- INJECT into news.html (newest first, capped) ---
+  const { rebuilt, count } = injectNews(page, finalItems)
+  fs.writeFileSync(NEWS_FILE, rebuilt)
+
+  // Hand today's new items to the social poster (Bluesky posts up to 2 of these).
+  // This file is a transient handoff and is not committed.
+  try {
+    fs.writeFileSync('.github/news-latest.json', JSON.stringify(finalItems.map((it) => ({
+      headline: it.headline,
+      summary: it.summary,
+      caveat: it.caveat || '',
+      sourceName: it.sourceName,
+      sourceUrl: it.sourceUrl,
+      date: it.date || niceDate,
+      image: it.image || null,
+    })), null, 2))
+  } catch (e) {
+    console.error('Could not write news-latest.json:', e.message)
+  }
+
+  if (finalItems.length < targetMin) console.warn(`Note: published ${finalItems.length}, below today's target of ${targetMin}. Held the quality bar rather than adding filler.`)
+  console.log(`Injected ${finalItems.length} new item(s); page now holds ${count}.`)
+  fs.appendFileSync(process.env.GITHUB_OUTPUT || '/dev/stdout', `count=${finalItems.length}\n`)
+}
+
+export { itemHtml, slugify, injectNews, articleTime, START, END }
+
+// Run the full pipeline ONLY when invoked directly (node news_pipeline.mjs). When
+// imported (tests/fixtures) nothing runs and the Anthropic SDK is never loaded.
+const isEntry = Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href
+if (isEntry) {
+  run().catch((e) => { console.error(e); process.exit(1) })
+}

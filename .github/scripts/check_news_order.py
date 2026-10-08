@@ -6,8 +6,9 @@ work, and the items can still be in the wrong order. This asserts the visible
 dates on the live News page are non-increasing (most recent at the top), which
 is exactly the class of bug that slipped past the availability checks once.
 
-It also sanity-checks that the homepage "Latest news" rail leads with the same
-headline the News feed leads with, so the two never drift apart again.
+It also sanity-checks that the homepage "Research briefs" rail leads with the
+same brief the News feed leads with (matched by permalink slug), so the two
+never drift apart again.
 
 FAILS CLOSED. Exits non-zero (failing the watchdog, which opens an alert issue)
 if it can't read the pages after retries, if no dated items parse (the markup
@@ -27,7 +28,14 @@ UA = {"User-Agent": "Mozilla/5.0 (compatible; TheNeuroReview-watchdog/1.0)"}
 
 META_DATE = re.compile(r'news-item__meta[^>]*>\s*([A-Za-z]+ \d{1,2}, \d{4})')
 NEWS_HEADLINE = re.compile(r'<h[23]><a [^>]*>([\s\S]*?)</a></h[23]>')
-RAIL_HEADLINE = re.compile(r'home-news__headline"[^>]*>([\s\S]*?)</a>')
+# Each news card now carries a stable permalink id (id="n-SLUG") and the homepage
+# rail links to that same permalink (news.html#n-SLUG). The lead cross-check
+# compares the two by SLUG, which is encoding-independent -- the rail title writes
+# apostrophes as &rsquo; where the news h2 uses a straight ' -- instead of trying
+# to match display text. RAIL_TITLE is kept only for a human-readable message.
+NEWS_TOP_ID = re.compile(r'<article class="news-item"[^>]*\bid="(n-[a-z0-9-]+)"')
+RAIL_ITEM = re.compile(r'class="latest-item"[^>]*href="news\.html#(n-[a-z0-9-]+)"')
+RAIL_TITLE = re.compile(r'latest-item__title"[^>]*>([\s\S]*?)</span>')
 
 
 def fetch(path, attempts=3):
@@ -91,13 +99,16 @@ def main():
     if not fail:
         print(f"News order ok: {len(dates)} items, newest-first.")
 
-    # The News feed must expose a lead headline for the rail cross-check.
+    # The News feed must expose a lead card with its permalink id for the rail
+    # cross-check. A missing id means the card markup changed (fail closed).
+    news_top_id = first(NEWS_TOP_ID, news)
     news_top = norm(first(NEWS_HEADLINE, news))
-    if not news_top:
-        print("CONTENT FAIL: could not find the lead headline on news.html.")
+    if not news_top_id or not news_top:
+        print("CONTENT FAIL: could not find the lead news card (permalink id + headline) "
+              "on news.html (markup changed).")
         return 1
 
-    # The homepage rail should lead with the same story. A homepage network
+    # The homepage rail should lead with that same brief. A homepage network
     # failure after retries also FAILS closed.
     try:
         home = fetch("/")
@@ -105,14 +116,19 @@ def main():
         print(f"NETWORK FAIL: could not fetch the homepage after retries ({e}).")
         return 2
 
-    rail_top = norm(first(RAIL_HEADLINE, home))
-    if not rail_top:
-        print("CONTENT FAIL: could not find the lead headline in the homepage news rail.")
+    rail_top_id = first(RAIL_ITEM, home)
+    rail_top = norm(first(RAIL_TITLE, home))
+    if not rail_top_id:
+        print("CONTENT FAIL: could not find a brief link in the homepage research-briefs rail "
+              "(markup changed).")
         return 1
-    if news_top != rail_top:
+    # Compare by slug: the rail title and the news headline encode apostrophes
+    # differently, so comparing display text would false-alarm.
+    if news_top_id != rail_top_id:
         print(
             "CONTENT FAIL, RAIL DRIFT: homepage leads with "
-            f"{rail_top!r} but the News feed leads with {news_top!r}."
+            f"{rail_top or rail_top_id!r} (#{rail_top_id}) but the News feed leads with "
+            f"{news_top!r} (#{news_top_id})."
         )
         fail = 1
     else:
