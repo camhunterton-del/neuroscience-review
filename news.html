@@ -3,607 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neuroscience News — The Neuroscience Review</title>
-  <meta name="description" content="Short, fact-checked notes on new neuroscience, updated often. Each one links straight to the original study or report.">
-  <!-- Fonts -->
+  <title>The Neuroscience Review — Back shortly</title>
+  <meta name="description" content="The Neuroscience Review is being refreshed. We'll be back shortly. In the meantime, read us on Substack.">
+  <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
-  <!-- Theme (no flash of wrong theme) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap">
   <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
-  <link rel="stylesheet" href="css/styles.css">
   <style>
-    .news-item { padding: 1.7rem 0; border-top: 1px solid var(--border); }
-    .news-item:first-child { border-top: none; padding-top: 0.4rem; }
-    .news-item__meta { font-family: var(--sans); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); margin-bottom: 0.5rem; }
-    .news-item__meta a { color: var(--text-faint); }
-    .news-item h2, .news-item h3 { font-family: var(--serif); font-size: 1.4rem; line-height: 1.3; margin: 0 0 0.55rem; font-weight: 600; }
-    .news-item h2 a, .news-item h3 a { color: var(--text); text-decoration: none; }
-    .news-item h2 a:hover, .news-item h3 a:hover { color: var(--accent); }
-    .news-item p { margin-bottom: 0.5rem; }
-    .news-item__caveat { color: var(--text-faint); font-size: 0.95rem; }
-    .news-item::after { content: ""; display: table; clear: both; }
-    .news-item__thumb { float: right; width: 150px; margin: 0.2rem 0 0.7rem 1.4rem; }
-    .news-item__thumb img { width: 150px; height: 100px; object-fit: cover; border-radius: 6px; display: block; }
-    @media (max-width: 640px) { .news-item__thumb { float: none; width: 100%; margin: 0 0 0.9rem; } .news-item__thumb img { width: 100%; height: 180px; } }
-    /* Compact news header: a single label + line, then straight into the feed */
-    .news-hero { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; padding-top: 0.4rem; margin-bottom: 1.4rem; padding-bottom: 1.3rem; border-bottom: 1px solid var(--border); }
-    .news-hero__label { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin: 0; line-height: 1.4; }
-    .news-hero__sub { font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--text-muted); line-height: 1.5; margin: 0; }
-    @media (max-width: 640px) { .news-hero__sub { font-size: 0.95rem; } }
-    /* Wider feed so the news column fills more of the page */
-    article.post { max-width: 840px; }
-    /* Topic filter chips + load-more, so the feed opens compact instead of endless */
-    .news-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.7rem; }
-    .news-chip { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: color .15s, border-color .15s, background .15s; }
-    .news-chip:hover { border-color: var(--accent); color: var(--accent); }
-    .news-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .news-chip__count { opacity: 0.65; margin-left: 0.35rem; font-weight: 500; }
-    .news-item[hidden] { display: none; }
-    .news-empty { color: var(--text-muted); font-style: italic; padding: 1.4rem 0; }
-    .news-more { margin: 1.9rem 0 0; text-align: center; }
-    .news-more__btn { font-family: var(--sans); font-size: 0.88rem; font-weight: 600; padding: 0.7rem 1.7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-alt); color: var(--text); cursor: pointer; transition: color .15s, border-color .15s; }
-    .news-more__btn:hover { border-color: var(--accent); color: var(--accent); }
+    :root{
+      --bg:#fafaf6; --ink:#15181b; --ink-soft:#3b434a; --muted:#6c757c;
+      --rule:#e4e1db; --accent:#1d4c64; --accent-hover:#11394d;
+      --serif:"Newsreader",Georgia,"Times New Roman",serif;
+      --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --bg:#111417; --ink:#ecebe6; --ink-soft:#bcc2c7; --muted:#8c959b;
+        --rule:#2a2f34; --accent:#86b9d2; --accent-hover:#aad4e8;
+      }
+    }
+    :root[data-theme="dark"]{
+      --bg:#111417; --ink:#ecebe6; --ink-soft:#bcc2c7; --muted:#8c959b;
+      --rule:#2a2f34; --accent:#86b9d2; --accent-hover:#aad4e8;
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0; background:var(--bg); color:var(--ink);
+      font-family:var(--sans); line-height:1.6;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100vh; padding:40px 24px; text-align:center;
+    }
+    .mark{ width:46px; height:46px; margin:0 auto 22px; color:var(--accent); }
+    .mark svg{ width:100%; height:100%; display:block; }
+    h1{
+      font-family:var(--serif); font-weight:600; letter-spacing:-.01em;
+      font-size:clamp(28px,5vw,44px); margin:0 0 6px;
+    }
+    .kicker{
+      font-family:var(--sans); font-size:12px; font-weight:600;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+      margin:0 0 20px;
+    }
+    .lede{
+      font-family:var(--serif); font-size:clamp(17px,2.4vw,20px);
+      color:var(--ink-soft); max-width:30rem; margin:0 auto 10px;
+    }
+    .sub{ color:var(--muted); font-size:15px; max-width:30rem; margin:0 auto 30px; }
+    .btn{
+      display:inline-block; font-family:var(--sans); font-weight:600; font-size:15px;
+      color:#fff; background:var(--accent); padding:12px 26px; border-radius:999px;
+      text-decoration:none; transition:background .15s ease;
+    }
+    @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn{ color:#0b0f12; } }
+    :root[data-theme="dark"] .btn{ color:#0b0f12; }
+    .btn:hover{ background:var(--accent-hover); }
+    .rule{ width:40px; height:2px; background:var(--rule); border:0; margin:34px auto 0; }
+    footer{ margin-top:22px; font-size:13px; color:var(--muted); }
+    footer a{ color:var(--accent); text-decoration:none; }
+    footer a:hover{ text-decoration:underline; }
   </style>
-  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
-  <link rel="canonical" href="https://theneuroreview.com/news.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="The Neuroscience Review">
-  <meta property="og:title" content="Neuroscience News">
-  <meta property="og:description" content="Short, fact-checked notes on new neuroscience, updated often. Each one links straight to the original.">
-  <meta property="og:url" content="https://theneuroreview.com/news.html">
-  <meta property="og:image" content="https://theneuroreview.com/og-cover.png?v=2">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Neuroscience News">
-  <meta name="twitter:description" content="Short, fact-checked notes on new neuroscience, updated often. Each one links straight to the original.">
-  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
-      <nav class="site-nav">
-        <a href="index.html">Home</a>
-        <a href="posts.html">Articles</a>
-        <a aria-current="page" href="news.html">News</a>
-        <a href="lab.html">Lab</a>
-        <a href="commons.html">The Commons</a>
-        <a class="site-nav__cta" href="#subscribe">Subscribe</a>
-        <a class="site-nav__search" href="search.html" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
-        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
-      </nav>
-    </div>
-  </header>
-
-  <main id="main">
-    <article class="post">
-      <header class="news-hero">
-        <h1 class="news-hero__label">News</h1>
-        <p class="news-hero__sub">Recent brain research, each note checked against its source and linked to the original.</p>
-      </header>
-
-      <a class="alz-band" href="https://act.alz.org/goto/TeamNeuroscienceReview" target="_blank" rel="noopener" style="margin:0 0 1.8rem">
-        <svg class="alz-band__mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g stroke="#6a3fb0" stroke-width="3.4" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="#6a3fb0"><circle cx="16" cy="20" r="3.4"/><circle cx="26" cy="12" r="3.4"/><circle cx="48" cy="18" r="3.4"/><circle cx="44" cy="48" r="3.4"/><circle cx="20" cy="46" r="3.4"/></g><circle cx="32" cy="32" r="8" fill="#6a3fb0"/></svg>
-        <div class="alz-band__body">
-          <div class="alz-band__eyebrow">Team Neuroscience Review</div>
-          <div class="alz-band__title">We're walking to end Alzheimer's</div>
-          <p class="alz-band__text">We cover this disease closely, and this fall we're helping fund the fight. On November 14 we walk in Central Park, aiming to raise 10,000 dollars for the Alzheimer's Association. Every dollar goes straight to them.</p>
-        </div>
-        <span class="alz-band__btn">Donate or walk with us</span>
-      </a>
-
-      <div class="news-filter" id="news-filter" role="group" aria-label="Filter news by topic"></div>
-
-      <div class="post-body">
-        <!-- NEWS-FEED-START -->
-        <article class="news-item">
-          <p class="news-item__meta">October 7, 2026 &middot; via <a href="https://doi.org/10.1038/s41593-026-02480-0" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1038/s41593-026-02480-0" target="_blank" rel="noopener">A Midbrain Sensory Hub Fires for What's Coming, Not Just What Arrives</a></h2>
-          <p>The superior colliculus is an ancient midbrain structure that helps orient the eyes and body toward sights and touches. Scanning 80 people with 7-Tesla fMRI, researchers found it responded to vision and to touch in distinct patterns at different depths, matching what animal work predicted. The surprise was that those same sense-specific patterns appeared before any stimulus arrived, during a wait when the actual input was identical, which means the structure carries an advance signal for which sense is about to be used. The same anticipatory effect turned up in the sensory thalamus.</p>
-          <p class="news-item__caveat"><em>fMRI tracks blood flow rather than neurons firing and the design is correlational, so it shows anticipatory patterns without proving the colliculus itself generates the prediction.</em></p>
-        </article>
-        <article class="news-item">
-          <p class="news-item__meta">October 6, 2026 &middot; via <a href="https://doi.org/10.1038/s41593-026-02475-x" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1038/s41593-026-02475-x" target="_blank" rel="noopener">Recordings Inside the Human Claustrum Catch It Tracking Uncertainty</a></h2>
-          <p>The claustrum is a thin, deeply buried sheet of brain wired to almost the entire cortex, and nobody is sure what it does. Recording from single neurons in 7 epilepsy patients during a threat-avoidance game, researchers logged 110 claustrum cells and found they tracked quantities the senses cannot supply directly, namely how uncertain the moment was and how far outcomes strayed from expectation. The same signals showed up in 80 anterior cingulate neurons but were largely absent from 75 cells in the amygdala, which points to the claustrum helping update beliefs rather than just relaying sensation.</p>
-          <p class="news-item__caveat"><em>This is correlational recording in a small group of epilepsy patients on seizure medication, so it shows the claustrum carries these signals, not that it computes them.</em></p>
-        </article>
-        <article class="news-item">
-          <p class="news-item__meta">October 3, 2026 &middot; via <a href="https://doi.org/10.1038/s41467-026-77942-x" target="_blank" rel="noopener">Nature Communications</a></p>
-          <h2><a href="https://doi.org/10.1038/s41467-026-77942-x" target="_blank" rel="noopener">Single Neurons Show the Brain Predicting Speech From the Top Down</a></h2>
-          <p>We usually picture hearing as building up from sound to meaning, but a new study recording from single neurons in the human superior temporal gyrus found the brain also runs the other way. Researchers logged 624 neurons across 3 people with electrodes in the speech cortex while they listened, and high-level expectations about a word's meaning reshaped and time-locked the low-level activity coding the actual speech sounds. The alignment showed up in the firing of individual cells but not in the signals read off the brain's surface.</p>
-          <p class="news-item__caveat"><em>This is invasive recording in only 3 neurosurgical patients, and the key effect shows up only at the single-neuron level, so it leans heavily on the recording method.</em></p>
-        </article>
-        <article class="news-item">
-          <p class="news-item__meta">October 2, 2026 &middot; via <a href="https://doi.org/10.1038/s41467-026-78300-7" target="_blank" rel="noopener">Nature Communications</a></p>
-          <h2><a href="https://doi.org/10.1038/s41467-026-78300-7" target="_blank" rel="noopener">A Model Estimates Alzheimer's Tau From a More Common Brain Scan</a></h2>
-          <p>Measuring tau, one of the two proteins that define Alzheimer's, usually needs a specialized PET scan most clinics don't have. A new machine-learning model built on how the brain uses energy tries to predict that tau burden from an ordinary FDG-PET scan instead. Trained on 1,088 people spanning normal aging through Alzheimer's, it estimated tau levels with an accuracy that ranged widely between groups, and sorted people into low versus high tau stages correctly 79 to 95 percent of the time.</p>
-          <p class="news-item__caveat"><em>This is a prediction model rather than a new biological finding, it was tested on past scans rather than prospectively, and its accuracy swung a lot between groups, so it isn't ready for the clinic.</em></p>
-        </article>
-        <article class="news-item">
-          <p class="news-item__meta">September 30, 2026 &middot; via <a href="https://doi.org/10.1038/s41593-026-02436-4" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1038/s41593-026-02436-4" target="_blank" rel="noopener">The Hippocampus Carries a Map of Meaning That Resembles an AI's</a></h2>
-          <p>The hippocampus is the brain's memory and navigation hub, but a new study that recorded from single neurons while people listened to spoken stories found it also holds a rich map of what words mean. Individual cells responded to many different words, and the pattern of activity across the whole population tracked how far apart two words are in meaning. That pattern lined up most closely with the word embeddings inside the language model GPT-2, which is a spread-out, vector-style code for meaning rather than one cell per word.</p>
-          <p class="news-item__caveat"><em>This is correlational recording in surgery patients, so it shows the hippocampus represents meaning while you listen, not that it computes language on its own.</em></p>
-        </article>
-        <article class="news-item">
-          <p class="news-item__meta">September 29, 2026 &middot; via <a href="https://doi.org/10.1038/s41593-026-02460-4" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1038/s41593-026-02460-4" target="_blank" rel="noopener">From Worms to People, Anesthesia Leaves the Same Fingerprint</a></h2>
-          <p>Researchers pooled brain recordings from six species, humans, macaques, marmosets, mice, zebrafish, and nematodes, and pulled out more than 6,000 features of the activity. Under anesthesia every species showed the same shift. Local activity ran on shorter timescales and brain regions fell out of sync, a state the authors call spatiotemporal isolation. In anesthetized macaques, deep brain stimulation of one thalamic hub reversed that signature and brought responsiveness back.</p>
-          <p class="news-item__caveat"><em>The data come from very different tools across species and the reversal was shown only in a handful of macaques, so the shared pattern is a statistical convergence rather than one identical experiment.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 28, 2026 &middot; via <a href="https://doi.org/10.1016/j.neuron.2026.08.030" target="_blank" rel="noopener">Neuron</a></p>
-          <h2><a href="https://doi.org/10.1016/j.neuron.2026.08.030" target="_blank" rel="noopener">A Brake on Alzheimer's-Type Brain Damage May Sit Outside the Brain</a></h2>
-          <p>Tau tangles pull immune T cells into the brain, and a new mouse study finds that blocking their entry protects it. When researchers used an antibody against a receptor called CXCR3, or deleted it genetically, far fewer T cells crossed into the brains of tau-model mice, the neurodegeneration eased, and the animals did better on memory tests. Because CXCR3 acts on immune cells out in the body, not just the brain, it points to a target a drug could reach from the outside.</p>
-          <p class="news-item__caveat"><em>This is mice with a strong tau mutation, so it flags a promising target rather than a therapy that works in people yet.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 24, 2026 &middot; via <a href="https://doi.org/10.1002/alz.71817" target="_blank" rel="noopener">Alzheimer's &amp; Dementia</a></p>
-          <h2><a href="https://doi.org/10.1002/alz.71817" target="_blank" rel="noopener">Your Genes May Decide Whether Aspirin Lowers Dementia Risk</a></h2>
-          <p>A genetic reanalysis of the big ASPREE trial, more than 13,500 older adults, found that low-dose aspirin was tied to lower dementia in just one group. Among the roughly one in five people with the highest genetic score for platelet count, dementia showed up in 1.0 percent on aspirin versus 3.3 percent on placebo, while everyone else saw no benefit. It's an early step toward matching a prevention to the people it might actually help.</p>
-          <p class="news-item__caveat"><em>This is a look-back at an existing trial, not a new one, and aspirin carried more serious bleeding (4.4 versus 2.1 percent), so it's a lead to test, not advice to act on.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 23, 2026 &middot; via <a href="https://doi.org/10.1038/s41586-025-09573-z" target="_blank" rel="noopener">Nature</a></p>
-          <h2><a href="https://doi.org/10.1038/s41586-025-09573-z" target="_blank" rel="noopener">A Cell-by-Cell Map of the Human Brain Pins Disease Risk to Specific Cell Types</a></h2>
-          <p>Researchers built the largest single-cell map yet of the human prefrontal cortex, reading gene activity in more than 6.3 million individual cell nuclei from 1,494 donors. By comparing healthy brains against eight disorders, including Alzheimer's, Parkinson's, schizophrenia and frontotemporal dementia, they can start to point genetic risk at the particular cell types that carry it rather than at the brain as a whole. It landed as a coordinated set of Nature papers, including a companion atlas tracing how those cell types shift from birth to age 97.</p>
-          <p class="news-item__caveat"><em>This is a map, not a treatment, and it's built from postmortem tissue, so it shows where risk concentrates rather than how disease unfolds in a living brain.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 23, 2026 &middot; via <a href="https://doi.org/10.1038/s41586-026-11041-1" target="_blank" rel="noopener">Nature</a></p>
-          <h2><a href="https://doi.org/10.1038/s41586-026-11041-1" target="_blank" rel="noopener">Scientists Find the Neurons That Make Escape Contagious in a School of Fish</a></h2>
-          <p>In transparent glassfish that swim in tight schools, one fish bolting can set off the whole group. Imaging the brains of fish watching virtual neighbors flee, researchers found specific neurons in the midbrain that fire in response to seeing others escape, not to a threat the fish spots on its own. It's a candidate neural basis for socially contagious behavior, where an action spreads through a group by sight alone.</p>
-          <p class="news-item__caveat"><em>This is a small fish chosen because its see-through brain is easy to image, so whether the same wiring drives contagious behavior in other animals is still open.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 22, 2026 &middot; via <a href="https://doi.org/10.7554/eLife.110234" target="_blank" rel="noopener">eLife</a></p>
-          <h2><a href="https://doi.org/10.7554/eLife.110234" target="_blank" rel="noopener">The Brain's Inward and Outward Networks Turn Out to Share One Map</a></h2>
-          <p>The default mode network handles internal thought and the dorsal attention network handles the outside world, and they're usually described as opposites. Using high-resolution 7T scans in seven people, researchers found both are laid out along the same map of the visual field. Spots in the two networks tuned to the same patch of the visual field move together, and spots tuned to it in opposite ways push against each other. It's a new way of seeing how the two systems are wired to talk.</p>
-          <p class="news-item__caveat"><em>This was seven people on one very high-field scanner, so it maps the organization clearly but still needs a larger sample to confirm.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 22, 2026 &middot; via <a href="https://doi.org/10.7554/eLife.112197" target="_blank" rel="noopener">eLife</a> (reviewed preprint)</p>
-          <h2><a href="https://doi.org/10.7554/eLife.112197" target="_blank" rel="noopener">Where Your Attention Drifts, Not Just Where Your Eyes Land, Sways Your Choices</a></h2>
-          <p>When people weigh two options, the choice often follows whatever the eyes are fixating. Across two eye-tracking experiments with about thirty people each, researchers found that covert attention, the kind that shifts to the edge of vision without moving the eyes, leaned toward the more valuable option and pushed back against that gaze bias. So a decision isn't dictated by where you happen to be looking.</p>
-          <p class="news-item__caveat"><em>This is a peer-reviewed preprint in two small samples, so it shows the effect but hasn't been through final publication or replication at scale.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 18, 2026 &middot; via <a href="https://doi.org/10.1038/s41593-026-02445-3" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1038/s41593-026-02445-3" target="_blank" rel="noopener">A Brain Circuit Behind Pregnancy Food Cravings, Mapped in Mice</a></h2>
-          <p>Pregnancy famously comes with cravings, and a new study points to where they start. During pregnancy, serotonin neurons in a hub called the dorsal raphe quieted down in mice, which lifted the brakes on a reward pathway running to the brain's dopamine center. Switching that pathway on with light curbed craving-like eating in pregnant mice, and switching it off set off the same behavior in mice that weren't pregnant.</p>
-          <p class="news-item__caveat"><em>This is a mouse study of one circuit, so it maps a plausible mechanism rather than proving what drives cravings during pregnancy in people.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 18, 2026 &middot; via <a href="https://www.nature.com/articles/s41593-026-02433-7" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://www.nature.com/articles/s41593-026-02433-7" target="_blank" rel="noopener">The Developing Brain Grows From Two Separate Progenitor Lineages, Not One</a></h2>
-          <p>Textbooks describe the early brain as growing out of a single pool of neural progenitor cells. A new study reports that the neural ectoderm actually splits into two parallel lineages from the start, one that builds the forebrain and midbrain and one that builds the hindbrain, and the two stay separate rather than branching off a shared ancestor. Sorting cells along that divide also helped the team grow hindbrain neurons in the lab, which has been hard to do.</p>
-          <p class="news-item__caveat"><em>This is developmental work done largely in animal models and lab grown cells, so it maps how the brain is built rather than pointing to a treatment.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 16, 2026 &middot; via <a href="https://doi.org/10.1038/s41593-026-02449-z" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1038/s41593-026-02449-z" target="_blank" rel="noopener">A Movement Region of the Brain Turns Out to Track Reward Too</a></h2>
-          <p>The cerebellum sits at the back of the brain and has mostly been studied for balance and movement. In mice trained to work for a direct hit of dopamine, cells there predicted the reward before it arrived and stretched that activity to fill a one or two second wait, then went quiet the moment it landed. The reward signal was about as strong as the one for water, which points to the cerebellum helping drive motivation and not just motion.</p>
-          <p class="news-item__caveat"><em>This was done in mice with reward wired straight to the brain, so it isolates the signal cleanly but doesn't show how the same circuit shapes everyday wanting in people.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 16, 2026 &middot; via <a href="https://www.nature.com/articles/s41586-026-11032-2" target="_blank" rel="noopener">Nature</a></p>
-          <h2><a href="https://www.nature.com/articles/s41586-026-11032-2" target="_blank" rel="noopener">Human Brain Organoids Grown Into Mouse Cortex Wire Up and Shift Behavior</a></h2>
-          <p>Researchers transplanted lab-grown clumps of human brain tissue, called organoids, into the cortex of newborn mice and watched them take hold. The human cells matured, sent projections into the host brain, formed working connections, and the mice showed measurable behavioral differences. It's a step toward studying human brain development in a living circuit rather than a dish.</p>
-          <p class="news-item__caveat"><em>This is early work in mice, and growing human tissue inside animal brains raises ethical questions the field is still working through, so it's a research tool and not a therapy.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 16, 2026 &middot; via <a href="https://www.nature.com/articles/s41586-026-11026-0" target="_blank" rel="noopener">Nature</a></p>
-          <h2><a href="https://www.nature.com/articles/s41586-026-11026-0" target="_blank" rel="noopener">The Brain's Noradrenaline Hub Is Wired for Specific Targets, Not One Big Broadcast</a></h2>
-          <p>The locus coeruleus is a small brainstem cluster that supplies most of the brain's noradrenaline, and the textbook picture treats it as a single loudspeaker that lifts alertness everywhere at once. A new high resolution map in mice finds its neurons are organized by where they send their output, so different groups can route distinct signals to distinct parts of the brain instead of broadcasting one signal to all of it.</p>
-          <p class="news-item__caveat"><em>This is a mapping study in mice, so it shows how the system is wired rather than proving what each group does in the human brain.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://medicalxpress.com/news/2026-09-wireless-brain-device-enables-animal.html" target="_blank" rel="noopener"><img src="https://scx2.b-cdn.net/gfx/news/2026/illustration-of-a-grou.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 16, 2026 &middot; via <a href="https://medicalxpress.com/news/2026-09-wireless-brain-device-enables-animal.html" target="_blank" rel="noopener">Medical Xpress (Cornell University)</a></p>
-          <h2><a href="https://medicalxpress.com/news/2026-09-wireless-brain-device-enables-animal.html" target="_blank" rel="noopener">Cornell Team Builds Dime-Sized Wireless Device to Study Mouse Brains Outdoors</a></h2>
-          <p>Cornell researchers created a wireless device called WILD, about the size of a dime, that records neural activity, tracks eye movements, vocalizations and locomotion, and can trigger optogenetic stimulation in mice moving freely outside the lab. The device was tested in an outdoor field trial lasting more than two weeks, with battery life supporting 3 to 9 hours of continuous recording per charge and probes that can track neurons for months.</p>
-          <p class="news-item__caveat"><em>This is an early engineering demonstration from one lab, and it does not yet show new discoveries about social behavior or independent replication of the device's long-term reliability.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 2026 &middot; via <a href="https://doi.org/10.1016/j.medj.2026.101295" target="_blank" rel="noopener">Med</a></p>
-          <h2><a href="https://doi.org/10.1016/j.medj.2026.101295" target="_blank" rel="noopener">A Custom Genetic Drug Built for One ALS Patient Shows Early Signs of Working</a></h2>
-          <p>Doctors designed an antisense oligonucleotide, a short piece of genetic code, tailored to a single person's rare ALS-causing mutation in the gene CHCHD10. After about a year of treatment a blood marker of nerve damage fell toward the normal range and the patient's decline appeared to stabilize. It's a proof of concept for bespoke drugs aimed at mutations too rare for a standard trial.</p>
-          <p class="news-item__caveat"><em>This is a single patient, so it shows early signs and not proof the drug works. One person's course cannot rule out chance or the natural ups and downs of the disease.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://research.gatech.edu/myth-lizard-brain-and-real-trade-inside-your-mind" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/lizard-brain-ancient-intelligence.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 13, 2026 &middot; via <a href="https://research.gatech.edu/myth-lizard-brain-and-real-trade-inside-your-mind" target="_blank" rel="noopener">Georgia Tech Research News</a></p>
-          <h2><a href="https://research.gatech.edu/myth-lizard-brain-and-real-trade-inside-your-mind" target="_blank" rel="noopener">Study Of 182 Mammal Species Questions The Old Lizard Brain Idea</a></h2>
-          <p>Researchers examined brain wiring across 182 mammalian species and found that brain evolution follows a tradeoff between two connection strategies that expand and shrink together, not a rational cortex simply stacked on an ancient lizard brain.</p>
-          <p class="news-item__caveat"><em>The findings come from structural and connectivity comparisons across species, so they do not yet show the genetic or behavioral mechanisms behind this tradeoff.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://doi.org/10.1038/s41592-026-03220-9" target="_blank" rel="noopener"><img src="https://media.springernature.com/m312/springer-static/image/art%3A10.1038%2Fs41592-026-03220-9/MediaObjects/41592_2026_3220_Fig1_HTML.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 12, 2026 &middot; via <a href="https://doi.org/10.1038/s41592-026-03220-9" target="_blank" rel="noopener">Nature Methods</a></p>
-          <h2><a href="https://doi.org/10.1038/s41592-026-03220-9" target="_blank" rel="noopener">New wireless device called WILD lets scientists record and control brain activity in freely moving mice</a></h2>
-          <p>Researchers built a small wireless system named WILD that can record brain cell activity, deliver optogenetic light stimulation, track movement, and capture video through a built in camera, all while a mouse moves around freely. The device also processes data in real time so it can trigger stimulation based on what it detects, making it useful for studying brain activity during natural behavior both in the lab and in more realistic settings.</p>
-          <p class="news-item__caveat"><em>This is a single methods paper introducing the tool, so it does not yet show how the device performs across many labs, many animals, or species beyond mice, and it does not compare its accuracy directly against existing wired or wireless systems.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="http://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener"><img src="https://news.berkeley.edu/wp-content/uploads/2026/09/pexels-shvets-production-8899465-scaled.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 11, 2026 &middot; via <a href="http://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener">Berkeley News (UC Berkeley)</a></p>
-          <h2><a href="http://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener">Tau buildup in older brains tied to weaker deep sleep waves and memory</a></h2>
-          <p>A new UC Berkeley study using EEG and PET scans found that older adults with more tau protein in the brain's frontal cortex had shorter, more isolated slow brain waves during deep non REM sleep, and these disrupted wave patterns lined up with poorer memory consolidation overnight.</p>
-          <p class="news-item__caveat"><em>This single correlational study cannot show that tau causes the sleep changes or that fixing sleep would reduce tau or protect memory, so larger and longer studies are needed before any treatment claims.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 9, 2026 &middot; via <a href="https://picower.mit.edu/" target="_blank" rel="noopener">Picower Institute for Learning and Memory (MIT)</a></p>
-          <h2><a href="https://picower.mit.edu/" target="_blank" rel="noopener">MIT study maps how the brain tracks more than one option before deciding</a></h2>
-          <p>Researchers at MIT's Picower Institute recorded brain activity showing that neurons can represent more than one possible choice at the same time before a final decision is made. The findings point to specific patterns of activity that keep each option separate until one is selected.</p>
-          <p class="news-item__caveat"><em>This is one study in an animal model and does not show whether the same mechanism applies to humans or to real world decisions outside the lab.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.eanpages.org/2026/09/07/research-highlights-of-the-month-september-2026/" target="_blank" rel="noopener"><img src="https://www.eanpages.org/wp-content/uploads/2024/10/Research-highlights-2024.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 9, 2026 &middot; via <a href="https://www.eanpages.org/2026/09/07/research-highlights-of-the-month-september-2026/" target="_blank" rel="noopener">European Academy of Neurology (eanNews)</a></p>
-          <h2><a href="https://www.eanpages.org/2026/09/07/research-highlights-of-the-month-september-2026/" target="_blank" rel="noopener">Pill called tavapadon improves movement and daily function in early Parkinson's disease trial</a></h2>
-          <p>In a phase 3 study of 304 people with early Parkinson's disease, the drug tavapadon produced larger improvements in motor symptoms and daily function than placebo over 27 weeks. Tavapadon works by partially activating dopamine D1 and D5 receptors in the brain.</p>
-          <p class="news-item__caveat"><em>This single 27 week trial does not show whether the benefits last longer term, how tavapadon compares to existing Parkinson's drugs, or what side effects or dropout rates occurred.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.nature.com/articles/d41586-026-02468-7" target="_blank" rel="noopener"><img src="https://media.nature.com/lw1200/magazine-assets/d41586-026-02468-7/d41586-026-02468-7_53181140.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 5, 2026 &middot; via <a href="https://www.nature.com/articles/d41586-026-02468-7" target="_blank" rel="noopener">Nature (Research Briefing)</a></p>
-          <h2><a href="https://www.nature.com/articles/d41586-026-02468-7" target="_blank" rel="noopener">GLP-1 Drug Extended Lifespan in Female Mice From One Mouse Strain</a></h2>
-          <p>In a study using one inbred strain of female mice, researchers found that giving a GLP-1 weight loss drug late in life extended how long the mice lived. The effect held up even when researchers matched calorie intake between treated and untreated mice, suggesting something beyond reduced eating was involved.</p>
-          <p class="news-item__caveat"><em>This finding comes from one mouse strain and only female mice, so it does not show whether the effect applies to other animals or to humans.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.sciencedaily.com/releases/2026/08/260829235958.htm" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/lizard-brain-ancient-intelligence.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 2, 2026 &middot; via <a href="https://www.sciencedaily.com/releases/2026/08/260829235958.htm" target="_blank" rel="noopener">ScienceDaily</a></p>
-          <h2><a href="https://www.sciencedaily.com/releases/2026/08/260829235958.htm" target="_blank" rel="noopener">The Lizard Brain Picture of Brain Evolution May Be Wrong</a></h2>
-          <p>Researchers argue that the old idea of a primitive lizard brain buried under newer rational layers oversimplifies how brains actually evolved. The new view suggests brain structures across species share more overlapping functions than the layered model implies.</p>
-          <p class="news-item__caveat"><em>This reflects a shift in scientific interpretation rather than a single new experiment, so it does not prove one definitive replacement model.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.thetransmitter.org/neuroethology/revealing-how-crabs-make-their-escape/" target="_blank" rel="noopener"><img src="https://www.thetransmitter.org/wp-content/uploads/2026/08/Crab-eats-525.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 2, 2026 &middot; via <a href="https://www.thetransmitter.org/neuroethology/revealing-how-crabs-make-their-escape/" target="_blank" rel="noopener">The Transmitter</a></p>
-          <h2><a href="https://www.thetransmitter.org/neuroethology/revealing-how-crabs-make-their-escape/" target="_blank" rel="noopener">A Crab That Escapes Traps Also Lets Scientists Record Single Neurons While It Moves</a></h2>
-          <p>Researchers studying the crab Neohelice granulata have found a rare way to record electrical activity from single neurons while the animal is awake and behaving normally. This gives them a direct window into how neurons work during real movement instead of only in restrained or anesthetized animals.</p>
-          <p class="news-item__caveat"><em>The report describes a promising method in one crab species and does not yet show how many animals were tested or whether the technique works the same way in other species.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.cuimc.columbia.edu/news/depression-stalls-formation-new-brain-cells" target="_blank" rel="noopener"><img src="https://www.cuimc.columbia.edu/sites/default/files/styles/cola_media_1280_16_9/public/media/images/teaser/2026-08/dupont_hippocampus_new_neurons.png?itok=a3qZ8eju" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 2, 2026 &middot; via <a href="https://www.cuimc.columbia.edu/news/depression-stalls-formation-new-brain-cells" target="_blank" rel="noopener">Columbia University Irving Medical Center</a></p>
-          <h2><a href="https://www.cuimc.columbia.edu/news/depression-stalls-formation-new-brain-cells" target="_blank" rel="noopener">Study finds signs that depression may slow the birth of new brain cells</a></h2>
-          <p>Researchers examined hippocampal tissue from people who had major depressive disorder and found patterns suggesting that the process of making new neurons was disrupted. They also identified specific molecular programs tied to this process that could help guide future treatment research.</p>
-          <p class="news-item__caveat"><em>The study looked at tissue after death and cannot show whether reduced neurogenesis causes depression or results from it, so the findings need confirmation before they lead to new treatments.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://source.washu.edu/2026/09/key-path-to-alzheimers-like-brain-damage-starts-outside-the-brain/" target="_blank" rel="noopener"><img src="https://source.washu.edu/app/uploads/2026/09/Tau-mouse-brain-1.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 1, 2026 &middot; via <a href="https://source.washu.edu/2026/09/key-path-to-alzheimers-like-brain-damage-starts-outside-the-brain/" target="_blank" rel="noopener">WashU Medicine, The Source</a></p>
-          <h2><a href="https://source.washu.edu/2026/09/key-path-to-alzheimers-like-brain-damage-starts-outside-the-brain/" target="_blank" rel="noopener">Removing one type of immune cell protected mice from tau related brain damage</a></h2>
-          <p>In mice prone to tau disease, scientists eliminated a peripheral immune cell called cDC1 and saw far fewer T cells entering the brain along with protection from tau driven neurodegeneration. Tau tangle levels themselves did not change, suggesting the tangles and the immune attack that follows can be treated as separate problems.</p>
-          <p class="news-item__caveat"><em>This work was done only in mice, so it does not yet show whether targeting cDC1 would be safe or effective in people with Alzheimer's disease.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.salk.edu/news-release/why-do-we-have-traveling-brain-waves/" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/brain-waves-sensory-perception.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 1, 2026 &middot; via <a href="https://www.salk.edu/news-release/why-do-we-have-traveling-brain-waves/" target="_blank" rel="noopener">Salk Institute</a></p>
-          <h2><a href="https://www.salk.edu/news-release/why-do-we-have-traveling-brain-waves/" target="_blank" rel="noopener">Salk Scientists Propose That Traveling Brain Waves Help The Brain Predict The World</a></h2>
-          <p>Reviewing existing physiological and computational studies, Salk Institute researchers argue that electrical waves moving across the visual cortex are not random noise but may act as a working system that helps the brain build internal models to predict and interpret what it sees.</p>
-          <p class="news-item__caveat"><em>This is a theoretical review of past evidence, not a new experiment, so it does not prove the causal role of these waves in prediction, only proposes it for future testing.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">September 1, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.0641-26.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1523/JNEUROSCI.0641-26.2026" target="_blank" rel="noopener">Study Finds Glia Signal Guides Neuron Branching Through a JAK STAT CK2alpha Pathway</a></h2>
-          <p>Researchers report that a signal called Upd1, released by glial cells, activates a JAK STAT CK2alpha pathway inside neurons and reshapes dendrite structure. The work was done in a fruit fly model and points to a new route by which glia influence neuron shape.</p>
-          <p class="news-item__caveat"><em>This is one study in a fly model, so it does not yet show whether the same pathway works in mammals or humans, and it does not test behavioral effects of the dendrite changes.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.sciencedaily.com/releases/2026/08/260830000016.htm" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/neuroscience-brain-boost-glow.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 30, 2026 &middot; via <a href="https://www.sciencedaily.com/releases/2026/08/260830000016.htm" target="_blank" rel="noopener">ScienceDaily (Scientific Reports)</a></p>
-          <h2><a href="https://www.sciencedaily.com/releases/2026/08/260830000016.htm" target="_blank" rel="noopener">Real HEPA Air Filters Linked to Faster Executive Function Scores in Adults Over 40</a></h2>
-          <p>In a crossover trial of 119 adults living near highways, participants aged 40 and older completed a mental flexibility test about 12 percent faster after one month of real HEPA filtration than after a sham month. Younger participants showed no such difference.</p>
-          <p class="news-item__caveat"><em>This is one trial with a one month exposure window and a single cognitive test, so it does not show whether the effect lasts, applies to broader thinking skills, or holds up in other populations.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.sciencedaily.com/releases/2026/08/260829235953.htm" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/senior-brain-puzzle-neuroscience-dementia.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 29, 2026 &middot; via <a href="https://www.sciencedaily.com/releases/2026/08/260829235953.htm" target="_blank" rel="noopener">ScienceDaily / UC Davis Health</a></p>
-          <h2><a href="https://www.sciencedaily.com/releases/2026/08/260829235953.htm" target="_blank" rel="noopener">Dementia Risk Keeps Rising After Age 90, With Wide Gaps by Sex and Race</a></h2>
-          <p>A UC Davis Health study called LifeAfter90 tracked more than 800 people over age 90 and found women had almost twice the dementia risk of men. Black and Hispanic participants also had significantly higher dementia rates than White and Asian participants, and the effect of the APOE gene differed between men and women.</p>
-          <p class="news-item__caveat"><em>This comes from one observational study with roughly 800 people, so the racial and genetic subgroups are small and the results still need confirmation in other groups before anyone treats them as settled.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.sciencedaily.com/releases/2026/08/260829035228.htm" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/exploding-heart.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 29, 2026 &middot; via <a href="https://www.sciencedaily.com/releases/2026/08/260829035228.htm" target="_blank" rel="noopener">ScienceDaily (American Heart Association)</a></p>
-          <h2><a href="https://www.sciencedaily.com/releases/2026/08/260829035228.htm" target="_blank" rel="noopener">Long-Term Melatonin Use Linked to Higher Heart Failure Risk in People With Chronic Insomnia</a></h2>
-          <p>In a preliminary study of people with chronic insomnia, those who took melatonin for a year or more had about a 90 percent higher risk of developing heart failure over five years than those who did not take it. The research was presented at an American Heart Association meeting and has not yet completed peer review.</p>
-          <p class="news-item__caveat"><em>This was an observational study of health records, so it cannot prove that melatonin itself caused the higher heart failure risk.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 27, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.0670-26.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1523/JNEUROSCI.0670-26.2026" target="_blank" rel="noopener">Cerebellar Visual Regions Show Attention Effects Even When the Image Stays the Same</a></h2>
-          <p>A new Journal of Neuroscience study found that activity in cerebellar visual regions changed with attention even when the visual stimulus was held constant. The authors say this supports a role for the cerebellum in visual attention beyond motor control.</p>
-          <p class="news-item__caveat"><em>This is one study using one task design, so it does not prove that the cerebellum causes attention shifts or that the effect holds across other stimuli, tasks, or people.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 27, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.1782-25.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1523/JNEUROSCI.1782-25.2026" target="_blank" rel="noopener">Brainstem Neurons May Act as a Brake on Breathing Rhythm</a></h2>
-          <p>A new study in live animals found a group of medullary GABAergic neurons that appears to work like a brake, helping coordinate and regulate the rhythm of breathing. The research comes from a single paper published in the Journal of Neuroscience in August 2026.</p>
-          <p class="news-item__caveat"><em>This is one animal study and it does not yet show whether the same mechanism operates in humans or whether it is disrupted in any breathing disorder.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 24, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.0802-26.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1523/JNEUROSCI.0802-26.2026" target="_blank" rel="noopener">Infant Rat Brains Show Linked Delta Rhythms Between Cortex and Brainstem During Sleep</a></h2>
-          <p>A new study in the Journal of Neuroscience found that delta-wave brain rhythms in the cortex and brainstem of sleeping infant rats rise and fall together, suggesting the two regions may develop their roles in sleep regulation in step with each other.</p>
-          <p class="news-item__caveat"><em>This is a single correlational study in rats, so it does not prove a causal link between the two brain regions or show whether the same pattern holds in humans.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 24, 2026 &middot; via <a href="https://www.jneurosci.org/" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
-          <h2><a href="https://www.jneurosci.org/" target="_blank" rel="noopener">Scientists Detail Early Cell Response to Brain Axon Injury</a></h2>
-          <p>Researchers studied how oligodendrocyte lineage cells, the support cells that insulate nerve fibers, react in the hours right after traumatic injury to axons in the central nervous system. The work maps out the order of cellular changes that follow this type of trauma.</p>
-          <p class="news-item__caveat"><em>This shows only the early cellular response after injury, not whether it applies to humans or leads to long term repair or recovery.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.sciencedaily.com/releases/2026/08/260823094148.htm" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/neuroscience-brain-perception-processing.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 23, 2026 &middot; via <a href="https://www.sciencedaily.com/releases/2026/08/260823094148.htm" target="_blank" rel="noopener">ScienceDaily / Indiana University</a></p>
-          <h2><a href="https://www.sciencedaily.com/releases/2026/08/260823094148.htm" target="_blank" rel="noopener">Indiana University professor argues the brain has no single decision center</a></h2>
-          <p>Professor Tom James proposes that what feels like one decision making step may actually come from ongoing interaction between perception, movement, the body, and the environment. This is a theoretical argument built on existing research, not a new experiment.</p>
-          <p class="news-item__caveat"><em>It does not present new experimental data or prove that a dedicated decision center does not exist. It offers a conceptual alternative to the standard model.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.sciencedaily.com/releases/2026/08/260821012234.htm" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/neurons-in-alzheimers-disease.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 21, 2026 &middot; via <a href="https://www.sciencedaily.com/releases/2026/08/260821012234.htm" target="_blank" rel="noopener">ScienceDaily</a></p>
-          <h2><a href="https://www.sciencedaily.com/releases/2026/08/260821012234.htm" target="_blank" rel="noopener">Alzheimer's Gene APOE4 May Shrink Brain Cells Years Before Memory Loss, Mouse Study Finds</a></h2>
-          <p>In mice, the Alzheimer's risk gene APOE4 raised levels of a protein called Nell2, which shrank neurons and caused overactive memory circuits linked to worse memory later. Lowering Nell2 in adult mice reversed some of these effects.</p>
-          <p class="news-item__caveat"><em>This finding comes from one mouse study and has not been confirmed in humans or replicated by other labs yet.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.nature.com/articles/s41586-026-10877-x" target="_blank" rel="noopener"><img src="https://media.springernature.com/m312/springer-static/image/art%3A10.1038%2Fs41586-026-10877-x/MediaObjects/41586_2026_10877_Fig1_HTML.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 19, 2026 &middot; via <a href="https://www.nature.com/articles/s41586-026-10877-x" target="_blank" rel="noopener">Nature</a></p>
-          <h2><a href="https://www.nature.com/articles/s41586-026-10877-x" target="_blank" rel="noopener">Human Brain Organoids Grown for Five Years Show Cells Still Maturing on a Human Timeline</a></h2>
-          <p>Scientists at Harvard and the Broad Institute grew human brain organoids in the lab for more than five years and found that the brain cells kept maturing and tracking developmental time on their own internal schedule, matching the slow pace seen in real human cortical development. The study offers researchers a new long-term model for studying why human brain development takes so much longer than in other species.</p>
-          <p class="news-item__caveat"><em>This single-lab study used a small number of long-term organoid samples that lack blood vessels, immune cells, and connections to a body, so it does not prove the same timing mechanisms work identically inside a living human brain.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://news.uthscsa.edu/any-degree-of-physical-activity-may-slow-cognitive-decline-particularly-in-hispanics-ut-health-san-antonio-study-suggests/" target="_blank" rel="noopener"><img src="http://news.uthscsa.edu/wp-content/uploads/2024/02/walking.jpeg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 19, 2026 &middot; via <a href="https://news.uthscsa.edu/any-degree-of-physical-activity-may-slow-cognitive-decline-particularly-in-hispanics-ut-health-san-antonio-study-suggests/" target="_blank" rel="noopener">UT Health San Antonio</a></p>
-          <h2><a href="https://news.uthscsa.edu/any-degree-of-physical-activity-may-slow-cognitive-decline-particularly-in-hispanics-ut-health-san-antonio-study-suggests/" target="_blank" rel="noopener">Midlife Exercise and Blood Sugar Linked to Slower Thinking Decline Decades Later</a></h2>
-          <p>A study of 402 adults followed for decades found that people who were more physically active in midlife showed slower cognitive decline later in life, with the strongest link seen among Mexican American participants. Among non-Hispanic white participants, lower fasting blood glucose in midlife was linked to slower decline instead.</p>
-          <p class="news-item__caveat"><em>This is one observational study with 402 people, so it shows a link, not proof that exercise or blood sugar levels caused the difference, and the ethnicity based findings need to be confirmed in other groups before drawing firm conclusions.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 17, 2026 &middot; via <a href="https://doi.org/10.1038/s41562-026-02541-1" target="_blank" rel="noopener">Nature Human Behaviour</a></p>
-          <h2><a href="https://doi.org/10.1038/s41562-026-02541-1" target="_blank" rel="noopener">Focusing on your body, not away from it, quieted an inflammatory response</a></h2>
-          <p>In three preregistered experiments, researchers gave healthy volunteers a standard skin inflammation challenge and told them to either focus on the sensation or distract themselves. Focusing inward produced inflammatory responses about 1.5 times smaller, an effect that showed up in roughly 90 percent of participants across two separate groups. It worked through two routes, a sensory one and a top down calming signal carried by the vagus nerve.</p>
-          <p class="news-item__caveat"><em>This used an experimentally induced skin inflammation as a model, so it shows the brain can nudge the immune system in a lab setting, not that paying attention treats any actual disease.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://med.stanford.edu/news/all-news/2026/08/study-ties-estrogen-based-menopausal-hormone-therapy-to-lower-al.html" target="_blank" rel="noopener"><img src="https://med.stanford.edu/news/all-news/2026/08/study-ties-estrogen-based-menopausal-hormone-therapy-to-lower-al/_jcr_content/cq:featuredimage.coreimg.jpeg/1786657066462/women-alzheimers.jpeg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 16, 2026 &middot; via <a href="https://med.stanford.edu/news/all-news/2026/08/study-ties-estrogen-based-menopausal-hormone-therapy-to-lower-al.html" target="_blank" rel="noopener">Stanford Medicine / Neurology</a></p>
-          <h2><a href="https://med.stanford.edu/news/all-news/2026/08/study-ties-estrogen-based-menopausal-hormone-therapy-to-lower-al.html" target="_blank" rel="noopener">Estrogen-only hormone therapy linked to lower dementia risk in large study</a></h2>
-          <p>In a study of more than 21,000 women, those who used estrogen-only menopausal hormone therapy had 39 percent lower odds of a dementia diagnosis and 35 percent lower odds of Alzheimer's related brain changes such as amyloid plaques and tau tangles found at autopsy.</p>
-          <p class="news-item__caveat"><em>This is an observational study showing association not proof of prevention, and the autopsy findings come from a smaller subset of participants who died and were autopsied, so the results may not apply to all women equally.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.nature.com/articles/s41593-026-02397-8" target="_blank" rel="noopener"><img src="https://media.springernature.com/m312/springer-static/image/art%3A10.1038%2Fs41593-026-02397-8/MediaObjects/41593_2026_2397_Fig1_HTML.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 16, 2026 &middot; via <a href="https://www.nature.com/articles/s41593-026-02397-8" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://www.nature.com/articles/s41593-026-02397-8" target="_blank" rel="noopener">Shed brain protein NLGN3 fuels glioma growth via a mechanical signaling pathway</a></h2>
-          <p>Researchers found that a protein called NLGN3, once shed from cells, binds a sugar coated protein on the surface of both normal and cancerous brain glial cells. This binding switches on mechanical signaling inside the cells that pushes glioma tumors to grow and keeps them in an early progenitor like state.</p>
-          <p class="news-item__caveat"><em>The work comes from lab and animal models of glioma, so it does not yet show whether blocking this pathway would be safe or effective in people.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.nature.com/articles/s41593-026-02375-0" target="_blank" rel="noopener"><img src="https://media.springernature.com/m312/springer-static/image/art%3A10.1038%2Fs41593-026-02375-0/MediaObjects/41593_2026_2375_Fig1_HTML.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 15, 2026 &middot; via <a href="https://www.nature.com/articles/s41593-026-02375-0" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://www.nature.com/articles/s41593-026-02375-0" target="_blank" rel="noopener">New mouse tools let scientists map and control brain cells that sense psychedelic drugs</a></h2>
-          <p>Researchers led by Yi-Ting Chiu created engineered mouse lines that let them locate, target and adjust the activity of neurons carrying the serotonin 2A receptor, the molecule psychedelic drugs act on. They confirmed the tool works using chemical tests, electrical recordings of neurons and behavior tests in mice.</p>
-          <p class="news-item__caveat"><em>This is a mouse research tool, not a human treatment or a full explanation of how psychedelics produce their effects in people.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.nature.com/articles/s41467-026-75745-8" target="_blank" rel="noopener"><img src="https://media.springernature.com/m312/springer-static/image/art%3A10.1038%2Fs41467-026-75745-8/MediaObjects/41467_2026_75745_Fig1_HTML.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 15, 2026 &middot; via <a href="https://www.nature.com/articles/s41467-026-75745-8" target="_blank" rel="noopener">Nature Communications</a></p>
-          <h2><a href="https://www.nature.com/articles/s41467-026-75745-8" target="_blank" rel="noopener">Brain's Language Network Shows Up Even During Non Language Tasks</a></h2>
-          <p>Researchers analyzed 1,957 brain scans from 1,199 people and found a left leaning brain network tied to language that stays active even when someone is doing an unrelated task. This pattern appeared consistently across the scans, suggesting the network could help locate language areas in patients who cannot complete language tests in a scanner.</p>
-          <p class="news-item__caveat"><em>The study used healthy volunteers only, so it has not yet been tested as a mapping tool in actual stroke or aphasia patients.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://medicalxpress.com/news/2026-07-large-scale-brain-scan-reveals.html" target="_blank" rel="noopener"><img src="https://scx2.b-cdn.net/gfx/news/hires/2026/large-scale-study-unco.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 15, 2026 &middot; via <a href="https://medicalxpress.com/news/2026-07-large-scale-brain-scan-reveals.html" target="_blank" rel="noopener">Medical Xpress / Washington University School of Medicine</a></p>
-          <h2><a href="https://medicalxpress.com/news/2026-07-large-scale-brain-scan-reveals.html" target="_blank" rel="noopener">Six-dataset brain scan study of 23,417 people finds depression's brain pattern is less consistent than earlier work suggested</a></h2>
-          <p>Researchers analyzed brain scans from 23,417 people across six large datasets and found associations between depression and differences in motor and visual brain regions, a result not emphasized in smaller earlier studies. The study also confirmed earlier findings of reduced gray matter in the frontal cortex, anterior cingulate, and insula, but did not find the subcortical differences such as in the amygdala or hippocampus that some smaller studies had reported.</p>
-          <p class="news-item__caveat"><em>This shows group-level associations only, not causation, and does not establish that these brain differences can diagnose depression in any one person.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.nature.com/articles/s41593-026-02388-9" target="_blank" rel="noopener"><img src="https://media.springernature.com/m312/springer-static/image/art%3A10.1038%2Fs41593-026-02388-9/MediaObjects/41593_2026_2388_Fig1_HTML.png" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 14, 2026 &middot; via <a href="https://www.nature.com/articles/s41593-026-02388-9" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://www.nature.com/articles/s41593-026-02388-9" target="_blank" rel="noopener">Dense wiring map of a small hippocampal circuit shows organized patterns of connections</a></h2>
-          <p>Researchers reconstructed a small volume of hippocampal CA3 tissue at high density and found spatial gradients in wiring, highly convergent connections onto pyramidal neurons, and feedforward inhibition that varies by cell type.</p>
-          <p class="news-item__caveat"><em>This is a single structural snapshot from a small tissue sample and does not show how these connections function during memory or whether the pattern holds across other animals or brain regions.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 13, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.1930-25.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1523/JNEUROSCI.1930-25.2026" target="_blank" rel="noopener">Brain cells for social reward and sugar reward stay mostly separate in one animal study</a></h2>
-          <p>Researchers recording activity in the basolateral amygdala found that neurons responding to social reward and neurons responding to sucrose reward were largely different groups, not the same cells doing double duty. The pattern also differed by sex, with males showing similar activity for both rewards and females showing a stronger sucrose response.</p>
-          <p class="news-item__caveat"><em>This shows separate patterns of brain activity linked to each reward, not proof that the brain actively keeps them apart or that this holds true in humans.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 13, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.0512-26.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1523/JNEUROSCI.0512-26.2026" target="_blank" rel="noopener">Two types of deep brain cells process sound in different ways</a></h2>
-          <p>Researchers Ghimire and Williamson found that layer 5 and layer 6b extratelencephalic neurons in the auditory cortex respond to sound differently. Layer 5 neurons showed stronger sound-evoked activity, more selective firing patterns, and steadier responses across repeated trials compared to layer 6b neurons.</p>
-          <p class="news-item__caveat"><em>This is one study that shows a correlation between neuron type and sound response patterns, it does not prove these differences cause specific listening behaviors, and it needs replication before drawing wider conclusions.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://stemcell.ucla.edu/news/drug-reverses-autism-brain-changes-adult-mice-within-hours-study-finds" target="_blank" rel="noopener"><img src="https://stemcell.ucla.edu/sites/default/files/images/ucla_health_adobestock_image.jpeg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 13, 2026 &middot; via <a href="https://stemcell.ucla.edu/news/drug-reverses-autism-brain-changes-adult-mice-within-hours-study-finds" target="_blank" rel="noopener">UCLA Health (Broad Stem Cell Research Center)</a></p>
-          <h2><a href="https://stemcell.ucla.edu/news/drug-reverses-autism-brain-changes-adult-mice-within-hours-study-finds" target="_blank" rel="noopener">Rapamycin briefly reverses autism-like brain signs in mice</a></h2>
-          <p>In mice whose mothers had mild inflammation during pregnancy, one dose of the drug rapamycin normalized overactive brain signaling, seizure risk, sensory sensitivity and repetitive behaviors within about two hours. The effect faded afterward and did not repair the underlying brain structure.</p>
-          <p class="news-item__caveat"><em>This is a single mouse study with a short-lived effect, not a proven treatment for autism in humans.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.sciencedaily.com/releases/2026/08/260811011140.htm" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/functional-brain-scan-neurotypical-participant.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 11, 2026 &middot; via <a href="https://www.sciencedaily.com/releases/2026/08/260811011140.htm" target="_blank" rel="noopener">ScienceDaily / MIT McGovern Institute</a></p>
-          <h2><a href="https://www.sciencedaily.com/releases/2026/08/260811011140.htm" target="_blank" rel="noopener">MIT Study Finds People Can Solve Logic Puzzles Without Using Language Brain Areas</a></h2>
-          <p>MIT researchers tested people with severe language impairments from stroke and found they solved logic puzzles as well as people without such impairments, while brain scans showed the brain's language regions stayed quiet during the puzzles.</p>
-          <p class="news-item__caveat"><em>This is one study using logic puzzles in stroke patients, so it does not prove language plays no role in reasoning generally, and quiet activity in brain scans does not rule out smaller or subtler language involvement.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 11, 2026 &middot; via <a href="https://doi.org/10.1038/s41593-026-02400-2" target="_blank" rel="noopener">Nature Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1038/s41593-026-02400-2" target="_blank" rel="noopener">An Immune Molecule Tied to Infection in Pregnancy Warped Cortical Growth in Lab-Grown Human Fetal Brain Tissue</a></h2>
-          <p>Researchers built a three-dimensional model, which they call a cerebroid, from real human fetal cortex, keeping its mix of cell types and its structure intact. When they exposed it to IL-17A, an immune signaling molecule linked to infection during pregnancy, the tissue folded too early, grew thicker, and pushed out neurons faster than it should. The molecule did this by switching on an inflammation pathway called NF-kB inside neural stem cells, and blocking that pathway with a compound called parthenolide reversed the changes.</p>
-          <p class="news-item__caveat"><em>This is cultured fetal tissue with a cytokine added in a dish, not a living pregnancy, so it shows a plausible mechanism for how maternal infection might reshape the developing brain, not proof that it does.</em></p>
-        </article>
-
-        <article class="news-item">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://www.sciencedaily.com/releases/2026/08/260810015719.htm" target="_blank" rel="noopener"><img src="https://www.sciencedaily.com/images/1920/brain-disease-neuroscience-psychology.webp" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">August 10, 2026 &middot; via <a href="https://www.sciencedaily.com/releases/2026/08/260810015719.htm" target="_blank" rel="noopener">ScienceDaily (Victoria University)</a></p>
-          <h2><a href="https://www.sciencedaily.com/releases/2026/08/260810015719.htm" target="_blank" rel="noopener">Exercise May Help The Aging Brain Clear Out Waste, Review Finds</a></h2>
-          <p>A review of animal and human studies from Victoria University found that physical activity supports several processes linked to the brain's glymphatic waste clearance system, including better sleep, lower inflammation, reduced blood pressure and vascular stiffness, and improved deep sleep and slow wave brain activity tied to cleanup during rest.</p>
-          <p class="news-item__caveat"><em>This review combines findings from animal and human research without directly measuring waste clearance in living human brains, so it shows linked processes rather than proof that exercise causes faster brain cleanup in people.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 10, 2026 &middot; via <a href="https://doi.org/10.1523/JNEUROSCI.2174-25.2026" target="_blank" rel="noopener">Journal of Neuroscience</a></p>
-          <h2><a href="https://doi.org/10.1523/JNEUROSCI.2174-25.2026" target="_blank" rel="noopener">Both Breeding and Training Shape the Brain Networks Dogs Use to Understand Us</a></h2>
-          <p>Harvard researchers scanned the brain wiring of 108 dogs and found that the networks a dog uses to make sense of human voices and words look different depending on where the dog comes from. Generations of selective breeding had broadly reshaped those communication pathways, with the ones tied to processing words changed the most, so a modern breed's brain is wired differently from an ancient, less-bred lineage. Intensive service-dog training left a narrower mark, mostly on the circuits for reading a cue and acting on it. And the dogs rated most trainable had stronger connections across five networks covering movement, planning, touch, and sound.</p>
-          <p class="news-item__caveat"><em>This maps brain structure, not activity, in dogs, so it shows how a breed's history and a dog's own training show up in the wiring, not that any single pathway causes a given behavior.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 10, 2026 &middot; via <a href="https://doi.org/10.1073/pnas.2604191123" target="_blank" rel="noopener">PNAS</a></p>
-          <h2><a href="https://doi.org/10.1073/pnas.2604191123" target="_blank" rel="noopener">Signals in the Brain's Wiring, Not Just Its Gray Matter, Tracked Brain Age and ADHD Symptoms in Young People</a></h2>
-          <p>Most brain imaging reads activity from gray matter and treats the white-matter wiring beneath it as passive cable. Across four groups of children and young adults, researchers found that functional signals in white matter carry real information of their own. They predicted a person's brain age in one group of 2,370, specific aspects of thinking in another of 4,388, and ADHD symptoms in a third of 4,465, and they held up even after the team accounted for the gray-matter signals this kind of work usually leans on.</p>
-          <p class="news-item__caveat"><em>This is predictive imaging, not causation, so it shows white-matter activity carries information the gray matter doesn't, across large groups, not that it drives cognition or ADHD or works as a test for any one person.</em></p>
-        </article>
-
-        <article class="news-item">
-          <p class="news-item__meta">August 10, 2026 &middot; via <a href="https://doi.org/10.1038/s41562-026-02535-z" target="_blank" rel="noopener">Nature Human Behaviour</a></p>
-          <h2><a href="https://doi.org/10.1038/s41562-026-02535-z" target="_blank" rel="noopener">People in Three Countries Share a Map of Where They're Most Ticklish</a></h2>
-          <p>Comparing Chinese, Dutch, and Greek participants, researchers found that people agree to a surprising degree on where the body is most ticklish, and that map turned out to be different from the maps for touch, pain, and pleasure. The ticklish spots tended to be places we rarely touch, like the armpits, the soles of the feet, and the sides of the torso, which fits an old guess of Darwin's. Even so, none of the five existing theories they tested could fully explain the pattern.</p>
-          <p class="news-item__caveat"><em>The study maps where and whether ticklishness is shared, drawn from young adults, so it settles the geography and not the neural reason behind it, which the authors say no current model captures.</em></p>
-        </article>
-        <!-- NEWS-FEED-END -->
-        <p class="news-empty" id="news-empty" hidden>No items in this topic yet.</p>
-      </div>
-      <div class="news-more" id="news-more" hidden><button class="news-more__btn" id="news-more-btn" type="button">Load more</button></div>
-    </article>
-
-    <section class="cta" id="subscribe">
-      <h3>Get new posts in your inbox.</h3>
-      <p>One post a week. No fluff. Unsubscribe anytime.</p>
-      <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
-        <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
-        <button type="submit" class="cta__button">Subscribe</button>
-      </form>
-      <p class="cta__fine">We use your email only to send you new posts (via Buttondown) and never share it. <a href="privacy.html">Privacy</a>.</p>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="site-footer__inner">
-      <p>&copy; 2026 The Neuroscience Review</p>
-      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
-      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Articles</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="commons.html">The Commons</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
-      <p><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a> &middot; <a href="disclaimer.html">Disclaimer</a></p>
-    </div>
-  </footer>
-  <script>
-  // Topic filter + load-more for the news feed. Classifies each card by keyword
-  // (works on existing and future auto-generated items, no pipeline change), shows
-  // a compact first page, and reveals more on demand so the feed never doom-scrolls.
-  (function(){
-    var feed = [].slice.call(document.querySelectorAll('.news-item'));
-    var bar = document.getElementById('news-filter');
-    if(!feed.length || !bar) return;
-    var CATS = [
-      ['Disease & clinic', /dementia|alzheimer|parkinson|depress|migraine|autism|epilep|stroke|disorder|clinical|\btrial\b|\bdrug\b|therap|patient|disease|tumor|cancer|schizophren/i],
-      ['Methods & tech', /fmri|\bmri\b|\beeg\b|\bmeg\b|\bai\b|machine learning|deep learning|imaging|dataset|algorithm|brain.computer|decode|gene therapy|computational|simulation|model/i],
-      ['Senses', /vision|visual|hearing|auditory|smell|taste|touch|percept|sensory|\bpain\b|\bsound\b|\bsight\b|retina|cochlea|\bear\b/i],
-      ['Memory & learning', /memory|memories|learning|\blearn|recall|forget|plasticity|critical period|\bhabit|navigation/i],
-      ['Mind & behavior', /behavio|emotion|decision|social|sleep|\bfear\b|reward|addiction|conscious|cognit|language|reasoning|motivat|stress|anxiety|feeling/i],
-      ['Cells & circuits', /neuron|synap|circuit|astrocyte|glia|receptor|protein|\bgene\b|cortex|hippocamp|amygdala|dopamine|serotonin|gaba|molecul|axon|compass|octopamine/i]
-    ];
-    function classify(t){ for(var i=0;i<CATS.length;i++){ if(CATS[i][1].test(t)) return CATS[i][0]; } return 'More'; }
-    var counts = {};
-    feed.forEach(function(el){ var c = classify(el.textContent); el.setAttribute('data-cat', c); counts[c] = (counts[c]||0)+1; });
-    var chipNames = ['All'].concat(CATS.map(function(x){return x[0];}).filter(function(c){return counts[c];}));
-    if(counts['More']) chipNames.push('More');
-    var PAGE = 10, active = 'All', shown = PAGE;
-    var moreWrap = document.getElementById('news-more'), moreBtn = document.getElementById('news-more-btn');
-    var emptyMsg = document.getElementById('news-empty');
-    chipNames.forEach(function(c){
-      var b = document.createElement('button');
-      b.className = 'news-chip'; b.type = 'button';
-      b.setAttribute('aria-pressed', c === 'All' ? 'true' : 'false');
-      var n = c === 'All' ? feed.length : counts[c];
-      b.textContent = c;
-      b.addEventListener('click', function(){
-        active = c; shown = PAGE;
-        bar.querySelectorAll('.news-chip').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
-        b.setAttribute('aria-pressed','true');
-        render();
-      });
-      bar.appendChild(b);
-    });
-    function render(){
-      var matched = 0, visible = 0;
-      feed.forEach(function(el){
-        var inCat = active === 'All' || el.getAttribute('data-cat') === active;
-        if(inCat && visible < shown){ el.hidden = false; visible++; matched++; }
-        else if(inCat){ el.hidden = true; matched++; }
-        else { el.hidden = true; }
-      });
-      if(emptyMsg) emptyMsg.hidden = matched > 0;
-      if(moreWrap) moreWrap.hidden = visible >= matched;
-    }
-    if(moreBtn) moreBtn.addEventListener('click', function(){ shown += PAGE; render(); });
-    render();
-  })();
-  </script>
-  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="2.4"/>
+      <path d="M12 9.6V3M12 14.4V21M9.6 12H3M14.4 12H21M10.3 10.3 5.6 5.6M13.7 13.7l4.7 4.7M13.7 10.3l4.7-4.7M10.3 13.7l-4.7 4.7"/>
+    </svg>
+  </div>
+  <p class="kicker">The Neuroscience Review</p>
+  <h1>We&rsquo;re refreshing the site.</h1>
+  <p class="lede">We&rsquo;re in the middle of a redesign, building something that reads the way the science deserves. Back here shortly.</p>
+  <p class="sub">In the meantime, every new piece still goes out on Substack, and nothing there has changed.</p>
+  <a class="btn" href="https://theneuroreview.substack.com">Read us on Substack</a>
+  <hr class="rule">
+  <footer>Questions? <a href="mailto:theneuroreview@gmail.com">theneuroreview@gmail.com</a></footer>
 </body>
 </html>
