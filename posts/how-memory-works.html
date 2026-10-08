@@ -3,401 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How does memory actually work? — The Neuroscience Review</title>
-  <meta name="description" content="A memory isn't a recording filed away in a drawer. It's a physical change in your neurons, rebuilt every time you remember.">
-  <!-- Fonts -->
+  <title>The Neuroscience Review — Back shortly</title>
+  <meta name="description" content="The Neuroscience Review is being refreshed. We'll be back shortly. In the meantime, read us on Substack.">
+  <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
-  <!-- Theme (no flash of wrong theme) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap">
   <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
-  <link rel="stylesheet" href="../css/styles.css">
-  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
-  <link rel="canonical" href="https://theneuroreview.com/posts/how-memory-works.html">
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="The Neuroscience Review">
-  <meta property="og:title" content="How does memory actually work?">
-  <meta property="og:description" content="A memory isn't a recording filed away in a drawer. It's a physical change in your neurons, rebuilt every time you remember.">
-  <meta property="og:url" content="https://theneuroreview.com/posts/how-memory-works.html">
-  <meta property="og:image" content="https://theneuroreview.com/img/photo-memory.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="How does memory actually work?">
-  <meta name="twitter:description" content="A memory isn't a recording filed away in a drawer. It's a physical change in your neurons, rebuilt every time you remember.">
-  <meta name="twitter:image" content="https://theneuroreview.com/img/photo-memory.jpg">
-  <meta property="article:published_time" content="2026-06-09">
-  <meta property="article:author" content="Cameron Hunterton">
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@graph":[{"@context":"https://schema.org","@type":"BlogPosting","headline":"How does memory actually work?","description":"A memory isn't a recording filed away in a drawer. It's a physical change in your neurons, rebuilt every time you remember.","author":{"@id":"https://theneuroreview.com/#editor"},"publisher":{"@id":"https://theneuroreview.com/#publication"},"datePublished":"2026-06-09","dateModified":"2026-06-09","image":"https://theneuroreview.com/img/photo-memory.jpg","mainEntityOfPage":"https://theneuroreview.com/posts/how-memory-works.html","isPartOf":{"@id":"https://theneuroreview.com/#website"}},{"@type":"Person","@id":"https://theneuroreview.com/#editor","name":"Cameron Hunterton","url":"https://theneuroreview.com/authors/cameron-hunterton.html","jobTitle":"Founder and Editor","affiliation":{"@type":"CollegeOrUniversity","name":"Columbia University"},"description":"Studies neuroscience at Columbia University and edits The Neuroscience Review.","worksFor":{"@id":"https://theneuroreview.com/#publication"},"sameAs":["https://bsky.app/profile/theneuroreview.bsky.social","https://theneuroreview.substack.com"]},{"@type":"NewsMediaOrganization","@id":"https://theneuroreview.com/#publication","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"},"sameAs":["https://bsky.app/profile/theneuroreview.bsky.social","https://theneuroreview.substack.com"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://theneuroreview.com/"},{"@type":"ListItem","position":2,"name":"Articles","item":"https://theneuroreview.com/posts.html"},{"@type":"ListItem","position":3,"name":"How does memory actually work?"}]}]}
-  </script>
+  <style>
+    :root{
+      --bg:#fafaf6; --ink:#15181b; --ink-soft:#3b434a; --muted:#6c757c;
+      --rule:#e4e1db; --accent:#1d4c64; --accent-hover:#11394d; --logo-mark:#2d5d7b;
+      --serif:"Newsreader",Georgia,"Times New Roman",serif;
+      --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --bg:#111417; --ink:#ecebe6; --ink-soft:#bcc2c7; --muted:#8c959b;
+        --rule:#2a2f34; --accent:#86b9d2; --accent-hover:#aad4e8; --logo-mark:#86b9d2;
+      }
+    }
+    :root[data-theme="dark"]{
+      --bg:#111417; --ink:#ecebe6; --ink-soft:#bcc2c7; --muted:#8c959b;
+      --rule:#2a2f34; --accent:#86b9d2; --accent-hover:#aad4e8; --logo-mark:#86b9d2;
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0; background:var(--bg); color:var(--ink);
+      font-family:var(--sans); line-height:1.6;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100vh; padding:40px 24px; text-align:center;
+    }
+    .mark{ width:52px; height:52px; margin:0 auto 22px; color:var(--logo-mark); }
+    .mark svg{ width:100%; height:100%; display:block; }
+    h1{
+      font-family:var(--serif); font-weight:600; letter-spacing:-.01em;
+      font-size:clamp(28px,5vw,44px); margin:0 0 6px;
+    }
+    .kicker{
+      font-family:var(--sans); font-size:12px; font-weight:600;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+      margin:0 0 20px;
+    }
+    .lede{
+      font-family:var(--serif); font-size:clamp(17px,2.4vw,20px);
+      color:var(--ink-soft); max-width:30rem; margin:0 auto 10px;
+    }
+    .sub{ color:var(--muted); font-size:15px; max-width:30rem; margin:0 auto 30px; }
+    .btn{
+      display:inline-block; font-family:var(--sans); font-weight:600; font-size:15px;
+      color:#fff; background:var(--accent); padding:12px 26px; border-radius:999px;
+      text-decoration:none; transition:background .15s ease;
+    }
+    @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn{ color:#0b0f12; } }
+    :root[data-theme="dark"] .btn{ color:#0b0f12; }
+    .btn:hover{ background:var(--accent-hover); }
+    .rule{ width:40px; height:2px; background:var(--rule); border:0; margin:34px auto 0; }
+    footer{ margin-top:22px; font-size:13px; color:var(--muted); }
+    footer a{ color:var(--accent); text-decoration:none; }
+    footer a:hover{ text-decoration:underline; }
+  </style>
 </head>
 <body>
-  <div class="reading-progress" aria-hidden="true"></div>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a href="../index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
-      <nav class="site-nav">
-        <a href="../index.html">Home</a>
-        <a aria-current="page" href="../posts.html">Articles</a>
-        <a href="../news.html">News</a>
-        <a href="../lab.html">Lab</a>
-        <a href="../commons.html">The Commons</a>
-        <a class="site-nav__cta" href="#subscribe">Subscribe</a>
-        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
-      </nav>
-    </div>
-  </header>
-
-  <main id="main">
-    <div class="reading-shell">
-    <article class="post">
-      <header class="post-header">
-        <div class="post-header__eyebrow">First principles</div>
-        <h1 class="post-header__title">How does memory actually work?</h1>
-        <p class="post-header__subtitle">A memory isn't a recording filed away in a drawer. It's a physical change in your neurons, and your brain rebuilds it every time you remember. Here's what that actually means.</p>
-        <div class="post-header__meta">
-          <span>June 9, 2026</span>
-          <span>·</span>
-          <span>9 min read</span>
-          <span>·</span>
-          <span class="byline"><a class="byline__link" href="../authors/cameron-hunterton.html" rel="author">Cameron Hunterton</a></span>
-          <span aria-hidden="true">&middot;</span>
-          <a class="post-header__factcheck" href="../trust.html">Fact-checked</a>
-        </div>
-        <div class="post-share post-share--top">
-          <span class="post-share__label">Share</span>
-          <a class="post-share__net" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html&text=How%20does%20memory%20actually%20work%3F" target="_blank" rel="noopener">X</a>
-          <a class="post-share__net" href="https://bsky.app/intent/compose?text=How%20does%20memory%20actually%20work%3F%20https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html" target="_blank" rel="noopener">Bluesky</a>
-          <a class="post-share__net" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="post-share__net" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html" target="_blank" rel="noopener">Facebook</a>
-          <a class="post-share__net" href="mailto:?subject=How%20does%20memory%20actually%20work%3F&body=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html">Email</a>
-          <button type="button" class="post-share__copy" data-url="https://theneuroreview.com/posts/how-memory-works.html">Copy link</button>
-          <button type="button" class="post-share__story">Story card</button>
-          <button type="button" class="post-share__native" aria-label="More sharing options">More…</button>
-        </div>
-      </header>
-
-      <div class="post-body">
-        <figure>
-          <img src="../img/hippocampus.svg" alt="Coronal section of the brain highlighting the hippocampus in the medial temporal lobe" width="512" height="512">
-          <figcaption>The hippocampus sits deep in the medial temporal lobe, one curled structure in each hemisphere. <span class="figure-credit">DataBase Center for Life Science (DBCLS), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</span></figcaption>
-        </figure>
-<aside class="callout callout--summary">
-  <span class="callout__label">Key takeaways</span>
-  <ul>
-    <li>Memory isn't one system. The brain stores facts and events (declarative) separately from skills and habits (nondeclarative), and the two can fail independently.</li>
-    <li>A long term memory is a physical change in the strength of synapses, formed with the hippocampus and slowly handed off to the cortex.</li>
-    <li>Remembering is reconstruction, not playback. Each recall can quietly rewrite the memory, which is why a confident memory can still be wrong.</li>
-  </ul>
-</aside>
-        <p>Think about a specific moment from your childhood. A birthday, a fight, the smell of a particular kitchen. It feels like you're opening a file and watching it play back, as if the memory were sitting somewhere in your head, complete, waiting to be retrieved.</p>
-
-        <p>That picture is wrong in almost every way that matters. A memory isn't a recording, it isn't stored in any one place, and the act of remembering changes the thing you're remembering. To see why, it helps to build the idea up from the cell, the same way we did with the <a href="what-is-a-neuron.html">neuron</a>.</p>
-
-        <h2>Memory isn't one thing</h2>
-
-        <p>The first mistake is treating memory as a single system. It isn't. The brain keeps several different kinds of memory that run on different machinery, and they can fail independently of each other.</p>
-
-        <p>There's working memory, the handful of things you can hold in mind right now, like a phone number you're about to dial. It lasts seconds and holds only about four items at once, and the famous "seven, plus or minus two" has since been revised down. Then there's long term memory, which splits into two broad families. Declarative memory is the stuff you can consciously describe, and it divides again into episodic memory, the specific events you lived through, like your last birthday, and semantic memory, the facts you simply know, like the capital of France, stripped of any memory of learning them. Nondeclarative memory is everything you know how to do without being able to put it into words, like riding a bike, touch typing, or flinching at a sound that once came right before something painful.</p>
-
-        <p>These aren't just tidy philosophical categories. They come apart in real brains. The most famous demonstration came from a patient known for decades only by his initials, H.M.</p>
-
-        <h2>The man who couldn't form new memories</h2>
-
-        <p>In 1953, a man named Henry Molaison had large parts of his medial temporal lobes, including most of a seahorse shaped structure called the hippocampus, surgically removed to treat severe epilepsy. The seizures got better. But something nobody expected happened too. He could no longer form new conscious memories.</p>
-
-        <p>H.M. could hold a thought for as long as he kept rehearsing it, and his memories from well before the surgery were largely intact. But the moment his attention moved on, anything new was gone. He'd read the same magazine with fresh interest, and meet the same doctor as a stranger again and again, for the rest of his life.</p>
-
-        <p>Two things about H.M. reshaped the science of memory. First, it showed that the hippocampus is required to form new declarative memories but not to hold the old ones, which means making a memory and keeping a memory are different jobs done in different places. Second, and stranger, H.M. could still learn new motor skills. Asked to trace a shape while watching only his hand in a mirror, a genuinely hard task, he got better at it day after day, even though he had no memory of ever having done it before. His skill memory kept working while his memory for events was gone. Two kinds of memory, two separate systems, cleanly pulled apart in one person.</p>
-
-        <h2>Where a memory actually lives</h2>
-
-        <p>So if a memory isn't a file, what's it physically?</p>
-
-        <p>The leading answer is that a memory is a change in the connections between neurons. Remember that neurons talk to each other across synapses. The strength of a synapse, how hard the firing of one neuron pushes on the next, isn't fixed. It can go up or down with experience. This adjustability is called synaptic plasticity, and it's the closest thing neuroscience has to a physical home for memory.</p>
-
-        <p>The psychologist Donald Hebb captured the intuition back in 1949, in a line now usually squeezed down to four words, neurons that fire together wire together. If two connected neurons are active at the same time, the synapse between them strengthens, so that later one is more likely to set off the other. Wire enough of those small changes together across a population of cells and you've stored a relationship, a pairing, a pattern. You've remembered something.</p>
-
-        <p>In 1973 two researchers, Tim Bliss and Terje Lomo, found a concrete version of this in the rabbit hippocampus. A brief, rapid burst of stimulation to a pathway made its synapses respond more strongly for hours, even days, afterward. They called it long term potentiation, or LTP, and it's still the best studied cellular model of how a memory might get written. The molecular details that follow, a receptor called NMDA acting as a kind of coincidence detector, the trafficking of other receptors that makes a synapse physically stronger, the growth of new connection points on the dendrites, all fill in how a fleeting flash of activity becomes a lasting structural change. One honest caveat is worth stating up front. Almost all of this mechanism is worked out in animals and in slices of brain tissue, because you can't do these experiments in a living human. LTP is a powerful model, not a finished proof of how your own memories are stored.</p>
-
-        <aside class="cta cta--inline">
-          <p><strong>Enjoying this?</strong> Get one neuroscience deep dive in your inbox every Wednesday.</p>
-          <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
-            <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
-            <button type="submit" class="cta__button">Subscribe</button>
-          </form>
-        </aside>
-
-        <h2>The engram, and reading a memory off the cells</h2>
-
-        <p>If a memory is a pattern of strengthened connections, can you find it? Can you point to the exact cells that hold one specific memory?</p>
-
-        <p>For most of the twentieth century this looked like a fool's errand. The psychologist Karl Lashley spent some thirty years training rats and then lesioning their brains, trying to locate the physical trace of a memory, which he called the engram, and he famously failed to find it in any single spot. Memory seemed to be everywhere and nowhere at once.</p>
-
-        <p>That has changed. Modern tools let researchers tag the specific neurons that switch on while a mouse forms a particular memory, and then turn just those neurons back on later using pulses of light, a technique called optogenetics. When they do, the mouse acts as though it's recalling the memory, freezing in fear, for instance, even in a place where nothing bad ever happened to it. Switch the tagged cells on, the memory appears. Silence them, and recall is blocked. The same light-based switch has since been used to drive whole behaviors, in one striking case making a mouse <a href="aggression-switch-in-the-brain.html">attack on cue</a>. This is strong evidence that a given memory really is carried by a specific, sparse set of neurons, an engram, rather than smeared evenly across the whole brain. It's worth saying plainly that this work is done in mice, with methods that can't be used in people, and that being able to trigger a memory isn't the same as being able to read what's inside it. We can flip the switch. We can't yet play back the movie.</p>
-
-        <h2>Remembering rewrites the memory</h2>
-
-        <p>Here's the part that does the most damage to the filing cabinet picture. Pulling up a memory isn't a read only operation. It can change the file.</p>
-
-        <p>When a long term memory is recalled, it can briefly become unstable again, open to editing, before it's saved back down. This is called reconsolidation, and it was shown cleanly in 2000 by Karim Nader and his colleagues, who found that a settled fear memory in rats could be weakened if you interfered with the brain's protein building machinery at the exact moment the animal was recalling it. The memory had to be physically rewritten in order to last, and if you blocked the rewriting, it faded.</p>
-
-        <p>The human side of this is roughly fifty years of experiments on false memory, much of it by Elizabeth Loftus. People can be led, through nothing more than the wording of a question, to confidently remember details that never happened, sometimes whole events. In one classic study, simply asking how fast two cars were going when they smashed into each other, rather than when they hit each other, led people to recall broken glass at a scene that had none. Memory is reconstructive. Every time you remember, you rebuild the event out of fragments, and the version you rebuild is colored by your current mood, your beliefs, and the way the question was put to you. This isn't a flaw in a few unreliable people. It's how memory works in everyone, and it's a central reason a confident eyewitness can still be wrong.</p>
-
-        <p>You don't have to take my word for it. Here's that same reconstruction happening in your own head, in about a minute.</p>
-
-        <style>
-          .labdemo { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 1.7rem 1.8rem; margin: 2.2rem 0; }
-          .labdemo__eyebrow { font-family: var(--sans); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent); margin-bottom: 1rem; }
-          .labdemo__stage { min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-          .labdemo__stage p { font-family: var(--sans); color: var(--text); margin: 0 0 1.1rem; max-width: 34rem; line-height: 1.5; }
-          .labdemo__word { font-family: var(--serif); font-size: clamp(2rem, 7vw, 3rem); font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
-          .labdemo__list { display: flex; flex-wrap: wrap; gap: 0.5rem 1.15rem; justify-content: center; font-family: var(--serif); font-size: 1.25rem; color: var(--text); }
-          .labdemo__row { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
-          .labdemo__btn { font-family: var(--sans); font-size: 0.95rem; font-weight: 600; border: 1px solid var(--accent); background: var(--accent); color: #fff; padding: 0.6rem 1.5rem; border-radius: 999px; cursor: pointer; }
-          .labdemo__btn:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
-          .labdemo__btn--ghost { background: transparent; color: var(--accent); }
-          .labdemo__btn--ghost:hover { background: transparent; color: var(--accent-hover); }
-          [data-theme="dark"] .labdemo__btn:not(.labdemo__btn--ghost) { color: #16151a; }
-          .labdemo__result-head { font-family: var(--serif); font-size: 1.45rem; font-weight: 600; margin-bottom: 0.7rem; color: var(--text); line-height: 1.25; }
-          .labdemo__muted { color: var(--text-muted); font-size: 0.92rem; }
-        </style>
-        <section class="labdemo" aria-label="A small memory experiment">
-          <div class="labdemo__eyebrow">Try it yourself</div>
-          <div class="labdemo__stage" id="drm-stage" aria-live="polite"></div>
-        </section>
-        <script>
-        (function(){
-          var stage = document.getElementById('drm-stage');
-          if(!stage) return;
-          var study = ['bed','rest','awake','tired','dream','wake','snooze','blanket','doze','slumber','snore','nap'];
-          var test = [
-            {w:'bed', studied:true}, {w:'chair', studied:false}, {w:'sleep', lure:true},
-            {w:'tired', studied:true}, {w:'ocean', studied:false}, {w:'dream', studied:true}, {w:'pencil', studied:false}
-          ];
-          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          var answers = {};
-          function set(html){ stage.innerHTML = html; }
-          function intro(){
-            set('<p>A quick experiment. Twelve words will flash by, one at a time. Just read them, do not write anything down. Then I will test what you remember.</p><button class="labdemo__btn" id="drm-start">Start</button>');
-            document.getElementById('drm-start').onclick = reduce ? studyStatic : studyFlash;
-          }
-          function studyFlash(){
-            var i = 0;
-            (function next(){
-              if(i >= study.length){ return distractor(); }
-              set('<div class="labdemo__word">'+study[i]+'</div>');
-              i++; setTimeout(next, 900);
-            })();
-          }
-          function studyStatic(){
-            set('<p class="labdemo__muted">Read these words, then continue.</p><div class="labdemo__list">'+study.map(function(w){return '<span>'+w+'</span>';}).join('')+'</div><div class="labdemo__row" style="margin-top:1.3rem"><button class="labdemo__btn" id="drm-done">I have read them</button></div>');
-            document.getElementById('drm-done').onclick = distractor;
-          }
-          function distractor(){
-            set('<p>Now a memory test. For each word, did it appear in the list you just saw?</p>');
-            setTimeout(function(){ ask(0); }, 1100);
-          }
-          function ask(n){
-            if(n >= test.length){ return result(); }
-            var t = test[n];
-            set('<p class="labdemo__muted">Did this word appear in the list?</p><div class="labdemo__word">'+t.w+'</div><div class="labdemo__row"><button class="labdemo__btn" data-a="yes">Yes, I saw it</button><button class="labdemo__btn labdemo__btn--ghost" data-a="no">No</button></div>');
-            var btns = stage.querySelectorAll('[data-a]');
-            for(var k=0;k<btns.length;k++){
-              btns[k].onclick = (function(t){ return function(){ var now = Date.now(); if(stage._lock && now - stage._lock < 350) return; stage._lock = now; answers[t.w] = this.getAttribute('data-a'); ask(n+1); }; })(t);
-            }
-          }
-          function result(){
-            var sawLure = answers['sleep'] === 'yes';
-            var hits = 0, studiedTotal = 0;
-            for(var j=0;j<test.length;j++){ if(test[j].studied){ studiedTotal++; if(answers[test[j].w]==='yes') hits++; } }
-            var head, body;
-            if(sawLure){
-              head = 'You remembered a word that was never there.';
-              body = 'You just said you saw <strong>sleep</strong> in the list. It never appeared. Every word pointed at sleep, so your brain stored the gist, the theme, and then reconstructed <em>sleep</em> as if you had actually seen it. That is a false memory, built in about a minute, and it felt exactly as real as the words that truly were there.';
-            } else {
-              head = 'You resisted the lure this time.';
-              body = 'You correctly said <strong>sleep</strong> was not in the list, even though every word pointed at it. Nicely done. Most people are fooled, and even those who answer no often report it felt familiar. That pull toward <em>sleep</em> is the same reconstruction at work, you just caught it.';
-            }
-            set('<div class="labdemo__result-head">'+head+'</div><p>'+body+'</p><p class="labdemo__muted">You correctly recalled '+hits+' of '+studiedTotal+' real words. This is a one-person version of a classic experiment (Roediger and McDermott, 1995), so treat it as a demonstration, not a measurement. The effect holds up across large groups.</p><div class="labdemo__row"><button class="labdemo__btn labdemo__btn--ghost" id="drm-again">Run it again</button></div>');
-            document.getElementById('drm-again').onclick = function(){ answers = {}; intro(); };
-          }
-          intro();
-        })();
-        </script>
-
-        <h2>The honest caveats</h2>
-
-        <p>As with the neuron, it's worth being clear about the edges of this story.</p>
-
-        <p>We don't have a full physical readout of a single human memory. We have a strong cellular model in synaptic plasticity, a clear anatomy for forming new declarative memories in the hippocampus that hands off to the cortex over time, a process that <a href="why-we-sleep.html">sleep</a> seems to help along, and striking demonstrations in animals that memories map onto specific cells. What we don't have is the ability to <a href="what-fmri-measures.html">look at a living human brain</a> and say, there, those synapses, that's your tenth birthday. The distance between the molecular story and the felt experience of remembering is still wide.</p>
-
-        <p>Much of the sharpest mechanistic work is done in rodents, for the simple reason that you can't ethically do it in people, so every jump from a mouse to a human carries an asterisk. And the deepest question, how a pattern of strengthened synapses turns into the conscious experience of reliving a moment, is the same unsolved problem we ran into with the neuron. We know memory is physical. We can't yet say how the physics becomes the feeling.</p>
-
-        <p class="pull-quote">A memory isn't a recording you play back. It's rebuilt every time you call it up.</p>
-        <h2>Why this matters</h2>
-
-        <p>Getting this right quietly changes how you think about ordinary things.</p>
-
-        <p>It reframes learning. If a memory is the strengthening of connections through repeated, active firing, then cramming once is close to the worst way to study, and spreading practice out over time while forcing yourself to actively recall, rather than just rereading, is close to the best. The structure of memory is itself an argument for how to learn.</p>
-
-        <p>It reframes disease. Alzheimer's is, at the cellular level, a disease of synapses and the neurons that carry them, which is part of why it so often takes recent declarative memory first while leaving old skills alone. It reframes trauma, where the discovery that memories can be made briefly editable on recall has opened real, if still early, lines of treatment for conditions like PTSD.</p>
-
-        <p>And it reframes how much to trust your own certainty. A vivid, confident memory feels like proof. What it actually is, is the most recent rebuild of a structure that was never a recording in the first place. That's worth knowing about the three pounds of tissue you do all of your remembering with.</p>
-      </div>
-      <div class="post-endmark" aria-hidden="true">
-        <svg width="34" height="12" viewBox="0 0 34 12" fill="none">
-          <circle cx="5" cy="6" r="3.4" fill="currentColor"/>
-          <circle cx="15" cy="6" r="1.7" fill="currentColor" opacity="0.55"/>
-          <circle cx="23" cy="6" r="1.1" fill="currentColor" opacity="0.38"/>
-          <circle cx="30" cy="6" r="0.7" fill="currentColor" opacity="0.25"/>
-        </svg>
-      </div>
-      <footer class="post-end">
-        <div class="post-share">
-          <span class="post-share__label">Share</span>
-          <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html&text=How%20does%20memory%20actually%20work%3F">X</a>
-          <a href="https://bsky.app/intent/compose?text=How%20does%20memory%20actually%20work%3F%20https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html">Bluesky</a>
-          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html">LinkedIn</a>
-          <a href="mailto:?subject=How%20does%20memory%20actually%20work%3F&body=https%3A%2F%2Ftheneuroreview.com%2Fposts%2Fhow-memory-works.html">Email</a>
-        </div>
-        <section class="post-sources">
-          <h2>Further reading</h2>
-          <ol>
-            <li>Hebb DO. <em>The Organization of Behavior</em>. 1949.</li>
-            <li>Scoville WB, Milner B. &ldquo;<a href="https://doi.org/10.1136/jnnp.20.1.11" target="_blank" rel="noopener">Loss of recent memory after bilateral hippocampal lesions.</a>&rdquo; <em>Journal of Neurology, Neurosurgery &amp; Psychiatry</em>, 1957.</li>
-            <li>Bliss TVP, Lomo T. &ldquo;<a href="https://doi.org/10.1113/jphysiol.1973.sp010273" target="_blank" rel="noopener">Long-lasting potentiation of synaptic transmission in the dentate area of the anaesthetized rabbit.</a>&rdquo; <em>Journal of Physiology</em>, 1973.</li>
-            <li>Nader K, Schafe GE, LeDoux JE. &ldquo;<a href="https://doi.org/10.1038/35021052" target="_blank" rel="noopener">Fear memories require protein synthesis in the amygdala for reconsolidation after retrieval.</a>&rdquo; <em>Nature</em>, 2000.</li>
-            <li>Loftus EF, Palmer JC. &ldquo;<a href="https://doi.org/10.1016/S0022-5371(74)80011-3" target="_blank" rel="noopener">Reconstruction of automobile destruction.</a>&rdquo; <em>Journal of Verbal Learning and Verbal Behavior</em>, 1974.</li>
-            <li>Roediger HL, McDermott KB. &ldquo;<a href="https://doi.org/10.1037/0278-7393.21.4.803" target="_blank" rel="noopener">Creating false memories: remembering words not presented in lists.</a>&rdquo; <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>, 1995.</li>
-            <li>Liu X, Ramirez S, Pang PT, et al. &ldquo;<a href="https://doi.org/10.1038/nature11028" target="_blank" rel="noopener">Optogenetic stimulation of a hippocampal engram activates fear memory recall.</a>&rdquo; <em>Nature</em>, 2012.</li>
-          </ol>
-        </section>
-        <p class="post-topics"><span class="post-topics__label">Filed under</span> <a class="topic-chip" href="../topics.html#memory-and-sleep">Memory &amp; sleep</a></p>
-        <div class="cite-this">
-          <p class="cite-this__label">Cite this article</p>
-          <p class="cite-this__text">Hunterton, C. (2026). How does memory actually work? <em>The Neuroscience Review</em>. https://theneuroreview.com/posts/how-memory-works.html</p>
-          <button type="button" class="cite-this__copy" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());var b=this;b.textContent='Copied';setTimeout(function(){b.textContent='Copy citation';},1500)">Copy citation</button>
-        </div>
-              <p class="post-disclaimer">Educational content, not medical advice. <a href="../disclaimer.html">Read the full disclaimer</a>.</p>
-</footer>
-    </article>
-    </div>
-
-    <nav class="read-next" aria-label="Read next">
-      <p class="read-next__label">Read next</p>
-      <ul class="read-next__list">
-        <li><a class="read-next__link" href="what-is-a-neuron.html"><img class="read-next__thumb" src="../img/photo-neuron.jpg" alt="" loading="lazy"><span class="read-next__body"><span class="read-next__type">First principles</span><span class="read-next__title">What is a neuron, really?</span><span class="read-next__meta">7 min read</span></span></a></li>
-        <li><a class="read-next__link" href="why-we-sleep.html"><img class="read-next__thumb" src="../img/photo-sleep.jpg" alt="" loading="lazy"><span class="read-next__body"><span class="read-next__type">First principles</span><span class="read-next__title">Why do you need to sleep?</span><span class="read-next__meta">9 min read</span></span></a></li>
-      </ul>
-    </nav>
-
-    <section class="cta" id="subscribe">
-      <h3>Get one brain-science deep dive every Wednesday.</h3>
-      <p>Real research, written to be read. No hype, no fluff, unsubscribe anytime.</p>
-      <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
-        <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
-        <button type="submit" class="cta__button">Subscribe</button>
-      </form>
-      <p class="cta__fine">We use your email only to send you new posts (via Buttondown) and never share it. <a href="../privacy.html">Privacy</a>.</p>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="site-footer__inner">
-      <p>&copy; 2026 The Neuroscience Review</p>
-      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
-      <p><a href="../index.html">Home</a> &middot; <a href="../posts.html">Articles</a> &middot; <a href="../news.html">News</a> &middot; <a href="../lab.html">Lab</a> &middot; <a href="../commons.html">The Commons</a> &middot; <a href="../about.html">About</a> &middot; <a href="../contribute.html">Submissions</a></p>
-      <p><a href="../privacy.html">Privacy</a> &middot; <a href="../terms.html">Terms</a> &middot; <a href="../disclaimer.html">Disclaimer</a></p>
-    </div>
-  </footer>
-  <script>
-  (function(){var b=document.querySelector('.post-share__copy');if(!b)return;b.addEventListener('click',function(){var u=b.getAttribute('data-url');var done=function(){var t=b.getAttribute('data-label')||'Copy link';b.textContent='Link copied';b.classList.add('is-copied');setTimeout(function(){b.textContent=t;b.classList.remove('is-copied');},1600);};b.setAttribute('data-label','Copy link');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,done);}else{done();}});})();
-  </script>
-  <script>
-  (function(){
-    var row=document.querySelector('.post-share--top'); if(!row) return;
-    var cn=document.querySelector('link[rel=canonical]'); var url=cn?cn.href:location.href;
-    var tEl=document.querySelector('.post-header__title'); var title=tEl?tEl.textContent.trim():document.title;
-    var eEl=document.querySelector('.post-header__eyebrow'); var eyebrow=eEl?eEl.textContent.trim():'';
-    var bEl=document.querySelector('.byline__link'); var author=bEl?bEl.textContent.trim():'Cameron Hunterton';
-    var oEl=document.querySelector('meta[property="og:image"]'); var imgUrl=oEl?oEl.getAttribute('content'):'';
-    // adaptive: on a phone viewport with a share sheet, collapse the per-network links
-    // into "More"; on desktop keep the full row of links.
-    var ns=row.querySelector('.post-share__native');
-    if(ns && navigator.share){ ns.addEventListener('click',function(){ navigator.share({title:title,url:url}).catch(function(){}); }); }
-    var mq=window.matchMedia?matchMedia('(max-width:640px)'):null;
-    function applyRow(){ if(mq&&mq.matches&&navigator.share){ row.classList.add('has-native'); } else { row.classList.remove('has-native'); } }
-    if(mq){ applyRow(); if(mq.addEventListener)mq.addEventListener('change',applyRow); else if(mq.addListener)mq.addListener(applyRow); }
-    // ---- branded Instagram story card ----
-    function mark(x,cx,cy,r,c){ var p=[[-0.62,-0.75],[-0.28,-1.0],[0.78,-0.72],[0.56,0.78],[-0.66,0.62]]; x.strokeStyle=c; x.lineWidth=r*0.14; x.lineCap='round'; p.forEach(function(q){x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+q[0]*r,cy+q[1]*r);x.stroke();}); x.fillStyle=c; p.forEach(function(q){x.beginPath();x.arc(cx+q[0]*r,cy+q[1]*r,r*0.15,0,7);x.fill();}); x.beginPath();x.arc(cx,cy,r*0.34,0,7);x.fill(); }
-    function wrap(x,t,m){ var w=t.split(' '),L=[],l=''; for(var i=0;i<w.length;i++){var s=l?l+' '+w[i]:w[i]; if(x.measureText(s).width>m&&l){L.push(l);l=w[i];}else l=s;} if(l)L.push(l); return L; }
-    function cover(x,img,dx,dy,dw,dh){ var ir=img.width/img.height,br=dw/dh,sw,sh,sx,sy; if(ir>br){sh=img.height;sw=sh*br;sx=(img.width-sw)/2;sy=0;}else{sw=img.width;sh=sw/br;sx=0;sy=(img.height-sh)/2;} x.save();x.beginPath();x.rect(dx,dy,dw,dh);x.clip();x.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);x.restore(); }
-    function paint(cv,img){
-      var x=cv.getContext('2d'),W=1080,H=1920,PAPER='#fbfaf5',INK='#1a1a1c',TEAL='#2d5d7b',MUT='#6b6b66';
-      x.fillStyle=PAPER;x.fillRect(0,0,W,H); x.strokeStyle='rgba(45,93,123,.25)';x.lineWidth=3;x.strokeRect(46,46,W-92,H-92); x.fillStyle=TEAL;x.fillRect(46,46,W-92,10);
-      mark(x,130,210,48,TEAL); x.fillStyle=INK;x.textAlign='left';x.textBaseline='middle';x.font='600 36px Newsreader,Georgia,serif';x.fillText('The Neuroscience Review',196,210);
-      var ix=100,iy=300,iw=W-200,ih=720; x.fillStyle='#f0efe8';x.fillRect(ix,iy,iw,ih); if(img&&img.naturalWidth){cover(x,img,ix,iy,iw,ih);} x.strokeStyle=TEAL;x.lineWidth=3;x.strokeRect(ix,iy,iw,ih);
-      x.fillStyle=TEAL;x.textBaseline='alphabetic';x.font='700 28px Inter,sans-serif'; var eb=(eyebrow||'').toUpperCase(),ex=100,ey=iy+ih+82; for(var i=0;i<eb.length;i++){x.fillText(eb[i],ex,ey);ex+=x.measureText(eb[i]).width+7;}
-      // headline: clamp to 4 lines by shrinking the face if needed
-      var fs=74; x.font='600 '+fs+'px Newsreader,Georgia,serif'; var ls=wrap(x,title,W-200);
-      while(ls.length>4 && fs>48){ fs-=6; x.font='600 '+fs+'px Newsreader,Georgia,serif'; ls=wrap(x,title,W-200); }
-      x.fillStyle=INK; var adv=Math.round(fs*1.22), ly=ey+Math.round(fs*1.25);
-      for(var j=0;j<ls.length;j++){ x.fillText(ls[j],100,ly); ly+=adv; }
-      // bottom group anchored to the footer (no mid-card gap)
-      x.strokeStyle=TEAL;x.lineWidth=5;x.beginPath();x.moveTo(100,H-248);x.lineTo(230,H-248);x.stroke();
-      x.fillStyle=MUT;x.font='500 34px Inter,sans-serif';x.fillText('By '+author,100,H-186);
-      x.fillStyle=TEAL;x.font='600 38px Inter,sans-serif';x.fillText('theneuroreview.com',100,H-120);
-      x.fillStyle=MUT;x.font='400 28px Inter,sans-serif';x.fillText('Real brain research, made readable.',100,H-74);
-    }
-    function makeCard(cb){
-      var cv=document.createElement('canvas');cv.width=1080;cv.height=1920;
-      var settled=false, to;
-      var go=function(img){ if(settled)return; settled=true; if(to)clearTimeout(to); (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(function(){ try{paint(cv,img);}catch(e){} cb(cv); }); };
-      if(imgUrl){ var im=new Image();im.crossOrigin='anonymous';im.onload=function(){go(im);};im.onerror=function(){go(null);};im.src=imgUrl; to=setTimeout(function(){ go(null); },8000); } else { go(null); }
-    }
-    function download(blob){ var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neuroscience-review-story.png';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href);},2000); }
-    var sc=row.querySelector('.post-share__story');
-    if(sc){ sc.addEventListener('click',function(){
-      if(sc.disabled) return; var old=sc.textContent; sc.disabled=true; sc.textContent='Building…';
-      var done=function(){ sc.textContent=old; sc.disabled=false; };
-      try{ makeCard(function(cv){
-        try{ cv.toBlob(function(blob){ done(); if(!blob)return;
-          var file=new File([blob],'neuroscience-review-story.png',{type:'image/png'});
-          if(navigator.canShare&&navigator.canShare({files:[file]})){ navigator.share({files:[file],title:title}).catch(function(err){ if(err&&err.name==='AbortError')return; download(blob); }); }
-          else { download(blob); }
-        },'image/png'); }catch(e){ done(); }
-      }); }catch(e){ done(); }
-    }); }
-  })();
-  </script>
-  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script><!-- End Cloudflare Web Analytics -->
-  <script>
-  /* Reading-progress bar: fill from the top of the article to the end of the
-     prose (.post-body), so it reads 100% when the reader finishes reading. */
-  (function(){
-    var bar=document.querySelector('.reading-progress');
-    var art=document.querySelector('article.post');
-    var body=document.querySelector('.post-body');
-    if(!bar||!art||!body)return;
-    var ticking=false;
-    function calc(){
-      ticking=false;
-      var y=window.pageYOffset||document.documentElement.scrollTop;
-      var start=art.getBoundingClientRect().top+y;
-      var end=body.getBoundingClientRect().bottom+y;
-      var span=end-start-window.innerHeight;
-      var p=span>0?(y-start)/span:0;
-      if(p<0){p=0;}else if(p>1){p=1;}
-      bar.style.transform='scaleX('+p+')';
-    }
-    function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(calc);}}
-    window.addEventListener('scroll',onScroll,{passive:true});
-    window.addEventListener('resize',onScroll,{passive:true});
-    calc();
-  })();
-  </script>
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>
+  </div>
+  <p class="kicker">The Neuroscience Review</p>
+  <h1>We&rsquo;re refreshing the site.</h1>
+  <p class="lede">We&rsquo;re in the middle of a redesign, building something that reads the way the science deserves. Back here shortly.</p>
+  <p class="sub">In the meantime, every new piece still goes out on Substack, and nothing there has changed.</p>
+  <a class="btn" href="https://theneuroreview.substack.com">Read us on Substack</a>
+  <hr class="rule">
+  <footer>Questions? <a href="mailto:theneuroreview@gmail.com">theneuroreview@gmail.com</a></footer>
 </body>
 </html>
