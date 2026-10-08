@@ -12,6 +12,7 @@
   --text-faint: #696760;
   --accent: #2d5d7b;
   --accent-hover: #1f4761;
+  --on-accent: #fff;
   --border: #e6e4dc;
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -95,16 +96,14 @@ body {
   text-underline-offset: 6px;
 }
 .site-nav a.site-nav__cta {
-  color: #fff;
+  color: var(--on-accent);
   background: var(--accent);
   padding: 0.4rem 1.05rem;
   border-radius: 999px;
   font-weight: 600;
   transition: background 0.15s, color 0.15s;
 }
-.site-nav a.site-nav__cta:hover { color: #fff; background: var(--accent-hover); }
-[data-theme="dark"] .site-nav a.site-nav__cta { color: #16151a; }
-[data-theme="dark"] .site-nav a.site-nav__cta:hover { color: #16151a; }
+.site-nav a.site-nav__cta:hover { color: var(--on-accent); background: var(--accent-hover); }
 
 main { padding: 3rem 1.5rem 4rem; }
 
@@ -306,8 +305,11 @@ article.post {
   font-size: 0.85rem;
   color: var(--text-faint);
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  min-width: 0;
 }
+.post-header__meta > * { min-width: 0; }
 
 /* Section/index pages (Posts, Lab, Column, About...) use a compact hero so the
    page title does not fill the screen before any content shows. Individual
@@ -464,7 +466,7 @@ article.post {
 
 .cta__button {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   border: none;
   border-radius: 4px;
   padding: 0.75rem 1.25rem;
@@ -528,7 +530,7 @@ article.post {
 /* ============================================
    Upgrades (2026-06): sharing, dark mode, reading polish
    ============================================ */
-.skip-link{position:absolute;left:-9999px;top:0;background:var(--accent);color:#fff;padding:.6rem 1rem;border-radius:0 0 4px 0;font-family:var(--sans);font-size:.9rem;z-index:100;}
+.skip-link{position:absolute;left:-9999px;top:0;background:var(--accent);color:var(--on-accent);padding:.6rem 1rem;border-radius:0 0 4px 0;font-family:var(--sans);font-size:.9rem;z-index:100;}
 .skip-link:focus{left:0;}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
 .theme-toggle{background:none;border:1px solid var(--border);border-radius:999px;width:2rem;height:2rem;cursor:pointer;line-height:1;color:var(--text-muted);font-size:.95rem;padding:0;display:inline-flex;align-items:center;justify-content:center;transition:color .15s,border-color .15s;align-self:center;}
@@ -589,9 +591,8 @@ article.post {
 .alz-band:hover .alz-band__btn{background:#4a2782;transform:translateX(2px);}
 @media (max-width:640px){.alz-band__btn{align-self:flex-start;}}
 .byline{color:var(--text-muted);}
-[data-theme="dark"]{--bg:#16151a;--bg-alt:#1f1e25;--text:#e9e7e0;--text-muted:#a8a69e;--text-faint:#9a988f;--accent:#7fb2d4;--accent-hover:#a3c9e3;--border:#2e2c35;}
+[data-theme="dark"]{--bg:#16151a;--bg-alt:#1f1e25;--text:#e9e7e0;--text-muted:#a8a69e;--text-faint:#9a988f;--accent:#7fb2d4;--accent-hover:#a3c9e3;--on-accent:#16151a;--border:#2e2c35;}
 [data-theme="dark"] .site-header{background:rgba(22,21,26,.9);}
-[data-theme="dark"] .cta__button{color:#16151a;}
 [data-theme="dark"] .post-body a{text-decoration-color:rgba(127,178,212,.4);}
 @media (max-width:600px){.theme-toggle{align-self:flex-start;}}
 .figure-credit{display:block;margin-top:.3rem;font-size:.78rem;color:var(--text-faint);}
