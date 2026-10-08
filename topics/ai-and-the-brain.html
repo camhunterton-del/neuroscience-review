@@ -149,7 +149,8 @@
     justify-content:center;
     gap:clamp(.45rem,1.6vw,.95rem);
   }
-  .masthead .site-logo:hover{color:var(--accent);}
+  .masthead .site-logo::after{content:"";width:clamp(1.25rem,4.5vw,2.7rem);flex:0 0 auto;}
+  .site-logo:hover{color:var(--accent);}
   .masthead .site-logo__mark{color:var(--logo-mark);
     /* Scaled to sit proportionally beside the larger wordmark (~43px on desktop) */
     width:clamp(1.25rem,4.5vw,2.7rem);
@@ -617,7 +618,7 @@
 <!-- Utility bar -->
 <div class="utility">
   <div class="wrap">
-    <span class="utility__date">Wednesday, October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"});}})();</script>
+    <span class="utility__date">Wednesday, October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
       <span class="utility__est">Independent · Est. 2026</span>
       <a href="#subscribe">Subscribe</a>
@@ -934,9 +935,14 @@
   if(!triggers.length)return;
   var pairs=triggers.map(function(t){return {t:t,m:document.getElementById(t.getAttribute('aria-controls'))};}).filter(function(p){return p.m;});
   function closeAll(){pairs.forEach(function(p){p.m.hidden=true;p.t.setAttribute('aria-expanded','false');});}
+  function openP(p){closeAll();p.m.hidden=false;p.t.setAttribute('aria-expanded','true');}
+  var canHover=matchMedia('(hover:hover) and (pointer:fine)').matches,closeT;
+  function later(){clearTimeout(closeT);closeT=setTimeout(closeAll,160);}
+  function keep(){clearTimeout(closeT);}
   pairs.forEach(function(p){
     p.t.addEventListener('click',function(e){e.stopPropagation();var wasOpen=!p.m.hidden;closeAll();if(!wasOpen){p.m.hidden=false;p.t.setAttribute('aria-expanded','true');}});
     p.m.addEventListener('click',function(e){e.stopPropagation();});
+    if(canHover){p.t.addEventListener('mouseenter',function(){keep();openP(p);});p.t.addEventListener('mouseleave',later);p.m.addEventListener('mouseenter',keep);p.m.addEventListener('mouseleave',later);}
   });
   document.addEventListener('click',function(){closeAll();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=pairs.filter(function(p){return p.t.getAttribute('aria-expanded')==='true';})[0];closeAll();if(o){o.t.focus();}}});
