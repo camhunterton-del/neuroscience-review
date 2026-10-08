@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neuro Funding Finder — The Neuroscience Review</title>
+  <meta name="description" content="A curated, searchable map of real neuroscience funding — scholarships, fellowships, and grants from high school through faculty. Filter by career stage and type.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap">
+<!-- Theme: set before paint to avoid a flash of the wrong theme -->
+<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else if(matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}</script>
+<style>
+  :root{
+    --bg:#ffffff;
+    --bg-tint:#f6f5f1;
+    --surface:#ffffff;
+    --ink:#15181b;
+    --ink-soft:#3b434a;
+    --muted:#6c757c;
+    --rule:#e4e1db;
+    --rule-strong:#cbc7bf;
+    --accent:#1d4c64;
+    --logo-mark:#2d5d7b;
+    --accent-hover:#11394d;
+    --band-cool:#edf3f6;
+    --label:#5c7a85;
+    --serif:"Newsreader",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    /* Newsroom front page: span most of the screen, capped so it still reads on huge monitors */
+    --wrap:min(94vw,1680px);
+  }
+  /* Dark palette shared by the OS preference (when the viewer has not forced light)
+     and by the manual toggle (data-theme="dark"). */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#111417;
+      --bg-tint:#171a1e;
+      --surface:#15181b;
+      --ink:#ecebe6;
+      --ink-soft:#bcc2c7;
+      --muted:#8c959b;
+      --rule:#2a2f34;
+      --rule-strong:#3b4046;
+      --accent:#86b9d2;
+    --logo-mark:#86b9d2;
+      --accent-hover:#aad4e8;
+      --band-cool:#121b22;
+      --label:#8fb0bb;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#111417;
+    --bg-tint:#171a1e;
+    --surface:#15181b;
+    --ink:#ecebe6;
+    --ink-soft:#bcc2c7;
+    --muted:#8c959b;
+    --rule:#2a2f34;
+    --rule-strong:#3b4046;
+    --accent:#86b9d2;
+    --logo-mark:#86b9d2;
+    --accent-hover:#aad4e8;
+    --band-cool:#121b22;
+    --label:#8fb0bb;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;}
+  img,svg{max-width:100%;display:block;}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(24px,3vw,48px);}
+
+  .skip{position:absolute;left:-999px;top:0;background:var(--accent);color:#fff;padding:.6rem 1rem;z-index:100;}
+  .skip:focus{left:8px;top:8px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:1px;}
+
+  /* ---------- Eyebrows / shared ---------- */
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:.7rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--label);
+    display:inline-flex;
+    align-items:center;
+    gap:.55rem;
+  }
+  .eyebrow::before{content:"";width:18px;height:1.5px;background:var(--accent);display:inline-block;}
+  .meta{
+    font-family:var(--sans);
+    font-size:.74rem;
+    letter-spacing:.03em;
+    color:var(--muted);
+  }
+  .tag{
+    font-family:var(--sans);
+    font-size:.66rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--label);
+  }
+
+  /* ---------- Top utility bar ---------- */
+  .utility{
+    border-bottom:1px solid var(--rule);
+    background:var(--bg-tint);
+    font-family:var(--sans);
+    font-size:.72rem;
+    letter-spacing:.04em;
+    color:var(--muted);
+  }
+  .utility .wrap{display:flex;justify-content:space-between;align-items:center;min-height:36px;gap:1rem;}
+  .utility__date{letter-spacing:.02em;}
+  .utility__right{display:flex;gap:1.3rem;align-items:center;}
+  .utility a{text-decoration:none;color:var(--muted);}
+  .utility a:hover{color:var(--accent);}
+
+  /* ---------- Masthead (commanding nameplate) ---------- */
+  .masthead{text-align:center;padding:clamp(10px,1.8vw,18px) 0;border-bottom:2px solid var(--accent);}
+  .masthead__name{
+    font-family:var(--serif);
+    font-weight:500;
+    /* Min stays at the v4 size so phones never overflow; scales up to ~56px on desktop */
+    font-size:clamp(1.45rem,6vw,3.5rem);
+    line-height:1.02;
+    letter-spacing:-.02em;
+    margin:0;
+    color:var(--ink);
+  }
+  .masthead .site-logo{
+    text-decoration:none;
+    color:var(--ink);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(.45rem,1.6vw,.95rem);
+  }
+  .masthead .site-logo:hover{color:var(--accent);}
+  .masthead .site-logo__mark{color:var(--logo-mark);
+    /* Scaled to sit proportionally beside the larger wordmark (~43px on desktop) */
+    width:clamp(1.25rem,4.5vw,2.7rem);
+    height:auto;
+    flex:0 0 auto;
+  }
+
+  /* ---------- Primary nav (single row) ---------- */
+  .nav{
+    border-bottom:1px solid var(--rule-strong);
+    position:sticky;
+    top:0;
+    background:var(--bg);
+    z-index:40;
+  }
+  .nav .wrap{
+    display:flex;
+    flex-wrap:nowrap;
+    justify-content:center;
+    align-items:center;
+    gap:clamp(.55rem,2.2vw,2rem);
+    padding-top:.5rem;
+    padding-bottom:.5rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .nav .wrap::-webkit-scrollbar{display:none;}
+  .nav a{
+    font-family:var(--sans);
+    font-size:.82rem;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    text-decoration:none;
+    color:var(--ink-soft);
+    padding:.15rem 0;
+    border-bottom:1.5px solid transparent;
+    white-space:nowrap;
+  }
+  .nav a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+  .nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent);}
+  .nav__search{display:inline-flex;align-items:center;flex:0 0 auto;}
+  .nav__search svg{width:18px;height:18px;}
+  .nav__search:hover{color:var(--accent);}
+  .theme-toggle{
+    font-family:var(--sans);
+    font-size:1rem;
+    line-height:1;
+    background:transparent;
+    border:1px solid var(--rule-strong);
+    color:var(--ink-soft);
+    width:30px;
+    height:30px;
+    border-radius:2px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    flex:0 0 auto;
+  }
+  .theme-toggle:hover{color:var(--accent);border-color:var(--accent);}
+
+  /* ---------- Resources dropdown ---------- */
+  .nav__trigger{
+    font-family:var(--sans);
+    font-size:.82rem;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    background:transparent;
+    border:0;
+    border-bottom:1.5px solid transparent;
+    padding:.15rem 0;
+    cursor:pointer;
+    white-space:nowrap;
+    display:inline-flex;
+    align-items:center;
+    gap:.3rem;
+    flex:0 0 auto;
+  }
+  .nav__trigger:hover{color:var(--accent);border-bottom-color:var(--accent);}
+  .nav__trigger[aria-expanded="true"]{color:var(--accent);border-bottom-color:var(--accent);}
+  .nav__chev{width:11px;height:11px;transition:transform .15s ease;}
+  .nav__trigger[aria-expanded="true"] .nav__chev{transform:rotate(180deg);}
+  .nav__menu{
+    position:absolute;
+    left:0;right:0;top:100%;
+    background:var(--surface);
+    border-bottom:1px solid var(--rule-strong);
+    box-shadow:0 14px 34px rgba(16,25,32,.10);
+    z-index:39;
+  }
+  .nav__menu[hidden]{display:none;}
+  .nav__menu-inner{
+    display:flex;
+    flex-wrap:wrap;
+    gap:clamp(1.8rem,5vw,4.5rem);
+    padding-top:1.5rem;
+    padding-bottom:1.7rem;
+    align-items:flex-start;
+  }
+  .nav__col{display:flex;flex-direction:column;gap:.5rem;min-width:150px;}
+  .nav__col-head{
+    font-family:var(--sans);
+    font-size:.68rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 .35rem;
+  }
+  .nav__col a{
+    font-family:var(--serif);
+    font-size:1.02rem;font-weight:400;letter-spacing:0;text-transform:none;
+    color:var(--ink);
+    text-decoration:none;
+    padding:.08rem 0;
+    border:0;
+    white-space:nowrap;
+  }
+  .nav__col a:hover{color:var(--accent);border:0;}
+  @media (max-width:560px){
+    .nav__menu-inner{gap:1.3rem;padding-top:1.1rem;padding-bottom:1.3rem;}
+    .nav__col{min-width:46%;}
+  }
+  /* ---------- Subscribe (now in the footer) ---------- */
+  .subscribe{
+    background:var(--surface);
+    border:1px solid var(--rule-strong);
+    padding:clamp(1.2rem,2.4vw,1.5rem);
+  }
+  .subscribe__h{
+    font-family:var(--sans);
+    font-size:.72rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--label);
+    margin:0 0 .75rem;
+  }
+  .subscribe__form{display:flex;gap:.5rem;flex-wrap:wrap;}
+  .subscribe__form label{position:absolute;left:-999px;}
+  .subscribe input[type=email]{
+    flex:1 1 150px;
+    min-width:0;
+    font-family:var(--sans);
+    font-size:.9rem;
+    padding:.62rem .7rem;
+    border:1px solid var(--rule-strong);
+    background:var(--bg);
+    color:var(--ink);
+    border-radius:2px;
+  }
+  .btn{
+    font-family:var(--sans);
+    font-size:.82rem;
+    font-weight:600;
+    letter-spacing:.03em;
+    padding:.62rem 1.1rem;
+    border:1px solid var(--accent);
+    background:var(--accent);
+    color:#fff;
+    border-radius:2px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    white-space:nowrap;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn{color:#0e1113;} }
+  :root[data-theme="dark"] .btn{color:#0e1113;}
+  .btn:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
+  .btn--ghost{background:transparent;color:var(--accent);}
+  :root[data-theme="dark"] .btn--ghost{color:var(--accent);}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn--ghost{color:var(--accent);} }
+  .btn--ghost:hover{background:transparent;color:var(--accent-hover);border-color:var(--accent-hover);}
+  .subscribe__note{
+    font-family:var(--sans);
+    font-size:.76rem;
+    line-height:1.45;
+    color:var(--muted);
+    margin:.75rem 0 0;
+  }
+  /* ---------- Walk callout (institutional) ---------- */
+  .callout{
+    border:1px solid var(--rule-strong);
+    background:var(--surface);
+    display:grid;
+    grid-template-columns:4px 1fr;
+  }
+  .callout__bar{background:var(--accent-hover);}
+  /* Two-column interior so the box reads full: pitch left, facts + button right */
+  .callout__inner{
+    padding:clamp(1.3rem,3vw,2rem);
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:clamp(1.6rem,4vw,3.2rem);
+    align-items:center;
+  }
+  .callout__lead{min-width:0;}
+  .callout__aside{min-width:0;}
+  .callout__label{
+    font-family:var(--sans);
+    font-size:.68rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--label);
+    margin:0 0 .7rem;
+  }
+  .callout__title{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(1.3rem,2.4vw,1.7rem);
+    line-height:1.18;
+    letter-spacing:-.01em;
+    margin:0 0 .6rem;
+    max-width:24ch;
+  }
+  .callout__body{
+    font-family:var(--sans);
+    font-size:.96rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+    margin:0;
+    max-width:56ch;
+  }
+  .callout__facts{
+    list-style:none;
+    margin:0 0 1.4rem;
+    padding:0;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1rem 1.4rem;
+  }
+  .callout__facts div{padding:0;}
+  .callout__facts dt{
+    font-family:var(--sans);
+    font-size:.64rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .callout__facts dd{
+    font-family:var(--serif);
+    font-size:1.05rem;
+    margin:.1rem 0 0;
+    color:var(--ink);
+  }
+  /* ---------- Footer ---------- */
+  .foot{background:var(--bg-tint);border-top:1px solid var(--rule-strong);padding:clamp(2.2rem,4vw,3rem) 0 2rem;}
+  .foot__top{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:clamp(1.6rem,4vw,3rem);
+    align-items:start;
+    padding-bottom:1.8rem;
+    border-bottom:1px solid var(--rule);
+  }
+  .foot__name{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:1.55rem;
+    letter-spacing:-.01em;
+    margin:0 0 .4rem;
+    color:var(--ink);
+  }
+  .foot__rule{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:.98rem;
+    color:var(--ink-soft);
+    margin:0;
+  }
+  .foot__nav{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;margin:1.4rem 0 0;}
+  .foot__nav a{
+    font-family:var(--sans);
+    font-size:.8rem;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-decoration:none;
+  }
+  .foot__nav a:hover{color:var(--accent);}
+  .foot__subscribe .subscribe{max-width:560px;}
+  .foot__links{
+    font-family:var(--sans);
+    font-size:.8rem;
+    line-height:1.9;
+    color:var(--muted);
+    margin:1.6rem 0 0;
+  }
+  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a:hover{color:var(--accent);text-decoration:underline;}
+  .foot__fine{
+    font-family:var(--sans);
+    font-size:.78rem;
+    line-height:1.55;
+    color:var(--muted);
+    margin:1rem 0 0;
+    max-width:70ch;
+  }
+  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
+
+  /* ---------- Shared responsive (shell) ---------- */
+  @media (max-width:860px){
+    .callout__inner{grid-template-columns:1fr;gap:1.4rem;align-items:start;}
+    .foot__top{grid-template-columns:1fr;}
+  }
+  @media (max-width:560px){
+    .utility__est{display:none;}
+    .nav .wrap{justify-content:flex-start;gap:.7rem;padding-top:.45rem;padding-bottom:.45rem;}
+    .nav a{font-size:.72rem;letter-spacing:.03em;}
+  }
+  @media (max-width:380px){
+    .nav .wrap{gap:.55rem;}
+    .nav a{font-size:.66rem;}
+  }
+
+  /* ========== Reading / info / utility page content (new design tokens) ========== */
+  main{display:block;padding:clamp(1.8rem,3.5vw,3rem) clamp(20px,4vw,40px) clamp(3rem,6vw,5rem);}
+  /* targeted margin reset so content spacing comes only from the rules below */
+  main :where(h1,h2,h3,h4,h5,h6,p,ul,ol,figure,blockquote,dl,dd,dt){margin:0;}
+  main :where(ul,ol){padding:0;}
+
+  .reading-shell{max-width:680px;margin:0 auto;}
+  .reading-shell > article.post{max-width:none;margin:0;}
+  article.post{max-width:680px;margin:0 auto;}
+
+  .post-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--rule);}
+  .post-header__eyebrow{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:1.5rem;}
+  .post-header__title{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,4.5vw,2.75rem);line-height:1.12;letter-spacing:-.022em;margin-bottom:1.25rem;color:var(--ink);}
+  .post-header__subtitle{font-family:var(--serif);font-size:1.2rem;line-height:1.5;color:var(--muted);font-style:italic;margin-bottom:1.75rem;}
+  .post-header--compact{margin-bottom:1.75rem;padding-bottom:1.3rem;}
+  .post-header--compact .post-header__eyebrow{margin-bottom:.6rem;}
+  .post-header--compact .post-header__title{font-size:clamp(1.7rem,3.2vw,2.1rem);margin-bottom:.55rem;}
+  .post-header--compact .post-header__subtitle{font-size:1.1rem;margin-bottom:0;}
+
+  .post-body{font-family:var(--serif);font-size:1.2rem;line-height:1.65;color:var(--ink);max-width:66ch;margin-left:auto;margin-right:auto;}
+  .post-body p,.post-body ul,.post-body ol,.post-body blockquote{margin-bottom:1.4rem;}
+  .post-body > p:first-of-type::first-line{font-variant:small-caps;letter-spacing:.04em;}
+  .post-body > p:first-of-type::first-letter{font-family:var(--serif);font-weight:600;float:left;font-size:3.3em;line-height:.78;padding:.04em .12em 0 0;color:var(--accent);}
+  .post-body h2{font-family:var(--serif);font-size:1.55rem;font-weight:600;letter-spacing:-.015em;margin-top:3rem;margin-bottom:1rem;line-height:1.25;color:var(--ink);}
+  .post-body h3{font-family:var(--serif);font-size:1.2rem;font-weight:600;margin-top:2.25rem;margin-bottom:.75rem;line-height:1.3;color:var(--ink);}
+  .post-body a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px;transition:text-decoration-color .15s;}
+  .post-body a:hover{text-decoration-color:var(--accent);}
+  .post-body em{font-style:italic;}
+  .post-body strong{font-weight:600;}
+  .post-body blockquote{border-left:3px solid var(--accent);padding-left:1.5rem;margin-left:0;color:var(--muted);font-style:italic;}
+  .post-body ul,.post-body ol{padding-left:1.5rem;}
+  .post-body ul li,.post-body ol li{margin-bottom:.4rem;}
+
+  /* Editorial aside (was .callout in the old stylesheet; renamed so .callout stays the shared Walk promo) */
+  .note{font-family:var(--serif);background:var(--bg-tint);border-left:3px solid var(--accent);padding:1.25rem 1.5rem;margin:2rem 0;font-size:.95rem;line-height:1.55;color:var(--ink);}
+  .note p{margin:0;color:var(--ink-soft);}
+  .note a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px;}
+  .note a:hover{text-decoration-color:var(--accent);}
+  .note__label{display:block;font-family:var(--sans);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.5rem;}
+  .note--summary ul{margin:0;padding-left:1.1rem;}
+  .note--summary li{margin-bottom:.4rem;font-size:.97rem;line-height:1.5;color:var(--ink-soft);}
+
+  .submission-note{font-family:var(--sans);font-size:.9rem;color:var(--muted);margin-top:1rem;}
+  .submission-note a{color:var(--accent);}
+  .submission-note a:hover{color:var(--accent-hover);}
+
+  /* Section heading + start-here helpers */
+  .section-heading{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:2rem;padding-bottom:.75rem;border-bottom:1px solid var(--rule);}
+  .start-heading{margin-top:3rem;}
+  .start-note{max-width:66ch;margin:.2rem auto 1.4rem;color:var(--muted);font-size:1.05rem;line-height:1.55;font-family:var(--serif);}
+
+  /* Post list + cards (start-here, and search results) */
+  .post-list{list-style:none;}
+  .post-card{padding:2.25rem 0;border-bottom:1px solid var(--rule);}
+  .post-card:last-child{border-bottom:0;}
+  .post-card a{display:flex;gap:1.5rem;align-items:center;text-decoration:none;color:inherit;}
+  .post-card a:hover .post-card__title{color:var(--accent);}
+  .post-card__thumb{flex:0 0 168px;aspect-ratio:4/3;background:var(--bg-tint);border:1px solid var(--rule);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .post-card__thumb img{width:100%;height:100%;object-fit:cover;transition:transform .25s ease;}
+  .post-card a:hover .post-card__thumb img{transform:scale(1.04);}
+  .post-card__body{flex:1 1 auto;min-width:0;}
+  .post-card__meta{font-family:var(--sans);font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.75rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem .55rem;}
+  .post-card__meta-type{color:var(--accent);font-weight:600;flex:0 0 100%;margin-bottom:.05rem;}
+  .post-card__meta-type + .post-card__meta-divider{display:none;}
+  .post-card__meta-divider{color:var(--muted);opacity:.5;}
+  .post-card__title{font-family:var(--serif);font-size:1.85rem;font-weight:600;line-height:1.18;letter-spacing:-.018em;margin-bottom:.85rem;transition:color .15s;color:var(--ink);}
+  .post-card__lede{font-family:var(--serif);font-size:1.05rem;line-height:1.6;color:var(--muted);}
+  /* Search results have no thumbnail, so stack the row instead of a flex pair */
+  .search-results .post-card a{display:block;}
+  @media (max-width:620px){
+    .post-card a{flex-direction:column;align-items:stretch;gap:1rem;}
+    .post-card__thumb{width:100%;flex:none;aspect-ratio:16/9;}
+    .post-card__title{font-size:1.5rem;}
+  }
+
+  /* The Paper That Hooked Me entries */
+  .hooked-entry{scroll-margin-top:5rem;}
+  .hooked-entry + .hooked-entry{margin-top:2.75rem;padding-top:1.9rem;border-top:1px solid var(--rule);}
+  .hooked-entry__byline{font-family:var(--sans);font-size:.9rem;color:var(--muted);}
+  .hooked-entry__cite{font-family:var(--sans);font-size:.85rem;line-height:1.5;color:var(--muted);}
+
+  /* 404 hero */
+  .hero{max-width:760px;margin:2rem auto 5rem;}
+  .hero__eyebrow{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:1.25rem;}
+  .hero__title{font-family:var(--serif);font-size:clamp(2.25rem,5.5vw,3.25rem);font-weight:600;line-height:1.12;letter-spacing:-.025em;margin-bottom:1.5rem;color:var(--ink);}
+  .hero__lede{font-family:var(--serif);font-size:1.2rem;line-height:1.55;color:var(--muted);font-style:italic;}
+
+  /* Search page */
+  .search-wrap{max-width:760px;margin:0 auto;}
+  .search-field{margin:0 0 1.1rem;}
+  .search-input{width:100%;font-family:var(--serif);font-size:1.25rem;line-height:1.4;color:var(--ink);background:var(--bg-tint);border:1px solid var(--rule-strong);border-radius:10px;padding:.95rem 1.1rem;-webkit-appearance:none;appearance:none;}
+  .search-input::placeholder{color:var(--muted);}
+  .search-input:focus{border-color:var(--accent);}
+  .search-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);}
+  .search-status{font-family:var(--sans);font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);min-height:1.1rem;margin:0 0 .5rem;}
+  .search-empty{font-family:var(--serif);font-size:1.08rem;line-height:1.6;color:var(--muted);margin:1.4rem 0 0;}
+  .search-results{margin-top:.4rem;}
+  .search-results:empty{margin-top:0;}
+  @media (prefers-reduced-motion:no-preference){.search-results .post-card{animation:search-fade .28s ease both;}}
+  @keyframes search-fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+  @media (max-width:600px){
+    main{padding:2rem 1.25rem 3rem;}
+    .post-body{font-size:1.1rem;}
+    .hero{margin:1rem auto 3rem;}
+  }
+
+  /* ========== Neuro Funding Finder ========== */
+  /* On-accent text colour so pressed chips read in both themes (accent is dark in light mode, light in dark mode) */
+  :root{--on-accent:#ffffff;}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--on-accent:#0e1113;} }
+  :root[data-theme="dark"]{--on-accent:#0e1113;}
+
+  .finder-shell{max-width:1100px;margin:0 auto;}
+  .finder-intro{max-width:72ch;}
+  .finder-intro .post-header__title{margin-bottom:1rem;}
+  .finder-lede{font-family:var(--serif);font-size:1.18rem;line-height:1.6;color:var(--ink-soft);margin:0 0 1.2rem;}
+  .finder-caveat{font-family:var(--sans);font-size:.9rem;line-height:1.55;color:var(--muted);background:var(--bg-tint);border-left:3px solid var(--accent);padding:.9rem 1.1rem;margin:0 0 2rem;}
+  .finder-caveat strong{color:var(--ink);font-weight:600;}
+
+  /* Finder controls */
+  .finder{margin:0 0 2rem;}
+  .finder__search{margin:0 0 1.3rem;}
+  .finder__search label{position:absolute;left:-999px;}
+  .finder-input{width:100%;font-family:var(--serif);font-size:1.15rem;line-height:1.4;color:var(--ink);background:var(--bg-tint);border:1px solid var(--rule-strong);border-radius:10px;padding:.85rem 1.05rem;-webkit-appearance:none;appearance:none;}
+  .finder-input::placeholder{color:var(--muted);}
+  .finder-input:focus{border-color:var(--accent);}
+  .finder-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);}
+
+  .filter-group{margin:0 0 1rem;}
+  .filter-group__label{font-family:var(--sans);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--label);display:block;margin:0 0 .55rem;}
+  .filter-chips{display:flex;flex-wrap:wrap;gap:.5rem;}
+  .f-chip{font-family:var(--sans);font-size:.8rem;font-weight:600;padding:.38rem .85rem;border-radius:999px;border:1px solid var(--rule-strong);background:transparent;color:var(--muted);cursor:pointer;transition:color .15s,border-color .15s,background .15s;}
+  .f-chip:hover{border-color:var(--accent);color:var(--accent);}
+  .f-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
+  .f-chip__count{opacity:.65;margin-left:.35rem;font-weight:500;}
+
+  .finder__status{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem 1rem;margin:1.4rem 0 1.1rem;padding-top:1.1rem;border-top:1px solid var(--rule);}
+  .finder__count{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0;}
+  .finder__reset{font-family:var(--sans);font-size:.8rem;font-weight:600;color:var(--accent);background:transparent;border:0;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;}
+  .finder__reset:hover{color:var(--accent-hover);}
+  .finder__reset[hidden]{display:none;}
+
+  /* Cards */
+  .funding-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.1rem;margin:0;padding:0;}
+  .f-card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--rule-strong);border-radius:10px;padding:1.3rem 1.3rem 1.2rem;min-width:0;overflow-wrap:anywhere;}
+  .f-card.is-hidden{display:none;}
+  .f-card__name{font-family:var(--serif);font-size:1.3rem;font-weight:600;line-height:1.22;letter-spacing:-.012em;margin:0 0 .25rem;color:var(--ink);}
+  .f-card__name a{color:inherit;text-decoration:none;}
+  .f-card__name a:hover{color:var(--accent);text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px;}
+  .f-card__sponsor{font-family:var(--sans);font-size:.82rem;color:var(--muted);margin:0 0 .85rem;}
+  .f-card__tags{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 .9rem;}
+  .f-tag{font-family:var(--sans);font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;padding:.18rem .5rem;border-radius:4px;background:var(--band-cool);color:var(--label);white-space:nowrap;}
+  .f-tag--type{background:transparent;border:1px solid var(--rule-strong);color:var(--muted);}
+  .f-card__desc{font-family:var(--serif);font-size:1rem;line-height:1.55;color:var(--ink-soft);margin:0 0 1rem;}
+  .f-card__meta{list-style:none;margin:0 0 1.1rem;padding:0;display:grid;gap:.45rem;}
+  .f-card__meta div{display:flex;gap:.5rem;font-family:var(--sans);font-size:.82rem;line-height:1.4;}
+  .f-card__meta dt{flex:0 0 72px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.64rem;color:var(--muted);padding-top:.12rem;}
+  .f-card__meta dd{margin:0;color:var(--ink-soft);min-width:0;}
+  .f-card__foot{margin-top:auto;}
+  .f-card__link{font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;}
+  .f-card__link:hover{color:var(--accent-hover);text-decoration:underline;text-underline-offset:3px;}
+
+  .funding-empty{font-family:var(--serif);font-size:1.08rem;line-height:1.6;color:var(--muted);margin:1.6rem 0;padding:1.4rem;border:1px dashed var(--rule-strong);border-radius:10px;text-align:center;}
+  .funding-empty[hidden]{display:none;}
+
+  /* No-JS fallback */
+  .funding-fallback{font-family:var(--sans);font-size:.95rem;line-height:1.65;color:var(--ink-soft);margin:1.5rem 0 0;padding-left:1.2rem;}
+  .funding-fallback li{margin-bottom:.7rem;}
+  .funding-fallback a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
+  .funding-fallback__note{font-family:var(--sans);font-size:.9rem;color:var(--muted);margin:0 0 1rem;}
+
+  @media (max-width:600px){
+    .finder-input{font-size:1.05rem;}
+    .f-card__meta dt{flex-basis:64px;}
+  }
+
+</style>
+  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
+  <link rel="canonical" href="https://theneuroreview.com/funding.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="Neuro Funding Finder — The Neuroscience Review">
+  <meta property="og:description" content="A curated, searchable map of real neuroscience funding — scholarships, fellowships, and grants from high school through faculty.">
+  <meta property="og:url" content="https://theneuroreview.com/funding.html">
+  <meta property="og:image" content="https://theneuroreview.com/og-cover.png?v=2">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Neuro Funding Finder — The Neuroscience Review">
+  <meta name="twitter:description" content="A curated, searchable map of real neuroscience funding — scholarships, fellowships, and grants from high school through faculty.">
+  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"CollectionPage","name":"Neuro Funding Finder","url":"https://theneuroreview.com/funding.html","description":"A curated, searchable directory of neuroscience funding opportunities across career stages.","isPartOf":{"@type":"WebSite","name":"The Neuroscience Review","url":"https://theneuroreview.com/"}}
+  </script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Utility bar -->
+<div class="utility">
+  <div class="wrap">
+    <span class="utility__date">Wednesday, October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"});}})();</script>
+    <span class="utility__right">
+      <span class="utility__est">Independent · Est. 2026</span>
+      <a href="#subscribe">Subscribe</a>
+    </span>
+  </div>
+</div>
+
+<!-- Masthead (one compact line, no slogan) -->
+<header class="masthead">
+  <div class="wrap">
+    <h1 class="masthead__name">
+      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+    </h1>
+  </div>
+</header>
+
+<!-- Primary navigation (single row; Subscribe now lives in the footer) -->
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a href="index.html">Home</a>
+    <button class="nav__trigger" id="articles-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="articles-menu">Articles<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="nav__trigger" id="news-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="news-menu">News<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <a href="lab.html">Lab</a>
+    <button class="nav__trigger" id="resources-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="resources-menu">Resources<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <a href="search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾</button>
+  </div>
+  <div class="nav__menu" id="articles-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Browse</p>
+        <a href="posts.html">All articles</a>
+        <a href="topics.html">Topics</a>
+        <a href="start-here.html">Start here</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Formats</p>
+        <a href="topics/first-principles.html">First principles</a>
+        <a href="topics/paper-breakdown.html">Paper breakdowns</a>
+        <a href="topics/myth-busting.html">Myth-busting</a>
+        <a href="the-paper-that-hooked-me.html">The Paper That Hooked Me</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Community</p>
+        <a href="commons.html">Latest contributions</a>
+        <a href="contribute.html">Write for us</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav__menu" id="news-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Browse</p>
+        <a href="news.html">Latest research briefs</a>
+        <a href="topics/ai-and-the-brain.html">AI &amp; the Brain</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">By topic</p>
+        <a href="news.html?topic=disease-and-clinic">Disease &amp; clinic</a>
+        <a href="news.html?topic=methods-and-tech">Methods &amp; tech</a>
+        <a href="news.html?topic=senses">Senses</a>
+        <a href="news.html?topic=memory-and-learning">Memory &amp; learning</a>
+        <a href="news.html?topic=mind-and-behavior">Mind &amp; behavior</a>
+        <a href="news.html?topic=cells-and-circuits">Cells &amp; circuits</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav__menu" id="resources-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Resources</p>
+        <a href="resources.html#books">Books</a>
+        <a href="resources.html#conferences">Conferences</a>
+        <a href="resources.html#podcasts">Podcasts</a>
+        <a href="resources.html#journals">Reading the research</a>
+        <a href="funding.html">Funding finder</a>
+        <a href="resources.html">All resources</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Learn</p>
+        <a href="start-here.html">Start here</a>
+        <a href="topics/first-principles.html">First principles</a>
+        <a href="brain-myths.html">Brain myths</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Explore</p>
+        <a href="lab.html">The Lab</a>
+        <a href="brain.html">Brain</a>
+        <a href="neuron.html">Neuron</a>
+        <a href="synapse.html">Synapse</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">About</p>
+        <a href="about.html">About</a>
+        <a href="authors.html">Authors</a>
+        <a href="trust.html">How we work</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+    <div class="finder-shell">
+      <header class="post-header post-header--compact finder-intro">
+        <div class="post-header__eyebrow">Resources</div>
+        <h1 class="post-header__title">Neuro Funding Finder</h1>
+        <p class="finder-lede">A curated map of the scholarships, fellowships, and grants that fund a life in neuroscience, from a first undergraduate research summer through an independent lab. Search by name, or filter by where you are in your training and the kind of support you need.</p>
+        <p class="finder-caveat"><strong>One honest caveat.</strong> Deadlines move every year and award amounts are revised, so treat everything here as a starting point, not the fine print. Always confirm the current deadline, amount, and eligibility on the program's official site before you apply.</p>
+      </header>
+
+      <section class="finder" aria-label="Filter funding opportunities">
+        <div class="finder__search">
+          <label for="funding-search">Search funding opportunities</label>
+          <input type="search" id="funding-search" class="finder-input" placeholder="Search by name, sponsor, or keyword (e.g. postdoc, Goldwater, NIH)" autocomplete="off">
+        </div>
+        <div class="filter-group">
+          <span class="filter-group__label" id="stage-label">Career stage</span>
+          <div class="filter-chips" id="stage-chips" role="group" aria-labelledby="stage-label"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-group__label" id="type-label">Type</span>
+          <div class="filter-chips" id="type-chips" role="group" aria-labelledby="type-label"></div>
+        </div>
+        <div class="finder__status">
+          <p class="finder__count" id="funding-count" role="status" aria-live="polite"></p>
+          <button type="button" class="finder__reset" id="funding-reset" hidden>Clear search and filters</button>
+        </div>
+      </section>
+
+      <ul class="funding-list" id="funding-list"></ul>
+      <p class="funding-empty" id="funding-empty" hidden>No opportunities match those filters yet. Try removing a filter or clearing your search.</p>
+
+      <noscript>
+        <p class="funding-fallback__note">Search and filtering need JavaScript. Here is the full list of opportunities, each linked to its official page. Confirm the current deadline, amount, and eligibility on the official site before applying.</p>
+        <ul class="funding-fallback">
+          <li><a href="https://goldwaterscholarship.gov/" target="_blank" rel="noopener">Goldwater Scholarship</a> &mdash; Barry Goldwater Scholarship Foundation. Undergrad &middot; Scholarship. Up to $7,500/yr. US citizens, nationals &amp; permanent residents; sophomores and juniors in science, math or engineering.</li>
+          <li><a href="https://amgenscholars.com/us-program" target="_blank" rel="noopener">Amgen Scholars Program</a> &mdash; Amgen Foundation (US program administered by Harvard). Undergrad &middot; Fellowship. Varies by host; stipend plus housing, meals and travel. US citizens &amp; permanent residents; undergraduates (GPA 3.2+) considering a science PhD or MD-PhD.</li>
+          <li><a href="https://www.nsf.gov/funding/opportunities/reu-research-experiences-undergraduates" target="_blank" rel="noopener">NSF Research Experiences for Undergraduates (REU)</a> &mdash; US National Science Foundation. Undergrad &middot; Fellowship. Varies by site (stipend; sites often add housing and travel). US citizens, nationals &amp; permanent residents; enrolled undergraduates.</li>
+          <li><a href="https://www.winstonchurchillfoundation.org/" target="_blank" rel="noopener">Churchill Scholarship</a> &mdash; Winston Churchill Foundation of the USA. Undergrad, Grad/PhD &middot; Scholarship. Full costs (recently valued over $80,000; varies with exchange rate). US citizens only; graduating seniors or recent graduates in science, math or engineering.</li>
+          <li><a href="https://www.hhmi.org/programs/cech-fellows" target="_blank" rel="noopener">HHMI Cech Fellows (Summer Undergraduate Research)</a> &mdash; Howard Hughes Medical Institute. Undergrad &middot; Fellowship. Varies (summer stipend plus housing and travel). Open to anyone with US work authorization; rising juniors and seniors in the life sciences.</li>
+          <li><a href="https://www.nsf.gov/funding/initiatives/grfp" target="_blank" rel="noopener">NSF Graduate Research Fellowship (GRFP)</a> &mdash; US National Science Foundation. Grad/PhD &middot; Fellowship. $37,000/yr stipend plus $16,000/yr tuition allowance (3 years of support). US citizens, nationals &amp; permanent residents; early-stage graduate students in STEM, including neuroscience.</li>
+          <li><a href="https://grants.nih.gov/funding/activity-codes/F30" target="_blank" rel="noopener">NIH F30 (MD/PhD Predoctoral Fellowship)</a> &mdash; National Institutes of Health. Grad/PhD &middot; Fellowship. Varies (NIH NRSA stipend levels; FY2026 predoctoral ~$29,364/yr) plus tuition. US citizens, nationals &amp; permanent residents; dual-degree (MD/PhD) students.</li>
+          <li><a href="https://grants.nih.gov/funding/activity-codes/F31" target="_blank" rel="noopener">NIH F31 (Predoctoral Fellowship)</a> &mdash; National Institutes of Health. Grad/PhD &middot; Fellowship. Varies (NIH NRSA stipend levels; FY2026 predoctoral ~$29,364/yr) plus tuition. US citizens, nationals &amp; permanent residents; PhD students.</li>
+          <li><a href="https://www.hertzfoundation.org/the-fellowship/" target="_blank" rel="noopener">Hertz Fellowship</a> &mdash; Fannie and John Hertz Foundation. Grad/PhD &middot; Fellowship. Up to $250,000 total over up to 5 years. US citizens &amp; permanent residents; first- or second-year PhD students in the applied physical and biological sciences, math or engineering.</li>
+          <li><a href="https://www.pdsoros.org/" target="_blank" rel="noopener">Paul &amp; Daisy Soros Fellowships for New Americans</a> &mdash; Paul &amp; Daisy Soros Fellowships for New Americans. Grad/PhD &middot; Fellowship. Up to $25,000/yr stipend plus up to half of tuition (2 years). Immigrants and children of immigrants (New Americans), age 30 or under; graduate or professional study in any field.</li>
+          <li><a href="https://sites.nationalacademies.org/pga/fordfellowships" target="_blank" rel="noopener">Ford Foundation Predoctoral Fellowship</a> &mdash; National Academies, on behalf of the Ford Foundation. Grad/PhD &middot; Fellowship. $27,000/yr for 3 years. US citizens, nationals, permanent residents, DACA recipients and others; PhD/ScD students committed to a faculty career.</li>
+          <li><a href="https://www.gatescambridge.org/" target="_blank" rel="noopener">Gates Cambridge Scholarship</a> &mdash; Gates Cambridge Trust, University of Cambridge. Grad/PhD &middot; Scholarship. Full cost of study plus a living stipend, travel and allowances. Citizens of any country outside the UK; full-time postgraduate study at Cambridge.</li>
+          <li><a href="https://www.rhodeshouse.ox.ac.uk/office-of-the-american-secretary/" target="_blank" rel="noopener">Rhodes Scholarship (US)</a> &mdash; The Rhodes Trust, University of Oxford. Grad/PhD &middot; Scholarship. Full funding (university and college fees, living stipend and travel). US citizens and long-term permanent residents; graduating seniors or recent graduates.</li>
+          <li><a href="https://www.marshallscholarship.org/" target="_blank" rel="noopener">Marshall Scholarship</a> &mdash; Marshall Aid Commemoration Commission (UK government). Grad/PhD &middot; Scholarship. Full funding (fees, living stipend, book and travel grants); 1-2 years. US citizens with a GPA of at least 3.7; graduating seniors or recent graduates for study in the UK.</li>
+          <li><a href="https://us.fulbrightonline.org/" target="_blank" rel="noopener">Fulbright US Student Program</a> &mdash; US Department of State (administered by IIE). Grad/PhD &middot; Fellowship. Varies by host country (travel, a living stipend and related costs). US citizens without a PhD; graduating seniors, graduate students and recent graduates.</li>
+          <li><a href="https://grants.nih.gov/funding/activity-codes/F32" target="_blank" rel="noopener">NIH F32 (Postdoctoral Fellowship)</a> &mdash; National Institutes of Health. Postdoc &middot; Fellowship. Varies (NIH NRSA postdoctoral stipend levels; up to 3 years). US citizens, nationals &amp; permanent residents; postdoctoral trainees.</li>
+          <li><a href="https://grants.nih.gov/funding/activity-codes/K99" target="_blank" rel="noopener">NIH K99/R00 (Pathway to Independence Award)</a> &mdash; National Institutes of Health. Postdoc, Faculty &middot; Grant. Varies (mentored K99 phase 1-2 years; independent R00 phase up to 3 years). Open to citizens and non-citizens; postdocs with no more than 4 years of postdoctoral experience.</li>
+          <li><a href="https://www.hhmi.org/programs/hanna-h-gray-fellows-program" target="_blank" rel="noopener">HHMI Hanna H. Gray Fellows Program</a> &mdash; Howard Hughes Medical Institute. Postdoc, Faculty &middot; Fellowship. Varies (salary plus expenses in the postdoc phase; grant to the institution in the faculty phase). Open to those with US work authorization; early postdocs from backgrounds underrepresented in science.</li>
+          <li><a href="https://hhwf.org/research-fellowship/" target="_blank" rel="noopener">Helen Hay Whitney Postdoctoral Fellowship</a> &mdash; Helen Hay Whitney Foundation. Postdoc &middot; Fellowship. Stipend of $73,000 / $75,000 / $77,000 across 3 years, plus allowances. All nationalities (non-US citizens must work in a US lab); early postdocs in basic biomedical science.</li>
+          <li><a href="https://www.jccfund.org/" target="_blank" rel="noopener">Jane Coffin Childs Postdoctoral Fellowship</a> &mdash; Jane Coffin Childs Memorial Fund for Medical Research. Postdoc &middot; Fellowship. Stipend of $72,000 / $74,000 / $76,000 across 3 years, plus allowances. All nationalities (non-US citizens must work in a US lab); early postdocs.</li>
+          <li><a href="https://lsrf.org/apply/" target="_blank" rel="noopener">Life Sciences Research Foundation Fellowship</a> &mdash; Life Sciences Research Foundation. Postdoc &middot; Fellowship. $85,000/yr for 3 years ($255,000 total, paid to the host institution). US and non-US citizens (non-US citizens must work in a US lab); postdocs within 5 years of the PhD, starting in a new lab.</li>
+          <li><a href="https://www.bwfund.org/grants/interfaces-in-science/career-awards-at-the-scientific-interface/" target="_blank" rel="noopener">Burroughs Wellcome Career Awards at the Scientific Interface (CASI)</a> &mdash; Burroughs Wellcome Fund. Postdoc, Faculty &middot; Grant. Up to $560,000 over 5 years (bridges late postdoc and first faculty years). US/Canada citizens, permanent and temporary residents on a valid visa; postdocs with a physical, mathematical, computational or engineering PhD.</li>
+          <li><a href="https://www.aaas.org/programs/loreal-usa-women-science" target="_blank" rel="noopener">L&#39;Oreal USA For Women in Science Fellowship</a> &mdash; L&#39;Oreal USA (administered by AAAS). Postdoc &middot; Fellowship. $75,000 (five fellows per year). US citizens and permanent residents; women postdocs at US institutions.</li>
+          <li><a href="https://www.bbrfoundation.org/grants-prizes/narsad-young-investigator-grants" target="_blank" rel="noopener">BBRF Young Investigator Grant</a> &mdash; Brain &amp; Behavior Research Foundation. Postdoc, Faculty &middot; Grant. Up to $35,000/yr for 2 years ($70,000 total). US and international institutions; advanced postdocs, instructors and assistant professors in brain-disorder research.</li>
+          <li><a href="https://www.mcknight.org/programs/the-mcknight-endowment-fund-for-neuroscience/scholar-awards/" target="_blank" rel="noopener">McKnight Scholar Award</a> &mdash; McKnight Endowment Fund for Neuroscience. Faculty &middot; Grant. $75,000/yr for 3 years ($225,000 total). US not-for-profit institutions; early-career neuroscience faculty establishing an independent lab.</li>
+          <li><a href="https://klingenstein.org/esther-a-joseph-klingenstein-fund/neuroscience/applying/" target="_blank" rel="noopener">Klingenstein-Simons Fellowship Awards in the Neurosciences</a> &mdash; Klingenstein Philanthropies &amp; the Simons Foundation. Faculty &middot; Fellowship. $150,000/yr for 3 years ($450,000 total) per the current official page. Research at a US institution; early-career neuroscience faculty within 4 years of completing training.</li>
+          <li><a href="https://www.whitehall.org/grants/" target="_blank" rel="noopener">Whitehall Foundation Research Grants</a> &mdash; The Whitehall Foundation. Faculty &middot; Grant. Research Grants up to $100,000/yr for 2-3 years; Grants-in-Aid up to $30,000 for 1 year. US institutions; independent investigators (a Grants-in-Aid track serves new assistant professors).</li>
+          <li><a href="https://www.searlescholars.org/" target="_blank" rel="noopener">Searle Scholars Program</a> &mdash; Searle Scholars Program (Kinship Foundation). Faculty &middot; Grant. $450,000 over 3 years ($150,000/yr). By institutional nomination only; first-time independent assistant professors in biomedical science, including neuroscience.</li>
+          <li><a href="https://sloan.org/fellowships" target="_blank" rel="noopener">Sloan Research Fellowships</a> &mdash; Alfred P. Sloan Foundation. Faculty &middot; Fellowship. $75,000 over 2 years (flexible, paid as a lump sum). US or Canadian faculty; tenure-track but untenured early-career researchers (neuroscience is an eligible field).</li>
+          <li><a href="https://ritaallen.org/scholars/about-the-rita-allen-foundation-scholars/" target="_blank" rel="noopener">Rita Allen Foundation Scholars</a> &mdash; Rita Allen Foundation. Faculty &middot; Grant. Up to $110,000/yr for up to 5 years (direct costs). By invitation/nomination; early-career faculty in neuroscience (or cancer and immunology) with committed startup support.</li>
+          <li><a href="https://grassfoundation.org/fellowship-overview/" target="_blank" rel="noopener">Grass Fellowship in Neuroscience</a> &mdash; The Grass Foundation (at the Marine Biological Laboratory). Grad/PhD, Postdoc, Faculty &middot; Fellowship. Total value around $50,000 (stipend, a $5,000 research budget, MBL housing and travel). All nationalities (non-US citizens need a valid visa); late-stage PhD students, postdocs and junior faculty.</li>
+          <li><a href="https://www.aan.com/research/clinical-research-training-scholarships" target="_blank" rel="noopener">AAN Clinical Research Training Scholarship</a> &mdash; American Academy of Neurology &amp; American Brain Foundation. Postdoc, Faculty &middot; Fellowship. $150,000 over 2 years ($65,000/yr plus a $10,000/yr education stipend). US and international institutions; MD/PhD clinician-scientists within 5 years of completing training.</li>
+          <li><a href="https://www.alz.org/research/for_researchers/grants/types-of-grants/aarfa" target="_blank" rel="noopener">Alzheimer&#39;s Association Research Fellowship (AARFA)</a> &mdash; Alzheimer&#39;s Association. Postdoc &middot; Fellowship. Up to $200,000 over 2-3 years (includes a $20,000 dissemination stipend). Any country; postdocs not yet in a faculty position, within 10 years of the doctorate.</li>
+          <li><a href="https://www.sfari.org/grant/" target="_blank" rel="noopener">SFARI Research Funding</a> &mdash; Simons Foundation (SFARI). Postdoc, Faculty &middot; Grant. Varies by award (for example, New Ideas up to $600,000 over 2 years). Funds flow through the applicant&#39;s institution; career stage depends on the mechanism.</li>
+          <li><a href="https://www.thebrf.org/seed-grants/" target="_blank" rel="noopener">Brain Research Foundation Seed Grant</a> &mdash; Brain Research Foundation. Faculty &middot; Grant. Up to $100,000 in direct costs over 2 years. By institutional invitation; US assistant or associate professors working on brain function.</li>
+          <li><a href="https://www.sfn.org/meetings/meeting-awards/trainee-professional-development-award" target="_blank" rel="noopener">SfN Trainee Professional Development Award (TPDA)</a> &mdash; Society for Neuroscience. Undergrad, Grad/PhD, Postdoc, Travel/trainee &middot; Travel award. $1,000 (US/Canada/Mexico) or $2,500 (elsewhere) travel stipend, plus meeting registration. SfN members presenting an abstract at the annual meeting; undergraduate, graduate, post-baccalaureate and postdoctoral trainees.</li>
+          <li><a href="https://www.astronautscholarship.org/programs/astronaut-scholarship/" target="_blank" rel="noopener">Astronaut Scholarship</a> &mdash; Astronaut Scholarship Foundation. Undergrad &middot; Scholarship. Up to $15,000. US citizens (native-born or naturalized); sophomores and juniors in science, technology, engineering or math at a participating university.</li>
+          <li><a href="https://www.beckman-foundation.org/programs/beckman-scholars/" target="_blank" rel="noopener">Beckman Scholars Program</a> &mdash; Arnold and Mabel Beckman Foundation. Undergrad &middot; Scholarship. Around $21,000 to the scholar over 15 months (varies by institution; schools also receive mentor support). Undergraduates at invited US colleges in chemistry, biochemistry or the biological sciences; chosen through each school&#39;s own program.</li>
+          <li><a href="https://ndseg.sysplus.com/" target="_blank" rel="noopener">NDSEG Fellowship</a> &mdash; US Department of Defense (administered by Systems Plus). Grad/PhD &middot; Fellowship. Full tuition and fees, a monthly stipend, plus a health insurance allowance (3 years). US citizens, dual citizens and nationals; graduating seniors and early PhD students in supported science and engineering fields.</li>
+          <li><a href="https://www.krellinst.org/csgf/" target="_blank" rel="noopener">DOE Computational Science Graduate Fellowship (CSGF)</a> &mdash; US Department of Energy (administered by the Krell Institute). Grad/PhD &middot; Fellowship. $45,000/yr stipend plus full tuition and fees and a yearly allowance (up to 4 years). US citizens and permanent residents; senior undergraduates and early PhD students using computing across the sciences and engineering.</li>
+          <li><a href="https://www.damonrunyon.org/for-scientists/application-guidelines/fellowship" target="_blank" rel="noopener">Damon Runyon Postdoctoral Fellowship</a> &mdash; Damon Runyon Cancer Research Foundation. Postdoc &middot; Fellowship. Stipend rising from $70,000 to $76,000 across 4 years, plus a yearly expense allowance. Any nationality (non-US citizens must train in the US); early postdocs within about 18 months of the doctorate, starting in a new lab.</li>
+          <li><a href="https://www.mcknight.org/programs/the-mcknight-endowment-fund-for-neuroscience/technology-awards/" target="_blank" rel="noopener">McKnight Technological Innovations in Neuroscience Award</a> &mdash; McKnight Endowment Fund for Neuroscience. Faculty &middot; Grant. Up to $200,000 over 2 years. Independent investigators (assistant professor or above) at US not-for-profit institutions.</li>
+          <li><a href="https://www.michaeljfox.org/funding-opportunities" target="_blank" rel="noopener">Michael J. Fox Foundation Research Grants</a> &mdash; The Michael J. Fox Foundation for Parkinson&#39;s Research. Postdoc, Faculty &middot; Grant. Varies by program (fellowships and research grants from tens of thousands to several million dollars). Academic and industry researchers; career stage depends on the program, from early-career fellowships to established-investigator grants.</li>
+          <li><a href="https://www.nationalmssociety.org/For-Professionals/Researchers" target="_blank" rel="noopener">National MS Society Research Grants and Fellowships</a> &mdash; National Multiple Sclerosis Society. Postdoc, Faculty &middot; Grant. Varies by program (postdoctoral fellowships, a career transition award around $600,000, and investigator-initiated grants). MD, PhD or equivalent; postdocs apply for fellowships and faculty for research grants, with work tied to the Pathways to MS Cures roadmap.</li>
+          <li><a href="https://www.als.org/research/funding-opportunities" target="_blank" rel="noopener">ALS Association Research Grants</a> &mdash; The ALS Association. Postdoc, Faculty &middot; Grant. Varies by program (Milton Safenowitz postdoc fellowship up to $50,000/yr for 2 years; investigator grants up to $100,000/yr). US and international institutions; the Safenowitz fellowship is for early postdocs, other grants for independent investigators.</li>
+          <li><a href="https://aesnet.org/research-funding/funding/apply" target="_blank" rel="noopener">American Epilepsy Society Research Awards</a> &mdash; American Epilepsy Society. Grad/PhD, Postdoc, Faculty &middot; Grant. Varies by program (predoctoral up to $30,000; postdoctoral up to $50,000; junior-investigator and clinician awards up to $75,000). Research must be done at a US institution (applicants need not be US citizens); awards span doctoral students through early faculty.</li>
+          <li><a href="https://www.brightfocus.org/apply" target="_blank" rel="noopener">BrightFocus Foundation Research Grants</a> &mdash; BrightFocus Foundation. Postdoc, Faculty &middot; Grant. Varies by program (postdoctoral fellowships and new-investigator grants across its three disease areas). Researchers in the US and abroad; postdoctoral fellows through independent faculty.</li>
+          <li><a href="https://www.parkinson.org/advancing-research/for-researchers" target="_blank" rel="noopener">Parkinson&#39;s Foundation Research Awards</a> &mdash; Parkinson&#39;s Foundation. Postdoc, Faculty &middot; Fellowship. Varies by program (postdoctoral fellowships, the Launch Award, and the Stanley Fahn Junior Faculty Award up to $300,000). Postdocs fresh from a PhD or neurology residency, and junior faculty who meet the NIH new-investigator definition.</li>
+          <li><a href="https://autismsciencefoundation.org/grants-awards-fellowships/" target="_blank" rel="noopener">Autism Science Foundation Fellowships</a> &mdash; Autism Science Foundation. Undergrad, Grad/PhD, Postdoc &middot; Fellowship. Varies by level (undergraduate summer award around $4,000; pre- and postdoctoral fellowships larger). Undergraduates, PhD and medical students, and postdocs doing autism-related research; priority for applicants from underrepresented groups.</li>
+          <li><a href="https://www.pew.org/en/projects/pew-biomedical-scholars/program-details" target="_blank" rel="noopener">Pew Biomedical Scholars</a> &mdash; The Pew Charitable Trusts. Faculty &middot; Grant. $300,000 over 4 years ($75,000/yr). By institutional nomination; new assistant professors running an independent lab in the biomedical sciences (neuroscience included).</li>
+          <li><a href="https://www.packard.org/what-we-fund/conservation-and-science/packard-fellowships-for-science-and-engineering/" target="_blank" rel="noopener">Packard Fellowships for Science and Engineering</a> &mdash; The David and Lucile Packard Foundation. Faculty &middot; Fellowship. $875,000 over 5 years. By nomination from 50 invited universities; faculty within the first three years of their careers in the natural sciences or engineering.</li>
+          <li><a href="https://alleninstitute.org/division/frontiers-group/distinguished-investigators/" target="_blank" rel="noopener">Allen Distinguished Investigators</a> &mdash; The Paul G. Allen Frontiers Group (Allen Institute). Faculty &middot; Grant. $1 million to $1.5 million over 3 years. Independent investigators at eligible US and international institutions, as individuals or teams; by open call or invitation.</li>
+          <li><a href="https://www.beckman-foundation.org/programs/beckman-young-investigator/" target="_blank" rel="noopener">Arnold O. Beckman Young Investigator Program</a> &mdash; Arnold and Mabel Beckman Foundation. Faculty &middot; Grant. Around $600,000 over 4 years ($150,000/yr). US citizens and permanent residents in the first years of a tenure-track post in the chemical and life sciences; limited existing external funding.</li>
+          <li><a href="https://grants.nih.gov/funding/activity-codes/K08" target="_blank" rel="noopener">NIH K08 / K23 (Mentored Clinical Scientist Career Development Awards)</a> &mdash; National Institutes of Health. Postdoc, Faculty &middot; Grant. Varies (salary plus research support for 3-5 years). Clinically trained investigators (MD, DO, PharmD, DVM or equivalent) on a faculty track; K08 for lab or translational work, K23 for patient-oriented research.</li>
+          <li><a href="https://www.simonsfoundation.org/grant/simons-society-of-fellows/" target="_blank" rel="noopener">Junior Fellows of the Simons Society of Fellows</a> &mdash; Simons Foundation. Postdoc &middot; Fellowship. Stipend around $102,800 plus a $10,000/yr research allowance (up to 3 years). By nomination only; early postdocs appointed at a New York City institution, with no concurrent fellowship or tenure-track post.</li>
+        </ul>
+      </noscript>
+    </div>
+  </main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div>
+        <p class="foot__name">The Neuroscience Review</p>
+        <p class="foot__rule">The rigor of a journal. The readability of a Sunday paper.</p>
+        <nav class="foot__nav" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="posts.html">Articles</a>
+          <a href="news.html">News</a>
+          <a href="lab.html">Lab</a>
+          <a href="commons.html">The Commons</a>
+          <a href="#subscribe">Subscribe</a>
+          <a href="search.html">Search</a>
+        </nav>
+      </div>
+      <div class="foot__subscribe">
+        <div class="subscribe" id="subscribe">
+          <p class="subscribe__h">The Wednesday brief</p>
+          <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
+            <button type="submit" class="btn">Subscribe free</button>
+          </form>
+          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+        </div>
+      </div>
+    </div>
+    <p class="foot__links">
+      <a href="start-here.html">Start here</a> ·
+      <a href="topics.html">Topics</a> ·
+      <a href="about.html">About</a> ·
+      <a href="contribute.html">Submissions</a> ·
+      <a href="brain-myths.html">Brain myths</a> ·
+      <a href="trust.html">How we fact-check</a> ·
+      <a href="privacy.html">Privacy</a> ·
+      <a href="terms.html">Terms</a> ·
+      <a href="disclaimer.html">Disclaimer</a>
+    </p>
+    <p class="foot__fine">The Neuroscience Review is an independent neuroscience review, written for curious readers who want the actual science. Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>. &copy; 2026 The Neuroscience Review.</p>
+    <p class="foot__fine">Neuron photo by <a href="https://commons.wikimedia.org/wiki/File:Cultured_Rat_Hippocampal_Neuron_(24327909026).jpg" target="_blank" rel="noopener">ZEISS Microscopy</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>. fMRI scan by <a href="https://commons.wikimedia.org/wiki/File:FMRI_BOLD_activation_in_an_emotional_Stroop_task.jpg" target="_blank" rel="noopener">Ovaysikia et al.</a>, <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>.</p>
+  </div>
+</footer>
+<!-- Theme toggle: reflect the current mode (moon in light, sun in dark) -->
+<script>
+(function(){
+  var btn=document.getElementById('theme-toggle');
+  if(!btn)return;
+  var root=document.documentElement;
+  function current(){
+    var t=root.getAttribute('data-theme');
+    if(t==='dark'||t==='light')return t;
+    try{return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}
+  }
+  function sync(){
+    var dark=current()==='dark';
+    btn.textContent=dark?'☀':'☾';
+    btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+    btn.setAttribute('aria-pressed',dark?'true':'false');
+  }
+  btn.addEventListener('click',function(){
+    var n=current()==='dark'?'light':'dark';
+    root.setAttribute('data-theme',n);
+    try{localStorage.setItem('theme',n);}catch(e){}
+    sync();
+  });
+  sync();
+})();
+(function(){
+  var triggers=[].slice.call(document.querySelectorAll('.nav__trigger'));
+  if(!triggers.length)return;
+  var pairs=triggers.map(function(t){return {t:t,m:document.getElementById(t.getAttribute('aria-controls'))};}).filter(function(p){return p.m;});
+  function closeAll(){pairs.forEach(function(p){p.m.hidden=true;p.t.setAttribute('aria-expanded','false');});}
+  pairs.forEach(function(p){
+    p.t.addEventListener('click',function(e){e.stopPropagation();var wasOpen=!p.m.hidden;closeAll();if(!wasOpen){p.m.hidden=false;p.t.setAttribute('aria-expanded','true');}});
+    p.m.addEventListener('click',function(e){e.stopPropagation();});
+  });
+  document.addEventListener('click',function(){closeAll();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=pairs.filter(function(p){return p.t.getAttribute('aria-expanded')==='true';})[0];closeAll();if(o){o.t.focus();}}});
+})();
+</script>
+<!-- Neuro Funding Finder: data is the single source of truth; cards are rendered and filtered client-side. -->
+<script>
+(function(){
+  "use strict";
+  var DATA = [
+    { name: "Goldwater Scholarship", sponsor: "Barry Goldwater Scholarship Foundation", url: "https://goldwaterscholarship.gov/", stage: ["Undergrad"], type: "Scholarship", amount: "Up to $7,500/yr", eligibility: "US citizens, nationals & permanent residents; sophomores and juniors in science, math or engineering", deadline: "Annual; national deadline late January (campus deadlines earlier)", desc: "For sophomores and juniors headed for a research career in science, math or engineering; helps cover undergraduate costs." },
+    { name: "Amgen Scholars Program", sponsor: "Amgen Foundation (US program administered by Harvard)", url: "https://amgenscholars.com/us-program", stage: ["Undergrad"], type: "Fellowship", amount: "Varies by host; stipend plus housing, meals and travel", eligibility: "US citizens & permanent residents; undergraduates (GPA 3.2+) considering a science PhD or MD-PhD", deadline: "Annual; applications typically due early February", desc: "A paid summer in a lab at a major research university, for undergraduates weighing a science PhD or MD-PhD." },
+    { name: "NSF Research Experiences for Undergraduates (REU)", sponsor: "US National Science Foundation", url: "https://www.nsf.gov/funding/opportunities/reu-research-experiences-undergraduates", stage: ["Undergrad"], type: "Fellowship", amount: "Varies by site (stipend; sites often add housing and travel)", eligibility: "US citizens, nationals & permanent residents; enrolled undergraduates", deadline: "Rolling; each host site sets its own deadline (many winter or early spring)", desc: "Paid summer research placements that put undergraduates on real projects at host sites across the country; you apply to individual sites." },
+    { name: "Churchill Scholarship", sponsor: "Winston Churchill Foundation of the USA", url: "https://www.winstonchurchillfoundation.org/", stage: ["Undergrad","Grad/PhD"], type: "Scholarship", amount: "Full costs (recently valued over $80,000; varies with exchange rate)", eligibility: "US citizens only; graduating seniors or recent graduates in science, math or engineering", deadline: "Annual; national deadline in early November (campus deadlines earlier)", desc: "Sends outstanding US STEM seniors to the University of Cambridge for a funded year of graduate study." },
+    { name: "HHMI Cech Fellows (Summer Undergraduate Research)", sponsor: "Howard Hughes Medical Institute", url: "https://www.hhmi.org/programs/cech-fellows", stage: ["Undergrad"], type: "Fellowship", amount: "Varies (summer stipend plus housing and travel)", eligibility: "Open to anyone with US work authorization; rising juniors and seniors in the life sciences", deadline: "Annual; opens mid-November, closes mid-to-late December", desc: "A paid nine-week summer placement in an HHMI lab or at Janelia, for life-science undergraduates." },
+    { name: "NSF Graduate Research Fellowship (GRFP)", sponsor: "US National Science Foundation", url: "https://www.nsf.gov/funding/initiatives/grfp", stage: ["Grad/PhD"], type: "Fellowship", amount: "$37,000/yr stipend plus $16,000/yr tuition allowance (3 years of support)", eligibility: "US citizens, nationals & permanent residents; early-stage graduate students in STEM, including neuroscience", deadline: "Annual; deadlines typically in October (set by field)", desc: "The flagship US fellowship for early graduate students in STEM; funds a stipend plus tuition for research-based study." },
+    { name: "NIH F30 (MD/PhD Predoctoral Fellowship)", sponsor: "National Institutes of Health", url: "https://grants.nih.gov/funding/activity-codes/F30", stage: ["Grad/PhD"], type: "Fellowship", amount: "Varies (NIH NRSA stipend levels; FY2026 predoctoral ~$29,364/yr) plus tuition", eligibility: "US citizens, nationals & permanent residents; dual-degree (MD/PhD) students", deadline: "Annual; three standard cycles (typically April / August / December)", desc: "Supports MD/PhD students' mentored research training during the PhD phase, with stipend and tuition." },
+    { name: "NIH F31 (Predoctoral Fellowship)", sponsor: "National Institutes of Health", url: "https://grants.nih.gov/funding/activity-codes/F31", stage: ["Grad/PhD"], type: "Fellowship", amount: "Varies (NIH NRSA stipend levels; FY2026 predoctoral ~$29,364/yr) plus tuition", eligibility: "US citizens, nationals & permanent residents; PhD students", deadline: "Annual; three standard cycles (typically April / August / December)", desc: "Supports a PhD student's mentored dissertation research and training, with stipend and tuition." },
+    { name: "Hertz Fellowship", sponsor: "Fannie and John Hertz Foundation", url: "https://www.hertzfoundation.org/the-fellowship/", stage: ["Grad/PhD"], type: "Fellowship", amount: "Up to $250,000 total over up to 5 years", eligibility: "US citizens & permanent residents; first- or second-year PhD students in the applied physical and biological sciences, math or engineering", deadline: "Annual; applications typically close in late October", desc: "Gives PhD students in the applied sciences broad freedom to pursue their research, for up to five years." },
+    { name: "Paul & Daisy Soros Fellowships for New Americans", sponsor: "Paul & Daisy Soros Fellowships for New Americans", url: "https://www.pdsoros.org/", stage: ["Grad/PhD"], type: "Fellowship", amount: "Up to $25,000/yr stipend plus up to half of tuition (2 years)", eligibility: "Immigrants and children of immigrants (New Americans), age 30 or under; graduate or professional study in any field", deadline: "Annual; deadline typically in late October", desc: "Funds graduate or professional study in any field for immigrants and the children of immigrants." },
+    { name: "Ford Foundation Predoctoral Fellowship", sponsor: "National Academies, on behalf of the Ford Foundation", url: "https://sites.nationalacademies.org/pga/fordfellowships", stage: ["Grad/PhD"], type: "Fellowship", amount: "$27,000/yr for 3 years", eligibility: "US citizens, nationals, permanent residents, DACA recipients and others; PhD/ScD students committed to a faculty career", deadline: "Annual; applications typically due in mid-December", desc: "Three years of support for PhD students committed to a career teaching and researching at the university level." },
+    { name: "Gates Cambridge Scholarship", sponsor: "Gates Cambridge Trust, University of Cambridge", url: "https://www.gatescambridge.org/", stage: ["Grad/PhD"], type: "Scholarship", amount: "Full cost of study plus a living stipend, travel and allowances", eligibility: "Citizens of any country outside the UK; full-time postgraduate study at Cambridge", deadline: "Annual; US applicants typically mid-October, others December-January", desc: "Full-cost postgraduate study at Cambridge for non-UK citizens, chosen for scholarship and leadership." },
+    { name: "Rhodes Scholarship (US)", sponsor: "The Rhodes Trust, University of Oxford", url: "https://www.rhodeshouse.ox.ac.uk/office-of-the-american-secretary/", stage: ["Grad/PhD"], type: "Scholarship", amount: "Full funding (university and college fees, living stipend and travel)", eligibility: "US citizens and long-term permanent residents; graduating seniors or recent graduates", deadline: "Annual; national deadline in early October (campus deadlines earlier)", desc: "Fully funded postgraduate study at the University of Oxford for US citizens and permanent residents." },
+    { name: "Marshall Scholarship", sponsor: "Marshall Aid Commemoration Commission (UK government)", url: "https://www.marshallscholarship.org/", stage: ["Grad/PhD"], type: "Scholarship", amount: "Full funding (fees, living stipend, book and travel grants); 1-2 years", eligibility: "US citizens with a GPA of at least 3.7; graduating seniors or recent graduates for study in the UK", deadline: "Annual; early autumn (campus deadlines in September)", desc: "UK-government funding for up to three years of graduate study at any British university." },
+    { name: "Fulbright US Student Program", sponsor: "US Department of State (administered by IIE)", url: "https://us.fulbrightonline.org/", stage: ["Grad/PhD"], type: "Fellowship", amount: "Varies by host country (travel, a living stipend and related costs)", eligibility: "US citizens without a PhD; graduating seniors, graduate students and recent graduates", deadline: "Annual; national deadline typically in early October", desc: "Funds a year of study, research or English teaching abroad for US citizens." },
+    { name: "NIH F32 (Postdoctoral Fellowship)", sponsor: "National Institutes of Health", url: "https://grants.nih.gov/funding/activity-codes/F32", stage: ["Postdoc"], type: "Fellowship", amount: "Varies (NIH NRSA postdoctoral stipend levels; up to 3 years)", eligibility: "US citizens, nationals & permanent residents; postdoctoral trainees", deadline: "Annual; three standard cycles", desc: "Mentored postdoctoral research training for scientists aiming to become independent investigators." },
+    { name: "NIH K99/R00 (Pathway to Independence Award)", sponsor: "National Institutes of Health", url: "https://grants.nih.gov/funding/activity-codes/K99", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Varies (mentored K99 phase 1-2 years; independent R00 phase up to 3 years)", eligibility: "Open to citizens and non-citizens; postdocs with no more than 4 years of postdoctoral experience", deadline: "Annual; three standard career-award cycles", desc: "Carries outstanding postdocs through their last mentored years and into a first independent faculty position." },
+    { name: "HHMI Hanna H. Gray Fellows Program", sponsor: "Howard Hughes Medical Institute", url: "https://www.hhmi.org/programs/hanna-h-gray-fellows-program", stage: ["Postdoc","Faculty"], type: "Fellowship", amount: "Varies (salary plus expenses in the postdoc phase; grant to the institution in the faculty phase)", eligibility: "Open to those with US work authorization; early postdocs from backgrounds underrepresented in science", deadline: "Biennial (every other year); opens November, closes mid-December", desc: "Supports postdocs from underrepresented backgrounds through training and into independent faculty careers." },
+    { name: "Helen Hay Whitney Postdoctoral Fellowship", sponsor: "Helen Hay Whitney Foundation", url: "https://hhwf.org/research-fellowship/", stage: ["Postdoc"], type: "Fellowship", amount: "Stipend of $73,000 / $75,000 / $77,000 across 3 years, plus allowances", eligibility: "All nationalities (non-US citizens must work in a US lab); early postdocs in basic biomedical science", deadline: "Annual; deadline typically in mid-June", desc: "Three years of stipend support for early postdocs in basic biomedical research." },
+    { name: "Jane Coffin Childs Postdoctoral Fellowship", sponsor: "Jane Coffin Childs Memorial Fund for Medical Research", url: "https://www.jccfund.org/", stage: ["Postdoc"], type: "Fellowship", amount: "Stipend of $72,000 / $74,000 / $76,000 across 3 years, plus allowances", eligibility: "All nationalities (non-US citizens must work in a US lab); early postdocs", deadline: "Annual; deadline typically in early February", desc: "Three years of salary support for postdocs doing fundamental biomedical research relevant to cancer." },
+    { name: "Life Sciences Research Foundation Fellowship", sponsor: "Life Sciences Research Foundation", url: "https://lsrf.org/apply/", stage: ["Postdoc"], type: "Fellowship", amount: "$85,000/yr for 3 years ($255,000 total, paid to the host institution)", eligibility: "US and non-US citizens (non-US citizens must work in a US lab); postdocs within 5 years of the PhD, starting in a new lab", deadline: "Annual; applications typically due October 1", desc: "Three years of stipend and research support for early postdocs starting in a new lab, across the life sciences." },
+    { name: "Burroughs Wellcome Career Awards at the Scientific Interface (CASI)", sponsor: "Burroughs Wellcome Fund", url: "https://www.bwfund.org/grants/interfaces-in-science/career-awards-at-the-scientific-interface/", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Up to $560,000 over 5 years (bridges late postdoc and first faculty years)", eligibility: "US/Canada citizens, permanent and temporary residents on a valid visa; postdocs with a physical, mathematical, computational or engineering PhD", deadline: "Annual; letter of intent mid-August, invited full application mid-January", desc: "Carries researchers from a physical-sciences background into biology and on into their first faculty years." },
+    { name: "L'Oreal USA For Women in Science Fellowship", sponsor: "L'Oreal USA (administered by AAAS)", url: "https://www.aaas.org/programs/loreal-usa-women-science", stage: ["Postdoc"], type: "Fellowship", amount: "$75,000 (five fellows per year)", eligibility: "US citizens and permanent residents; women postdocs at US institutions", deadline: "Annual; deadline typically in mid-February", desc: "Grants for US-based women postdocs to advance their research and their science-outreach work." },
+    { name: "BBRF Young Investigator Grant", sponsor: "Brain & Behavior Research Foundation", url: "https://www.bbrfoundation.org/grants-prizes/narsad-young-investigator-grants", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Up to $35,000/yr for 2 years ($70,000 total)", eligibility: "US and international institutions; advanced postdocs, instructors and assistant professors in brain-disorder research", deadline: "Annual; application window typically opens in late winter", desc: "Pilot funding for early-career scientists studying psychiatric and other brain disorders, to seed larger grants." },
+    { name: "McKnight Scholar Award", sponsor: "McKnight Endowment Fund for Neuroscience", url: "https://www.mcknight.org/programs/the-mcknight-endowment-fund-for-neuroscience/scholar-awards/", stage: ["Faculty"], type: "Grant", amount: "$75,000/yr for 3 years ($225,000 total)", eligibility: "US not-for-profit institutions; early-career neuroscience faculty establishing an independent lab", deadline: "Annual; applications typically open in late summer; awards begin June 1", desc: "Flexible research support for new neuroscience faculty setting up an independent lab." },
+    { name: "Klingenstein-Simons Fellowship Awards in the Neurosciences", sponsor: "Klingenstein Philanthropies & the Simons Foundation", url: "https://klingenstein.org/esther-a-joseph-klingenstein-fund/neuroscience/applying/", stage: ["Faculty"], type: "Fellowship", amount: "$150,000/yr for 3 years ($450,000 total) per the current official page", eligibility: "Research at a US institution; early-career neuroscience faculty within 4 years of completing training", deadline: "Annual; portal opens mid-September, closes around February 1", desc: "Supports young neuroscience faculty doing basic or clinical brain research tied to neurological and psychiatric disease." },
+    { name: "Whitehall Foundation Research Grants", sponsor: "The Whitehall Foundation", url: "https://www.whitehall.org/grants/", stage: ["Faculty"], type: "Grant", amount: "Research Grants up to $100,000/yr for 2-3 years; Grants-in-Aid up to $30,000 for 1 year", eligibility: "US institutions; independent investigators (a Grants-in-Aid track serves new assistant professors)", deadline: "Two cycles per year; letter of intent then invited full application", desc: "Funds basic neurobiology of behavior for independent investigators, with a starter track for new assistant professors." },
+    { name: "Searle Scholars Program", sponsor: "Searle Scholars Program (Kinship Foundation)", url: "https://www.searlescholars.org/", stage: ["Faculty"], type: "Grant", amount: "$450,000 over 3 years ($150,000/yr)", eligibility: "By institutional nomination only; first-time independent assistant professors in biomedical science, including neuroscience", deadline: "Annual; nominations open in June, deadline around September 30", desc: "Research support for first-time independent biomedical faculty, neuroscience included." },
+    { name: "Sloan Research Fellowships", sponsor: "Alfred P. Sloan Foundation", url: "https://sloan.org/fellowships", stage: ["Faculty"], type: "Fellowship", amount: "$75,000 over 2 years (flexible, paid as a lump sum)", eligibility: "US or Canadian faculty; tenure-track but untenured early-career researchers (neuroscience is an eligible field)", deadline: "Annual; nomination deadline in mid-September", desc: "Recognizes outstanding early-career faculty researchers; neuroscience is an eligible field." },
+    { name: "Rita Allen Foundation Scholars", sponsor: "Rita Allen Foundation", url: "https://ritaallen.org/scholars/about-the-rita-allen-foundation-scholars/", stage: ["Faculty"], type: "Grant", amount: "Up to $110,000/yr for up to 5 years (direct costs)", eligibility: "By invitation/nomination; early-career faculty in neuroscience (or cancer and immunology) with committed startup support", deadline: "Annual; letter of inquiry in late summer, full application in mid-October", desc: "Backs early-career faculty pursuing bold, high-risk research in neuroscience, cancer or immunology." },
+    { name: "Grass Fellowship in Neuroscience", sponsor: "The Grass Foundation (at the Marine Biological Laboratory)", url: "https://grassfoundation.org/fellowship-overview/", stage: ["Grad/PhD","Postdoc","Faculty"], type: "Fellowship", amount: "Total value around $50,000 (stipend, a $5,000 research budget, MBL housing and travel)", eligibility: "All nationalities (non-US citizens need a valid visa); late-stage PhD students, postdocs and junior faculty", deadline: "Annual; opens around September 1, deadline around December 1", desc: "Funds a self-directed summer research project at the Marine Biological Laboratory for early-career neuroscientists." },
+    { name: "AAN Clinical Research Training Scholarship", sponsor: "American Academy of Neurology & American Brain Foundation", url: "https://www.aan.com/research/clinical-research-training-scholarships", stage: ["Postdoc","Faculty"], type: "Fellowship", amount: "$150,000 over 2 years ($65,000/yr plus a $10,000/yr education stipend)", eligibility: "US and international institutions; MD/PhD clinician-scientists within 5 years of completing training", deadline: "Annual; applications open around June, deadline around September", desc: "A two-year mentored clinical and translational research-training award for early clinician-scientists in neurology." },
+    { name: "Alzheimer's Association Research Fellowship (AARFA)", sponsor: "Alzheimer's Association", url: "https://www.alz.org/research/for_researchers/grants/types-of-grants/aarfa", stage: ["Postdoc"], type: "Fellowship", amount: "Up to $200,000 over 2-3 years (includes a $20,000 dissemination stipend)", eligibility: "Any country; postdocs not yet in a faculty position, within 10 years of the doctorate", deadline: "Annual; letter of intent in mid-August, full application around October", desc: "A mentored postdoctoral fellowship for researchers studying Alzheimer's disease and dementia." },
+    { name: "SFARI Research Funding", sponsor: "Simons Foundation (SFARI)", url: "https://www.sfari.org/grant/", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Varies by award (for example, New Ideas up to $600,000 over 2 years)", eligibility: "Funds flow through the applicant's institution; career stage depends on the mechanism", deadline: "Periodic; requests for applications are issued through the year (core competitions run annually)", desc: "Peer-reviewed grants and fellowships advancing autism and neurodevelopmental research, from pilots to faculty transitions." },
+    { name: "Brain Research Foundation Seed Grant", sponsor: "Brain Research Foundation", url: "https://www.thebrf.org/seed-grants/", stage: ["Faculty"], type: "Grant", amount: "Up to $100,000 in direct costs over 2 years", eligibility: "By institutional invitation; US assistant or associate professors working on brain function", deadline: "Annual; institutional letter of intent round (summer), then invited full proposals", desc: "Seed funding to help faculty launch a new neuroscience project and attract larger grants." },
+    { name: "SfN Trainee Professional Development Award (TPDA)", sponsor: "Society for Neuroscience", url: "https://www.sfn.org/meetings/meeting-awards/trainee-professional-development-award", stage: ["Undergrad","Grad/PhD","Postdoc","Travel/trainee"], type: "Travel award", amount: "$1,000 (US/Canada/Mexico) or $2,500 (elsewhere) travel stipend, plus meeting registration", eligibility: "SfN members presenting an abstract at the annual meeting; undergraduate, graduate, post-baccalaureate and postdoctoral trainees", deadline: "Annual; application window tied to the SfN meeting (around June)", desc: "A travel and registration award for neuroscience trainees presenting at the SfN annual meeting." },
+    { name: "Astronaut Scholarship", sponsor: "Astronaut Scholarship Foundation", url: "https://www.astronautscholarship.org/programs/astronaut-scholarship/", stage: ["Undergrad"], type: "Scholarship", amount: "Up to $15,000", eligibility: "US citizens (native-born or naturalized); sophomores and juniors in science, technology, engineering or math at a participating university", deadline: "Annual; by faculty nomination, with campus deadlines in late winter (spring national deadline)", desc: "For top STEM sophomores and juniors headed for research, nominated by their university. It covers up to a year of study costs and adds a trip to the foundation's symposium." },
+    { name: "Beckman Scholars Program", sponsor: "Arnold and Mabel Beckman Foundation", url: "https://www.beckman-foundation.org/programs/beckman-scholars/", stage: ["Undergrad"], type: "Scholarship", amount: "Around $21,000 to the scholar over 15 months (varies by institution; schools also receive mentor support)", eligibility: "Undergraduates at invited US colleges in chemistry, biochemistry or the biological sciences; chosen through each school's own program", deadline: "Annual; invited institutions name their scholars each spring (confirm your campus timeline)", desc: "A 15-month mentored research experience across two summers and the year between, for undergraduates in the chemical and life sciences. You apply through your school once it holds an active Beckman award." },
+    { name: "NDSEG Fellowship", sponsor: "US Department of Defense (administered by Systems Plus)", url: "https://ndseg.sysplus.com/", stage: ["Grad/PhD"], type: "Fellowship", amount: "Full tuition and fees, a monthly stipend, plus a health insurance allowance (3 years)", eligibility: "US citizens, dual citizens and nationals; graduating seniors and early PhD students in supported science and engineering fields", deadline: "Annual; the application window typically opens in late summer and closes in the fall", desc: "Three years of full tuition and a stipend for early doctoral students in the sciences and engineering, open to US citizens and nationals. Your research just needs to fit one of the Defense Department's supported topic areas." },
+    { name: "DOE Computational Science Graduate Fellowship (CSGF)", sponsor: "US Department of Energy (administered by the Krell Institute)", url: "https://www.krellinst.org/csgf/", stage: ["Grad/PhD"], type: "Fellowship", amount: "$45,000/yr stipend plus full tuition and fees and a yearly allowance (up to 4 years)", eligibility: "US citizens and permanent residents; senior undergraduates and early PhD students using computing across the sciences and engineering", deadline: "Annual; applications typically open in the fall and close in mid-January", desc: "Four years of support for PhD students who use high-performance computing in their science, with a required practicum at a national lab. It spans the physical, life, computer and engineering sciences." },
+    { name: "Damon Runyon Postdoctoral Fellowship", sponsor: "Damon Runyon Cancer Research Foundation", url: "https://www.damonrunyon.org/for-scientists/application-guidelines/fellowship", stage: ["Postdoc"], type: "Fellowship", amount: "Stipend rising from $70,000 to $76,000 across 4 years, plus a yearly expense allowance", eligibility: "Any nationality (non-US citizens must train in the US); early postdocs within about 18 months of the doctorate, starting in a new lab", deadline: "Annual; deadline typically in mid-August", desc: "Four years of salary support for early postdocs doing basic or translational cancer research, including neuro-oncology. It backs bold projects that go beyond a simple extension of your PhD work." },
+    { name: "McKnight Technological Innovations in Neuroscience Award", sponsor: "McKnight Endowment Fund for Neuroscience", url: "https://www.mcknight.org/programs/the-mcknight-endowment-fund-for-neuroscience/technology-awards/", stage: ["Faculty"], type: "Grant", amount: "Up to $200,000 over 2 years", eligibility: "Independent investigators (assistant professor or above) at US not-for-profit institutions", deadline: "Annual; letter of intent in the fall, full application the following spring", desc: "Funds new tools that help researchers monitor, map or model the brain, from reagents to instruments to software. It's for faculty building technology rather than extending existing methods." },
+    { name: "Michael J. Fox Foundation Research Grants", sponsor: "The Michael J. Fox Foundation for Parkinson's Research", url: "https://www.michaeljfox.org/funding-opportunities", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Varies by program (fellowships and research grants from tens of thousands to several million dollars)", eligibility: "Academic and industry researchers; career stage depends on the program, from early-career fellowships to established-investigator grants", deadline: "Rolling; programs open through the year with their own deadlines", desc: "The largest nonprofit funder of Parkinson's research, with grants spanning basic, translational and clinical work. It runs rolling programs plus a movement-disorders fellowship for clinician-researchers." },
+    { name: "National MS Society Research Grants and Fellowships", sponsor: "National Multiple Sclerosis Society", url: "https://www.nationalmssociety.org/For-Professionals/Researchers", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Varies by program (postdoctoral fellowships, a career transition award around $600,000, and investigator-initiated grants)", eligibility: "MD, PhD or equivalent; postdocs apply for fellowships and faculty for research grants, with work tied to the Pathways to MS Cures roadmap", deadline: "Annual; fellowship and grant cycles typically open in spring with summer deadlines", desc: "A family of awards for multiple sclerosis research, from postdoctoral fellowships to a five-year career transition award to faculty research grants. Most work needs to connect to the society's Pathways to MS Cures roadmap." },
+    { name: "ALS Association Research Grants", sponsor: "The ALS Association", url: "https://www.als.org/research/funding-opportunities", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Varies by program (Milton Safenowitz postdoc fellowship up to $50,000/yr for 2 years; investigator grants up to $100,000/yr)", eligibility: "US and international institutions; the Safenowitz fellowship is for early postdocs, other grants for independent investigators", deadline: "Varies; check the current funding opportunities, some annual and some one-time", desc: "Research funding focused on ALS, from the Milton Safenowitz postdoctoral fellowship to multi-year investigator grants and starter grants for those new to the field." },
+    { name: "American Epilepsy Society Research Awards", sponsor: "American Epilepsy Society", url: "https://aesnet.org/research-funding/funding/apply", stage: ["Grad/PhD","Postdoc","Faculty"], type: "Grant", amount: "Varies by program (predoctoral up to $30,000; postdoctoral up to $50,000; junior-investigator and clinician awards up to $75,000)", eligibility: "Research must be done at a US institution (applicants need not be US citizens); awards span doctoral students through early faculty", deadline: "Annual; early-career deadlines in January, established-investigator deadlines in spring", desc: "A ladder of epilepsy research awards, from predoctoral and postdoctoral fellowships to junior-investigator and seed grants. Each adds a year of AES membership and meeting registration." },
+    { name: "BrightFocus Foundation Research Grants", sponsor: "BrightFocus Foundation", url: "https://www.brightfocus.org/apply", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Varies by program (postdoctoral fellowships and new-investigator grants across its three disease areas)", eligibility: "Researchers in the US and abroad; postdoctoral fellows through independent faculty", deadline: "Annual; each disease program runs its own letter-of-intent and full-application cycle", desc: "Funds high-risk early ideas in Alzheimer's disease, macular degeneration and glaucoma. It backs both postdocs and independent investigators through three separate programs." },
+    { name: "Parkinson's Foundation Research Awards", sponsor: "Parkinson's Foundation", url: "https://www.parkinson.org/advancing-research/for-researchers", stage: ["Postdoc","Faculty"], type: "Fellowship", amount: "Varies by program (postdoctoral fellowships, the Launch Award, and the Stanley Fahn Junior Faculty Award up to $300,000)", eligibility: "Postdocs fresh from a PhD or neurology residency, and junior faculty who meet the NIH new-investigator definition", deadline: "Annual; most awards start with a fall letter of intent and a spring full proposal", desc: "Early-career support for Parkinson's research, from postdoctoral fellowships and a transition-to-independence Launch Award to the Stanley Fahn award for junior faculty." },
+    { name: "Autism Science Foundation Fellowships", sponsor: "Autism Science Foundation", url: "https://autismsciencefoundation.org/grants-awards-fellowships/", stage: ["Undergrad","Grad/PhD","Postdoc"], type: "Fellowship", amount: "Varies by level (undergraduate summer award around $4,000; pre- and postdoctoral fellowships larger)", eligibility: "Undergraduates, PhD and medical students, and postdocs doing autism-related research; priority for applicants from underrepresented groups", deadline: "Annual; undergraduate applications usually close in early spring, trainee fellowships later in the year", desc: "Supports autism research at every early stage, from a funded undergraduate summer project to pre- and postdoctoral training fellowships. The science can range from genetics to services and policy." },
+    { name: "Pew Biomedical Scholars", sponsor: "The Pew Charitable Trusts", url: "https://www.pew.org/en/projects/pew-biomedical-scholars/program-details", stage: ["Faculty"], type: "Grant", amount: "$300,000 over 4 years ($75,000/yr)", eligibility: "By institutional nomination; new assistant professors running an independent lab in the biomedical sciences (neuroscience included)", deadline: "Annual; one nominee per invited institution, with a late-winter national deadline", desc: "Flexible four-year support for early-career faculty whose research could advance human health, neuroscience very much included. Your institution nominates one candidate each year." },
+    { name: "Packard Fellowships for Science and Engineering", sponsor: "The David and Lucile Packard Foundation", url: "https://www.packard.org/what-we-fund/conservation-and-science/packard-fellowships-for-science-and-engineering/", stage: ["Faculty"], type: "Fellowship", amount: "$875,000 over 5 years", eligibility: "By nomination from 50 invited universities; faculty within the first three years of their careers in the natural sciences or engineering", deadline: "Annual; invited institutions nominate two early-career professors each spring", desc: "One of the most generous awards for early-career faculty, giving broad freedom across five years. Neuroscientists on the natural-sciences side are eligible where their university is invited to nominate." },
+    { name: "Allen Distinguished Investigators", sponsor: "The Paul G. Allen Frontiers Group (Allen Institute)", url: "https://alleninstitute.org/division/frontiers-group/distinguished-investigators/", stage: ["Faculty"], type: "Grant", amount: "$1 million to $1.5 million over 3 years", eligibility: "Independent investigators at eligible US and international institutions, as individuals or teams; by open call or invitation", deadline: "Periodic; proposals are invited through open calls (no unsolicited applications)", desc: "Backs early-stage, high-risk research that could reinvent a field and that traditional funders tend to pass over, including bold neuroscience. Individuals and teams can apply." },
+    { name: "Arnold O. Beckman Young Investigator Program", sponsor: "Arnold and Mabel Beckman Foundation", url: "https://www.beckman-foundation.org/programs/beckman-young-investigator/", stage: ["Faculty"], type: "Grant", amount: "Around $600,000 over 4 years ($150,000/yr)", eligibility: "US citizens and permanent residents in the first years of a tenure-track post in the chemical and life sciences; limited existing external funding", deadline: "Annual; letter of intent typically due around August 1", desc: "Research support for new faculty opening bold lines of work in the chemical and life sciences. It favors people who haven't yet landed a major award and doesn't fund clinical trials." },
+    { name: "NIH K08 / K23 (Mentored Clinical Scientist Career Development Awards)", sponsor: "National Institutes of Health", url: "https://grants.nih.gov/funding/activity-codes/K08", stage: ["Postdoc","Faculty"], type: "Grant", amount: "Varies (salary plus research support for 3-5 years)", eligibility: "Clinically trained investigators (MD, DO, PharmD, DVM or equivalent) on a faculty track; K08 for lab or translational work, K23 for patient-oriented research", deadline: "Annual; three standard career-award cycles", desc: "Protected time and salary that carry clinician-scientists through several mentored years toward independence. K08 supports laboratory and translational work, K23 patient-oriented research." },
+    { name: "Junior Fellows of the Simons Society of Fellows", sponsor: "Simons Foundation", url: "https://www.simonsfoundation.org/grant/simons-society-of-fellows/", stage: ["Postdoc"], type: "Fellowship", amount: "Stipend around $102,800 plus a $10,000/yr research allowance (up to 3 years)", eligibility: "By nomination only; early postdocs appointed at a New York City institution, with no concurrent fellowship or tenure-track post", deadline: "Annual; nominations typically due in early fall", desc: "Up to three years of independent postdoctoral research at a New York City institution, with weekly dinners and lectures that bring fellows across fields together. Nomination only." }
+  ];
+
+  var listEl = document.getElementById('funding-list');
+  if(!listEl || !DATA.length){ return; }
+  var stageChipsEl = document.getElementById('stage-chips');
+  var typeChipsEl = document.getElementById('type-chips');
+  var countEl = document.getElementById('funding-count');
+  var emptyEl = document.getElementById('funding-empty');
+  var searchEl = document.getElementById('funding-search');
+  var resetEl = document.getElementById('funding-reset');
+
+  var STAGES = ['Undergrad','Grad/PhD','Postdoc','Faculty','Travel/trainee'];
+  var TYPES  = ['Fellowship','Grant','Scholarship','Travel award','Prize'];
+
+  var activeStages = [];
+  var activeTypes = [];
+  var query = '';
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  // Render every opportunity once, then filtering just toggles .is-hidden.
+  var cards = DATA.map(function(d){
+    var li = document.createElement('li');
+    li.className = 'f-card';
+    var stages = d.stage.slice();
+    var tags = stages.map(function(s){ return '<span class="f-tag">'+esc(s)+'</span>'; })
+      .concat('<span class="f-tag f-tag--type">'+esc(d.type)+'</span>').join('');
+    li.innerHTML =
+      '<h2 class="f-card__name"><a href="'+esc(d.url)+'" target="_blank" rel="noopener">'+esc(d.name)+'</a></h2>'+
+      '<p class="f-card__sponsor">'+esc(d.sponsor)+'</p>'+
+      '<div class="f-card__tags">'+tags+'</div>'+
+      '<p class="f-card__desc">'+esc(d.desc)+'</p>'+
+      '<dl class="f-card__meta">'+
+        '<div><dt>Award</dt><dd>'+esc(d.amount)+'</dd></div>'+
+        '<div><dt>Who</dt><dd>'+esc(d.eligibility)+'</dd></div>'+
+        '<div><dt>Deadline</dt><dd>'+esc(d.deadline)+'</dd></div>'+
+      '</dl>'+
+      '<p class="f-card__foot"><a class="f-card__link" href="'+esc(d.url)+'" target="_blank" rel="noopener">Details &amp; apply &rarr;</a></p>';
+    listEl.appendChild(li);
+    return {
+      el: li,
+      stages: stages,
+      type: d.type,
+      search: (d.name+' '+d.sponsor+' '+d.desc+' '+d.eligibility+' '+stages.join(' ')+' '+d.type).toLowerCase()
+    };
+  });
+
+  function countFor(dim, val){
+    var n = 0;
+    cards.forEach(function(c){
+      if(dim==='stage' ? c.stages.indexOf(val)>-1 : c.type===val){ n++; }
+    });
+    return n;
+  }
+  function buildChips(container, values, dim, activeArr){
+    if(!container){ return; }
+    values.forEach(function(v){
+      var n = countFor(dim, v);
+      if(!n){ return; } // only surface categories that actually have entries
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'f-chip';
+      b.setAttribute('aria-pressed','false');
+      b.innerHTML = esc(v)+'<span class="f-chip__count">'+n+'</span>';
+      b.addEventListener('click', function(){
+        var i = activeArr.indexOf(v);
+        if(i>-1){ activeArr.splice(i,1); b.setAttribute('aria-pressed','false'); }
+        else { activeArr.push(v); b.setAttribute('aria-pressed','true'); }
+        apply();
+      });
+      container.appendChild(b);
+    });
+  }
+  buildChips(stageChipsEl, STAGES, 'stage', activeStages);
+  buildChips(typeChipsEl, TYPES, 'type', activeTypes);
+
+  function apply(){
+    var q = query.trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function(c){
+      var okStage = !activeStages.length || activeStages.some(function(s){ return c.stages.indexOf(s)>-1; });
+      var okType  = !activeTypes.length  || activeTypes.indexOf(c.type)>-1;
+      var okQ     = !q || c.search.indexOf(q)>-1;
+      var show = okStage && okType && okQ;
+      c.el.classList.toggle('is-hidden', !show);
+      if(show){ shown++; }
+    });
+    if(countEl){ countEl.textContent = 'Showing ' + shown + ' of ' + cards.length + (cards.length===1 ? ' opportunity' : ' opportunities'); }
+    if(emptyEl){ emptyEl.hidden = shown > 0; }
+    if(resetEl){ resetEl.hidden = !(q || activeStages.length || activeTypes.length); }
+  }
+
+  if(searchEl){
+    searchEl.addEventListener('input', function(){ query = searchEl.value || ''; apply(); });
+  }
+  if(resetEl){
+    resetEl.addEventListener('click', function(){
+      query = ''; if(searchEl){ searchEl.value = ''; }
+      activeStages.length = 0; activeTypes.length = 0;
+      [].forEach.call(document.querySelectorAll('.f-chip'), function(b){ b.setAttribute('aria-pressed','false'); });
+      apply();
+      if(searchEl){ searchEl.focus(); }
+    });
+  }
+
+  apply();
+})();
+</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script>
+
+<!-- privacy-notice -->
+<style>
+  .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  .privacy-bar.is-visible{transform:translateY(0);}
+  .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
+  .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
+  .privacy-bar__text a{color:var(--accent);text-decoration:underline;}
+  .privacy-bar__btn{font-family:var(--sans);font-weight:600;font-size:12.5px;color:#fff;background:var(--accent);border:0;border-radius:999px;padding:8px 22px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+  .privacy-bar__btn:hover{background:var(--accent-hover);}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .privacy-bar__btn{color:#0b0f12;} }
+  :root[data-theme="dark"] .privacy-bar__btn{color:#0b0f12;}
+  @media(max-width:560px){ .privacy-bar__inner{justify-content:center;text-align:center;} }
+</style>
+<div class="privacy-bar" id="privacy-bar" role="region" aria-label="Privacy notice" hidden>
+  <div class="privacy-bar__inner">
+    <p class="privacy-bar__text">We store your theme in your browser and use only cookieless, privacy-friendly analytics, with no ads and no tracking cookies. See our <a href="privacy.html">privacy notice</a> for the details.</p>
+    <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
+  </div>
+</div>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<!-- /privacy-notice -->
+
+</body>
+</html>

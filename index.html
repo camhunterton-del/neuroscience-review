@@ -147,7 +147,7 @@
     color:var(--muted);
   }
   .utility .wrap{display:flex;justify-content:space-between;align-items:center;min-height:36px;gap:1rem;}
-  .utility__date{text-transform:uppercase;letter-spacing:.1em;}
+  .utility__date{letter-spacing:.02em;}
   .utility__right{display:flex;gap:1.3rem;align-items:center;}
   .utility a{text-decoration:none;color:var(--muted);}
   .utility a:hover{color:var(--accent);}
@@ -359,7 +359,7 @@
 
   /* ---------- Section scaffolding ---------- */
   main{display:block;}
-  .section{padding:clamp(2.2rem,4.5vw,3.4rem) 0;border-bottom:1px solid var(--rule);}
+  .section{padding:clamp(1.5rem,2.6vw,2.1rem) 0;border-bottom:1px solid var(--rule);}
   .section--lede{padding-top:1rem;}
   /* Tonal zones: warm paper band and a faint ink-tinted focal band */
   .section--band{background:var(--bg-tint);}
@@ -378,7 +378,7 @@
     align-items:baseline;
     justify-content:space-between;
     gap:1rem;
-    margin-bottom:1.4rem;
+    margin-bottom:1.1rem;
   }
   .section-head h2{
     font-family:var(--serif);
@@ -430,7 +430,7 @@
     border-left:1px solid var(--rule);
     padding-left:clamp(1.3rem,2.2vw,2.3rem);
   }
-  .front__more{margin-top:1.2rem;}
+  .front__more{margin-top:.85rem;}
 
   /* FEATURED lead (the big story on the left) */
   a.feat__figure{display:block;}
@@ -498,6 +498,25 @@
     margin:.3rem 0 0;
   }
 
+  /* FEATURED: "More deep dives" — a compact thumbnail rail that fills the
+     left column down to the middle column's height */
+  .feat__more{
+    margin-top:1.3rem;
+    padding-top:1.1rem;
+    border-top:1px solid var(--rule-strong);
+  }
+  .feat__more-label{
+    font-family:var(--sans);
+    font-size:.68rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--accent);
+    margin:0 0 .55rem;
+  }
+  .feat__more .dive-list a{grid-template-columns:78px 1fr;gap:.8rem;padding:.72rem 0;}
+  .feat__more .dive-list__title{font-size:1.04rem;}
+
   /* DEEP DIVES middle column: a secondary lead over a tight headline list */
   .dive-lead{
     display:block;
@@ -523,10 +542,37 @@
     color:var(--muted);
     font-variant-numeric:tabular-nums;
   }
+  /* Secondary lead carries a full-width photo, like the archive cards */
+  .dive-lead__figure{
+    display:block;
+    aspect-ratio:16/10;
+    margin:0 0 .75rem;
+    border:1px solid var(--rule);
+    background:var(--bg-tint);
+    overflow:hidden;
+  }
+  .dive-lead__figure img{width:100%;height:100%;object-fit:cover;}
   .dive-list{list-style:none;margin:0;padding:0;}
   .dive-list li{border-top:1px solid var(--rule);}
   .dive-list li:first-child{border-top:0;}
-  .dive-list a{display:block;padding:.85rem 0;text-decoration:none;}
+  /* Headline list becomes a thumbnail rail: small photo beside the headline */
+  .dive-list a{
+    display:grid;
+    grid-template-columns:96px 1fr;
+    gap:.85rem;
+    align-items:start;
+    padding:.85rem 0;
+    text-decoration:none;
+  }
+  .dive-list__thumb{
+    display:block;
+    aspect-ratio:4/3;
+    border:1px solid var(--rule);
+    background:var(--bg-tint);
+    overflow:hidden;
+  }
+  .dive-list__thumb img{width:100%;height:100%;object-fit:cover;}
+  .dive-list__text{display:flex;flex-direction:column;min-width:0;}
   .dive-list__title{
     display:block;
     font-family:var(--serif);
@@ -739,10 +785,10 @@
     color:var(--muted);
     margin:0;
   }
-  .lab-cta{margin-top:1.5rem;}
+  .lab-cta{margin-top:1.1rem;}
 
   /* ---------- Footer ---------- */
-  .foot{background:var(--bg-tint);border-top:1px solid var(--rule-strong);padding:clamp(2.2rem,4vw,3rem) 0 2rem;}
+  .foot{background:var(--bg-tint);border-top:1px solid var(--rule-strong);padding:clamp(1.8rem,3vw,2.4rem) 0 2rem;}
   .foot__top{
     display:grid;
     grid-template-columns:1.4fr 1fr;
@@ -798,6 +844,445 @@
   .foot__fine a{color:var(--ink-soft);text-decoration:none;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
+  /* ---------- Reading paths: "Understand the brain" ---------- */
+  .paths{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:clamp(1rem,2.4vw,1.6rem);
+  }
+  .path-card{
+    border:1px solid var(--rule);
+    background:var(--surface);
+    padding:clamp(1.3rem,2.4vw,1.6rem);
+    display:flex;
+    flex-direction:column;
+  }
+  /* Modest header photo, bled to the card edges above the text */
+  .path-card__figure{
+    display:block;
+    margin:calc(-1 * clamp(1.3rem,2.4vw,1.6rem)) calc(-1 * clamp(1.3rem,2.4vw,1.6rem)) clamp(1rem,2vw,1.2rem);
+    aspect-ratio:16/9;
+    border-bottom:1px solid var(--rule);
+    background:var(--bg-tint);
+    overflow:hidden;
+  }
+  .path-card__figure img{width:100%;height:100%;object-fit:cover;}
+  .path-card__title{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(1.2rem,1.9vw,1.4rem);
+    line-height:1.2;
+    letter-spacing:-.01em;
+    margin:0 0 .5rem;
+  }
+  .path-card__title a{color:var(--ink);text-decoration:none;}
+  .path-card__title a:hover{color:var(--accent);}
+  .path-card__desc{
+    font-family:var(--sans);
+    font-size:.9rem;
+    line-height:1.5;
+    color:var(--muted);
+    margin:0 0 1rem;
+  }
+  .path-card__start{
+    font-family:var(--sans);
+    font-size:.8rem;
+    font-weight:600;
+    letter-spacing:.02em;
+    color:var(--accent);
+    text-decoration:none;
+    display:inline-block;
+    line-height:1.4;
+  }
+  .path-card__start:hover{color:var(--accent-hover);text-decoration:underline;}
+  .path-links{
+    list-style:none;
+    margin:1rem 0 0;
+    padding:.95rem 0 0;
+    border-top:1px solid var(--rule);
+  }
+  .path-links__label{
+    display:block;
+    font-family:var(--sans);
+    font-size:.62rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--muted);
+    margin-bottom:.6rem;
+  }
+  .path-links li + li{margin-top:.55rem;}
+  .path-links a{
+    font-family:var(--serif);
+    font-size:1.02rem;
+    line-height:1.26;
+    color:var(--ink);
+    text-decoration:none;
+  }
+  .path-links a:hover{color:var(--accent);}
+  .path-links__kind{
+    font-family:var(--sans);
+    font-size:.62rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--muted);
+    margin-left:.4rem;
+    white-space:nowrap;
+  }
+
+  /* ---------- Feature rows (AI & the Brain) ---------- */
+  .feature-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:clamp(1rem,2.4vw,1.6rem);
+  }
+  .feature-card{
+    border:1px solid var(--rule);
+    background:var(--surface);
+    padding:clamp(1.2rem,2.4vw,1.5rem);
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    gap:.55rem;
+    transition:border-color .15s;
+  }
+  /* Thumbnail bled to the card edges above the kind label */
+  .feature-card__figure{
+    display:block;
+    margin:calc(-1 * clamp(1.2rem,2.4vw,1.5rem)) calc(-1 * clamp(1.2rem,2.4vw,1.5rem)) clamp(.4rem,1.2vw,.6rem);
+    aspect-ratio:16/9;
+    border-bottom:1px solid var(--rule);
+    background:var(--bg-tint);
+    overflow:hidden;
+  }
+  .feature-card__figure img{width:100%;height:100%;object-fit:cover;}
+  .feature-card:hover{border-color:var(--accent);}
+  .feature-card__kind{
+    font-family:var(--sans);
+    font-size:.62rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--label);
+  }
+  .feature-card__title{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:1.16rem;
+    line-height:1.24;
+    letter-spacing:-.01em;
+    color:var(--ink);
+    margin:0;
+  }
+  .feature-card:hover .feature-card__title{color:var(--accent);}
+  .feature-card__meta{
+    font-family:var(--sans);
+    font-size:.74rem;
+    letter-spacing:.03em;
+    color:var(--muted);
+    margin:0;
+    margin-top:auto;
+    padding-top:.35rem;
+  }
+  .ai-scope{
+    font-family:var(--serif);
+    font-size:clamp(1.02rem,1.4vw,1.14rem);
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 1.1rem;
+    max-width:70ch;
+  }
+
+  /* ---------- Try it in the Lab (dark showcase band) ---------- */
+  /* A deliberately dark zone so the interactive previews pop, echoing the Lab's own
+     hero. The shared tokens are rescoped locally so the eyebrow, heading and links
+     stay legible on dark in BOTH light and dark themes. */
+  .section--lab{
+    background:linear-gradient(160deg,#103343 0%,#0c2735 58%,#0a2130 100%);
+    border-bottom-color:#081a26;
+    --ink:#f2f6f8;
+    --ink-soft:#c6d5dc;
+    --muted:#9db2bb;
+    --label:#8ab7ca;
+    --rule:#2a5064;
+    --accent:#8fc9e0;
+    --accent-hover:#b2ddee;
+    color:var(--ink);
+  }
+  .lab-scope{
+    font-family:var(--serif);
+    font-size:clamp(1.02rem,1.4vw,1.14rem);
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 1.2rem;
+    max-width:70ch;
+  }
+  .lab-showcase{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:clamp(1.1rem,2.4vw,1.6rem);
+    align-items:stretch;
+  }
+  /* shared card shell sitting on the dark panel */
+  .lab-feature,.lab-mini{
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.045);
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    transition:border-color .15s,background .15s;
+  }
+  .lab-feature:hover,.lab-mini:hover{border-color:var(--accent);background:rgba(255,255,255,.08);}
+  .lab-feature__figure,.lab-mini__figure{
+    display:block;
+    border-bottom:1px solid rgba(255,255,255,.12);
+    background:#0a1f2b;
+    overflow:hidden;
+  }
+  .lab-mini__figure{aspect-ratio:16/9;}
+  .lab-feature__figure{flex:1;min-height:clamp(220px,26vw,340px);}
+  .lab-feature__figure img,.lab-mini__figure img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .4s ease;
+  }
+  .lab-feature:hover .lab-feature__figure img,
+  .lab-mini:hover .lab-mini__figure img{transform:scale(1.03);}
+  .lab-feature__text{
+    padding:clamp(1.3rem,2.6vw,1.7rem);
+    display:flex;
+    flex-direction:column;
+    gap:.55rem;
+  }
+  .lab-feature__text h3{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(1.4rem,2.4vw,1.8rem);
+    letter-spacing:-.01em;
+    margin:.1rem 0 0;
+    color:var(--ink);
+  }
+  .lab-feature:hover h3{color:var(--accent);}
+  .lab-feature__text p{
+    font-family:var(--sans);
+    font-size:.92rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+    margin:0;
+    max-width:52ch;
+  }
+  .lab-showcase__side{display:flex;flex-direction:column;gap:clamp(1.1rem,2.4vw,1.6rem);}
+  .lab-mini{flex:1;}
+  .lab-mini__text{
+    padding:clamp(1rem,2vw,1.2rem);
+    display:flex;
+    flex-direction:column;
+    gap:.3rem;
+    flex:1;
+  }
+  .lab-mini__text h4{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:1.18rem;
+    letter-spacing:-.01em;
+    margin:.05rem 0 0;
+    color:var(--ink);
+  }
+  .lab-mini:hover h4{color:var(--accent);}
+  .lab-mini__text p{
+    font-family:var(--sans);
+    font-size:.84rem;
+    line-height:1.45;
+    color:var(--muted);
+    margin:0;
+  }
+  .lab-cue{
+    font-family:var(--sans);
+    font-size:.78rem;
+    font-weight:600;
+    letter-spacing:.03em;
+    color:var(--accent);
+    margin-top:auto;
+    padding-top:.55rem;
+  }
+
+  /* ---------- Newsletter band (designed brand panel) ---------- */
+  .nl{
+    display:grid;
+    grid-template-columns:1.25fr 1fr;
+    gap:clamp(1.4rem,4vw,3rem);
+    align-items:center;
+    background:
+      radial-gradient(120% 150% at 100% 0%, rgba(255,255,255,.09) 0%, transparent 55%),
+      linear-gradient(145deg,#1d4c64 0%,#174056 55%,#11394d 100%);
+    border:1px solid #0d3447;
+    border-radius:5px;
+    padding:clamp(1.6rem,4vw,2.8rem);
+  }
+  .nl__copy{min-width:0;}
+  .nl__eyebrow{
+    font-family:var(--sans);
+    font-size:.7rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:#bfe0f0;
+    display:inline-flex;
+    align-items:center;
+    gap:.55rem;
+    margin:0 0 .7rem;
+  }
+  .nl__eyebrow::before{content:"";width:18px;height:1.5px;background:#7fc4de;display:inline-block;}
+  .nl__title{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(1.55rem,3vw,2.1rem);
+    line-height:1.12;
+    letter-spacing:-.01em;
+    color:#ffffff;
+    margin:0 0 .55rem;
+    max-width:16ch;
+  }
+  .nl__sub{
+    font-family:var(--sans);
+    font-size:.95rem;
+    line-height:1.55;
+    color:#d6e7ef;
+    margin:0;
+    max-width:42ch;
+  }
+  .nl__form{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.6rem;
+    max-width:440px;
+    width:100%;
+  }
+  .nl__form input[type=email]{
+    flex:1 1 180px;
+    min-width:0;
+    font-family:var(--sans);
+    font-size:.92rem;
+    padding:.72rem .85rem;
+    border:1px solid rgba(255,255,255,.55);
+    background:#ffffff;
+    color:#15181b;
+    border-radius:2px;
+  }
+  .nl__form input[type=email]::placeholder{color:#8a8f94;}
+  .nl .btn{
+    background:#ffffff;
+    border-color:#ffffff;
+    color:#123f58;
+    padding:.72rem 1.2rem;
+  }
+  .nl .btn:hover{background:#e3f1f8;border-color:#e3f1f8;color:#0e3044;}
+
+  /* ---------- Community row (Commons + Walk) ---------- */
+  .community{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:clamp(1rem,2.4vw,1.6rem);
+    align-items:stretch;
+  }
+  .community-card{
+    border:1px solid var(--rule-strong);
+    background:var(--surface);
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    transition:border-color .15s;
+  }
+  .community-card:hover{border-color:var(--accent);}
+  /* visual header: a photograph for the Walk, an accent graphic for the Commons */
+  .community-card__figure{
+    display:block;
+    aspect-ratio:16/8;
+    border-bottom:1px solid var(--rule);
+    background:var(--bg-tint);
+    overflow:hidden;
+  }
+  .community-card__figure img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .4s ease;
+  }
+  .community-card:hover .community-card__figure img{transform:scale(1.03);}
+  .community-card__panel{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    aspect-ratio:16/8;
+    border-bottom:1px solid var(--rule);
+    color:#bfe0f0;
+    background:
+      radial-gradient(130% 160% at 16% 12%, rgba(255,255,255,.12) 0%, transparent 52%),
+      linear-gradient(140deg,#1d4c64 0%,#15425a 60%,#11394d 100%);
+    overflow:hidden;
+  }
+  .community-card__panel svg{width:clamp(52px,11vw,76px);height:auto;opacity:.95;}
+  .community-card__text{
+    padding:clamp(1.3rem,2.4vw,1.6rem);
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+    flex:1;
+  }
+  .community-card__label{
+    font-family:var(--sans);
+    font-size:.62rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--label);
+  }
+  .community-card__title{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(1.2rem,2vw,1.45rem);
+    line-height:1.2;
+    letter-spacing:-.01em;
+    color:var(--ink);
+    margin:0;
+  }
+  .community-card:hover .community-card__title{color:var(--accent);}
+  .community-card__body{
+    font-family:var(--sans);
+    font-size:.88rem;
+    line-height:1.5;
+    color:var(--muted);
+    margin:0;
+  }
+  .community-facts{
+    list-style:none;
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem .5rem;
+    margin:.15rem 0 0;
+    padding:0;
+  }
+  .community-facts li{
+    font-family:var(--sans);
+    font-size:.66rem;
+    font-weight:600;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--label);
+    border:1px solid var(--rule-strong);
+    border-radius:999px;
+    padding:.28rem .62rem;
+  }
+  .community-card__cue{
+    font-family:var(--sans);
+    font-size:.78rem;
+    font-weight:600;
+    letter-spacing:.03em;
+    color:var(--accent);
+    margin-top:auto;
+    padding-top:.6rem;
+  }
+
   /* ---------- Responsive ---------- */
   /* Medium: two columns — featured (image beside text) across the top,
      then Deep Dives | Latest beneath, keeping one hairline rule between them */
@@ -822,6 +1307,7 @@
     .front__featured .front__label{grid-area:label;}
     .front__featured .feat__figure{grid-area:figure;margin:0;aspect-ratio:4/3;}
     .front__featured .feat__text{grid-area:text;}
+    .front__featured .feat__more{grid-column:1 / -1;margin-top:1.1rem;}
     .front__dives{border-left:0;padding-left:0;padding-right:clamp(1.2rem,2.4vw,2rem);}
     .front__latest{border-left:1px solid var(--rule);padding-left:clamp(1.2rem,2.4vw,2rem);}
   }
@@ -831,23 +1317,38 @@
     .commons__card-date{margin-top:.6rem;}
     .callout__inner{grid-template-columns:1fr;gap:1.4rem;align-items:start;}
     .foot__top{grid-template-columns:1fr;}
+    .paths{grid-template-columns:1fr 1fr;}
+    .feature-row{grid-template-columns:1fr 1fr;}
+    .lab-showcase{grid-template-columns:1fr;}
+    .lab-showcase__side{flex-direction:row;}
+    .community{grid-template-columns:1fr;}
+    .nl{grid-template-columns:1fr;align-items:start;}
   }
   /* Phone: single column — featured, then deep dives, then latest; no column rules */
   @media (max-width:640px){
+    /* Phone reading order: lead headline, its image, research briefs, then the deep-dive list */
     .front{
       grid-template-columns:1fr;
-      grid-template-areas:"featured" "dives" "latest";
+      grid-template-areas:"featured" "latest" "dives";
     }
     .front__featured{
-      display:block;
+      display:flex;
+      flex-direction:column;
       padding:0 0 1.5rem;
       margin-bottom:1.5rem;
       border-bottom:1px solid var(--rule-strong);
     }
-    .front__featured .feat__figure{margin:0 0 1rem;aspect-ratio:16/10;}
-    .front__dives{border-left:0;padding-left:0;padding-right:0;}
+    /* Headline block above its image, so the lead opens on words, not a big picture */
+    .front__featured .front__label{order:0;}
+    .front__featured .feat__text{order:1;margin-bottom:1rem;}
+    .front__featured .feat__figure{order:2;margin:0;aspect-ratio:16/10;}
+    .front__featured .feat__more{order:3;}
     .front__latest{
       border-left:0;padding-left:0;
+      margin-top:1.6rem;
+    }
+    .front__dives{
+      border-left:0;padding-left:0;padding-right:0;
       border-top:1px solid var(--rule-strong);
       margin-top:1.6rem;
       padding-top:1.5rem;
@@ -858,9 +1359,12 @@
     .nav .wrap{justify-content:flex-start;gap:.7rem;padding-top:.45rem;padding-bottom:.45rem;}
     .nav a{font-size:.72rem;letter-spacing:.03em;}
     .lab-grid{grid-template-columns:1fr;}
+    .lab-showcase__side{flex-direction:column;}
     .commons{grid-template-columns:1fr;}
     .commons__bar{display:none;}
     .section-head{flex-direction:column;align-items:flex-start;gap:.4rem;}
+    .paths{grid-template-columns:1fr;}
+    .feature-row{grid-template-columns:1fr;}
   }
   @media (max-width:380px){
     .nav .wrap{gap:.55rem;}
@@ -896,7 +1400,7 @@
   <div class="wrap">
     <a href="index.html" aria-current="page">Home</a>
     <button class="nav__trigger" id="articles-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="articles-menu">Articles<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <a href="news.html">News</a>
+    <button class="nav__trigger" id="news-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="news-menu">News<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <a href="lab.html">Lab</a>
     <button class="nav__trigger" id="resources-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="resources-menu">Resources<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <a href="search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
@@ -906,36 +1410,71 @@
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
         <p class="nav__col-head">Browse</p>
-        <a href="posts.html">All Articles</a>
-        <a href="topics.html">By Topic</a>
+        <a href="posts.html">All articles</a>
+        <a href="topics.html">Topics</a>
+        <a href="start-here.html">Start here</a>
       </div>
       <div class="nav__col">
-        <p class="nav__col-head">The Commons</p>
-        <a href="commons.html">About The Commons</a>
+        <p class="nav__col-head">Formats</p>
+        <a href="topics/first-principles.html">First principles</a>
+        <a href="topics/paper-breakdown.html">Paper breakdowns</a>
+        <a href="topics/myth-busting.html">Myth-busting</a>
+        <a href="the-paper-that-hooked-me.html">The Paper That Hooked Me</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Community</p>
+        <a href="commons.html">Latest contributions</a>
         <a href="contribute.html">Write for us</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav__menu" id="news-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Browse</p>
+        <a href="news.html">Latest research briefs</a>
+        <a href="topics/ai-and-the-brain.html">AI &amp; the Brain</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">By topic</p>
+        <a href="news.html?topic=disease-and-clinic">Disease &amp; clinic</a>
+        <a href="news.html?topic=methods-and-tech">Methods &amp; tech</a>
+        <a href="news.html?topic=senses">Senses</a>
+        <a href="news.html?topic=memory-and-learning">Memory &amp; learning</a>
+        <a href="news.html?topic=mind-and-behavior">Mind &amp; behavior</a>
+        <a href="news.html?topic=cells-and-circuits">Cells &amp; circuits</a>
       </div>
     </div>
   </div>
   <div class="nav__menu" id="resources-menu" hidden>
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
+        <p class="nav__col-head">Resources</p>
+        <a href="resources.html#books">Books</a>
+        <a href="resources.html#conferences">Conferences</a>
+        <a href="resources.html#podcasts">Podcasts</a>
+        <a href="resources.html#journals">Reading the research</a>
+        <a href="funding.html">Funding finder</a>
+        <a href="resources.html">All resources</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Learn</p>
+        <a href="start-here.html">Start here</a>
+        <a href="topics/first-principles.html">First principles</a>
+        <a href="brain-myths.html">Brain myths</a>
+      </div>
+      <div class="nav__col">
         <p class="nav__col-head">Explore</p>
-        <a href="start-here.html">Start Here</a>
-        <a href="topics.html">Topics</a>
         <a href="lab.html">The Lab</a>
+        <a href="brain.html">Brain</a>
+        <a href="neuron.html">Neuron</a>
+        <a href="synapse.html">Synapse</a>
       </div>
       <div class="nav__col">
-        <p class="nav__col-head">Explainers</p>
-        <a href="brain.html">The Brain</a>
-        <a href="neuron.html">The Neuron</a>
-        <a href="synapse.html">The Synapse</a>
-        <a href="brain-myths.html">Brain Myths</a>
-      </div>
-      <div class="nav__col">
-        <p class="nav__col-head">The Review</p>
+        <p class="nav__col-head">About</p>
         <a href="about.html">About</a>
-        <a href="trust.html">How We Work</a>
-        <a href="contribute.html">Contribute</a>
+        <a href="authors.html">Authors</a>
+        <a href="trust.html">How we work</a>
       </div>
     </div>
   </div>
@@ -960,38 +1499,92 @@
             <p class="feat__byline"><strong>Evelyn Nye</strong> <span class="aff">&middot; SUNY Geneseo</span></p>
             <p class="feat__dateline">October 7, 2026 &middot; 4 min read</p>
           </div>
+          <div class="feat__more">
+            <p class="feat__more-label">More deep dives</p>
+            <ul class="dive-list">
+              <li>
+                <a href="posts/midlife-risk-factors-dementia.html">
+                  <span class="dive-list__thumb"><img src="img/mri-dementia-thumb.jpg" alt="A healthy brain MRI beside an Alzheimer's brain MRI, the ventricles visibly enlarged" loading="lazy"></span>
+                  <span class="dive-list__text">
+                    <span class="dive-list__title">What your midlife numbers say about dementia</span>
+                    <span class="dive-list__date">Aug 19, 2026</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="posts/how-one-drug-treats-depression-and-anxiety.html">
+                  <span class="dive-list__thumb"><img src="img/serotonin-molecule.png" alt="Ball-and-stick model of a serotonin molecule" loading="lazy"></span>
+                  <span class="dive-list__text">
+                    <span class="dive-list__title">How can one drug treat both depression and anxiety?</span>
+                    <span class="dive-list__date">Jul 29, 2026</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="posts/barn-owl-prism-experiment.html">
+                  <span class="dive-list__thumb"><img src="img/barn-owl.jpg" alt="A barn owl with its heart-shaped facial disc turned toward the camera" loading="lazy"></span>
+                  <span class="dive-list__text">
+                    <span class="dive-list__title">What happens when you put prism glasses on a barn owl?</span>
+                    <span class="dive-list__date">Jul 22, 2026</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </article>
 
         <!-- DEEP DIVES: newest dive as a secondary lead, then the rest as a headline list -->
         <section class="front__dives" aria-labelledby="front-dives">
           <p class="front__label" id="front-dives">Deep Dives</p>
           <a class="dive-lead" href="posts/feature-interference.html">
+            <span class="dive-lead__figure"><img src="img/photo-interference.jpg" alt="A black-and-white pattern of overlapping concentric ripples spreading and interfering across a dark field" loading="lazy"></span>
             <h3 class="dive-lead__title">Your brain doesn&rsquo;t run out of room</h3>
             <span class="dive-lead__date">Sep 30, 2026</span>
           </a>
           <ul class="dive-list">
             <li>
               <a href="posts/astrocytes-keep-time.html">
-                <span class="dive-list__title">Your brain&rsquo;s support cells keep their own time</span>
-                <span class="dive-list__date">Sep 23, 2026</span>
+                <span class="dive-list__thumb"><img src="img/photo-astrocytes.jpg" alt="Fluorescence microscopy of a single star-shaped astrocyte, its fine branching processes glowing against a dark background" loading="lazy"></span>
+                <span class="dive-list__text">
+                  <span class="dive-list__title">Your brain&rsquo;s support cells keep their own time</span>
+                  <span class="dive-list__date">Sep 23, 2026</span>
+                </span>
               </a>
             </li>
             <li>
               <a href="posts/brain-plumbing-plays-favorites.html">
-                <span class="dive-list__title">Your brain&rsquo;s plumbing plays favorites</span>
-                <span class="dive-list__date">Sep 16, 2026</span>
+                <span class="dive-list__thumb"><img src="img/photo-neurovascular.jpg" alt="Two-photon microscopy image of blood vessels threading through mouse cortex" loading="lazy"></span>
+                <span class="dive-list__text">
+                  <span class="dive-list__title">Your brain&rsquo;s plumbing plays favorites</span>
+                  <span class="dive-list__date">Sep 16, 2026</span>
+                </span>
               </a>
             </li>
             <li>
               <a href="posts/psychedelics-tune-the-brain.html">
-                <span class="dive-list__title">Psychedelics don&rsquo;t scramble your brain. They tune it to the room.</span>
-                <span class="dive-list__date">Sep 9, 2026</span>
+                <span class="dive-list__thumb"><img src="img/photo-psilocybin.jpg" alt="A single Psilocybe cubensis mushroom growing in a grassy field" loading="lazy"></span>
+                <span class="dive-list__text">
+                  <span class="dive-list__title">Psychedelics don&rsquo;t scramble your brain. They tune it to the room.</span>
+                  <span class="dive-list__date">Sep 9, 2026</span>
+                </span>
               </a>
             </li>
             <li>
               <a href="posts/your-brain-is-guessing.html">
-                <span class="dive-list__title">Your brain is guessing</span>
-                <span class="dive-list__date">Sep 2, 2026</span>
+                <span class="dive-list__thumb"><img src="img/photo-perception.jpg" alt="A close-up of a human eye with a landscape reflected in the iris and pupil" loading="lazy"></span>
+                <span class="dive-list__text">
+                  <span class="dive-list__title">Your brain is guessing</span>
+                  <span class="dive-list__date">Sep 2, 2026</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="posts/where-you-go-under-anesthesia.html">
+                <span class="dive-list__thumb"><img src="img/photo-anesthesia.jpg" alt="An anesthetist holds a mask over a patient's face at the start of anesthesia" loading="lazy"></span>
+                <span class="dive-list__text">
+                  <span class="dive-list__title">Where you go under anesthesia</span>
+                  <span class="dive-list__date">Aug 26, 2026</span>
+                </span>
               </a>
             </li>
           </ul>
@@ -1000,7 +1593,7 @@
 
         <!-- LATEST: the Review's own news coverage as a stacked rail -->
         <aside class="front__latest" aria-labelledby="front-latest">
-          <p class="front__label" id="front-latest">Latest</p>
+          <p class="front__label" id="front-latest">Research briefs</p>
           <ul class="latest-list">
             <li>
               <a class="latest-item" href="news.html#n-superior-colliculus-prediction">
@@ -1023,6 +1616,34 @@
                 <span class="latest-item__date">October 3, 2026</span>
               </a>
             </li>
+            <li>
+              <a class="latest-item" href="news.html#n-from-worms-to-people-anesthesia-leaves-the-same-fingerprint">
+                <span class="tag src">Nature Neuroscience</span>
+                <span class="latest-item__title">From Worms to People, Anesthesia Leaves the Same Fingerprint</span>
+                <span class="latest-item__date">September 29, 2026</span>
+              </a>
+            </li>
+            <li>
+              <a class="latest-item" href="news.html#n-a-brake-on-alzheimers-type-brain-damage-may-sit-outside-the-brain">
+                <span class="tag src">Neuron</span>
+                <span class="latest-item__title">A Brake on Alzheimer&rsquo;s-Type Brain Damage May Sit Outside the Brain</span>
+                <span class="latest-item__date">September 28, 2026</span>
+              </a>
+            </li>
+            <li>
+              <a class="latest-item" href="news.html#n-your-genes-may-decide-whether-aspirin-lowers-dementia-risk">
+                <span class="tag src">Alzheimer&rsquo;s &amp; Dementia</span>
+                <span class="latest-item__title">Your Genes May Decide Whether Aspirin Lowers Dementia Risk</span>
+                <span class="latest-item__date">September 24, 2026</span>
+              </a>
+            </li>
+            <li>
+              <a class="latest-item" href="news.html#n-scientists-find-the-neurons-that-make-escape-contagious-in-a-school-of-fish">
+                <span class="tag src">Nature</span>
+                <span class="latest-item__title">Scientists Find the Neurons That Make Escape Contagious in a School of Fish</span>
+                <span class="latest-item__date">September 23, 2026</span>
+              </a>
+            </li>
           </ul>
           <p class="front__more"><a class="more-link" href="news.html">All news &rarr;</a></p>
         </aside>
@@ -1031,97 +1652,188 @@
     </div>
   </section>
 
-  <!-- The Commons -->
-  <section class="section section--band" aria-labelledby="commons-title">
+  <!-- Understand the brain: three guided reading paths into real articles -->
+  <section class="section section--band" aria-labelledby="paths-title">
     <div class="wrap">
-      <div class="section-ornament" aria-hidden="true">
-        <svg viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>
-      </div>
-      <div class="commons">
-        <div class="commons__bar" aria-hidden="true"></div>
-        <div class="commons__grid">
-          <div class="commons__intro">
-            <span class="eyebrow">The Commons</span>
-            <h2 class="commons__title" id="commons-title">Short notes from the field</h2>
-            <p class="commons__body">A shared space for people in and around neuroscience to pass along something worth knowing. A talk that stuck with them, a method they love, a finding they are still chewing on.</p>
-            <a class="more-link" href="commons.html">Explore The Commons &rarr;</a>
-          </div>
-          <a class="commons__card" href="posts/when-brain-development-and-brain-injury-collide.html">
-            <span class="tag">The Commons</span>
-            <h3 class="commons__card-title">When brain development and brain injury collide</h3>
-            <p class="commons__card-byline"><strong>Evelyn Nye</strong> · SUNY Geneseo</p>
-            <span class="commons__card-date">October 7, 2026</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Walk callout (institutional, not a promo banner) -->
-  <section class="section section--focus" aria-labelledby="walk-title">
-    <div class="wrap">
-      <div class="callout">
-        <div class="callout__bar" aria-hidden="true"></div>
-        <div class="callout__inner">
-          <div class="callout__lead">
-            <p class="callout__label">Team Neuroscience Review · Community</p>
-            <h2 class="callout__title" id="walk-title">We&rsquo;re walking to end Alzheimer&rsquo;s.</h2>
-            <p class="callout__body">We cover this disease closely, and this fall we&rsquo;re helping fund the fight. On November 14 we walk in Central Park, aiming to raise 10,000 dollars for the Alzheimer&rsquo;s Association. Every dollar goes straight to them.</p>
-          </div>
-          <div class="callout__aside">
-            <dl class="callout__facts">
-              <div><dt>Date</dt><dd>November 14, 2026</dd></div>
-              <div><dt>Location</dt><dd>Central Park, NYC</dd></div>
-              <div><dt>Goal</dt><dd>$10,000</dd></div>
-              <div><dt>Beneficiary</dt><dd>Alzheimer&rsquo;s Association</dd></div>
-            </dl>
-            <a class="btn" href="https://act.alz.org/goto/TeamNeuroscienceReview" target="_blank" rel="noopener">Donate or walk with us</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured in the Lab -->
-  <section class="section section--band" aria-labelledby="lab-title">
-    <div class="wrap">
-      <div class="section-ornament" aria-hidden="true">
-        <svg viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>
-      </div>
       <div class="section-head">
         <div>
-          <span class="eyebrow">Featured in the Lab</span>
-          <h2 id="lab-title" style="margin-top:.5rem;">Explore the brain, neuron and synapse in 3D</h2>
+          <span class="eyebrow">Reading paths</span>
+          <h2 id="paths-title" style="margin-top:.5rem;">Understand the brain</h2>
+        </div>
+        <a class="more-link" href="topics.html">Browse all topics &rarr;</a>
+      </div>
+      <div class="paths">
+
+        <article class="path-card">
+          <span class="path-card__figure"><img src="img/photo-memory.jpg" alt="" loading="lazy"></span>
+          <h3 class="path-card__title"><a href="topics.html#memory-and-sleep">Memory &amp; sleep</a></h3>
+          <p class="path-card__desc">How the brain lays down a memory, and what competes to pull it apart.</p>
+          <a class="path-card__start" href="posts/how-memory-works.html">Start here: How does memory actually work? &rarr;</a>
+          <ul class="path-links">
+            <li class="path-links__label-wrap"><span class="path-links__label">Go deeper</span></li>
+            <li><a href="posts/feature-interference.html">Your brain doesn&rsquo;t run out of room</a></li>
+            <li><a href="posts/astrocytes-keep-time.html">Your brain&rsquo;s support cells keep their own time</a></li>
+          </ul>
+        </article>
+
+        <article class="path-card">
+          <span class="path-card__figure"><img src="img/photo-fmri.jpg" alt="" loading="lazy"></span>
+          <h3 class="path-card__title"><a href="topics.html#neurotech-and-methods">How we study the brain</a></h3>
+          <p class="path-card__desc">What our instruments actually record, and where the reading breaks down.</p>
+          <a class="path-card__start" href="posts/what-fmri-measures.html">Start here: What does an fMRI actually measure? &rarr;</a>
+          <ul class="path-links">
+            <li class="path-links__label-wrap"><span class="path-links__label">Go deeper</span></li>
+            <li><a href="posts/brain-implant-inner-voice.html">Can a brain implant read the voice in your head?</a></li>
+            <li><a href="tools/stroop-test.html">The Stroop test<span class="path-links__kind">Lab</span></a></li>
+          </ul>
+        </article>
+
+        <article class="path-card">
+          <span class="path-card__figure"><img src="img/photo-dopamine.jpg" alt="" loading="lazy"></span>
+          <h3 class="path-card__title"><a href="topics.html#drugs-and-the-brain">Drugs &amp; the brain</a></h3>
+          <p class="path-card__desc">What psychiatric and consciousness-altering drugs really do to a working brain.</p>
+          <a class="path-card__start" href="posts/how-one-drug-treats-depression-and-anxiety.html">Start here: How can one drug treat both depression and anxiety? &rarr;</a>
+          <ul class="path-links">
+            <li class="path-links__label-wrap"><span class="path-links__label">Go deeper</span></li>
+            <li><a href="posts/psychedelics-tune-the-brain.html">Psychedelics don&rsquo;t scramble your brain. They tune it to the room.</a></li>
+            <li><a href="posts/where-you-go-under-anesthesia.html">Where you go under anesthesia</a></li>
+          </ul>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- AI & the Brain -->
+  <section class="section" aria-labelledby="ai-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Collection</span>
+          <h2 id="ai-title" style="margin-top:.5rem;">AI &amp; the Brain</h2>
+        </div>
+        <a class="more-link" href="topics/ai-and-the-brain.html">See the collection &rarr;</a>
+      </div>
+      <p class="ai-scope">Where neuroscience and artificial intelligence meet: AI used to read brain scans, brain findings held up against machine models, and the questions each raises about the other. Verified, and no hype.</p>
+      <div class="feature-row">
+        <a class="feature-card" href="news.html#n-a-model-estimates-alzheimers-tau-from-a-more-common-brain-scan">
+          <span class="feature-card__figure"><img src="img/alzheimers-pet.jpg" alt="" loading="lazy"></span>
+          <span class="feature-card__kind">Research brief</span>
+          <h3 class="feature-card__title">A Model Estimates Alzheimer&rsquo;s Tau From a More Common Brain Scan</h3>
+          <p class="feature-card__meta">Nature Communications &middot; October 2, 2026</p>
+        </a>
+        <a class="feature-card" href="news.html#n-the-hippocampus-carries-a-map-of-meaning-that-resembles-an-ais">
+          <span class="feature-card__figure"><img src="img/hippocampus.png" alt="" loading="lazy"></span>
+          <span class="feature-card__kind">Research brief</span>
+          <h3 class="feature-card__title">The Hippocampus Carries a Map of Meaning That Resembles an AI&rsquo;s</h3>
+          <p class="feature-card__meta">Nature Neuroscience &middot; September 30, 2026</p>
+        </a>
+        <a class="feature-card" href="posts/brain-implant-inner-voice.html">
+          <span class="feature-card__figure"><img src="img/inner-voice-thumb.png" alt="" loading="lazy"></span>
+          <span class="feature-card__kind">Explainer</span>
+          <h3 class="feature-card__title">Can a brain implant read the voice in your head?</h3>
+          <p class="feature-card__meta">Paper breakdown &middot; August 5, 2026</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Try it in the Lab -->
+  <section class="section section--lab" aria-labelledby="lab-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">The Lab</span>
+          <h2 id="lab-title" style="margin-top:.5rem;">Try it in the Lab</h2>
         </div>
         <a class="more-link" href="lab.html">Open the Lab &rarr;</a>
       </div>
-      <div class="lab-grid">
-        <a class="lab-card" href="brain.html">
-          <span class="lab-card__icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 12c-5 0-8 4-8 8 0 2 1 4 2 5-1 1-2 3-2 5 0 5 4 8 9 8 2 0 4-1 5-2V11c-2-1-4-1-6 1z"/><path d="M26 10v26c1 1 3 2 5 2 5 0 9-3 9-8 0-2-1-4-2-5 1-1 2-3 2-5 0-4-3-8-8-8-2 0-4 0-6 2z"/><path d="M18 20h4M18 28h4M26 20h4M26 28h4"/></svg>
+      <p class="lab-scope">Interactive models you can turn in your hands. Rotate a whole brain, follow a signal down a single neuron, and watch a synapse fire. No download, right in the browser.</p>
+      <div class="lab-showcase">
+        <a class="lab-feature" href="brain.html">
+          <span class="lab-feature__figure"><img src="img/brain-preview.png" alt="" loading="lazy"></span>
+          <span class="lab-feature__text">
+            <span class="tag">Interactive &middot; 3D</span>
+            <h3>The Brain in 3D</h3>
+            <p>Rotate a whole-brain model, trace the major regions by hand, and see where the structures you read about actually sit.</p>
+            <span class="lab-cue">Open the model &rarr;</span>
           </span>
-          <span class="tag">Interactive</span>
-          <h3>The Brain in 3D</h3>
-          <p>Rotate a whole-brain model and trace the major regions by hand.</p>
         </a>
-        <a class="lab-card" href="neuron.html">
-          <span class="lab-card__icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="24" r="7"/><path d="M18 17v-6M13 19l-5-4M13 29l-5 4M18 31v6M25 24h13M38 24l-4-3M38 24l-4 3"/><circle cx="18" cy="24" r="2.2" fill="currentColor" stroke="none"/></svg>
-          </span>
-          <span class="tag">Interactive</span>
-          <h3>A Single Neuron</h3>
-          <p>Follow a signal from dendrite to axon terminal, step by step.</p>
-        </a>
-        <a class="lab-card" href="synapse.html">
-          <span class="lab-card__icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 24h10"/><path d="M18 16a8 8 0 0 1 0 16"/><path d="M40 24H30"/><path d="M30 16a8 8 0 0 0 0 16"/><circle cx="23" cy="20" r="1.3" fill="currentColor" stroke="none"/><circle cx="25" cy="25" r="1.3" fill="currentColor" stroke="none"/><circle cx="22" cy="28" r="1.3" fill="currentColor" stroke="none"/></svg>
-          </span>
-          <span class="tag">Interactive</span>
-          <h3>The Synapse</h3>
-          <p>Watch neurotransmitters cross the gap and see what tunes the signal.</p>
-        </a>
+        <div class="lab-showcase__side">
+          <a class="lab-mini" href="neuron.html">
+            <span class="lab-mini__figure"><img src="img/neuron-preview.png" alt="" loading="lazy"></span>
+            <span class="lab-mini__text">
+              <span class="tag">Interactive</span>
+              <h4>A Single Neuron</h4>
+              <p>Follow a signal from dendrite to axon terminal, step by step.</p>
+            </span>
+          </a>
+          <a class="lab-mini" href="synapse.html">
+            <span class="lab-mini__figure"><img src="img/synapse-preview.png" alt="" loading="lazy"></span>
+            <span class="lab-mini__text">
+              <span class="tag">Interactive</span>
+              <h4>The Synapse</h4>
+              <p>Watch neurotransmitters cross the gap and see what tunes the signal.</p>
+            </span>
+          </a>
+        </div>
       </div>
       <div class="lab-cta"><a class="btn btn--ghost" href="lab.html">Open the Lab &rarr;</a></div>
+    </div>
+  </section>
+
+  <!-- Compact newsletter block -->
+  <section class="section" aria-labelledby="nl-title">
+    <div class="wrap">
+      <div class="nl">
+        <div class="nl__copy">
+          <span class="nl__eyebrow">The Newsletter</span>
+          <h2 class="nl__title" id="nl-title">The Wednesday Brief</h2>
+          <p class="nl__sub">One brain-science deep dive, every Wednesday. Rigorous, readable, and free.</p>
+        </div>
+        <form class="subscribe__form nl__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
+          <label for="nl-email">Email address</label>
+          <input type="email" id="nl-email" name="email" placeholder="your@email.com" autocomplete="email" required>
+          <button type="submit" class="btn">Subscribe free</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community: The Commons and the Walk, modest and side by side -->
+  <section class="section section--focus" aria-labelledby="community-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Community</span>
+          <h2 id="community-title" style="margin-top:.5rem;">Around the Review</h2>
+        </div>
+      </div>
+      <div class="community">
+        <a class="community-card" href="commons.html">
+          <span class="community-card__figure"><img src="img/commons-notes.jpg" alt="An open notebook filled with handwritten notes beside a pen" loading="lazy"></span>
+          <span class="community-card__text">
+            <span class="community-card__label">The Commons</span>
+            <h3 class="community-card__title">Latest contributions</h3>
+            <p class="community-card__body">Short notes from people in and around neuroscience. A talk that stuck with them, a method they love, a finding they&rsquo;re still chewing on.</p>
+            <span class="community-card__cue">Explore The Commons &rarr;</span>
+          </span>
+        </a>
+        <a class="community-card" href="walk.html">
+          <span class="community-card__figure"><img src="img/walk-autumn.jpg" alt="People walking a tree-lined path covered in autumn leaves" loading="lazy"></span>
+          <span class="community-card__text">
+            <span class="community-card__label">Team Neuroscience Review</span>
+            <h3 class="community-card__title">We&rsquo;re walking to end Alzheimer&rsquo;s</h3>
+            <p class="community-card__body">Walk with us in Central Park for the Alzheimer&rsquo;s Association. Join the team or donate toward the cure.</p>
+            <ul class="community-facts">
+              <li>November 14</li>
+              <li>Central Park</li>
+              <li>Goal $10,000</li>
+            </ul>
+            <span class="community-card__cue">About the walk &rarr;</span>
+          </span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -1168,7 +1880,7 @@
       <a href="disclaimer.html">Disclaimer</a>
     </p>
     <p class="foot__fine">The Neuroscience Review is an independent neuroscience review, written for curious readers who want the actual science. Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>. &copy; 2026 The Neuroscience Review.</p>
-    <p class="foot__fine">Neuron photo by <a href="https://commons.wikimedia.org/wiki/File:Cultured_Rat_Hippocampal_Neuron_(24327909026).jpg" target="_blank" rel="noopener">ZEISS Microscopy</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>. fMRI scan by <a href="https://commons.wikimedia.org/wiki/File:FMRI_BOLD_activation_in_an_emotional_Stroop_task.jpg" target="_blank" rel="noopener">Ovaysikia et al.</a>, <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>.</p>
+    <p class="foot__fine">Neuron photo by <a href="https://commons.wikimedia.org/wiki/File:Cultured_Rat_Hippocampal_Neuron_(24327909026).jpg" target="_blank" rel="noopener">ZEISS Microscopy</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>. fMRI scan by <a href="https://commons.wikimedia.org/wiki/File:FMRI_BOLD_activation_in_an_emotional_Stroop_task.jpg" target="_blank" rel="noopener">Ovaysikia et al.</a>, <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>. Walk photo by <a href="https://unsplash.com/photos/people-walking-on-autumn-path-GEbmx2Bgh0w" target="_blank" rel="noopener">Billy 4422</a> on <a href="https://unsplash.com/" target="_blank" rel="noopener">Unsplash</a>. Commons photo from <a href="https://www.pexels.com/photo/notebook-with-notes-5185088/" target="_blank" rel="noopener">Pexels</a>.</p>
   </div>
 </footer>
 
@@ -1207,10 +1919,33 @@
     p.m.addEventListener('click',function(e){e.stopPropagation();});
   });
   document.addEventListener('click',function(){closeAll();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeAll();}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=pairs.filter(function(p){return p.t.getAttribute('aria-expanded')==='true';})[0];closeAll();if(o){o.t.focus();}}});
 })();
 </script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script>
+
+
+<!-- privacy-notice -->
+<style>
+  .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  .privacy-bar.is-visible{transform:translateY(0);}
+  .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
+  .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
+  .privacy-bar__text a{color:var(--accent);text-decoration:underline;}
+  .privacy-bar__btn{font-family:var(--sans);font-weight:600;font-size:12.5px;color:#fff;background:var(--accent);border:0;border-radius:999px;padding:8px 22px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+  .privacy-bar__btn:hover{background:var(--accent-hover);}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .privacy-bar__btn{color:#0b0f12;} }
+  :root[data-theme="dark"] .privacy-bar__btn{color:#0b0f12;}
+  @media(max-width:560px){ .privacy-bar__inner{justify-content:center;text-align:center;} }
+</style>
+<div class="privacy-bar" id="privacy-bar" role="region" aria-label="Privacy notice" hidden>
+  <div class="privacy-bar__inner">
+    <p class="privacy-bar__text">We store your theme in your browser and use only cookieless, privacy-friendly analytics, with no ads and no tracking cookies. See our <a href="privacy.html">privacy notice</a> for the details.</p>
+    <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
+  </div>
+</div>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<!-- /privacy-notice -->
 
 </body>
 </html>

@@ -196,5 +196,371 @@
   "url": "the-paper-that-hooked-me.html",
   "category": "Column",
   "excerpt": "A short, recurring column where a scientist or student answers five questions about the one paper that changed how they think, in plain language. Includes the first entry, on a frog brain that sings in a dish."
+ },
+ {
+  "title": "A Midbrain Sensory Hub Fires for What's Coming, Not Just What Arrives",
+  "url": "news.html#n-superior-colliculus-prediction",
+  "category": "News",
+  "excerpt": "The superior colliculus is an ancient midbrain structure that helps orient the eyes and body toward sights and touches. Scanning 80 people with 7-Tesla fMRI, researchers found it responded to vision and to touch in distinct patterns at different depths, matching what animal work predicted."
+ },
+ {
+  "title": "Recordings Inside the Human Claustrum Catch It Tracking Uncertainty",
+  "url": "news.html#n-human-claustrum-uncertainty",
+  "category": "News",
+  "excerpt": "The claustrum is a thin, deeply buried sheet of brain wired to almost the entire cortex, and nobody is sure what it does. Recording from single neurons in 7 epilepsy patients during a threat-avoidance game, researchers logged 110 claustrum cells and found they tracked quantities the senses cannot supply directly, namely how uncertain the moment was and how far outcomes strayed from expectation."
+ },
+ {
+  "title": "Single Neurons Show the Brain Predicting Speech From the Top Down",
+  "url": "news.html#n-top-down-speech-prediction",
+  "category": "News",
+  "excerpt": "We usually picture hearing as building up from sound to meaning, but a new study recording from single neurons in the human superior temporal gyrus found the brain also runs the other way. Researchers logged 624 neurons across 3 people with electrodes in the speech cortex while they listened, and high-level expectations about a word's meaning reshaped and time-locked the low-level activity coding the actual speech sounds."
+ },
+ {
+  "title": "A Model Estimates Alzheimer's Tau From a More Common Brain Scan",
+  "url": "news.html#n-a-model-estimates-alzheimers-tau-from-a-more-common-brain-scan",
+  "category": "News",
+  "excerpt": "Measuring tau, one of the two proteins that define Alzheimer's, usually needs a specialized PET scan most clinics don't have. A new machine-learning model built on how the brain uses energy tries to predict that tau burden from an ordinary FDG-PET scan instead."
+ },
+ {
+  "title": "The Hippocampus Carries a Map of Meaning That Resembles an AI's",
+  "url": "news.html#n-the-hippocampus-carries-a-map-of-meaning-that-resembles-an-ais",
+  "category": "News",
+  "excerpt": "The hippocampus is the brain's memory and navigation hub, but a new study that recorded from single neurons while people listened to spoken stories found it also holds a rich map of what words mean. Individual cells responded to many different words, and the pattern of activity across the whole population tracked how far apart two words are in meaning."
+ },
+ {
+  "title": "From Worms to People, Anesthesia Leaves the Same Fingerprint",
+  "url": "news.html#n-from-worms-to-people-anesthesia-leaves-the-same-fingerprint",
+  "category": "News",
+  "excerpt": "Researchers pooled brain recordings from six species, humans, macaques, marmosets, mice, zebrafish, and nematodes, and pulled out more than 6,000 features of the activity. Under anesthesia every species showed the same shift."
+ },
+ {
+  "title": "A Brake on Alzheimer's-Type Brain Damage May Sit Outside the Brain",
+  "url": "news.html#n-a-brake-on-alzheimers-type-brain-damage-may-sit-outside-the-brain",
+  "category": "News",
+  "excerpt": "Tau tangles pull immune T cells into the brain, and a new mouse study finds that blocking their entry protects it. When researchers used an antibody against a receptor called CXCR3, or deleted it genetically, far fewer T cells crossed into the brains of tau-model mice, the neurodegeneration eased, and the animals did better on memory tests."
+ },
+ {
+  "title": "Your Genes May Decide Whether Aspirin Lowers Dementia Risk",
+  "url": "news.html#n-your-genes-may-decide-whether-aspirin-lowers-dementia-risk",
+  "category": "News",
+  "excerpt": "A genetic reanalysis of the big ASPREE trial, more than 13,500 older adults, found that low-dose aspirin was tied to lower dementia in just one group. Among the roughly one in five people with the highest genetic score for platelet count, dementia showed up in 1.0 percent on aspirin versus 3.3 percent on placebo, while everyone else saw no benefit."
+ },
+ {
+  "title": "A Cell-by-Cell Map of the Human Brain Pins Disease Risk to Specific Cell Types",
+  "url": "news.html#n-a-cell-by-cell-map-of-the-human-brain-pins-disease-risk-to-specific-cell-types",
+  "category": "News",
+  "excerpt": "Researchers built the largest single-cell map yet of the human prefrontal cortex, reading gene activity in more than 6.3 million individual cell nuclei from 1,494 donors. By comparing healthy brains against eight disorders, including Alzheimer's, Parkinson's, schizophrenia and frontotemporal dementia, they can start to point genetic risk at the particular cell types that carry it rather than at the brain as a whole."
+ },
+ {
+  "title": "Scientists Find the Neurons That Make Escape Contagious in a School of Fish",
+  "url": "news.html#n-scientists-find-the-neurons-that-make-escape-contagious-in-a-school-of-fish",
+  "category": "News",
+  "excerpt": "In transparent glassfish that swim in tight schools, one fish bolting can set off the whole group. Imaging the brains of fish watching virtual neighbors flee, researchers found specific neurons in the midbrain that fire in response to seeing others escape, not to a threat the fish spots on its own."
+ },
+ {
+  "title": "The Brain's Inward and Outward Networks Turn Out to Share One Map",
+  "url": "news.html#n-the-brains-inward-and-outward-networks-turn-out-to-share-one-map",
+  "category": "News",
+  "excerpt": "The default mode network handles internal thought and the dorsal attention network handles the outside world, and they're usually described as opposites. Using high-resolution 7T scans in seven people, researchers found both are laid out along the same map of the visual field."
+ },
+ {
+  "title": "Where Your Attention Drifts, Not Just Where Your Eyes Land, Sways Your Choices",
+  "url": "news.html#n-where-your-attention-drifts-not-just-where-your-eyes-land-sways-your-choices",
+  "category": "News",
+  "excerpt": "When people weigh two options, the choice often follows whatever the eyes are fixating. Across two eye-tracking experiments with about thirty people each, researchers found that covert attention, the kind that shifts to the edge of vision without moving the eyes, leaned toward the more valuable option and pushed back against that gaze bias."
+ },
+ {
+  "title": "A Brain Circuit Behind Pregnancy Food Cravings, Mapped in Mice",
+  "url": "news.html#n-a-brain-circuit-behind-pregnancy-food-cravings-mapped-in-mice",
+  "category": "News",
+  "excerpt": "Pregnancy famously comes with cravings, and a new study points to where they start. During pregnancy, serotonin neurons in a hub called the dorsal raphe quieted down in mice, which lifted the brakes on a reward pathway running to the brain's dopamine center."
+ },
+ {
+  "title": "The Developing Brain Grows From Two Separate Progenitor Lineages, Not One",
+  "url": "news.html#n-the-developing-brain-grows-from-two-separate-progenitor-lineages-not-one",
+  "category": "News",
+  "excerpt": "Textbooks describe the early brain as growing out of a single pool of neural progenitor cells. A new study reports that the neural ectoderm actually splits into two parallel lineages from the start, one that builds the forebrain and midbrain and one that builds the hindbrain, and the two stay separate rather than branching off a shared ancestor."
+ },
+ {
+  "title": "A Movement Region of the Brain Turns Out to Track Reward Too",
+  "url": "news.html#n-a-movement-region-of-the-brain-turns-out-to-track-reward-too",
+  "category": "News",
+  "excerpt": "The cerebellum sits at the back of the brain and has mostly been studied for balance and movement. In mice trained to work for a direct hit of dopamine, cells there predicted the reward before it arrived and stretched that activity to fill a one or two second wait, then went quiet the moment it landed."
+ },
+ {
+  "title": "Human Brain Organoids Grown Into Mouse Cortex Wire Up and Shift Behavior",
+  "url": "news.html#n-human-brain-organoids-grown-into-mouse-cortex-wire-up-and-shift-behavior",
+  "category": "News",
+  "excerpt": "Researchers transplanted lab-grown clumps of human brain tissue, called organoids, into the cortex of newborn mice and watched them take hold. The human cells matured, sent projections into the host brain, formed working connections, and the mice showed measurable behavioral differences."
+ },
+ {
+  "title": "The Brain's Noradrenaline Hub Is Wired for Specific Targets, Not One Big Broadcast",
+  "url": "news.html#n-the-brains-noradrenaline-hub-is-wired-for-specific-targets-not-one-big-broadcast",
+  "category": "News",
+  "excerpt": "The locus coeruleus is a small brainstem cluster that supplies most of the brain's noradrenaline, and the textbook picture treats it as a single loudspeaker that lifts alertness everywhere at once. A new high resolution map in mice finds its neurons are organized by where they send their output, so different groups can route distinct signals to distinct parts of the brain instead of broadcasting one signal to all of it."
+ },
+ {
+  "title": "Cornell Team Builds Dime-Sized Wireless Device to Study Mouse Brains Outdoors",
+  "url": "news.html#n-cornell-team-builds-dime-sized-wireless-device-to-study-mouse-brains-outdoors",
+  "category": "News",
+  "excerpt": "Cornell researchers created a wireless device called WILD, about the size of a dime, that records neural activity, tracks eye movements, vocalizations and locomotion, and can trigger optogenetic stimulation in mice moving freely outside the lab. The device was tested in an outdoor field trial lasting more than two weeks, with battery life supporting 3 to 9 hours of continuous recording per charge and probes that can track neurons for months."
+ },
+ {
+  "title": "A Custom Genetic Drug Built for One ALS Patient Shows Early Signs of Working",
+  "url": "news.html#n-a-custom-genetic-drug-built-for-one-als-patient-shows-early-signs-of-working",
+  "category": "News",
+  "excerpt": "Doctors designed an antisense oligonucleotide, a short piece of genetic code, tailored to a single person's rare ALS-causing mutation in the gene CHCHD10. After about a year of treatment a blood marker of nerve damage fell toward the normal range and the patient's decline appeared to stabilize."
+ },
+ {
+  "title": "Study Of 182 Mammal Species Questions The Old Lizard Brain Idea",
+  "url": "news.html#n-study-of-182-mammal-species-questions-the-old-lizard-brain-idea",
+  "category": "News",
+  "excerpt": "Researchers examined brain wiring across 182 mammalian species and found that brain evolution follows a tradeoff between two connection strategies that expand and shrink together, not a rational cortex simply stacked on an ancient lizard brain."
+ },
+ {
+  "title": "New wireless device called WILD lets scientists record and control brain activity in freely moving mice",
+  "url": "news.html#n-new-wireless-device-called-wild-lets-scientists-record-and-control-brain-activity-in-freely-moving-mice",
+  "category": "News",
+  "excerpt": "Researchers built a small wireless system named WILD that can record brain cell activity, deliver optogenetic light stimulation, track movement, and capture video through a built in camera, all while a mouse moves around freely. The device also processes data in real time so it can trigger stimulation based on what it detects, making it useful for studying brain activity during natural behavior both in the lab and in more realistic settings."
+ },
+ {
+  "title": "Tau buildup in older brains tied to weaker deep sleep waves and memory",
+  "url": "news.html#n-tau-buildup-in-older-brains-tied-to-weaker-deep-sleep-waves-and-memory",
+  "category": "News",
+  "excerpt": "A new UC Berkeley study using EEG and PET scans found that older adults with more tau protein in the brain's frontal cortex had shorter, more isolated slow brain waves during deep non REM sleep, and these disrupted wave patterns lined up with poorer memory consolidation overnight."
+ },
+ {
+  "title": "MIT study maps how the brain tracks more than one option before deciding",
+  "url": "news.html#n-mit-study-maps-how-the-brain-tracks-more-than-one-option-before-deciding",
+  "category": "News",
+  "excerpt": "Researchers at MIT's Picower Institute recorded brain activity showing that neurons can represent more than one possible choice at the same time before a final decision is made. The findings point to specific patterns of activity that keep each option separate until one is selected."
+ },
+ {
+  "title": "Pill called tavapadon improves movement and daily function in early Parkinson's disease trial",
+  "url": "news.html#n-pill-called-tavapadon-improves-movement-and-daily-function-in-early-parkinsons-disease-trial",
+  "category": "News",
+  "excerpt": "In a phase 3 study of 304 people with early Parkinson's disease, the drug tavapadon produced larger improvements in motor symptoms and daily function than placebo over 27 weeks. Tavapadon works by partially activating dopamine D1 and D5 receptors in the brain."
+ },
+ {
+  "title": "GLP-1 Drug Extended Lifespan in Female Mice From One Mouse Strain",
+  "url": "news.html#n-glp-1-drug-extended-lifespan-in-female-mice-from-one-mouse-strain",
+  "category": "News",
+  "excerpt": "In a study using one inbred strain of female mice, researchers found that giving a GLP-1 weight loss drug late in life extended how long the mice lived. The effect held up even when researchers matched calorie intake between treated and untreated mice, suggesting something beyond reduced eating was involved."
+ },
+ {
+  "title": "The Lizard Brain Picture of Brain Evolution May Be Wrong",
+  "url": "news.html#n-the-lizard-brain-picture-of-brain-evolution-may-be-wrong",
+  "category": "News",
+  "excerpt": "Researchers argue that the old idea of a primitive lizard brain buried under newer rational layers oversimplifies how brains actually evolved. The new view suggests brain structures across species share more overlapping functions than the layered model implies."
+ },
+ {
+  "title": "A Crab That Escapes Traps Also Lets Scientists Record Single Neurons While It Moves",
+  "url": "news.html#n-a-crab-that-escapes-traps-also-lets-scientists-record-single-neurons-while-it-moves",
+  "category": "News",
+  "excerpt": "Researchers studying the crab Neohelice granulata have found a rare way to record electrical activity from single neurons while the animal is awake and behaving normally. This gives them a direct window into how neurons work during real movement instead of only in restrained or anesthetized animals."
+ },
+ {
+  "title": "Study finds signs that depression may slow the birth of new brain cells",
+  "url": "news.html#n-study-finds-signs-that-depression-may-slow-the-birth-of-new-brain-cells",
+  "category": "News",
+  "excerpt": "Researchers examined hippocampal tissue from people who had major depressive disorder and found patterns suggesting that the process of making new neurons was disrupted. They also identified specific molecular programs tied to this process that could help guide future treatment research."
+ },
+ {
+  "title": "Removing one type of immune cell protected mice from tau related brain damage",
+  "url": "news.html#n-removing-one-type-of-immune-cell-protected-mice-from-tau-related-brain-damage",
+  "category": "News",
+  "excerpt": "In mice prone to tau disease, scientists eliminated a peripheral immune cell called cDC1 and saw far fewer T cells entering the brain along with protection from tau driven neurodegeneration. Tau tangle levels themselves did not change, suggesting the tangles and the immune attack that follows can be treated as separate problems."
+ },
+ {
+  "title": "Salk Scientists Propose That Traveling Brain Waves Help The Brain Predict The World",
+  "url": "news.html#n-salk-scientists-propose-that-traveling-brain-waves-help-the-brain-predict-the-world",
+  "category": "News",
+  "excerpt": "Reviewing existing physiological and computational studies, Salk Institute researchers argue that electrical waves moving across the visual cortex are not random noise but may act as a working system that helps the brain build internal models to predict and interpret what it sees."
+ },
+ {
+  "title": "Study Finds Glia Signal Guides Neuron Branching Through a JAK STAT CK2alpha Pathway",
+  "url": "news.html#n-study-finds-glia-signal-guides-neuron-branching-through-a-jak-stat-ck2alpha-pathway",
+  "category": "News",
+  "excerpt": "Researchers report that a signal called Upd1, released by glial cells, activates a JAK STAT CK2alpha pathway inside neurons and reshapes dendrite structure. The work was done in a fruit fly model and points to a new route by which glia influence neuron shape."
+ },
+ {
+  "title": "Real HEPA Air Filters Linked to Faster Executive Function Scores in Adults Over 40",
+  "url": "news.html#n-real-hepa-air-filters-linked-to-faster-executive-function-scores-in-adults-over-40",
+  "category": "News",
+  "excerpt": "In a crossover trial of 119 adults living near highways, participants aged 40 and older completed a mental flexibility test about 12 percent faster after one month of real HEPA filtration than after a sham month. Younger participants showed no such difference."
+ },
+ {
+  "title": "Dementia Risk Keeps Rising After Age 90, With Wide Gaps by Sex and Race",
+  "url": "news.html#n-dementia-risk-keeps-rising-after-age-90-with-wide-gaps-by-sex-and-race",
+  "category": "News",
+  "excerpt": "A UC Davis Health study called LifeAfter90 tracked more than 800 people over age 90 and found women had almost twice the dementia risk of men. Black and Hispanic participants also had significantly higher dementia rates than White and Asian participants, and the effect of the APOE gene differed between men and women."
+ },
+ {
+  "title": "Long-Term Melatonin Use Linked to Higher Heart Failure Risk in People With Chronic Insomnia",
+  "url": "news.html#n-long-term-melatonin-use-linked-to-higher-heart-failure-risk-in-people-with-chronic-insomnia",
+  "category": "News",
+  "excerpt": "In a preliminary study of people with chronic insomnia, those who took melatonin for a year or more had about a 90 percent higher risk of developing heart failure over five years than those who did not take it. The research was presented at an American Heart Association meeting and has not yet completed peer review."
+ },
+ {
+  "title": "Cerebellar Visual Regions Show Attention Effects Even When the Image Stays the Same",
+  "url": "news.html#n-cerebellar-visual-regions-show-attention-effects-even-when-the-image-stays-the-same",
+  "category": "News",
+  "excerpt": "A new Journal of Neuroscience study found that activity in cerebellar visual regions changed with attention even when the visual stimulus was held constant. The authors say this supports a role for the cerebellum in visual attention beyond motor control."
+ },
+ {
+  "title": "Brainstem Neurons May Act as a Brake on Breathing Rhythm",
+  "url": "news.html#n-brainstem-neurons-may-act-as-a-brake-on-breathing-rhythm",
+  "category": "News",
+  "excerpt": "A new study in live animals found a group of medullary GABAergic neurons that appears to work like a brake, helping coordinate and regulate the rhythm of breathing. The research comes from a single paper published in the Journal of Neuroscience in August 2026."
+ },
+ {
+  "title": "Infant Rat Brains Show Linked Delta Rhythms Between Cortex and Brainstem During Sleep",
+  "url": "news.html#n-infant-rat-brains-show-linked-delta-rhythms-between-cortex-and-brainstem-during-sleep",
+  "category": "News",
+  "excerpt": "A new study in the Journal of Neuroscience found that delta-wave brain rhythms in the cortex and brainstem of sleeping infant rats rise and fall together, suggesting the two regions may develop their roles in sleep regulation in step with each other."
+ },
+ {
+  "title": "Scientists Detail Early Cell Response to Brain Axon Injury",
+  "url": "news.html#n-scientists-detail-early-cell-response-to-brain-axon-injury",
+  "category": "News",
+  "excerpt": "Researchers studied how oligodendrocyte lineage cells, the support cells that insulate nerve fibers, react in the hours right after traumatic injury to axons in the central nervous system. The work maps out the order of cellular changes that follow this type of trauma."
+ },
+ {
+  "title": "Indiana University professor argues the brain has no single decision center",
+  "url": "news.html#n-indiana-university-professor-argues-the-brain-has-no-single-decision-center",
+  "category": "News",
+  "excerpt": "Professor Tom James proposes that what feels like one decision making step may actually come from ongoing interaction between perception, movement, the body, and the environment. This is a theoretical argument built on existing research, not a new experiment."
+ },
+ {
+  "title": "Alzheimer's Gene APOE4 May Shrink Brain Cells Years Before Memory Loss, Mouse Study Finds",
+  "url": "news.html#n-alzheimers-gene-apoe4-may-shrink-brain-cells-years-before-memory-loss-mouse-study-finds",
+  "category": "News",
+  "excerpt": "In mice, the Alzheimer's risk gene APOE4 raised levels of a protein called Nell2, which shrank neurons and caused overactive memory circuits linked to worse memory later. Lowering Nell2 in adult mice reversed some of these effects."
+ },
+ {
+  "title": "Human Brain Organoids Grown for Five Years Show Cells Still Maturing on a Human Timeline",
+  "url": "news.html#n-human-brain-organoids-grown-for-five-years-show-cells-still-maturing-on-a-human-timeline",
+  "category": "News",
+  "excerpt": "Scientists at Harvard and the Broad Institute grew human brain organoids in the lab for more than five years and found that the brain cells kept maturing and tracking developmental time on their own internal schedule, matching the slow pace seen in real human cortical development. The study offers researchers a new long-term model for studying why human brain development takes so much longer than in other species."
+ },
+ {
+  "title": "Midlife Exercise and Blood Sugar Linked to Slower Thinking Decline Decades Later",
+  "url": "news.html#n-midlife-exercise-and-blood-sugar-linked-to-slower-thinking-decline-decades-later",
+  "category": "News",
+  "excerpt": "A study of 402 adults followed for decades found that people who were more physically active in midlife showed slower cognitive decline later in life, with the strongest link seen among Mexican American participants. Among non-Hispanic white participants, lower fasting blood glucose in midlife was linked to slower decline instead."
+ },
+ {
+  "title": "Focusing on your body, not away from it, quieted an inflammatory response",
+  "url": "news.html#n-focusing-on-your-body-not-away-from-it-quieted-an-inflammatory-response",
+  "category": "News",
+  "excerpt": "In three preregistered experiments, researchers gave healthy volunteers a standard skin inflammation challenge and told them to either focus on the sensation or distract themselves. Focusing inward produced inflammatory responses about 1.5 times smaller, an effect that showed up in roughly 90 percent of participants across two separate groups."
+ },
+ {
+  "title": "Estrogen-only hormone therapy linked to lower dementia risk in large study",
+  "url": "news.html#n-estrogen-only-hormone-therapy-linked-to-lower-dementia-risk-in-large-study",
+  "category": "News",
+  "excerpt": "In a study of more than 21,000 women, those who used estrogen-only menopausal hormone therapy had 39 percent lower odds of a dementia diagnosis and 35 percent lower odds of Alzheimer's related brain changes such as amyloid plaques and tau tangles found at autopsy."
+ },
+ {
+  "title": "Shed brain protein NLGN3 fuels glioma growth via a mechanical signaling pathway",
+  "url": "news.html#n-shed-brain-protein-nlgn3-fuels-glioma-growth-via-a-mechanical-signaling-pathway",
+  "category": "News",
+  "excerpt": "Researchers found that a protein called NLGN3, once shed from cells, binds a sugar coated protein on the surface of both normal and cancerous brain glial cells. This binding switches on mechanical signaling inside the cells that pushes glioma tumors to grow and keeps them in an early progenitor like state."
+ },
+ {
+  "title": "New mouse tools let scientists map and control brain cells that sense psychedelic drugs",
+  "url": "news.html#n-new-mouse-tools-let-scientists-map-and-control-brain-cells-that-sense-psychedelic-drugs",
+  "category": "News",
+  "excerpt": "Researchers led by Yi-Ting Chiu created engineered mouse lines that let them locate, target and adjust the activity of neurons carrying the serotonin 2A receptor, the molecule psychedelic drugs act on. They confirmed the tool works using chemical tests, electrical recordings of neurons and behavior tests in mice."
+ },
+ {
+  "title": "Brain's Language Network Shows Up Even During Non Language Tasks",
+  "url": "news.html#n-brains-language-network-shows-up-even-during-non-language-tasks",
+  "category": "News",
+  "excerpt": "Researchers analyzed 1,957 brain scans from 1,199 people and found a left leaning brain network tied to language that stays active even when someone is doing an unrelated task. This pattern appeared consistently across the scans, suggesting the network could help locate language areas in patients who cannot complete language tests in a scanner."
+ },
+ {
+  "title": "Six-dataset brain scan study of 23,417 people finds depression's brain pattern is less consistent than earlier work suggested",
+  "url": "news.html#n-six-dataset-brain-scan-study-of-23-417-people-finds-depressions-brain-pattern-is-less-consistent-than-earlier-work-suggested",
+  "category": "News",
+  "excerpt": "Researchers analyzed brain scans from 23,417 people across six large datasets and found associations between depression and differences in motor and visual brain regions, a result not emphasized in smaller earlier studies. The study also confirmed earlier findings of reduced gray matter in the frontal cortex, anterior cingulate, and insula, but did not find the subcortical differences such as in the amygdala or hippocampus that some smaller studies had reported."
+ },
+ {
+  "title": "Dense wiring map of a small hippocampal circuit shows organized patterns of connections",
+  "url": "news.html#n-dense-wiring-map-of-a-small-hippocampal-circuit-shows-organized-patterns-of-connections",
+  "category": "News",
+  "excerpt": "Researchers reconstructed a small volume of hippocampal CA3 tissue at high density and found spatial gradients in wiring, highly convergent connections onto pyramidal neurons, and feedforward inhibition that varies by cell type."
+ },
+ {
+  "title": "Brain cells for social reward and sugar reward stay mostly separate in one animal study",
+  "url": "news.html#n-brain-cells-for-social-reward-and-sugar-reward-stay-mostly-separate-in-one-animal-study",
+  "category": "News",
+  "excerpt": "Researchers recording activity in the basolateral amygdala found that neurons responding to social reward and neurons responding to sucrose reward were largely different groups, not the same cells doing double duty. The pattern also differed by sex, with males showing similar activity for both rewards and females showing a stronger sucrose response."
+ },
+ {
+  "title": "Two types of deep brain cells process sound in different ways",
+  "url": "news.html#n-two-types-of-deep-brain-cells-process-sound-in-different-ways",
+  "category": "News",
+  "excerpt": "Researchers Ghimire and Williamson found that layer 5 and layer 6b extratelencephalic neurons in the auditory cortex respond to sound differently. Layer 5 neurons showed stronger sound-evoked activity, more selective firing patterns, and steadier responses across repeated trials compared to layer 6b neurons."
+ },
+ {
+  "title": "Rapamycin briefly reverses autism-like brain signs in mice",
+  "url": "news.html#n-rapamycin-briefly-reverses-autism-like-brain-signs-in-mice",
+  "category": "News",
+  "excerpt": "In mice whose mothers had mild inflammation during pregnancy, one dose of the drug rapamycin normalized overactive brain signaling, seizure risk, sensory sensitivity and repetitive behaviors within about two hours. The effect faded afterward and did not repair the underlying brain structure."
+ },
+ {
+  "title": "MIT Study Finds People Can Solve Logic Puzzles Without Using Language Brain Areas",
+  "url": "news.html#n-mit-study-finds-people-can-solve-logic-puzzles-without-using-language-brain-areas",
+  "category": "News",
+  "excerpt": "MIT researchers tested people with severe language impairments from stroke and found they solved logic puzzles as well as people without such impairments, while brain scans showed the brain's language regions stayed quiet during the puzzles."
+ },
+ {
+  "title": "An Immune Molecule Tied to Infection in Pregnancy Warped Cortical Growth in Lab-Grown Human Fetal Brain Tissue",
+  "url": "news.html#n-an-immune-molecule-tied-to-infection-in-pregnancy-warped-cortical-growth-in-lab-grown-human-fetal-brain-tissue",
+  "category": "News",
+  "excerpt": "Researchers built a three-dimensional model, which they call a cerebroid, from real human fetal cortex, keeping its mix of cell types and its structure intact. When they exposed it to IL-17A, an immune signaling molecule linked to infection during pregnancy, the tissue folded too early, grew thicker, and pushed out neurons faster than it should."
+ },
+ {
+  "title": "Exercise May Help The Aging Brain Clear Out Waste, Review Finds",
+  "url": "news.html#n-exercise-may-help-the-aging-brain-clear-out-waste-review-finds",
+  "category": "News",
+  "excerpt": "A review of animal and human studies from Victoria University found that physical activity supports several processes linked to the brain's glymphatic waste clearance system, including better sleep, lower inflammation, reduced blood pressure and vascular stiffness, and improved deep sleep and slow wave brain activity tied to cleanup during rest."
+ },
+ {
+  "title": "Both Breeding and Training Shape the Brain Networks Dogs Use to Understand Us",
+  "url": "news.html#n-both-breeding-and-training-shape-the-brain-networks-dogs-use-to-understand-us",
+  "category": "News",
+  "excerpt": "Harvard researchers scanned the brain wiring of 108 dogs and found that the networks a dog uses to make sense of human voices and words look different depending on where the dog comes from. Generations of selective breeding had broadly reshaped those communication pathways, with the ones tied to processing words changed the most, so a modern breed's brain is wired differently from an ancient, less-bred lineage."
+ },
+ {
+  "title": "Signals in the Brain's Wiring, Not Just Its Gray Matter, Tracked Brain Age and ADHD Symptoms in Young People",
+  "url": "news.html#n-signals-in-the-brains-wiring-not-just-its-gray-matter-tracked-brain-age-and-adhd-symptoms-in-young-people",
+  "category": "News",
+  "excerpt": "Most brain imaging reads activity from gray matter and treats the white-matter wiring beneath it as passive cable. Across four groups of children and young adults, researchers found that functional signals in white matter carry real information of their own."
+ },
+ {
+  "title": "People in Three Countries Share a Map of Where They're Most Ticklish",
+  "url": "news.html#n-people-in-three-countries-share-a-map-of-where-theyre-most-ticklish",
+  "category": "News",
+  "excerpt": "Comparing Chinese, Dutch, and Greek participants, researchers found that people agree to a surprising degree on where the body is most ticklish, and that map turned out to be different from the maps for touch, pain, and pleasure. The ticklish spots tended to be places we rarely touch, like the armpits, the soles of the feet, and the sides of the torso, which fits an old guess of Darwin's."
+ },
+ {
+  "title": "Resources",
+  "url": "resources.html",
+  "category": "Resources",
+  "excerpt": "A curated guide to neuroscience books, conferences, podcasts, journals, courses, and organizations worth your time."
+ },
+ {
+  "title": "Neuro Funding Finder",
+  "url": "funding.html",
+  "category": "Resources",
+  "excerpt": "Find grants, fellowships, and funding for neuroscience research and training, from student awards to major career grants."
+ },
+ {
+  "title": "AI & the Brain",
+  "url": "topics/ai-and-the-brain.html",
+  "category": "Topics",
+  "excerpt": "Where neuroscience meets artificial intelligence: what brains and machines teach us about each other, in plain English."
  }
 ]

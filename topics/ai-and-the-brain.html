@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submissions — The Neuroscience Review</title>
-  <meta name="description" content="We publish a small number of outside contributors. Here's what it takes to be considered, and how to submit a pitch.">
-  
+  <title>AI &amp; the Brain — The Neuroscience Review</title>
+  <meta name="description" content="Where neuroscience and artificial intelligence meet: AI used to read brain scans, brain findings held up against machine models, and the clinical questions that follow. Verified, no hype.">
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap">
-<!-- Theme: set before paint to avoid a flash of the wrong theme -->
-<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else if(matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}</script>
-<style>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
+  <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else if(matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}</script>
+  <style>
   :root{
     --bg:#ffffff;
     --bg-tint:#f6f5f1;
@@ -580,19 +580,35 @@
   }
 
 </style>
+  <style>
+    /* Compact archive: a dense, scannable list so several posts show above the fold,
+       instead of one oversized lead image eating the whole screen. */
+    .post-list { max-width: 860px; margin: 0 auto; }
+    .post-card { padding: 1.6rem 0; }
+    .post-card:first-child { padding-top: 0.2rem; }
+    /* AI & the Brain collection: a scope note, a start-here callout, and type-labelled lists */
+    .collection-lede { font-family: var(--serif); font-size: 1.12rem; line-height: 1.65; color: var(--ink-soft); margin: 0 auto 1.6rem; max-width: 860px; }
+    .collection-angles { max-width: 860px; margin: 0 auto 1.8rem; padding: 0 0 0 1.2rem; list-style: none; }
+    .collection-angles li { font-family: var(--serif); font-size: 1.02rem; line-height: 1.55; color: var(--ink-soft); padding-left: 1rem; border-left: 2px solid var(--rule-strong); margin-bottom: .75rem; }
+    .collection-angles b { font-weight: 600; color: var(--ink); }
+    .collection-start { max-width: 860px; margin: 0 auto 2.6rem; padding: 1rem 1.2rem; border: 1px solid var(--rule-strong); border-left: 3px solid var(--accent); background: var(--bg-tint); border-radius: 2px; font-family: var(--sans); font-size: .95rem; line-height: 1.55; color: var(--ink-soft); }
+    .collection-start a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .collection-start a:hover { text-decoration: underline; }
+    .collection-note { max-width: 860px; margin: 2.4rem auto 0; font-family: var(--sans); font-size: .82rem; line-height: 1.5; color: var(--muted); }
+  </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
-  <link rel="canonical" href="https://theneuroreview.com/contribute.html">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
+  <link rel="canonical" href="https://theneuroreview.com/topics/ai-and-the-brain.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Neuroscience Review">
-  <meta property="og:title" content="Submit to The Neuroscience Review">
-  <meta property="og:description" content="We publish a small number of outside contributors. Here's what it takes to be considered, and how to submit a pitch.">
-  <meta property="og:url" content="https://theneuroreview.com/contribute.html">
+  <meta property="og:title" content="AI &amp; the Brain | The Neuroscience Review">
+  <meta property="og:description" content="Where neuroscience and artificial intelligence meet: AI used to read brain scans, brain findings held up against machine models, and the clinical questions that follow.">
+  <meta property="og:url" content="https://theneuroreview.com/topics/ai-and-the-brain.html">
   <meta property="og:image" content="https://theneuroreview.com/og-cover.png?v=2">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Submit to The Neuroscience Review">
-  <meta name="twitter:description" content="We publish a small number of outside contributors. Here's what it takes to be considered, and how to submit a pitch.">
+  <meta name="twitter:title" content="AI &amp; the Brain | The Neuroscience Review">
+  <meta name="twitter:description" content="Where neuroscience and artificial intelligence meet: AI used to read brain scans, brain findings held up against machine models, and the clinical questions that follow.">
   <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
 </head>
 <body>
@@ -613,7 +629,7 @@
 <header class="masthead">
   <div class="wrap">
     <h1 class="masthead__name">
-      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <a href="../index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>The Neuroscience Review</a>
     </h1>
   </div>
 </header>
@@ -621,33 +637,33 @@
 <!-- Primary navigation (single row; Subscribe now lives in the footer) -->
 <nav class="nav" aria-label="Primary">
   <div class="wrap">
-    <a href="index.html">Home</a>
+    <a href="../index.html">Home</a>
     <button class="nav__trigger" id="articles-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="articles-menu">Articles<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button class="nav__trigger" id="news-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="news-menu">News<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <a href="lab.html">Lab</a>
+    <a href="../lab.html">Lab</a>
     <button class="nav__trigger" id="resources-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="resources-menu">Resources<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <a href="search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
+    <a href="../search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾</button>
   </div>
   <div class="nav__menu" id="articles-menu" hidden>
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
         <p class="nav__col-head">Browse</p>
-        <a href="posts.html">All articles</a>
-        <a href="topics.html">Topics</a>
-        <a href="start-here.html">Start here</a>
+        <a href="../posts.html">All articles</a>
+        <a href="../topics.html">Topics</a>
+        <a href="../start-here.html">Start here</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">Formats</p>
-        <a href="topics/first-principles.html">First principles</a>
-        <a href="topics/paper-breakdown.html">Paper breakdowns</a>
-        <a href="topics/myth-busting.html">Myth-busting</a>
-        <a href="the-paper-that-hooked-me.html">The Paper That Hooked Me</a>
+        <a href="../topics/first-principles.html">First principles</a>
+        <a href="../topics/paper-breakdown.html">Paper breakdowns</a>
+        <a href="../topics/myth-busting.html">Myth-busting</a>
+        <a href="../the-paper-that-hooked-me.html">The Paper That Hooked Me</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">Community</p>
-        <a href="commons.html">Latest contributions</a>
-        <a href="contribute.html">Write for us</a>
+        <a href="../commons.html">Latest contributions</a>
+        <a href="../contribute.html">Write for us</a>
       </div>
     </div>
   </div>
@@ -655,17 +671,17 @@
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
         <p class="nav__col-head">Browse</p>
-        <a href="news.html">Latest research briefs</a>
-        <a href="topics/ai-and-the-brain.html">AI &amp; the Brain</a>
+        <a href="../news.html">Latest research briefs</a>
+        <a href="../topics/ai-and-the-brain.html">AI &amp; the Brain</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">By topic</p>
-        <a href="news.html?topic=disease-and-clinic">Disease &amp; clinic</a>
-        <a href="news.html?topic=methods-and-tech">Methods &amp; tech</a>
-        <a href="news.html?topic=senses">Senses</a>
-        <a href="news.html?topic=memory-and-learning">Memory &amp; learning</a>
-        <a href="news.html?topic=mind-and-behavior">Mind &amp; behavior</a>
-        <a href="news.html?topic=cells-and-circuits">Cells &amp; circuits</a>
+        <a href="../news.html?topic=disease-and-clinic">Disease &amp; clinic</a>
+        <a href="../news.html?topic=methods-and-tech">Methods &amp; tech</a>
+        <a href="../news.html?topic=senses">Senses</a>
+        <a href="../news.html?topic=memory-and-learning">Memory &amp; learning</a>
+        <a href="../news.html?topic=mind-and-behavior">Mind &amp; behavior</a>
+        <a href="../news.html?topic=cells-and-circuits">Cells &amp; circuits</a>
       </div>
     </div>
   </div>
@@ -673,126 +689,192 @@
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
         <p class="nav__col-head">Resources</p>
-        <a href="resources.html#books">Books</a>
-        <a href="resources.html#conferences">Conferences</a>
-        <a href="resources.html#podcasts">Podcasts</a>
-        <a href="resources.html#journals">Reading the research</a>
-        <a href="funding.html">Funding finder</a>
-        <a href="resources.html">All resources</a>
+        <a href="../resources.html#books">Books</a>
+        <a href="../resources.html#conferences">Conferences</a>
+        <a href="../resources.html#podcasts">Podcasts</a>
+        <a href="../resources.html#journals">Reading the research</a>
+        <a href="../funding.html">Funding finder</a>
+        <a href="../resources.html">All resources</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">Learn</p>
-        <a href="start-here.html">Start here</a>
-        <a href="topics/first-principles.html">First principles</a>
-        <a href="brain-myths.html">Brain myths</a>
+        <a href="../start-here.html">Start here</a>
+        <a href="../topics/first-principles.html">First principles</a>
+        <a href="../brain-myths.html">Brain myths</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">Explore</p>
-        <a href="lab.html">The Lab</a>
-        <a href="brain.html">Brain</a>
-        <a href="neuron.html">Neuron</a>
-        <a href="synapse.html">Synapse</a>
+        <a href="../lab.html">The Lab</a>
+        <a href="../brain.html">Brain</a>
+        <a href="../neuron.html">Neuron</a>
+        <a href="../synapse.html">Synapse</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">About</p>
-        <a href="about.html">About</a>
-        <a href="authors.html">Authors</a>
-        <a href="trust.html">How we work</a>
+        <a href="../about.html">About</a>
+        <a href="../authors.html">Authors</a>
+        <a href="../trust.html">How we work</a>
       </div>
     </div>
   </div>
 </nav>
 
 <main id="main">
-    <div class="reading-shell">
+  <div class="wrap">
     <article class="post">
       <header class="post-header post-header--compact">
-        <div class="post-header__eyebrow">Submissions</div>
-        <h1 class="post-header__title">Be considered for a byline.</h1>
-        <p class="post-header__subtitle">We publish a small number of outside contributors, and getting in works much like submitting to a journal. You send a pitch, we weigh it against a real bar, and a few are accepted.</p>
+        <div class="post-header__eyebrow"><a href="../topics.html">Topics</a></div>
+        <h1 class="post-header__title">AI &amp; the Brain.</h1>
+        <p class="post-header__subtitle">Where neuroscience and artificial intelligence meet, covered the same way as everything else here: verified, and without the hype.</p>
       </header>
-
-      <div class="post-body">
-        <p>The Review started as one person writing the kind of neuroscience he wished existed when he was learning the field. It's grown, and it's now opening to outside writers. We bring them in carefully, because the whole promise of the site is that a reader can trust every piece on it. Being published here is meant to mean something.</p>
-
-        <p>So this isn't an open call. It's closer to a submission. You pitch an idea, we weigh it against the same bar we hold our own work to, and if it clears, we work with you to publish it. Plenty of good pitches don't make it, and that's the point.</p>
-
-        <h2>Who we consider</h2>
-
-        <p>Neuroscience postdocs, researchers, faculty, and science communicators who can take a real finding and make it land for a smart general reader. You don't need a journalism degree. You do need a clear voice, a firm command of the science, and the habit of citing your sources. If you're a student, undergrad or grad, the full essays aren't the place to start, but The Commons is open to you, and there's more on that below.</p>
-
-        <h2>What we publish, and what we don't</h2>
-
-        <p><strong>We publish</strong> deep dives and paper breakdowns on peer-reviewed neuroscience, written for a curious non-specialist, usually 800 to 1,400 words. First-principles pieces that build a concept from scratch are welcome too.</p>
-
-        <p><strong>We don't publish</strong> press-release rewrites, opinion without evidence, listicles, anything promotional or sponsored, or text generated or edited by AI. A reader has to be able to trust the site, so the writing has to be yours and the science has to be right.</p>
-
-        <h2>What it takes to get in</h2>
-
-        <ul>
-          <li>Plain, warm prose with one clear takeaway.</li>
-          <li>At least three peer-reviewed primary sources, cited, with claims linked to the actual papers.</li>
-          <li>Jargon defined the first time you use it.</li>
-          <li>Animal studies labeled as animal studies. Correlation never dressed up as causation.</li>
-          <li>Your own writing, start to finish. No AI-generated text.</li>
-        </ul>
-
-        <h2>How submission works</h2>
-
-        <p><strong>Step 1. You pitch.</strong> Email a one-paragraph pitch. Tell us your angle, why it matters, the key paper or papers you'd cite, and one line about who you are.</p>
-
-        <p><strong>Step 2. We review.</strong> We read every submission and reply within about a week. Not every pitch is accepted. If yours is, we'll tell you what we're looking for and you write the full draft as a Google Doc or a Markdown file. You never touch code.</p>
-
-        <p><strong>Step 3. We edit and publish.</strong> One or two rounds of editing with us, then we format it, give it a figure, and run it on a Wednesday with your byline.</p>
-
-        <aside class="note note--summary">
-          <span class="note__label">Before you submit</span>
-          <ul>
-            <li>One clear angle and takeaway</li>
-            <li>Three or more peer-reviewed sources</li>
-            <li>Roughly 800 to 1,400 words in mind</li>
-            <li>A one-line bio</li>
-            <li>Your own writing, no AI-generated text</li>
-          </ul>
-        </aside>
-
-        <h2>What you get</h2>
-
-        <p>A real byline on a site built around accuracy, distribution to our Wednesday email, and hands-on editing that turns your draft into a polished, portfolio-ready clip you can point to for SciComm applications or your own writing. You keep full credit and get <a href="authors.html">your own author page</a>. To be upfront, contributors are unpaid for now, because the site is free and new. If it ever starts earning, contributors share in it. What we can offer today is publication in The Neuroscience Review, which goes out every Wednesday, one or two rounds of hands-on editing, and a published piece that had to earn its place.</p>
-
-        <h2>A lighter way in</h2>
-
-        <p>If a full essay feels like too much to take on, or you're a student, start with <a href="commons.html"><strong>The Commons</strong></a>. It's a space for short notes from people in and around neuroscience, a talk that stuck with you, a method you love, a finding you're still chewing on. You send a paragraph, we read every one, and if it's a fit it goes up with your name on it. It's the simplest way to take part. <a href="commons.html">See The Commons and how to take part</a>.</p>
-
-        <p>Lighter still is <a href="the-paper-that-hooked-me.html"><strong>The Paper That Hooked Me</strong></a>, a recurring column where a scientist or student answers five short questions about the one paper that changed how they think. No essay, just the five prompts in a few sentences each. <a href="the-paper-that-hooked-me.html">See the column and how to take part</a>.</p>
-
-        <h2>Rights and credit</h2>
-
-        <p>You keep the copyright to your work. You grant us the right to publish it first, keep it up, and send it to subscribers. You're free to republish it elsewhere later, just link back to the version here.</p>
-
-        <h2>Submit a pitch</h2>
-
-        <p>Send your one-paragraph pitch to <a href="mailto:theneuroreview@gmail.com?subject=Pitch%20for%20The%20Neuroscience%20Review">theneuroreview@gmail.com</a> with the subject line "Pitch." We read all of them, and we're honest when something isn't the right fit. If you think your idea clears the bar, we want to see it.</p>
-        <p class="submission-note">By sending a pitch or draft you agree to our <a href="terms.html">submission terms</a>.</p>
-      </div>
     </article>
-    </div>
+
+    <p class="collection-lede">This collection follows a few distinct lines where the two fields touch. Every item links straight to the real brief or article, and nothing here is invented.</p>
+    <ul class="collection-angles">
+      <li><b>AI used to study brains.</b> Models that read scans or estimate what a scarcer, more specialized tool used to measure directly.</li>
+      <li><b>Brains held up against AI models.</b> How patterns of real neural activity compare with the representations inside systems like GPT-2.</li>
+      <li><b>Brain-inspired AI.</b> Ideas drawn from how the brain works that shape how models are built and understood.</li>
+      <li><b>The clinic, where it applies.</b> What it means, and what still has to be proven, when a model is pointed at a patient.</li>
+    </ul>
+
+    <p class="collection-start">New here? Start with <a href="../posts/what-fmri-measures.html">What does an fMRI actually measure?</a> &mdash; the plain-language ground that the imaging and modeling work in this collection is built on.</p>
+
+    <section aria-labelledby="ai-featured">
+      <h2 class="section-heading" id="ai-featured">Featured</h2>
+      <ul class="post-list">
+        <li class="post-card">
+          <a href="../news.html#n-a-model-estimates-alzheimers-tau-from-a-more-common-brain-scan">
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__meta-type">Research brief</span>
+                <span>October 2, 2026</span>
+                <span class="post-card__meta-divider">·</span>
+                <span>Nature Communications</span>
+              </div>
+              <h2 class="post-card__title">A Model Estimates Alzheimer&rsquo;s Tau From a More Common Brain Scan</h2>
+              <p class="post-card__lede">A machine-learning model trained on how the brain uses energy tries to estimate Alzheimer&rsquo;s tau burden from an ordinary FDG-PET scan, instead of the specialized tau PET most clinics don&rsquo;t have. A clear case of AI pointed at a clinical reading, with its limits stated plainly.</p>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="../news.html#n-the-hippocampus-carries-a-map-of-meaning-that-resembles-an-ais">
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__meta-type">Research brief</span>
+                <span>September 30, 2026</span>
+                <span class="post-card__meta-divider">·</span>
+                <span>Nature Neuroscience</span>
+              </div>
+              <h2 class="post-card__title">The Hippocampus Carries a Map of Meaning That Resembles an AI&rsquo;s</h2>
+              <p class="post-card__lede">Recording from single neurons as people listened to spoken stories, researchers found the hippocampus holds a map of word meaning that lines up most closely with the word embeddings inside the language model GPT-2. A direct comparison of brain and model representations.</p>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="../posts/brain-implant-inner-voice.html">
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__meta-type">Explainer</span>
+                <span>August 5, 2026</span>
+                <span class="post-card__meta-divider">·</span>
+                <span>Paper breakdown</span>
+              </div>
+              <h2 class="post-card__title">Can a brain implant read the voice in your head?</h2>
+              <p class="post-card__lede">A brain implant caught sentences a person only imagined, decoded by a model trained on their own neural activity. The same study shows how limited, and how careful, that reading has to be.</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="ai-list">
+      <h2 class="section-heading" id="ai-list">More in this collection</h2>
+      <ul class="post-list">
+        <li class="post-card">
+          <a href="../news.html#n-a-model-estimates-alzheimers-tau-from-a-more-common-brain-scan">
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__meta-type">Research brief</span>
+                <span>October 2, 2026</span>
+                <span class="post-card__meta-divider">·</span>
+                <span>Nature Communications</span>
+              </div>
+              <h2 class="post-card__title">A Model Estimates Alzheimer&rsquo;s Tau From a More Common Brain Scan</h2>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="../news.html#n-the-hippocampus-carries-a-map-of-meaning-that-resembles-an-ais">
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__meta-type">Research brief</span>
+                <span>September 30, 2026</span>
+                <span class="post-card__meta-divider">·</span>
+                <span>Nature Neuroscience</span>
+              </div>
+              <h2 class="post-card__title">The Hippocampus Carries a Map of Meaning That Resembles an AI&rsquo;s</h2>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="../news.html#n-salk-scientists-propose-that-traveling-brain-waves-help-the-brain-predict-the-world">
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__meta-type">Research brief</span>
+                <span>September 1, 2026</span>
+                <span class="post-card__meta-divider">·</span>
+                <span>Salk Institute</span>
+              </div>
+              <h2 class="post-card__title">Salk Scientists Propose That Traveling Brain Waves Help the Brain Predict the World</h2>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="../posts/brain-implant-inner-voice.html">
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__meta-type">Reading recommendation</span>
+                <span>August 5, 2026</span>
+                <span class="post-card__meta-divider">·</span>
+                <span>Paper breakdown</span>
+              </div>
+              <h2 class="post-card__title">Can a brain implant read the voice in your head?</h2>
+            </div>
+          </a>
+        </li>
+        <li class="post-card">
+          <a href="../posts/what-fmri-measures.html">
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <span class="post-card__meta-type">Explainer</span>
+                <span>June 10, 2026</span>
+                <span class="post-card__meta-divider">·</span>
+                <span>First principles</span>
+              </div>
+              <h2 class="post-card__title">What does an fMRI actually measure?</h2>
+            </div>
+          </a>
+        </li>
+      </ul>
+      <p class="collection-note">New briefs are added as they publish. For the full feed, see <a href="../news.html">the latest research briefs</a>.</p>
+    </section>
+  </div>
   </main>
 
-<footer class="foot">
+  <footer class="foot">
   <div class="wrap">
     <div class="foot__top">
       <div>
         <p class="foot__name">The Neuroscience Review</p>
         <p class="foot__rule">The rigor of a journal. The readability of a Sunday paper.</p>
         <nav class="foot__nav" aria-label="Footer">
-          <a href="index.html">Home</a>
-          <a href="posts.html">Articles</a>
-          <a href="news.html">News</a>
-          <a href="lab.html">Lab</a>
-          <a href="commons.html">The Commons</a>
+          <a href="../index.html">Home</a>
+          <a href="../posts.html">Articles</a>
+          <a href="../news.html">News</a>
+          <a href="../lab.html">Lab</a>
+          <a href="../commons.html">The Commons</a>
           <a href="#subscribe">Subscribe</a>
-          <a href="search.html">Search</a>
+          <a href="../search.html">Search</a>
         </nav>
       </div>
       <div class="foot__subscribe">
@@ -808,15 +890,15 @@
       </div>
     </div>
     <p class="foot__links">
-      <a href="start-here.html">Start here</a> ·
-      <a href="topics.html">Topics</a> ·
-      <a href="about.html">About</a> ·
-      <a href="contribute.html">Submissions</a> ·
-      <a href="brain-myths.html">Brain myths</a> ·
-      <a href="trust.html">How we fact-check</a> ·
-      <a href="privacy.html">Privacy</a> ·
-      <a href="terms.html">Terms</a> ·
-      <a href="disclaimer.html">Disclaimer</a>
+      <a href="../start-here.html">Start here</a> ·
+      <a href="../topics.html">Topics</a> ·
+      <a href="../about.html">About</a> ·
+      <a href="../contribute.html">Submissions</a> ·
+      <a href="../brain-myths.html">Brain myths</a> ·
+      <a href="../trust.html">How we fact-check</a> ·
+      <a href="../privacy.html">Privacy</a> ·
+      <a href="../terms.html">Terms</a> ·
+      <a href="../disclaimer.html">Disclaimer</a>
     </p>
     <p class="foot__fine">The Neuroscience Review is an independent neuroscience review, written for curious readers who want the actual science. Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>. &copy; 2026 The Neuroscience Review.</p>
     <p class="foot__fine">Neuron photo by <a href="https://commons.wikimedia.org/wiki/File:Cultured_Rat_Hippocampal_Neuron_(24327909026).jpg" target="_blank" rel="noopener">ZEISS Microscopy</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>. fMRI scan by <a href="https://commons.wikimedia.org/wiki/File:FMRI_BOLD_activation_in_an_emotional_Stroop_task.jpg" target="_blank" rel="noopener">Ovaysikia et al.</a>, <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>.</p>
@@ -877,7 +959,7 @@
 </style>
 <div class="privacy-bar" id="privacy-bar" role="region" aria-label="Privacy notice" hidden>
   <div class="privacy-bar__inner">
-    <p class="privacy-bar__text">We store your theme in your browser and use only cookieless, privacy-friendly analytics, with no ads and no tracking cookies. See our <a href="privacy.html">privacy notice</a> for the details.</p>
+    <p class="privacy-bar__text">We store your theme in your browser and use only cookieless, privacy-friendly analytics, with no ads and no tracking cookies. See our <a href="../privacy.html">privacy notice</a> for the details.</p>
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>

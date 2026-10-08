@@ -124,7 +124,7 @@
     color:var(--muted);
   }
   .utility .wrap{display:flex;justify-content:space-between;align-items:center;min-height:36px;gap:1rem;}
-  .utility__date{text-transform:uppercase;letter-spacing:.1em;}
+  .utility__date{letter-spacing:.02em;}
   .utility__right{display:flex;gap:1.3rem;align-items:center;}
   .utility a{text-decoration:none;color:var(--muted);}
   .utility a:hover{color:var(--accent);}
@@ -630,7 +630,7 @@
   <div class="wrap">
     <a href="../index.html">Home</a>
     <button class="nav__trigger" id="articles-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="articles-menu">Articles<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <a href="../news.html">News</a>
+    <button class="nav__trigger" id="news-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="news-menu">News<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <a href="../lab.html">Lab</a>
     <button class="nav__trigger" id="resources-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="resources-menu">Resources<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <a href="../search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
@@ -640,36 +640,71 @@
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
         <p class="nav__col-head">Browse</p>
-        <a href="../posts.html">All Articles</a>
-        <a href="../topics.html">By Topic</a>
+        <a href="../posts.html">All articles</a>
+        <a href="../topics.html">Topics</a>
+        <a href="../start-here.html">Start here</a>
       </div>
       <div class="nav__col">
-        <p class="nav__col-head">The Commons</p>
-        <a href="../commons.html">About The Commons</a>
+        <p class="nav__col-head">Formats</p>
+        <a href="../topics/first-principles.html">First principles</a>
+        <a href="../topics/paper-breakdown.html">Paper breakdowns</a>
+        <a href="../topics/myth-busting.html">Myth-busting</a>
+        <a href="../the-paper-that-hooked-me.html">The Paper That Hooked Me</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Community</p>
+        <a href="../commons.html">Latest contributions</a>
         <a href="../contribute.html">Write for us</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav__menu" id="news-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Browse</p>
+        <a href="../news.html">Latest research briefs</a>
+        <a href="../topics/ai-and-the-brain.html">AI &amp; the Brain</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">By topic</p>
+        <a href="../news.html?topic=disease-and-clinic">Disease &amp; clinic</a>
+        <a href="../news.html?topic=methods-and-tech">Methods &amp; tech</a>
+        <a href="../news.html?topic=senses">Senses</a>
+        <a href="../news.html?topic=memory-and-learning">Memory &amp; learning</a>
+        <a href="../news.html?topic=mind-and-behavior">Mind &amp; behavior</a>
+        <a href="../news.html?topic=cells-and-circuits">Cells &amp; circuits</a>
       </div>
     </div>
   </div>
   <div class="nav__menu" id="resources-menu" hidden>
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
+        <p class="nav__col-head">Resources</p>
+        <a href="../resources.html#books">Books</a>
+        <a href="../resources.html#conferences">Conferences</a>
+        <a href="../resources.html#podcasts">Podcasts</a>
+        <a href="../resources.html#journals">Reading the research</a>
+        <a href="../funding.html">Funding finder</a>
+        <a href="../resources.html">All resources</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Learn</p>
+        <a href="../start-here.html">Start here</a>
+        <a href="../topics/first-principles.html">First principles</a>
+        <a href="../brain-myths.html">Brain myths</a>
+      </div>
+      <div class="nav__col">
         <p class="nav__col-head">Explore</p>
-        <a href="../start-here.html">Start Here</a>
-        <a href="../topics.html">Topics</a>
         <a href="../lab.html">The Lab</a>
+        <a href="../brain.html">Brain</a>
+        <a href="../neuron.html">Neuron</a>
+        <a href="../synapse.html">Synapse</a>
       </div>
       <div class="nav__col">
-        <p class="nav__col-head">Explainers</p>
-        <a href="../brain.html">The Brain</a>
-        <a href="../neuron.html">The Neuron</a>
-        <a href="../synapse.html">The Synapse</a>
-        <a href="../brain-myths.html">Brain Myths</a>
-      </div>
-      <div class="nav__col">
-        <p class="nav__col-head">The Review</p>
+        <p class="nav__col-head">About</p>
         <a href="../about.html">About</a>
-        <a href="../trust.html">How We Work</a>
-        <a href="../contribute.html">Contribute</a>
+        <a href="../authors.html">Authors</a>
+        <a href="../trust.html">How we work</a>
       </div>
     </div>
   </div>
@@ -798,9 +833,32 @@
     p.m.addEventListener('click',function(e){e.stopPropagation();});
   });
   document.addEventListener('click',function(){closeAll();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeAll();}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=pairs.filter(function(p){return p.t.getAttribute('aria-expanded')==='true';})[0];closeAll();if(o){o.t.focus();}}});
 })();
 </script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script>
+
+<!-- privacy-notice -->
+<style>
+  .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  .privacy-bar.is-visible{transform:translateY(0);}
+  .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
+  .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
+  .privacy-bar__text a{color:var(--accent);text-decoration:underline;}
+  .privacy-bar__btn{font-family:var(--sans);font-weight:600;font-size:12.5px;color:#fff;background:var(--accent);border:0;border-radius:999px;padding:8px 22px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+  .privacy-bar__btn:hover{background:var(--accent-hover);}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .privacy-bar__btn{color:#0b0f12;} }
+  :root[data-theme="dark"] .privacy-bar__btn{color:#0b0f12;}
+  @media(max-width:560px){ .privacy-bar__inner{justify-content:center;text-align:center;} }
+</style>
+<div class="privacy-bar" id="privacy-bar" role="region" aria-label="Privacy notice" hidden>
+  <div class="privacy-bar__inner">
+    <p class="privacy-bar__text">We store your theme in your browser and use only cookieless, privacy-friendly analytics, with no ads and no tracking cookies. See our <a href="../privacy.html">privacy notice</a> for the details.</p>
+    <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
+  </div>
+</div>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<!-- /privacy-notice -->
+
 </body>
 </html>
