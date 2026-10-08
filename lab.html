@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
   <!-- Theme (no flash of wrong theme) -->
   <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
-  <link rel="stylesheet" href="css/styles.css">
+  <!-- Shared design system is inlined below; this page is fully self-contained like the rest of the site. -->
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="canonical" href="https://theneuroreview.com/lab.html">
@@ -27,6 +27,436 @@
   <meta name="twitter:description" content="Small experiments you run on your own brain, right in the page.">
   <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
 
+  <!-- Shared design system — identical across the site (copied from the homepage). The bench skin below keeps its own teal instrument palette for the demos. -->
+  <style>
+  :root{
+    --bg:#ffffff;
+    --bg-tint:#f6f5f1;
+    --surface:#ffffff;
+    --ink:#15181b;
+    --ink-soft:#3b434a;
+    --muted:#6c757c;
+    --rule:#e4e1db;
+    --rule-strong:#cbc7bf;
+    --accent:#1d4c64;
+    --logo-mark:#2d5d7b;
+    --accent-hover:#11394d;
+    --band-cool:#edf3f6;
+    --label:#5c7a85;
+    --serif:"Newsreader",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --wrap:min(94vw,1680px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#111417;
+      --bg-tint:#171a1e;
+      --surface:#15181b;
+      --ink:#ecebe6;
+      --ink-soft:#bcc2c7;
+      --muted:#8c959b;
+      --rule:#2a2f34;
+      --rule-strong:#3b4046;
+      --accent:#86b9d2;
+      --logo-mark:#86b9d2;
+      --accent-hover:#aad4e8;
+      --band-cool:#121b22;
+      --label:#8fb0bb;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#111417;
+    --bg-tint:#171a1e;
+    --surface:#15181b;
+    --ink:#ecebe6;
+    --ink-soft:#bcc2c7;
+    --muted:#8c959b;
+    --rule:#2a2f34;
+    --rule-strong:#3b4046;
+    --accent:#86b9d2;
+    --logo-mark:#86b9d2;
+    --accent-hover:#aad4e8;
+    --band-cool:#121b22;
+    --label:#8fb0bb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;}
+  img,svg{max-width:100%;display:block;}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(24px,3vw,48px);}
+
+  .skip{position:absolute;left:-999px;top:0;background:var(--accent);color:#fff;padding:.6rem 1rem;z-index:100;}
+  .skip:focus{left:8px;top:8px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:1px;}
+
+  /* ---------- Top utility bar ---------- */
+  .utility{
+    border-bottom:1px solid var(--rule);
+    background:var(--bg-tint);
+    font-family:var(--sans);
+    font-size:.72rem;
+    letter-spacing:.04em;
+    color:var(--muted);
+  }
+  .utility .wrap{display:flex;justify-content:space-between;align-items:center;min-height:36px;gap:1rem;}
+  .utility__date{text-transform:uppercase;letter-spacing:.1em;}
+  .utility__right{display:flex;gap:1.3rem;align-items:center;}
+  .utility a{text-decoration:none;color:var(--muted);}
+  .utility a:hover{color:var(--accent);}
+
+  /* ---------- Masthead ---------- */
+  .masthead{text-align:center;padding:clamp(10px,1.8vw,18px) 0;border-bottom:2px solid var(--accent);}
+  .masthead__name{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(1.45rem,6vw,3.5rem);
+    line-height:1.02;
+    letter-spacing:-.02em;
+    margin:0;
+    color:var(--ink);
+  }
+  .masthead .site-logo{
+    text-decoration:none;
+    color:var(--ink);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(.45rem,1.6vw,.95rem);
+  }
+  .masthead .site-logo:hover{color:var(--accent);}
+  .masthead .site-logo__mark{color:var(--logo-mark);
+    width:clamp(1.25rem,4.5vw,2.7rem);
+    height:auto;
+    flex:0 0 auto;
+  }
+
+  /* ---------- Primary nav ---------- */
+  .nav{
+    border-bottom:1px solid var(--rule-strong);
+    position:sticky;
+    top:0;
+    background:var(--bg);
+    z-index:40;
+  }
+  .nav .wrap{
+    display:flex;
+    flex-wrap:nowrap;
+    justify-content:center;
+    align-items:center;
+    gap:clamp(.55rem,2.2vw,2rem);
+    padding-top:.5rem;
+    padding-bottom:.5rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .nav .wrap::-webkit-scrollbar{display:none;}
+  .nav a{
+    font-family:var(--sans);
+    font-size:.82rem;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    text-decoration:none;
+    color:var(--ink-soft);
+    padding:.15rem 0;
+    border-bottom:1.5px solid transparent;
+    white-space:nowrap;
+  }
+  .nav a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+  .nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent);}
+  .nav__search{display:inline-flex;align-items:center;flex:0 0 auto;}
+  .nav__search svg{width:18px;height:18px;}
+  .nav__search:hover{color:var(--accent);}
+  .theme-toggle{
+    font-family:var(--sans);
+    font-size:1rem;
+    line-height:1;
+    background:transparent;
+    border:1px solid var(--rule-strong);
+    color:var(--ink-soft);
+    width:30px;
+    height:30px;
+    border-radius:2px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    flex:0 0 auto;
+  }
+  .theme-toggle:hover{color:var(--accent);border-color:var(--accent);}
+
+  /* ---------- Nav dropdowns ---------- */
+  .nav__trigger{
+    font-family:var(--sans);
+    font-size:.82rem;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    background:transparent;
+    border:0;
+    border-bottom:1.5px solid transparent;
+    padding:.15rem 0;
+    cursor:pointer;
+    white-space:nowrap;
+    display:inline-flex;
+    align-items:center;
+    gap:.3rem;
+    flex:0 0 auto;
+  }
+  .nav__trigger:hover{color:var(--accent);border-bottom-color:var(--accent);}
+  .nav__trigger[aria-expanded="true"]{color:var(--accent);border-bottom-color:var(--accent);}
+  .nav__chev{width:11px;height:11px;transition:transform .15s ease;}
+  .nav__trigger[aria-expanded="true"] .nav__chev{transform:rotate(180deg);}
+  .nav__menu{
+    position:absolute;
+    left:0;right:0;top:100%;
+    background:var(--surface);
+    border-bottom:1px solid var(--rule-strong);
+    box-shadow:0 14px 34px rgba(16,25,32,.10);
+    z-index:39;
+  }
+  .nav__menu[hidden]{display:none;}
+  .nav__menu-inner{
+    display:flex;
+    flex-wrap:wrap;
+    gap:clamp(1.8rem,5vw,4.5rem);
+    padding-top:1.5rem;
+    padding-bottom:1.7rem;
+    align-items:flex-start;
+  }
+  .nav__col{display:flex;flex-direction:column;gap:.5rem;min-width:150px;}
+  .nav__col-head{
+    font-family:var(--sans);
+    font-size:.68rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 .35rem;
+  }
+  .nav__col a{
+    font-family:var(--serif);
+    font-size:1.02rem;font-weight:400;letter-spacing:0;text-transform:none;
+    color:var(--ink);
+    text-decoration:none;
+    padding:.08rem 0;
+    border:0;
+    white-space:nowrap;
+  }
+  .nav__col a:hover{color:var(--accent);border:0;}
+  @media (max-width:560px){
+    .nav__menu-inner{gap:1.3rem;padding-top:1.1rem;padding-bottom:1.3rem;}
+    .nav__col{min-width:46%;}
+  }
+
+  /* ---------- Subscribe (footer) ---------- */
+  .subscribe{
+    background:var(--surface);
+    border:1px solid var(--rule-strong);
+    padding:clamp(1.2rem,2.4vw,1.5rem);
+  }
+  .subscribe__h{
+    font-family:var(--sans);
+    font-size:.72rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--label);
+    margin:0 0 .75rem;
+  }
+  .subscribe__form{display:flex;gap:.5rem;flex-wrap:wrap;}
+  .subscribe__form label{position:absolute;left:-999px;}
+  .subscribe input[type=email]{
+    flex:1 1 150px;
+    min-width:0;
+    font-family:var(--sans);
+    font-size:.9rem;
+    padding:.62rem .7rem;
+    border:1px solid var(--rule-strong);
+    background:var(--bg);
+    color:var(--ink);
+    border-radius:2px;
+  }
+  .btn{
+    font-family:var(--sans);
+    font-size:.82rem;
+    font-weight:600;
+    letter-spacing:.03em;
+    padding:.62rem 1.1rem;
+    border:1px solid var(--accent);
+    background:var(--accent);
+    color:#fff;
+    border-radius:2px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    white-space:nowrap;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn{color:#0e1113;} }
+  :root[data-theme="dark"] .btn{color:#0e1113;}
+  .btn:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
+  .btn--ghost{background:transparent;color:var(--accent);}
+  :root[data-theme="dark"] .btn--ghost{color:var(--accent);}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn--ghost{color:var(--accent);} }
+  .btn--ghost:hover{background:transparent;color:var(--accent-hover);border-color:var(--accent-hover);}
+  .subscribe__note{
+    font-family:var(--sans);
+    font-size:.76rem;
+    line-height:1.45;
+    color:var(--muted);
+    margin:.75rem 0 0;
+  }
+
+  /* ---------- Walk callout (shared institutional component) ---------- */
+  .callout{
+    border:1px solid var(--rule-strong);
+    background:var(--surface);
+    display:grid;
+    grid-template-columns:4px 1fr;
+  }
+  .callout__bar{background:var(--accent-hover);}
+  .callout__inner{
+    padding:clamp(1.3rem,3vw,2rem);
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:clamp(1.6rem,4vw,3.2rem);
+    align-items:center;
+  }
+  .callout__lead{min-width:0;}
+  .callout__aside{min-width:0;}
+  .callout__label{
+    font-family:var(--sans);
+    font-size:.68rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--label);
+    margin:0 0 .7rem;
+  }
+  .callout__title{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:clamp(1.3rem,2.4vw,1.7rem);
+    line-height:1.18;
+    letter-spacing:-.01em;
+    margin:0 0 .6rem;
+    max-width:24ch;
+  }
+  .callout__body{
+    font-family:var(--sans);
+    font-size:.96rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+    margin:0;
+    max-width:56ch;
+  }
+  .callout__facts{
+    list-style:none;
+    margin:0 0 1.4rem;
+    padding:0;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1rem 1.4rem;
+  }
+  .callout__facts div{padding:0;}
+  .callout__facts dt{
+    font-family:var(--sans);
+    font-size:.64rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--muted);
+  }
+  .callout__facts dd{
+    font-family:var(--serif);
+    font-size:1.05rem;
+    margin:.1rem 0 0;
+    color:var(--ink);
+  }
+
+  /* ---------- Footer ---------- */
+  .foot{background:var(--bg-tint);border-top:1px solid var(--rule-strong);padding:clamp(2.2rem,4vw,3rem) 0 2rem;}
+  .foot__top{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:clamp(1.6rem,4vw,3rem);
+    align-items:start;
+    padding-bottom:1.8rem;
+    border-bottom:1px solid var(--rule);
+  }
+  .foot__name{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:1.55rem;
+    letter-spacing:-.01em;
+    margin:0 0 .4rem;
+    color:var(--ink);
+  }
+  .foot__rule{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:.98rem;
+    color:var(--ink-soft);
+    margin:0;
+  }
+  .foot__nav{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;margin:1.4rem 0 0;}
+  .foot__nav a{
+    font-family:var(--sans);
+    font-size:.8rem;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-decoration:none;
+  }
+  .foot__nav a:hover{color:var(--accent);}
+  .foot__subscribe .subscribe{max-width:560px;}
+  .foot__links{
+    font-family:var(--sans);
+    font-size:.8rem;
+    line-height:1.9;
+    color:var(--muted);
+    margin:1.6rem 0 0;
+  }
+  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a:hover{color:var(--accent);text-decoration:underline;}
+  .foot__fine{
+    font-family:var(--sans);
+    font-size:.78rem;
+    line-height:1.55;
+    color:var(--muted);
+    margin:1rem 0 0;
+    max-width:70ch;
+  }
+  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
+
+  /* ---------- Responsive (chrome) ---------- */
+  @media (max-width:860px){
+    .callout__inner{grid-template-columns:1fr;gap:1.4rem;align-items:start;}
+    .foot__top{grid-template-columns:1fr;}
+  }
+  @media (max-width:560px){
+    .utility__est{display:none;}
+    .nav .wrap{justify-content:flex-start;gap:.7rem;padding-top:.45rem;padding-bottom:.45rem;}
+    .nav a{font-size:.72rem;letter-spacing:.03em;}
+  }
+  @media (max-width:380px){
+    .nav .wrap{gap:.55rem;}
+    .nav a{font-size:.66rem;}
+  }
+  </style>
+
   <!-- ============================================================
        LAB BENCH — instrument skin, scoped under .lab-bench so it
        cannot touch any other page. The only :root-level touches are
@@ -40,9 +470,9 @@
     :root{ --accent:#37cbb6; --accent-hover:#5fe0cd;
            --ink-red:#e0685c; --ink-blue:#6fa8d6; --ink-green:#5fb37f; --ink-orange:#e0a25a; }
     :root[data-theme="dark"]{ --accent:#37cbb6; --accent-hover:#5fe0cd; }
-    /* --- restore the site's own accent on the preserved chrome --- */
-    .site-header, .site-footer{ --accent:#2d5d7b; --accent-hover:#1f4761; }
-    [data-theme="dark"] .site-header, [data-theme="dark"] .site-footer{ --accent:#7fb2d4; --accent-hover:#a3c9e3; }
+    /* --- restore the site's own tokens on the shared chrome; the demos keep teal via :root above --- */
+    .skip, .utility, .masthead, .nav, .foot{ --accent:#1d4c64; --accent-hover:#11394d; --ink:#15181b; }
+    [data-theme="dark"] .skip, [data-theme="dark"] .utility, [data-theme="dark"] .masthead, [data-theme="dark"] .nav, [data-theme="dark"] .foot{ --accent:#86b9d2; --accent-hover:#aad4e8; --ink:#ecebe6; }
 
     /* --- bench-local tokens (extra vars, do not collide with site) --- */
     .lab-bench{
@@ -2020,22 +2450,77 @@
   </style>
 </head>
 <body class="lab-bench">
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="3"/><circle cx="26" cy="12" r="3"/><circle cx="48" cy="18" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="46" r="3"/></g><circle cx="32" cy="32" r="7.5" fill="currentColor"/></svg>The Neuroscience Review</a>
-      <nav class="site-nav">
-        <a href="index.html">Home</a>
-        <a href="posts.html">Articles</a>
-        <a href="news.html">News</a>
-        <a aria-current="page" href="lab.html">Lab</a>
-        <a href="commons.html">The Commons</a>
-        <a class="site-nav__cta" href="index.html#subscribe">Subscribe</a>
-        <a class="site-nav__search" href="search.html" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
-        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" onclick="(function(){var d=document.documentElement;var n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}})()">☾</button>
-      </nav>
+  <a class="skip" href="#main">Skip to content</a>
+
+<!-- Utility bar -->
+<div class="utility">
+  <div class="wrap">
+    <span class="utility__date">Wednesday, October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"});}})();</script>
+    <span class="utility__right">
+      <span class="utility__est">Independent · Est. 2026</span>
+      <a href="#subscribe">Subscribe</a>
+    </span>
+  </div>
+</div>
+
+<!-- Masthead -->
+<header class="masthead">
+  <div class="wrap">
+    <h1 class="masthead__name">
+      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+    </h1>
+  </div>
+</header>
+
+<!-- Primary navigation -->
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a href="index.html">Home</a>
+    <button class="nav__trigger" id="articles-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="articles-menu">Articles<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <a href="news.html">News</a>
+    <a href="lab.html" aria-current="page">Lab</a>
+    <button class="nav__trigger" id="resources-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="resources-menu">Resources<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <a href="search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾</button>
+  </div>
+  <div class="nav__menu" id="articles-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Browse</p>
+        <a href="posts.html">All Articles</a>
+        <a href="topics.html">By Topic</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">The Commons</p>
+        <a href="commons.html">About The Commons</a>
+        <a href="contribute.html">Write for us</a>
+      </div>
     </div>
-  </header>
+  </div>
+  <div class="nav__menu" id="resources-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Explore</p>
+        <a href="start-here.html">Start Here</a>
+        <a href="topics.html">Topics</a>
+        <a href="lab.html">The Lab</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Explainers</p>
+        <a href="brain.html">The Brain</a>
+        <a href="neuron.html">The Neuron</a>
+        <a href="synapse.html">The Synapse</a>
+        <a href="brain-myths.html">Brain Myths</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">The Review</p>
+        <a href="about.html">About</a>
+        <a href="trust.html">How We Work</a>
+        <a href="contribute.html">Contribute</a>
+      </div>
+    </div>
+  </div>
+</nav>
 
   <main id="main" class="bench">
 
@@ -4480,14 +4965,48 @@
 
   </main>
 
-  <footer class="site-footer">
-    <div class="site-footer__inner">
-      <p>&copy; 2026 The Neuroscience Review</p>
-      <p class="site-footer__follow">Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>.</p>
-      <p><a href="index.html">Home</a> &middot; <a href="posts.html">Articles</a> &middot; <a href="news.html">News</a> &middot; <a href="lab.html">Lab</a> &middot; <a href="commons.html">The Commons</a> &middot; <a href="about.html">About</a> &middot; <a href="contribute.html">Submissions</a></p>
-      <p><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a> &middot; <a href="disclaimer.html">Disclaimer</a></p>
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div>
+        <p class="foot__name">The Neuroscience Review</p>
+        <p class="foot__rule">The rigor of a journal. The readability of a Sunday paper.</p>
+        <nav class="foot__nav" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="posts.html">Articles</a>
+          <a href="news.html">News</a>
+          <a href="lab.html">Lab</a>
+          <a href="commons.html">The Commons</a>
+          <a href="#subscribe">Subscribe</a>
+          <a href="search.html">Search</a>
+        </nav>
+      </div>
+      <div class="foot__subscribe">
+        <div class="subscribe" id="subscribe">
+          <p class="subscribe__h">The Wednesday brief</p>
+          <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
+            <button type="submit" class="btn">Subscribe free</button>
+          </form>
+          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+        </div>
+      </div>
     </div>
-  </footer>
+    <p class="foot__links">
+      <a href="start-here.html">Start here</a> ·
+      <a href="topics.html">Topics</a> ·
+      <a href="about.html">About</a> ·
+      <a href="contribute.html">Submissions</a> ·
+      <a href="brain-myths.html">Brain myths</a> ·
+      <a href="trust.html">How we fact-check</a> ·
+      <a href="privacy.html">Privacy</a> ·
+      <a href="terms.html">Terms</a> ·
+      <a href="disclaimer.html">Disclaimer</a>
+    </p>
+    <p class="foot__fine">The Neuroscience Review is an independent neuroscience review, written for curious readers who want the actual science. Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>. &copy; 2026 The Neuroscience Review.</p>
+  </div>
+</footer>
 
 <!-- ============ HERO OSCILLOSCOPE (adapted from the pitch) ============ -->
 <script>
@@ -9890,5 +10409,40 @@
     window.addEventListener('hashchange', openFromHash);
   })();
   </script>
+
+<!-- Shared shell scripts: theme toggle + nav dropdowns -->
+<script>
+(function(){
+  var btn=document.getElementById('theme-toggle');
+  if(!btn)return;
+  var root=document.documentElement;
+  function sync(){
+    var dark=root.getAttribute('data-theme')==='dark';
+    btn.textContent=dark?'☀':'☾';
+    btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+    btn.setAttribute('aria-pressed',dark?'true':'false');
+  }
+  btn.addEventListener('click',function(){
+    var n=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',n);
+    try{localStorage.setItem('theme',n);}catch(e){}
+    sync();
+  });
+  sync();
+})();
+(function(){
+  var triggers=[].slice.call(document.querySelectorAll('.nav__trigger'));
+  if(!triggers.length)return;
+  var pairs=triggers.map(function(t){return {t:t,m:document.getElementById(t.getAttribute('aria-controls'))};}).filter(function(p){return p.m;});
+  function closeAll(){pairs.forEach(function(p){p.m.hidden=true;p.t.setAttribute('aria-expanded','false');});}
+  pairs.forEach(function(p){
+    p.t.addEventListener('click',function(e){e.stopPropagation();var wasOpen=!p.m.hidden;closeAll();if(!wasOpen){p.m.hidden=false;p.t.setAttribute('aria-expanded','true');}});
+    p.m.addEventListener('click',function(e){e.stopPropagation();});
+  });
+  document.addEventListener('click',function(){closeAll();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeAll();}});
+})();
+</script>
+
 </body>
 </html>

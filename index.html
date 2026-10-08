@@ -237,6 +237,68 @@
   }
   .theme-toggle:hover{color:var(--accent);border-color:var(--accent);}
 
+  /* ---------- Resources dropdown ---------- */
+  .nav__trigger{
+    font-family:var(--sans);
+    font-size:.82rem;
+    font-weight:500;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    background:transparent;
+    border:0;
+    border-bottom:1.5px solid transparent;
+    padding:.15rem 0;
+    cursor:pointer;
+    white-space:nowrap;
+    display:inline-flex;
+    align-items:center;
+    gap:.3rem;
+    flex:0 0 auto;
+  }
+  .nav__trigger:hover{color:var(--accent);border-bottom-color:var(--accent);}
+  .nav__trigger[aria-expanded="true"]{color:var(--accent);border-bottom-color:var(--accent);}
+  .nav__chev{width:11px;height:11px;transition:transform .15s ease;}
+  .nav__trigger[aria-expanded="true"] .nav__chev{transform:rotate(180deg);}
+  .nav__menu{
+    position:absolute;
+    left:0;right:0;top:100%;
+    background:var(--surface);
+    border-bottom:1px solid var(--rule-strong);
+    box-shadow:0 14px 34px rgba(16,25,32,.10);
+    z-index:39;
+  }
+  .nav__menu[hidden]{display:none;}
+  .nav__menu-inner{
+    display:flex;
+    flex-wrap:wrap;
+    gap:clamp(1.8rem,5vw,4.5rem);
+    padding-top:1.5rem;
+    padding-bottom:1.7rem;
+    align-items:flex-start;
+  }
+  .nav__col{display:flex;flex-direction:column;gap:.5rem;min-width:150px;}
+  .nav__col-head{
+    font-family:var(--sans);
+    font-size:.68rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 .35rem;
+  }
+  .nav__col a{
+    font-family:var(--serif);
+    font-size:1.02rem;font-weight:400;letter-spacing:0;text-transform:none;
+    color:var(--ink);
+    text-decoration:none;
+    padding:.08rem 0;
+    border:0;
+    white-space:nowrap;
+  }
+  .nav__col a:hover{color:var(--accent);border:0;}
+  @media (max-width:560px){
+    .nav__menu-inner{gap:1.3rem;padding-top:1.1rem;padding-bottom:1.3rem;}
+    .nav__col{min-width:46%;}
+  }
+
   /* ---------- Subscribe (now in the footer) ---------- */
   .subscribe{
     background:var(--surface);
@@ -812,7 +874,7 @@
 <!-- Utility bar -->
 <div class="utility">
   <div class="wrap">
-    <span class="utility__date">Wednesday, October 7, 2026</span>
+    <span class="utility__date">Wednesday, October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
       <span class="utility__est">Independent · Est. 2026</span>
       <a href="#subscribe">Subscribe</a>
@@ -833,12 +895,49 @@
 <nav class="nav" aria-label="Primary">
   <div class="wrap">
     <a href="index.html" aria-current="page">Home</a>
-    <a href="posts.html">Articles</a>
+    <button class="nav__trigger" id="articles-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="articles-menu">Articles<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <a href="news.html">News</a>
     <a href="lab.html">Lab</a>
-    <a href="commons.html">The Commons</a>
+    <button class="nav__trigger" id="resources-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="resources-menu">Resources<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <a href="search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾</button>
+  </div>
+  <div class="nav__menu" id="articles-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Browse</p>
+        <a href="posts.html">All Articles</a>
+        <a href="topics.html">By Topic</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">The Commons</p>
+        <a href="commons.html">About The Commons</a>
+        <a href="contribute.html">Write for us</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav__menu" id="resources-menu" hidden>
+    <div class="wrap nav__menu-inner">
+      <div class="nav__col">
+        <p class="nav__col-head">Explore</p>
+        <a href="start-here.html">Start Here</a>
+        <a href="topics.html">Topics</a>
+        <a href="lab.html">The Lab</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">Explainers</p>
+        <a href="brain.html">The Brain</a>
+        <a href="neuron.html">The Neuron</a>
+        <a href="synapse.html">The Synapse</a>
+        <a href="brain-myths.html">Brain Myths</a>
+      </div>
+      <div class="nav__col">
+        <p class="nav__col-head">The Review</p>
+        <a href="about.html">About</a>
+        <a href="trust.html">How We Work</a>
+        <a href="contribute.html">Contribute</a>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -1093,7 +1192,20 @@
   });
   sync();
 })();
+(function(){
+  var triggers=[].slice.call(document.querySelectorAll('.nav__trigger'));
+  if(!triggers.length)return;
+  var pairs=triggers.map(function(t){return {t:t,m:document.getElementById(t.getAttribute('aria-controls'))};}).filter(function(p){return p.m;});
+  function closeAll(){pairs.forEach(function(p){p.m.hidden=true;p.t.setAttribute('aria-expanded','false');});}
+  pairs.forEach(function(p){
+    p.t.addEventListener('click',function(e){e.stopPropagation();var wasOpen=!p.m.hidden;closeAll();if(!wasOpen){p.m.hidden=false;p.t.setAttribute('aria-expanded','true');}});
+    p.m.addEventListener('click',function(e){e.stopPropagation();});
+  });
+  document.addEventListener('click',function(){closeAll();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeAll();}});
+})();
 </script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script>
 
 </body>
 </html>
