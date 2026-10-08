@@ -1293,16 +1293,9 @@
         "featured featured"
         "dives    latest";
     }
-    .front__featured{
-      display:grid;
-      grid-template-columns:clamp(240px,40%,400px) 1fr;
-      grid-template-areas:
-        "label  label"
-        "figure text";
-      column-gap:clamp(1.3rem,3vw,2.2rem);
-      padding:0 0 1.7rem;
-      margin-bottom:1.8rem;
-      border-bottom:1px solid var(--rule-strong);
+    :root[data-theme="dark"]{
+      --bg:#111417; --ink:#ecebe6; --ink-soft:#bcc2c7; --muted:#8c959b;
+      --rule:#2a2f34; --accent:#86b9d2; --accent-hover:#aad4e8; --logo-mark:#86b9d2;
     }
     .front__featured .front__label{grid-area:label;}
     .front__featured .feat__figure{grid-area:figure;margin:0;aspect-ratio:4/3;}

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Stroop test — The Neuroscience Review</title>
-  <meta name="description" content="Take the Stroop test in your browser. Name the ink color while your brain wants to read the word, then measure the Stroop effect in your own milliseconds.">
-  <!-- Fonts -->
+  <title>The Neuroscience Review — Back shortly</title>
+  <meta name="description" content="The Neuroscience Review is on a short maintenance break. We'll be back soon. In the meantime, read us on Substack.">
+  <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
@@ -13,71 +13,60 @@
   <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else if(matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}</script>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
-    /* ---------- tool page layout (matches the site's centered reading column) ---------- */
-    .tool-page{ max-width: var(--content-width); margin: 0 auto; padding: clamp(2rem,5vw,3.75rem) 1.5rem 0; }
-    .tool-page .post-header{ margin-bottom: 1.6rem; }
-    .tool-explain{ margin: 2.4rem 0 0; }
-    .tool-explain h2{ font-family:var(--serif); font-size:1.5rem; font-weight:600; letter-spacing:-0.01em; margin-bottom:0.7rem; }
-    .tool-explain p{ font-family:var(--serif); color:var(--text-muted); font-size:1.05rem; line-height:1.6; margin-bottom:1rem; }
-    .tool-cite{ font-family:var(--sans); font-size:0.82rem; color:var(--text-faint); border-top:1px solid var(--border); padding-top:0.9rem; margin-top:0.4rem; }
-    .tool-links{ font-family:var(--sans); font-size:0.95rem; text-align:center; margin:2.6rem 0 0; color:var(--text-muted); }
-    .tool-links a{ color:var(--accent); font-weight:600; text-decoration:none; }
-    .tool-links a:hover{ color:var(--accent-hover); text-decoration:underline; }
-
-    /* ---------- the four ink vars the Stroop demo JS reads off documentElement ---------- */
-    :root{ --ink-red:#e0685c; --ink-blue:#6fa8d6; --ink-green:#5fb37f; --ink-orange:#e0a25a; }
-
-    /* ---------- bench tokens, scoped so they cannot touch the rest of the page ---------- */
-    .lab-bench{
-      --teal:#37cbb6; --teal-bright:#5fe0cd; --teal-dim:#1f6f64;
-      --panel:#101a18; --panel2:#152622; --line:rgba(120,170,155,.16);
-      --ink:#e6f0ea; --soft:#93a8a0; --faint:#7c8f86;
-      --mono: ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
-      margin: 2.2rem 0 0;
+    :root{
+      --bg:#fafaf6; --ink:#15181b; --ink-soft:#3b434a; --muted:#6c757c;
+      --rule:#e4e1db; --accent:#1d4c64; --accent-hover:#11394d; --logo-mark:#2d5d7b;
+      --serif:"Newsreader",Georgia,"Times New Roman",serif;
+      --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
-    /* dark instrument panel so the light ink words read clearly in either theme */
-    .stroop-instrument{ background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--teal-dim); border-radius:14px; padding:clamp(1.4rem,3.5vw,2.2rem); }
-
-    /* ---------- carried-over Stroop demo styling from the Lab, unchanged ---------- */
-    .lab-bench .labdemo{ background:transparent; border:0; border-radius:0; padding:0; margin:0; min-width:0; }
-    .lab-bench .labdemo__stage{ min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; min-width:0; }
-    .lab-bench .labdemo__stage p{ font-family:var(--sans); color:var(--ink); margin:0 0 1.1rem; max-width:34rem; line-height:1.5; }
-    .lab-bench .labdemo__word{ font-family:var(--sans); font-weight:700; font-size:clamp(2.6rem,11vw,4.2rem); letter-spacing:.01em; line-height:1; margin:.4rem 0 1.6rem; text-transform:uppercase; }
-    .lab-bench .labdemo__progress{ font-family:var(--mono); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); margin-bottom:.2rem; }
-    .lab-bench .labdemo__row{ display:flex; gap:.7rem; flex-wrap:wrap; justify-content:center; }
-    .lab-bench .labdemo__btn{ font-family:var(--sans); font-size:.95rem; font-weight:600; border:1px solid var(--teal); background:var(--teal); color:#052723; padding:.6rem 1.5rem; border-radius:999px; cursor:pointer; transition:background .15s, border-color .15s; }
-    .lab-bench .labdemo__btn:hover{ background:var(--teal-bright); border-color:var(--teal-bright); }
-    .lab-bench .labdemo__btn--ghost{ background:transparent; color:var(--teal); }
-    .lab-bench .labdemo__btn--ghost:hover{ background:transparent; color:var(--teal-bright); }
-    .lab-bench .key{ display:flex; gap:.55rem; flex-wrap:wrap; justify-content:center; }
-    .lab-bench .key__btn{ font-family:var(--sans); font-size:1rem; font-weight:700; border:2px solid var(--line); background:var(--panel2); color:var(--ink); padding:.55rem 1.35rem; border-radius:10px; cursor:pointer; min-width:96px; transition:border-color .15s; }
-    .lab-bench .key__btn:hover{ border-color:var(--teal); }
-    .lab-bench .labdemo__result-head{ font-family:var(--serif); font-size:1.45rem; font-weight:600; margin-bottom:.9rem; color:#eaf4f0; line-height:1.25; }
-    .lab-bench .bars{ width:100%; max-width:26rem; margin:.4rem auto 1.1rem; text-align:left; }
-    .lab-bench .bar__lab{ font-family:var(--mono); font-size:.82rem; color:var(--soft); margin:.7rem 0 .25rem; display:flex; justify-content:space-between; font-variant-numeric:tabular-nums; }
-    .lab-bench .bar__track{ height:16px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
-    .lab-bench .bar__fill{ height:100%; border-radius:8px; }
-    .lab-bench .labdemo__muted{ font-family:var(--sans); color:var(--soft); font-size:.92rem; max-width:34rem; }
-    .lab-bench .labdemo__cite{ font-family:var(--mono); font-size:.76rem; color:var(--faint); margin-top:1rem; border-top:1px solid var(--line); padding-top:.9rem; }
-    .lab-bench button:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; border-radius:4px; }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --bg:#111417; --ink:#ecebe6; --ink-soft:#bcc2c7; --muted:#8c959b;
+        --rule:#2a2f34; --accent:#86b9d2; --accent-hover:#aad4e8; --logo-mark:#86b9d2;
+      }
+    }
+    :root[data-theme="dark"]{
+      --bg:#111417; --ink:#ecebe6; --ink-soft:#bcc2c7; --muted:#8c959b;
+      --rule:#2a2f34; --accent:#86b9d2; --accent-hover:#aad4e8; --logo-mark:#86b9d2;
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0; background:var(--bg); color:var(--ink);
+      font-family:var(--sans); line-height:1.6;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100vh; padding:40px 24px; text-align:center;
+    }
+    .schematic{ width:clamp(230px,62vw,310px); color:var(--logo-mark); margin:0 auto 26px; }
+    .schematic svg{ width:100%; height:auto; display:block; }
+    h1{
+      font-family:var(--serif); font-weight:600; letter-spacing:-.01em;
+      font-size:clamp(28px,5vw,44px); margin:0 0 6px;
+    }
+    .kicker{
+      font-family:var(--sans); font-size:12px; font-weight:600;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+      margin:0 0 20px;
+    }
+    .lede{
+      font-family:var(--serif); font-size:clamp(17px,2.4vw,20px);
+      color:var(--ink-soft); max-width:30rem; margin:0 auto 10px;
+    }
+    .sub{ color:var(--muted); font-size:15px; max-width:30rem; margin:0 auto 30px; }
+    .btn{
+      display:inline-block; font-family:var(--sans); font-weight:600; font-size:15px;
+      color:#fff; background:var(--accent); padding:12px 26px; border-radius:999px;
+      text-decoration:none; transition:background .15s ease;
+    }
+    @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn{ color:#0b0f12; } }
+    :root[data-theme="dark"] .btn{ color:#0b0f12; }
+    .btn:hover{ background:var(--accent-hover); }
+    .rule{ width:40px; height:2px; background:var(--rule); border:0; margin:34px auto 0; }
+    footer{ margin-top:22px; font-size:13px; color:var(--muted); }
+    footer a{ color:var(--accent); text-decoration:none; }
+    footer a:hover{ text-decoration:underline; }
   </style>
-  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
-  <link rel="canonical" href="https://theneuroreview.com/tools/stroop-test.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="The Neuroscience Review">
-  <meta property="og:title" content="The Stroop test">
-  <meta property="og:description" content="Take the Stroop test in your browser. Name the ink color while your brain wants to read the word, then measure the Stroop effect in your own milliseconds.">
-  <meta property="og:url" content="https://theneuroreview.com/tools/stroop-test.html">
-  <meta property="og:image" content="https://theneuroreview.com/og-cover.png?v=2">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Stroop test">
-  <meta name="twitter:description" content="Take the Stroop test in your browser. Name the ink color while your brain wants to read the word, then measure the Stroop effect in your own milliseconds.">
-  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebPage","name":"The Stroop test","description":"An interactive Stroop test that measures how much your brain slows down when a color word and its ink disagree.","url":"https://theneuroreview.com/tools/stroop-test.html","inLanguage":"en-US","isPartOf":{"@type":"WebSite","name":"The Neuroscience Review","url":"https://theneuroreview.com/"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}}}
-  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
