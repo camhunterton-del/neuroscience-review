@@ -171,6 +171,12 @@ try {
       }
     } finally { await faultCtx.close(); }
   }
+  const noScriptHome = await browser.newContext({ javaScriptEnabled:false });
+  try {
+    const p = await noScriptHome.newPage();
+    await p.goto(`${BASE}/index.html`);
+    check('home: no stale masthead date without JavaScript', await p.locator('.utility__date').evaluate(e=>getComputedStyle(e).display==='none'));
+  } finally { await noScriptHome.close(); }
   // Independently exercise user-visible release behavior on the real pages.
   const release = await browser.newContext({viewport:{width:1280,height:900},colorScheme:'light'});
   const page = await release.newPage();
