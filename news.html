@@ -17,7 +17,7 @@
     --surface:#ffffff;
     --ink:#15181b;
     --ink-soft:#3b434a;
-    --muted:#6c757c;
+    --muted:#5f666c;
     --rule:#e4e1db;
     --rule-strong:#cbc7bf;
     --accent:#1d4c64;
@@ -763,7 +763,7 @@
     color:var(--muted);
     margin:1.6rem 0 0;
   }
-  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a{color:var(--ink-soft);text-decoration:underline;}
   .foot__links a:hover{color:var(--accent);text-decoration:underline;}
   .foot__fine{
     font-family:var(--sans);
@@ -773,7 +773,7 @@
     margin:1rem 0 0;
     max-width:70ch;
   }
-  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a{color:var(--ink-soft);text-decoration:underline;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
   /* ---------- Responsive ---------- */
@@ -928,12 +928,13 @@
   <meta name="twitter:title" content="Neuroscience News">
   <meta name="twitter:description" content="Short, fact-checked notes on new neuroscience, updated often. Each one links straight to the original.">
   <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
 <!-- Utility bar -->
-<div class="utility">
+<div class="utility" role="region" aria-label="Publication information">
   <div class="wrap">
     <span class="utility__date">October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
@@ -1226,9 +1227,9 @@
         </article>
 
         <article class="news-item" id="n-tau-buildup-in-older-brains-tied-to-weaker-deep-sleep-waves-and-memory">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="http://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener"><img src="https://news.berkeley.edu/wp-content/uploads/2026/09/pexels-shvets-production-8899465-scaled.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
-          <p class="news-item__meta">September 11, 2026 &middot; via <a href="http://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener">Berkeley News (UC Berkeley)</a></p>
-          <h2><a href="http://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener">Tau buildup in older brains tied to weaker deep sleep waves and memory</a></h2>
+          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener"><img src="https://news.berkeley.edu/wp-content/uploads/2026/09/pexels-shvets-production-8899465-scaled.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
+          <p class="news-item__meta">September 11, 2026 &middot; via <a href="https://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener">Berkeley News (UC Berkeley)</a></p>
+          <h2><a href="https://news.berkeley.edu/2026/09/11/new-uc-berkeley-study-links-deep-sleep-loss-to-alzheimers-related-protein-buildup/" target="_blank" rel="noopener">Tau buildup in older brains tied to weaker deep sleep waves and memory</a></h2>
           <p>A new UC Berkeley study using EEG and PET scans found that older adults with more tau protein in the brain's frontal cortex had shorter, more isolated slow brain waves during deep non REM sleep, and these disrupted wave patterns lined up with poorer memory consolidation overnight.</p>
           <p class="news-item__caveat"><em>This single correlational study cannot show that tau causes the sleep changes or that fixing sleep would reduce tau or protect memory, so larger and longer studies are needed before any treatment claims.</em></p>
         </article>
@@ -1380,7 +1381,7 @@
         </article>
 
         <article class="news-item" id="n-midlife-exercise-and-blood-sugar-linked-to-slower-thinking-decline-decades-later">
-          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://news.uthscsa.edu/any-degree-of-physical-activity-may-slow-cognitive-decline-particularly-in-hispanics-ut-health-san-antonio-study-suggests/" target="_blank" rel="noopener"><img src="http://news.uthscsa.edu/wp-content/uploads/2024/02/walking.jpeg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
+          <a class="news-item__thumb" aria-hidden="true" tabindex="-1" href="https://news.uthscsa.edu/any-degree-of-physical-activity-may-slow-cognitive-decline-particularly-in-hispanics-ut-health-san-antonio-study-suggests/" target="_blank" rel="noopener"><img src="https://news.uthscsa.edu/wp-content/uploads/2024/02/walking.jpeg" alt="" loading="lazy" onerror="this.parentElement.remove()"></a>
           <p class="news-item__meta">August 19, 2026 &middot; via <a href="https://news.uthscsa.edu/any-degree-of-physical-activity-may-slow-cognitive-decline-particularly-in-hispanics-ut-health-san-antonio-study-suggests/" target="_blank" rel="noopener">UT Health San Antonio</a></p>
           <h2><a href="https://news.uthscsa.edu/any-degree-of-physical-activity-may-slow-cognitive-decline-particularly-in-hispanics-ut-health-san-antonio-study-suggests/" target="_blank" rel="noopener">Midlife Exercise and Blood Sugar Linked to Slower Thinking Decline Decades Later</a></h2>
           <p>A study of 402 adults followed for decades found that people who were more physically active in midlife showed slower cognitive decline later in life, with the strongest link seen among Mexican American participants. Among non-Hispanic white participants, lower fasting blood glucose in midlife was linked to slower decline instead.</p>
@@ -1533,13 +1534,13 @@
       </div>
       <div class="foot__subscribe">
         <div class="subscribe" id="subscribe">
-          <p class="subscribe__h">The Wednesday brief</p>
+          <p class="subscribe__h">Subscribe by email</p>
           <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
             <button type="submit" class="btn">Subscribe free</button>
           </form>
-          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+          <p class="subscribe__note">Brain-science deep dives by email. No hype, unsubscribe anytime.</p>
         </div>
       </div>
     </div>
@@ -1712,6 +1713,7 @@
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  @media(max-width:700px),(max-height:500px){.privacy-bar{position:static;transform:none;box-shadow:none}}
   .privacy-bar.is-visible{transform:translateY(0);}
   .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
   .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
@@ -1728,7 +1730,7 @@
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>
-<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=getComputedStyle(bar).position==="fixed"?bar.offsetHeight+"px":"";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
 <!-- /privacy-notice -->
 
 </body>

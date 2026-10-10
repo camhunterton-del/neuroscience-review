@@ -78,6 +78,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"The Stroop test","description":"An interactive Stroop test that measures how much your brain slows down when a color word and its ink disagree.","url":"https://theneuroreview.com/tools/stroop-test.html","inLanguage":"en-US","isPartOf":{"@type":"WebSite","name":"The Neuroscience Review","url":"https://theneuroreview.com/"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}}}
   </script>
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -123,7 +124,7 @@
     </div>
 
     <section class="cta" id="subscribe">
-      <h3>Get one brain-science deep dive every Wednesday.</h3>
+      <h3>Get brain-science deep dives by email.</h3>
       <p>Real research, written to be read. No hype, no fluff, unsubscribe anytime.</p>
       <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
         <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
@@ -184,7 +185,7 @@
       var t = trials[idx];
       stage.innerHTML =
         '<div class="labdemo__progress">Trial '+(idx+1)+' of '+N+'</div>'+
-        '<div class="labdemo__word" id="stroop-word" style="color:'+ink(t.inkVar)+'">'+t.word+'</div>'+
+        '<div class="labdemo__word" id="stroop-word" role="img" aria-label="The word '+t.word+', printed in '+t.inkName.toLowerCase()+' ink. Name the ink colour." style="color:'+ink(t.inkVar)+'">'+t.word+'</div>'+
         '<div class="labdemo__progress" style="margin-bottom:0.6rem">Click the ink color</div>'+
         '<div class="key" id="stroop-keys"></div>';
       var keys = document.getElementById('stroop-keys');
@@ -213,15 +214,22 @@
       var scored = results.slice(1).filter(function(r){ return r.rt <= 4000; });
       var con = scored.filter(function(r){return r.congruent && r.correct;}).map(function(r){return r.rt;});
       var inc = scored.filter(function(r){return !r.congruent && r.correct;}).map(function(r){return r.rt;});
-      if(!con.length || !inc.length){
+      var errors = results.filter(function(r){return !r.correct;}).length;
+      // Guard against runs that cannot be read honestly: high error rates
+      // (8+ wrong of 20) or too few clean correct trials in either condition.
+      // These get an "invalid run" message, never an interpreted effect.
+      var MIN_PER_COND = 4, MAX_ERRORS = 7;
+      if(con.length < MIN_PER_COND || inc.length < MIN_PER_COND || errors > MAX_ERRORS){
+        var why = (errors > MAX_ERRORS)
+          ? 'You got '+errors+' of '+N+' wrong, too many errors for this short run to support a reliable timing comparison.'
+          : 'Too few clean trials were answered correctly in each condition to compare fairly.';
         stage.innerHTML =
-          '<div class="labdemo__result-head">Not enough clean trials to compare this round.</div>'+
-          '<p class="labdemo__muted">Too many trials were skipped, missed, or off the scale to give a fair read. Run it again and try to answer every one.</p>'+
+          '<div class="labdemo__result-head">This run cannot be scored.</div>'+
+          '<p class="labdemo__muted">'+why+' Run it again and name the ink colour on every card, as fast as you can without guessing.</p>'+
           '<div class="labdemo__row" style="margin-top:1.2rem"><button class="labdemo__btn labdemo__btn--ghost" id="stroop-again">Run it again</button></div>';
         document.getElementById('stroop-again').addEventListener('click', function(){ buildTrials(); idx=0; results=[]; nextTrial(); });
         return;
       }
-      var errors = results.filter(function(r){return !r.correct;}).length;
       var mCon = Math.round(median(con));
       var mInc = Math.round(median(inc));
       var delta = mInc - mCon;
@@ -239,7 +247,7 @@
           '<div class="bar__track"><div class="bar__fill" style="width:'+Math.round(mInc/maxRt*100)+'%;background:var(--ink-red)"></div></div>'+
         '</div>'+
         '<p class="labdemo__muted">That gap is the <strong>Stroop effect</strong>. Reading is so overlearned that your brain does it automatically, whether you want it to or not. When the word says one color and the ink is another, you have to hold back the reflex to read and let the slower, deliberate part of you name the color instead. Overriding a reflex takes time, and here you can measure it in your own milliseconds.</p>'+
-        (errors ? '<p class="labdemo__muted" style="margin-top:0.6rem">You slipped on '+errors+' of '+N+' trials, which is exactly the reflex winning.</p>' : '')+
+        (errors ? ('<p class="labdemo__muted" style="margin-top:0.6rem">You slipped on '+errors+' of '+N+' trials'+((delta > 40 && errors <= 4) ? ', the kind of slip the reading reflex tends to cause.' : '.')+'</p>') : '')+
         '<div class="labdemo__row" style="margin-top:1.2rem"><button class="labdemo__btn labdemo__btn--ghost" id="stroop-again">Run it again</button></div>'+
         '<p class="labdemo__cite">This is your own single run, not a study. The effect was first described by John Ridley Stroop in 1935.</p>';
       document.getElementById('stroop-again').addEventListener('click', function(){ buildTrials(); idx=0; results=[]; nextTrial(); });

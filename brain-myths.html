@@ -18,7 +18,7 @@
     --surface:#ffffff;
     --ink:#15181b;
     --ink-soft:#3b434a;
-    --muted:#6c757c;
+    --muted:#5f666c;
     --rule:#e4e1db;
     --rule-strong:#cbc7bf;
     --accent:#1d4c64;
@@ -764,7 +764,7 @@
     color:var(--muted);
     margin:1.6rem 0 0;
   }
-  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a{color:var(--ink-soft);text-decoration:underline;}
   .foot__links a:hover{color:var(--accent);text-decoration:underline;}
   .foot__fine{
     font-family:var(--sans);
@@ -774,7 +774,7 @@
     margin:1rem 0 0;
     max-width:70ch;
   }
-  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a{color:var(--ink-soft);text-decoration:underline;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
   /* ---------- Responsive ---------- */
@@ -964,13 +964,14 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BlogPosting","headline":"Brain myths that won't die","description":"Eight brain myths that refuse to die, from the ten percent brain to fixed learning styles, each one checked against the actual research.","author":{"@type":"Person","name":"Cameron Hunterton","url":"https://theneuroreview.com/authors/cameron-hunterton.html"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}},"datePublished":"2026-07-30","dateModified":"2026-07-30","image":"https://theneuroreview.com/og-cover.png?v=2","mainEntityOfPage":"https://theneuroreview.com/brain-myths.html"}
   </script>
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
   <div class="reading-progress" aria-hidden="true"></div>
   <a class="skip" href="#main">Skip to content</a>
 
 <!-- Utility bar -->
-<div class="utility">
+<div class="utility" role="region" aria-label="Publication information">
   <div class="wrap">
     <span class="utility__date">October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
@@ -1119,7 +1120,7 @@
         <p>Drinking really can harm your brain, just not in the tidy way this phrase suggests. When researchers counted the neurons in the brains of people with severe alcoholism and compared them to non-drinkers, they found no drop in the total number of nerve cells. What heavy drinking damages instead is the brain's wiring, the white matter and the connections between cells, along with overall brain volume in the worst cases. Alcohol hurts the brain by degrading its wiring, not by killing off cells one drink at a time.</p>
 
         <aside class="cta cta--inline">
-          <p><strong>Like this?</strong> This is what The Neuroscience Review does every week, one brain-science claim taken back to the actual research. Get it free every Wednesday.</p>
+          <p><strong>Like this?</strong> This is what The Neuroscience Review does every week, one brain-science claim taken back to the actual research. Get it free by email.</p>
           <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
             <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
             <button type="submit" class="cta__button">Subscribe</button>
@@ -1176,7 +1177,7 @@
             <li>Pietschnig J, Penke L, Wicherts JM, Zeiler M, Voracek M. &ldquo;Meta-analysis of associations between human brain volume and intelligence differences.&rdquo; <em>Neuroscience &amp; Biobehavioral Reviews</em>, 2015.</li>
             <li>Craig AD. &ldquo;<a href="https://doi.org/10.1038/nrn894" target="_blank" rel="noopener">How do you feel? Interoception: the sense of the physiological condition of the body.</a>&rdquo; <em>Nature Reviews Neuroscience</em>, 2002.</li>
             <li>Owen AM, Hampshire A, Grahn JA, et al. &ldquo;<a href="https://doi.org/10.1038/nature09042" target="_blank" rel="noopener">Putting brain training to the test.</a>&rdquo; <em>Nature</em>, 2010.</li>
-            <li>Federal Trade Commission. &ldquo;<a href="https://www.ftc.gov/news-events/news/press-releases/2016/01/lumosity-pay-2-million-settle-ftc-deceptive-advertising-charges" target="_blank" rel="noopener">Lumosity to pay $2 million to settle FTC deceptive advertising charges.</a>&rdquo; 2016.</li>
+            <li>Federal Trade Commission. &ldquo;<a href="https://www.ftc.gov/news-events/press-releases/2016/01/lumosity-pay-2-million-settle-ftc-deceptive-advertising-charges" target="_blank" rel="noopener">Lumosity to pay $2 million to settle FTC deceptive advertising charges.</a>&rdquo; 2016.</li>
             <li>Bethlehem RAI, Seidlitz J, White SR, et al. &ldquo;<a href="https://doi.org/10.1038/s41586-022-04554-y" target="_blank" rel="noopener">Brain charts for the human lifespan.</a>&rdquo; <em>Nature</em>, 2022.</li>
           </ol>
         </section>
@@ -1194,7 +1195,7 @@
     </nav>
 
     <section class="cta">
-      <h3>Get one careful brain-science breakdown every Wednesday.</h3>
+      <h3>Get careful brain-science breakdowns by email.</h3>
       <p>Real research, checked against the evidence and written to be read. No hype, no fluff, unsubscribe anytime.</p>
       <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
         <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
@@ -1222,13 +1223,13 @@
       </div>
       <div class="foot__subscribe">
         <div class="subscribe" id="subscribe">
-          <p class="subscribe__h">The Wednesday brief</p>
+          <p class="subscribe__h">Subscribe by email</p>
           <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
             <button type="submit" class="btn">Subscribe free</button>
           </form>
-          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+          <p class="subscribe__note">Brain-science deep dives by email. No hype, unsubscribe anytime.</p>
         </div>
       </div>
     </div>
@@ -1322,6 +1323,7 @@
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  @media(max-width:700px),(max-height:500px){.privacy-bar{position:static;transform:none;box-shadow:none}}
   .privacy-bar.is-visible{transform:translateY(0);}
   .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
   .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
@@ -1338,7 +1340,7 @@
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>
-<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=getComputedStyle(bar).position==="fixed"?bar.offsetHeight+"px":"";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
 <!-- /privacy-notice -->
 
 </body>

@@ -35,7 +35,7 @@
     --surface:#ffffff;
     --ink:#15181b;
     --ink-soft:#3b434a;
-    --muted:#6c757c;
+    --muted:#5f666c;
     --rule:#e4e1db;
     --rule-strong:#cbc7bf;
     --accent:#1d4c64;
@@ -429,7 +429,7 @@
     color:var(--muted);
     margin:1.6rem 0 0;
   }
-  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a{color:var(--ink-soft);text-decoration:underline;}
   .foot__links a:hover{color:var(--accent);text-decoration:underline;}
   .foot__fine{
     font-family:var(--sans);
@@ -439,7 +439,7 @@
     margin:1rem 0 0;
     max-width:70ch;
   }
-  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a{color:var(--ink-soft);text-decoration:underline;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
   /* ---------- Responsive (chrome) ---------- */
@@ -990,10 +990,12 @@
 .d-blind-spot .bs-controls{ margin:1rem 0 0; display:flex; flex-direction:column; gap:1rem; }
 .d-blind-spot .bs-field label.bs-flabel{
     display:flex; justify-content:space-between; align-items:baseline;
+    gap:.6rem;
     font-family:var(--bs-mono); font-size:.8rem; color:var(--bs-soft);
     margin:0 0 .4rem; font-variant-numeric:tabular-nums;
   }
-.d-blind-spot .bs-field label.bs-flabel span:last-child{ color:var(--bs-ink); }
+.d-blind-spot .bs-field label.bs-flabel span:first-child{ min-width:0; overflow-wrap:anywhere; }
+.d-blind-spot .bs-field label.bs-flabel span:last-child{ color:var(--bs-ink); flex:0 0 auto; white-space:nowrap; }
 .d-blind-spot input[type=range]{
     -webkit-appearance:none; appearance:none; width:100%; height:22px;
     background:transparent; cursor:pointer; margin:0; touch-action:pan-y;
@@ -2449,12 +2451,13 @@
 @media (max-width:520px){ .d-owl .owl-ears{ grid-template-columns:1fr; } }
 @media (prefers-reduced-motion: reduce){ .d-owl .owl-toggle{ transition:none; } }
   </style>
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body class="lab-bench">
   <a class="skip" href="#main">Skip to content</a>
 
 <!-- Utility bar -->
-<div class="utility">
+<div class="utility" role="region" aria-label="Publication information">
   <div class="wrap">
     <span class="utility__date">October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
@@ -2599,7 +2602,7 @@
     </div>
 
     <!-- ============ EXPLORE IN 3D (left, big) + ON THE BENCH (right) ============ -->
-    <section class="bench-top" id="explore-3d" aria-label="Explore in 3D, and this week on the bench">
+    <section class="bench-top" id="explore-3d" aria-label="Explore in 3D, and interactives on the bench">
       <div class="bench-inner bench-top__grid reveal">
 
         <!-- LEFT: the two 3D explorers, big -->
@@ -2639,19 +2642,19 @@
           </a>
         </div>
 
-        <!-- RIGHT: this week's interactive, smaller -->
+        <!-- RIGHT: the featured interactive, smaller -->
         <aside class="bench-top__bench">
           <p class="bench-tab">On the bench</p>
           <h2 class="bench-featured__title">Drive a neuron to threshold</h2>
           <p class="bench-featured__note">A leaky integrate and fire model, the textbook simplification. Below a certain drive it sits quiet. Above it, the rate climbs, but the spike size never does.</p>
           <section class="labdemo" aria-label="Integrate-and-fire neuron experiment">
             <div class="labdemo__stage" style="min-height:auto">
-              <canvas class="lif-canvas" id="lif-trace" width="680" height="150"></canvas>
+              <canvas class="lif-canvas" id="lif-trace" width="680" height="150" role="img" aria-label="A live membrane-voltage trace for a leaky integrate-and-fire neuron. The line climbs toward a dashed threshold and resets after each spike; raising the injected current makes it spike faster."></canvas>
               <div class="lif-ctrls">
-                <div class="lif-read"><span>Injected current</span><span><strong id="lif-drive">18</strong> &middot; firing at <strong id="lif-rate">0</strong> Hz</span></div>
-                <input type="range" id="lif-current" min="0" max="30" value="18" step="1" aria-label="Injected current">
+                <div class="lif-read"><span>Injected current (a.u.)</span><span><strong id="lif-drive">18</strong> a.u. &middot; firing at <strong id="lif-rate">0</strong> Hz</span></div>
+                <input type="range" id="lif-current" min="0" max="30" value="18" step="1" aria-label="Injected current, arbitrary units">
                 <div class="labdemo__progress" style="text-align:center">The model f-I curve. Each dot is a rate you drove it to.</div>
-                <canvas class="lif-fi" id="lif-fi" width="680" height="90"></canvas>
+                <canvas class="lif-fi" id="lif-fi" width="680" height="90" role="img" aria-label="The neuron's firing-rate versus injected-current curve. A faint line is the model's own f-I curve and each solid dot marks a settled firing rate you drove it to."></canvas>
               </div>
             </div>
           </section>
@@ -2670,7 +2673,7 @@
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
       <div class="bench-group" id="fi-group">
-        <h2 class="bench-section-kicker">This week's deep dive</h2>
+        <h2 class="bench-section-kicker">Deep-dive companion</h2>
         <div class="bench-grid">
           <style>
             .fi-demo{max-width:660px;margin:1rem auto 0;font-family:'Inter',system-ui,sans-serif;color:var(--text,#232b2f);}
@@ -2690,9 +2693,9 @@
             .fi-demo__legend span{display:inline-flex;align-items:center;gap:6px;}
             .fi-demo__swatch{width:12px;height:12px;border-radius:3px;flex:none;}
           </style>
-          <section id="feature-interference" class="demo-card demo-card--wide reveal" aria-label="See the signals tangle, an interactive on this week's deep dive">
+          <section id="feature-interference" class="demo-card demo-card--wide reveal" aria-label="See the signals tangle, an interactive on deep-dive companion">
             <div class="demo-card__head">
-              <p class="demo-card__kicker">Attention &middot; this week's deep dive</p>
+              <p class="demo-card__kicker">Attention &middot; deep-dive companion</p>
               <h3 class="demo-card__title">See the signals tangle</h3>
               <p class="demo-card__note">When you know which feature matters, your brain keeps two things apart. When you don't, the one you should ignore swells and its axis swings into the one you need, until the two smear together. Drag task uncertainty up and watch the read-out accuracy fall, not because the brain runs out of room, but because the signals tangle. Pairs with the article <a href="posts/feature-interference.html">Your brain doesn't run out of room.</a></p>
             </div>
@@ -2716,7 +2719,7 @@
                 <span><span class="fi-demo__swatch" style="background:#c9a24b"></span> irrelevant axis</span>
               </div>
             </div>
-            <p class="demo-card__cite">Illustrates Xue et al., Cohen lab, <em>Nature Neuroscience</em> 2026 &middot; the axes, spread and accuracy are illustrative of the mechanism, not a reading of real data.</p>
+            <p class="demo-card__cite">Illustrates Xue et al., Cohen lab, <em>Nature Neuroscience</em> 2026 &middot; the axes, spread and accuracy are illustrative of the mechanism, not a reading of real data. This demo uses two options, A and B, so chance sits at 50%. The task in the study and the article uses four, where chance is 25%. The two-option version makes the signal tangling easier to watch, and the mechanism is the same.</p>
           </section>
           <script>
 (function(){
@@ -2846,7 +2849,7 @@
         </div>
       </div>
       <div class="bench-group" id="astro-group">
-        <h2 class="bench-section-kicker">Last week's deep dive</h2>
+        <h2 class="bench-section-kicker">Another deep-dive companion</h2>
         <div class="bench-grid">
           <style>
             .astro-demo{max-width:640px;margin:1rem auto 0;font-family:'Inter',system-ui,sans-serif;color:var(--text,#232b2f);}
@@ -2863,9 +2866,9 @@
             .astro-demo__legend span{display:inline-flex;align-items:center;gap:6px;}
             .astro-demo__dot{width:10px;height:10px;border-radius:50%;background:#e0a52e;flex:none;}
           </style>
-          <section id="astrocytes-keep-time" class="demo-card demo-card--wide reveal" aria-label="Watch astrocytes keep time, an interactive on last week's deep dive">
+          <section id="astrocytes-keep-time" class="demo-card demo-card--wide reveal" aria-label="Watch astrocytes keep time, an interactive on deep-dive companion">
             <div class="demo-card__head">
-              <p class="demo-card__kicker">Glia &middot; last week's deep dive</p>
+              <p class="demo-card__kicker">Glia &middot; deep-dive companion</p>
               <h3 class="demo-card__title">Watch astrocytes keep time</h3>
               <p class="demo-card__note">Astrocytes were filed under support staff for a century. Give a model mouse a foot shock and watch them fire calcium in a fixed order, then send it back to the same box and into a new one, and watch the sequence replay in one and dissolve into noise in the other. Pairs with the article <a href="posts/astrocytes-keep-time.html">Your brain's support cells keep their own time.</a></p>
             </div>
@@ -3252,7 +3255,7 @@
       setPrompt('Teach yourself the rule. Drag the touch up and watch the blood follow the firing.');
       var row=document.createElement('div'); row.className='bts-row';
       var lab=document.createElement('label'); lab.textContent='Touch intensity'; lab.setAttribute('for','bts-touch');
-      var s=document.createElement('input'); s.type='range'; s.id='bts-touch'; s.min=0; s.max=100; s.value=Math.round(touchT*100);
+      var s=document.createElement('input'); s.type='range'; s.id='bts-touch'; s.min=0; s.max=100; s.value=Math.round(touchT*100); s.setAttribute('aria-label','Touch intensity');
       s.addEventListener('input',function(){ touchT=clamp01(s.value/100); render(); });
       row.appendChild(lab); row.appendChild(s); controls.appendChild(row);
       controls.appendChild(btn('I’ve got it → read a real scan','',startBet));
@@ -3422,7 +3425,7 @@
             .ybg-link{ display:block; font-family:var(--mono,'Inter',system-ui,sans-serif); font-size:.9rem; line-height:1.4; color:var(--teal,#2d5d7b); text-decoration:none; border:1px solid var(--teal-dim,rgba(45,93,123,.35)); border-radius:8px; padding:.6rem .85rem; transition:background .15s,border-color .15s; }
             .ybg-link:hover{ background:var(--panel2,rgba(45,93,123,.08)); border-color:var(--teal,#2d5d7b); }
           </style>
-          <section id="your-brain-is-guessing" class="demo-card demo-card--wide reveal" aria-label="Your brain is guessing, this week's deep dive">
+          <section id="your-brain-is-guessing" class="demo-card demo-card--wide reveal" aria-label="Your brain is guessing, deep-dive companion">
             <div class="demo-card__head">
               <p class="demo-card__kicker">Perception</p>
               <h3 class="demo-card__title">Your brain is guessing</h3>
@@ -3591,7 +3594,7 @@
             <div class="bs-readout">
               <span class="bs-read-main">the dot sits about <b id="blind-spot-angle">12</b>&deg; to the side</span>
               <span class="bs-status" id="blind-spot-status">keep sliding</span>
-              <span class="bs-read-sub" id="blind-spot-sub">on-screen gap 9.6 cm &middot; sitting about 45 cm away</span>
+              <span class="bs-read-sub" id="blind-spot-sub">on-screen gap 9.6 cm &middot; sitting about 30 cm away</span>
               <span class="bs-mark-read" id="blind-spot-markread" hidden aria-live="polite"></span>
             </div>
           
@@ -3605,9 +3608,9 @@
               </div>
               <div class="bs-field">
                 <label class="bs-flabel" for="blind-spot-dist">
-                  <span>How far you are sitting from the screen</span><span id="blind-spot-dist-val">45 cm</span>
+                  <span>How far you are sitting from the screen</span><span id="blind-spot-dist-val">30 cm</span>
                 </label>
-                <input type="range" id="blind-spot-dist" min="20" max="70" value="45" step="1"
+                <input type="range" id="blind-spot-dist" min="20" max="70" value="30" step="1"
                        aria-label="How far you sit from the screen, in centimetres">
               </div>
           
@@ -4073,7 +4076,7 @@
           </style>
           <section id="where-you-go-under-anesthesia" data-labdemo="where-you-go-under-anesthesia" class="demo-card demo-card--wide reveal" aria-label="Where you go under anesthesia, watch a cortical network come apart">
             <div class="demo-card__head">
-              <p class="demo-card__kicker">Consciousness &middot; this week's deep dive</p>
+              <p class="demo-card__kicker">Consciousness &middot; deep-dive companion</p>
               <h3 class="demo-card__title">Where you go under anesthesia</h3>
               <p class="demo-card__note">Anesthesia does not switch the brain off, it breaks the cross-talk that binds the cortex into one experience. Watch the same network come apart as it deepens, and the brain waves flatten into burst suppression. Pairs with the article <a href="posts/where-you-go-under-anesthesia.html">Where you go under anesthesia</a>.</p>
             </div>
@@ -5019,13 +5022,13 @@
       </div>
       <div class="foot__subscribe">
         <div class="subscribe" id="subscribe">
-          <p class="subscribe__h">The Wednesday brief</p>
+          <p class="subscribe__h">Subscribe by email</p>
           <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
             <button type="submit" class="btn">Subscribe free</button>
           </form>
-          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+          <p class="subscribe__note">Brain-science deep dives by email. No hype, unsubscribe anytime.</p>
         </div>
       </div>
     </div>
@@ -5267,6 +5270,14 @@
   var V = EL, buf = [], spikes = [], t = 0;
   for(var i=0;i<W;i++) buf.push(EL);
   var slider = document.getElementById('lif-current');
+  // measurement state: the rate is read over a SETTLED window in model time.
+  // SETTLE lets the membrane settle after a current change; WIN is the counting
+  // window (1000 model-ms so a spike count equals Hz). Both are cleared whenever
+  // the injected current changes, so a reading never mixes two currents.
+  var curI = parseFloat(slider.value);   // the current the window is measuring
+  var changeT = 0;                        // model-time when the current last changed
+  var SETTLE = 150, WIN = 1000;           // model-ms
+  var shownRate = 0;                      // last displayed (settled) rate
   var rateEl = document.getElementById('lif-rate'), driveEl = document.getElementById('lif-drive');
   var fi = document.getElementById('lif-fi'), fctx = fi.getContext('2d'), fpts = [], lastFi = 0;
   function acc(){ return (getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#2d5d7b').trim(); }
@@ -5281,15 +5292,31 @@
   var curve = []; for(var Ic=0; Ic<=30.001; Ic+=0.5){ curve.push({ I:Ic, r:simRate(Ic) }); }
   function step(ts){
     var I = parseFloat(slider.value); driveEl.textContent = I.toFixed(0);
+    // a new current starts a fresh measurement: drop every spike counted under the
+    // old current and restart the settle clock. (The LIF dynamics below are unchanged.)
+    if(I !== curI){ curI = I; spikes = []; changeT = t; shownRate = 0; }
     for(var k=0;k<10;k++){ var dt = 0.5; V += ((-(V - EL) + I) / tau) * dt; if(V >= VT){ V = VSPIKE; spikes.push(t); } buf.push(V); if(buf.length > W) buf.shift(); if(V >= VSPIKE) V = VR; t += dt; }
     ctx.clearRect(0,0,W,H);
     ctx.strokeStyle = 'rgba(150,150,150,.55)'; ctx.setLineDash([5,4]); ctx.beginPath(); ctx.moveTo(0, vY(VT)); ctx.lineTo(W, vY(VT)); ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = acc(); ctx.lineWidth = 2; ctx.beginPath();
     for(var x=0;x<buf.length;x++){ var y = vY(buf[x]); x === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); }
     ctx.stroke();
-    var rate = spikes.filter(function(s){ return s > t - 1000; }).length; rateEl.textContent = rate;
+    // count only spikes inside the settled window; convert the count to Hz by the
+    // window's true length so a partial (not-yet-full) window still reads sensibly.
+    var winStart = Math.max(changeT + SETTLE, t - WIN);
+    var winLen = t - winStart;
+    if(winLen > 0){
+      var cnt = 0;
+      for(var si = spikes.length - 1; si >= 0; si--){ if(spikes[si] >= winStart) cnt++; else break; }
+      shownRate = Math.round(cnt / (winLen / 1000));
+    }
+    rateEl.textContent = shownRate;
     if(spikes.length > 4000) spikes = spikes.slice(-2000);
-    if(ts - lastFi > 700){ lastFi = ts; fpts.push({ I:I, rate:rate }); if(fpts.length > 240) fpts.shift(); drawFi(); }
+    // only record an f-I point once the current has been stable through a full
+    // settled window, so the dot carries a settled rate for THIS current (not a
+    // reading contaminated by the previous current).
+    var settledFull = (t - changeT) >= (SETTLE + WIN);
+    if(settledFull && ts - lastFi > 700){ lastFi = ts; fpts.push({ I:I, rate:shownRate }); if(fpts.length > 240) fpts.shift(); drawFi(); }
   }
   function drawFi(){
     fctx.clearRect(0,0,fi.width,fi.height);
@@ -5811,10 +5838,17 @@
     return { dir:dir, crossX:crossX, cy:H/2, maxSepPx:maxSepPx };
   }
 
-  // clamp the millimetre slider so the dot always fits on the current stage
+  var SLIDER_MAX_DEG = 22;   // the slider's top is an angle, so it reaches past the ~15-18° blind-spot band
+  var REACH_DEG = 15;        // below this the stage cannot show the blind spot at the current distance
+  // Cap the millimetre slider at whichever is smaller: the angle target (so the
+  // range is set in degrees and reaches the blind spot), or the stage width (so
+  // the dot always fits). draw() surfaces a "sit closer" note when the stage wins.
   function clampSlider(){
     var g = geom();
-    var maxMm = Math.floor(g.maxSepPx / PX_PER_CM * 10);
+    var fitPx = g.maxSepPx;
+    var wantPx = pxAtAngle(SLIDER_MAX_DEG);        // px needed to reach the angle target here
+    var maxPx = Math.min(fitPx, wantPx);
+    var maxMm = Math.max(10, Math.floor(maxPx / PX_PER_CM * 10));
     sep.max = maxMm;
     if(+sep.value > maxMm) sep.value = maxMm;
   }
@@ -5917,7 +5951,12 @@
     angleEl.textContent = Math.round(deg);
     sepVal.textContent = cm.toFixed(1) + ' cm';
     distVal.textContent = (+dist.value) + ' cm';
-    subEl.textContent = 'on-screen gap ' + cm.toFixed(1) + ' cm · sitting about ' + (+dist.value) + ' cm away';
+    // the most the stage can show at this distance; below REACH_DEG the blind spot
+    // is off the edge, so guide the reader to sit closer instead of dead-ending.
+    var maxReachDeg = angleAt(g.maxSepPx);
+    var tooNarrow = maxReachDeg < REACH_DEG;
+    subEl.textContent = 'on-screen gap ' + cm.toFixed(1) + ' cm · sitting about ' + (+dist.value) + ' cm away' +
+      (tooNarrow ? ' · screen too narrow here, sit closer to reach your blind spot' : '');
     if(inBand){
       statusEl.textContent = 'in the typical blind-spot range';
       statusEl.classList.add('is-in');
@@ -5940,15 +5979,22 @@
     var sepPx = Math.min(+sep.value/10 * PX_PER_CM, g.maxSepPx);
     marked = { px:sepPx, angle:angleAt(sepPx) };
     var verb = (mode === 'dot') ? 'lost the dot' : 'saw the gap close';
+    var a = Math.round(marked.angle);
+    // one message, consistent with the status band (12-18 = typical blind spot),
+    // so a mark can never read "marked ~9°" next to "not far enough out yet".
+    var where;
+    if(a >= 12 && a <= 18) where = ', right in the typical blind-spot range';
+    else if(a < 12) where = ', short of the typical ~15° blind spot — slide further out, or sit a little closer';
+    else where = ', past where most blind spots sit';
     markRead.hidden = false;
-    markRead.textContent = 'Marked — you ' + verb + ' around ' + Math.round(marked.angle) + '° to the side.';
+    markRead.textContent = 'Marked — you ' + verb + ' around ' + a + '°' + where + '.';
     draw();
   }
 
   function reset(){
     marked = null;
     markRead.hidden = true;
-    sep.value = 96; dist.value = 45;
+    sep.value = 96; dist.value = 30;
     setMode('dot'); setEye('left');
     clampSlider();
     draw();
@@ -6607,6 +6653,10 @@
   var a = parseFloat(thrEl.value);
   var running = true;
   var stats = { nModel:0, errModel:0, sumDTm:0, nYou:0, errYou:0 };
+  // leftover model-time not yet consumed as whole DT_INT steps. Accumulating the
+  // fractional remainder makes the sim's model-time-per-wall-second equal SPEED
+  // regardless of the display's refresh rate (60Hz, 120Hz, 144Hz all match).
+  var modelAcc = 0;
 
   // per-trial state machine (live mode)
   var trial = null;
@@ -6615,6 +6665,7 @@
       phase:'run', x:0, t:0, dir: Math.random()<0.5 ? 1 : -1,
       you:0, samples:[{t:0,v:0}], hold:0, outcome:null, committedAt:null
     };
+    modelAcc = 0;
   }
   newTrial();
 
@@ -6680,7 +6731,7 @@
       ctx.stroke();
       ctx.font = '11px ui-monospace, Menlo, monospace';
       ctx.fillStyle = 'rgba(147,168,160,.9)'; ctx.textAlign='center';
-      ctx.fillText('true direction', w/2, cy - 16);
+      ctx.fillText(Math.round(C*100) === 0 ? 'latent side (no net motion)' : 'true direction', w/2, cy - 16);
       ctx.textAlign='start';
     }
   }
@@ -6842,10 +6893,14 @@
 
     if(running){
       if(trial.phase === 'run'){
-        var dtModel = dtReal * SPEED;
         var A = KDRIFT * C * trial.dir;
         var sq = Math.sqrt(DT_INT);
-        var steps = Math.max(1, Math.round(dtModel / DT_INT));
+        // consume whole DT_INT steps out of the accumulated model-time; the sub-step
+        // remainder carries to the next frame, so total model-time advanced over a
+        // wall-second is dtReal*SPEED summed = SPEED, independent of frame rate.
+        modelAcc += dtReal * SPEED;
+        var steps = Math.floor(modelAcc / DT_INT);
+        modelAcc -= steps * DT_INT;
         for(var k=0;k<steps;k++){
           trial.x += A*DT_INT + CNOISE*sq*gauss();
           trial.t += DT_INT;
@@ -6856,13 +6911,28 @@
             trial.phase = 'hold'; trial.hold = 0;
             recordCommit(trial.outcome);
             accStateEl.textContent = 'committed';
-            var youTxt = '';
-            if(trial.you !== 0){
-              var yc = trial.you === trial.dir;
-              youTxt = ' You ' + (yc ? '<span class="ok">had it right</span>' : '<span class="no">had it wrong</span>') + '.';
+            // At 0% motion strength there is no drift and therefore no motion to read:
+            // the latent direction is still defined and scoring choice===dir as chance
+            // stays valid, but the prose must not claim the dots "moved" a way.
+            if(Math.round(C*100) === 0){
+              var youTxt0 = '';
+              if(trial.you !== 0){
+                var yc0 = trial.you === trial.dir;
+                youTxt0 = ' Your guess was ' + (yc0 ? '<span class="ok">right</span>' : '<span class="no">wrong</span>') + '.';
+              }
+              setStatus('No motion to read at 0% strength, so this was a guess. The model picked <b>' +
+                (trial.outcome.choice===1?'right':'left') + '</b> and, against the latent side, landed ' +
+                (trial.outcome.correct ? '<span class="ok">correct</span>' : '<span class="no">wrong</span>') +
+                ' by chance.' + youTxt0);
+            } else {
+              var youTxt = '';
+              if(trial.you !== 0){
+                var yc = trial.you === trial.dir;
+                youTxt = ' You ' + (yc ? '<span class="ok">had it right</span>' : '<span class="no">had it wrong</span>') + '.';
+              }
+              setStatus('It moved <b>' + (trial.dir===1?'right':'left') + '</b>. The model ' +
+                (trial.outcome.correct ? '<span class="ok">got it</span>' : '<span class="no">missed</span>') + '.' + youTxt);
             }
-            setStatus('It moved <b>' + (trial.dir===1?'right':'left') + '</b>. The model ' +
-              (trial.outcome.correct ? '<span class="ok">got it</span>' : '<span class="no">missed</span>') + '.' + youTxt);
             break;
           }
         }
@@ -6905,7 +6975,7 @@
     ctx.beginPath(); ctx.moveTo(w/2-dir*30,cy); ctx.lineTo(x1,cy); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x1,cy); ctx.lineTo(x1-dir*9,cy-6); ctx.moveTo(x1,cy); ctx.lineTo(x1-dir*9,cy+6); ctx.stroke();
     ctx.font='11px ui-monospace, Menlo, monospace'; ctx.fillStyle='rgba(147,168,160,.9)'; ctx.textAlign='center';
-    ctx.fillText('motion strength ' + Math.round(C*100) + '%, moving ' + (dir===1?'right':'left'), w/2, cy-16); ctx.textAlign='start';
+    ctx.fillText(Math.round(C*100) === 0 ? 'motion strength 0%, no net motion (latent side ' + (dir===1?'right':'left') + ')' : 'motion strength ' + Math.round(C*100) + '%, moving ' + (dir===1?'right':'left'), w/2, cy-16); ctx.textAlign='start';
 
     // accumulator: a few frozen sample paths so the idea still reads
     var actx = Da.ctx; drawAcc();
@@ -6928,8 +6998,17 @@
   }
 
   // ---------- inputs ----------
-  function onCoh(){ C = parseFloat(cohEl.value); updatePredicted(); resetCounts(); drawSac(); if(mqReduce.matches) renderStatic(); }
-  function onThr(){ a = parseFloat(thrEl.value); updatePredicted(); resetCounts(); drawSac(); if(mqReduce.matches) renderStatic(); }
+  // A parameter change must not fold evidence already accumulated under the old
+  // coherence/threshold into the fresh tally: restart the in-flight trial too.
+  function restartTrial(){
+    if(mqReduce.matches) return;
+    newTrial();
+    accStateEl.textContent = running ? 'running' : 'paused';
+    setStatus('Watching the dots.');
+    armButtons();
+  }
+  function onCoh(){ C = parseFloat(cohEl.value); updatePredicted(); resetCounts(); restartTrial(); drawSac(); if(mqReduce.matches) renderStatic(); }
+  function onThr(){ a = parseFloat(thrEl.value); updatePredicted(); resetCounts(); restartTrial(); drawSac(); if(mqReduce.matches) renderStatic(); }
   cohEl.addEventListener('input', onCoh);
   thrEl.addEventListener('input', onThr);
 
@@ -9574,11 +9653,12 @@
       ctx.restore();
     }
 
-    // trajectory (faint teal)
+    // trajectory (faint teal). A point flagged m:true starts a NEW segment, so a
+    // teleport (tap to reposition) or a walk restart never draws a line across the box.
     if(traj.length>1){
       ctx.strokeStyle='rgba(55,203,182,.22)'; ctx.lineWidth=1.4;
       ctx.lineJoin='round'; ctx.beginPath();
-      for(var i=0;i<traj.length;i++){ var x=ax(traj[i].x), y=ay(traj[i].y); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+      for(var i=0;i<traj.length;i++){ var x=ax(traj[i].x), y=ay(traj[i].y); (i && !traj[i].m)?ctx.lineTo(x,y):ctx.moveTo(x,y); }
       ctx.stroke();
     }
 
@@ -9651,7 +9731,9 @@
     dragging=true;
     try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
     lastT=performance.now();
-    var p=evToBox(e); avatar.x=p.x; avatar.y=p.y; traj.push({x:p.x,y:p.y}); draw();
+    // teleport to the tapped spot: start a fresh path segment so no connector line
+    // is drawn from the old position across the box.
+    var p=evToBox(e); avatar.x=p.x; avatar.y=p.y; traj.push({x:p.x,y:p.y,m:true}); draw();
     e.preventDefault();
   });
   canvas.addEventListener('pointermove', function(e){
@@ -9713,6 +9795,7 @@
       var instSpeed=0.13;
       var s=0, dstep=0.008, prev=pointAt(pts,0);
       avatar.x=prev.x; avatar.y=prev.y;
+      traj.push({x:prev.x,y:prev.y,m:true});  // break: the walk starts a new segment
       while(s<total){
         s=Math.min(total, s+dstep);
         var q=pointAt(pts,s);
@@ -9728,6 +9811,7 @@
     exploreBtn.disabled=true; exploreBtn.textContent='Walking';
     var s=0, prev=pointAt(pts,0), last=performance.now();
     avatar.x=prev.x; avatar.y=prev.y;
+    traj.push({x:prev.x,y:prev.y,m:true});  // break: the walk starts a new segment
     raf=requestAnimationFrame(function frame(now){
       var dt=(now-last)/1000; last=now; if(dt>0.05) dt=0.05;
       s+=speed*dt; if(s>total) s=total;
@@ -10408,9 +10492,18 @@
         var btn = card.querySelector('.demo-toggle');
         var body = card.querySelector('.demo-collapse');
         if(!btn || !body) return;
+        // Every toggle reads "Try it →" visually, which gives 25 buttons the same
+        // accessible name. Derive a unique name from the card's own heading so a
+        // screen reader announces WHICH demo each button opens. Visible text is
+        // untouched; only the accessible name (aria-label) changes.
+        var head = card.querySelector('h2, h3, h4');
+        var demoName = (head && head.textContent.trim()) || card.getAttribute('data-labdemo') || 'this demo';
+        function labelToggle(open){ btn.setAttribute('aria-label', (open ? 'Hide: ' : 'Try it: ') + demoName); }
+        labelToggle(false);
         btn.addEventListener('click', function(){
           var open = card.classList.toggle('is-open');
           btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          labelToggle(open);
           if(open){
             body.hidden = false;
             if(btn.firstChild && btn.firstChild.nodeType === 3) btn.firstChild.nodeValue = 'Hide ';
@@ -10494,6 +10587,7 @@
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  @media(max-width:700px),(max-height:500px){.privacy-bar{position:static;transform:none;box-shadow:none}}
   .privacy-bar.is-visible{transform:translateY(0);}
   .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
   .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
@@ -10510,7 +10604,7 @@
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>
-<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=getComputedStyle(bar).position==="fixed"?bar.offsetHeight+"px":"";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
 <!-- /privacy-notice -->
 
 </body>

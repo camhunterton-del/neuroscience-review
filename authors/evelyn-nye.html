@@ -3,27 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Commons — The Neuroscience Review</title>
-  <meta name="description" content="A space for early-career writers in neuroscience. Short notes and fuller pieces, each read and edited with the author.">
+  <title>Evelyn Nye — The Neuroscience Review</title>
+  <meta name="description" content="Evelyn Nye is a contributor to The Commons at The Neuroscience Review, at SUNY Geneseo.">
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap">
-  <!-- Theme: set before paint to avoid a flash of the wrong theme -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap">
+  <!-- Theme (no flash of wrong theme) -->
   <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}else if(matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}</script>
-  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="feed.xml">
-  <link rel="canonical" href="https://theneuroreview.com/commons.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="The Neuroscience Review">
-  <meta property="og:title" content="The Commons — The Neuroscience Review">
-  <meta property="og:description" content="A space for early-career writers in neuroscience, each piece read and edited with the author.">
-  <meta property="og:url" content="https://theneuroreview.com/commons.html">
-  <meta property="og:image" content="https://theneuroreview.com/og-cover.png?v=2">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Commons — The Neuroscience Review">
-  <meta name="twitter:description" content="A space for early-career writers in neuroscience, each piece read and edited with the author.">
-  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
+  <link rel="stylesheet" href="../css/styles.css">
   <style>
   :root{
     --bg:#ffffff;
@@ -228,7 +216,7 @@
   }
   .theme-toggle:hover{color:var(--accent);border-color:var(--accent);}
 
-  /* ---------- Nav dropdowns ---------- */
+  /* ---------- Resources dropdown ---------- */
   .nav__trigger{
     font-family:var(--sans);
     font-size:.82rem;
@@ -289,8 +277,7 @@
     .nav__menu-inner{gap:1.3rem;padding-top:1.1rem;padding-bottom:1.3rem;}
     .nav__col{min-width:46%;}
   }
-
-  /* ---------- Subscribe (in the footer) ---------- */
+  /* ---------- Subscribe (now in the footer) ---------- */
   .subscribe{
     background:var(--surface);
     border:1px solid var(--rule-strong);
@@ -347,58 +334,6 @@
     color:var(--muted);
     margin:.75rem 0 0;
   }
-
-  /* ---------- Section scaffolding ---------- */
-  main{display:block;}
-  .section{padding:clamp(2.2rem,4.5vw,3.4rem) 0;border-bottom:1px solid var(--rule);}
-  /* Tonal zones: warm paper band and a faint ink-tinted focal band */
-  .section--band{background:var(--bg-tint);}
-  .section--focus{background:var(--band-cool);}
-  .section-head{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    gap:1rem;
-    margin-bottom:1.4rem;
-  }
-  .section-head h2{
-    font-family:var(--serif);
-    font-weight:500;
-    font-size:clamp(1.3rem,2.4vw,1.6rem);
-    letter-spacing:-.01em;
-    margin:0;
-  }
-  .more-link{
-    font-family:var(--sans);
-    font-size:.78rem;
-    font-weight:600;
-    letter-spacing:.03em;
-    color:var(--accent);
-    text-decoration:none;
-    white-space:nowrap;
-  }
-  .more-link:hover{color:var(--accent-hover);text-decoration:underline;}
-
-  /* ---------- Page header (shared across listing pages) ---------- */
-  .page-head{padding:clamp(1.8rem,3.6vw,2.8rem) 0 0;}
-  .page-head__title{
-    font-family:var(--serif);
-    font-weight:500;
-    font-size:clamp(1.9rem,4vw,2.8rem);
-    line-height:1.05;
-    letter-spacing:-.02em;
-    margin:.5rem 0 .6rem;
-    color:var(--ink);
-  }
-  .page-head__sub{
-    font-family:var(--serif);
-    font-size:clamp(1.05rem,1.5vw,1.2rem);
-    line-height:1.5;
-    color:var(--ink-soft);
-    margin:0;
-    max-width:60ch;
-  }
-
   /* ---------- Walk callout (institutional) ---------- */
   .callout{
     border:1px solid var(--rule-strong);
@@ -466,7 +401,6 @@
     margin:.1rem 0 0;
     color:var(--ink);
   }
-
   /* ---------- Footer ---------- */
   .foot{background:var(--bg-tint);border-top:1px solid var(--rule-strong);padding:clamp(2.2rem,4vw,3rem) 0 2rem;}
   .foot__top{
@@ -524,7 +458,7 @@
   .foot__fine a{color:var(--ink-soft);text-decoration:underline;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
-  /* ---------- Responsive ---------- */
+  /* ---------- Shared responsive (shell) ---------- */
   @media (max-width:860px){
     .callout__inner{grid-template-columns:1fr;gap:1.4rem;align-items:start;}
     .foot__top{grid-template-columns:1fr;}
@@ -533,92 +467,138 @@
     .utility__est{display:none;}
     .nav .wrap{justify-content:flex-start;gap:.7rem;padding-top:.45rem;padding-bottom:.45rem;}
     .nav a{font-size:.72rem;letter-spacing:.03em;}
-    .section-head{flex-direction:column;align-items:flex-start;gap:.4rem;}
   }
   @media (max-width:380px){
     .nav .wrap{gap:.55rem;}
     .nav a{font-size:.66rem;}
   }
 
-  /* ---------- The Commons: full-width feed + reading column ---------- */
-  .commons-section{padding:clamp(1.8rem,3.5vw,2.6rem) 0 clamp(2.4rem,4.5vw,3.4rem);}
-  .commons-feed{margin:0 0 clamp(2.4rem,5vw,3.4rem);}
-  .commons-feed__head{
-    font-family:var(--sans);
-    font-size:.72rem;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.12em;
-    color:var(--accent);
-    border-bottom:2px solid var(--accent);
-    padding-bottom:.6rem;
-    margin-bottom:1.5rem;
-  }
-  .commons-list{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:clamp(1.3rem,2.5vw,1.9rem);
-    list-style:none;
-    padding:0;
-    margin:0;
-  }
-  .commons-note{
-    border:1px solid var(--rule-strong);
-    background:var(--surface);
-    padding:clamp(1.3rem,2.2vw,1.7rem);
-    display:flex;
-    flex-direction:column;
-    transition:border-color .15s;
-  }
-  .commons-note:hover{border-color:var(--accent);}
-  .commons-note__meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:.8rem;}
-  .commons-note__tag{
-    font-family:var(--sans);
-    font-size:.66rem;
-    font-weight:600;
-    text-transform:uppercase;
-    letter-spacing:.1em;
-    color:var(--accent);
-    white-space:nowrap;
-  }
-  .commons-note__date{font-family:var(--sans);font-size:.76rem;color:var(--muted);white-space:nowrap;}
-  .commons-note__title{
-    font-family:var(--serif);
-    font-weight:500;
-    font-size:clamp(1.2rem,1.9vw,1.4rem);
-    line-height:1.22;
-    letter-spacing:-.01em;
-    margin:0 0 .55rem;
-  }
-  .commons-note__title a{color:var(--ink);text-decoration:none;transition:color .15s;}
-  .commons-note__title a:hover{color:var(--accent);}
-  .commons-note__body{font-family:var(--sans);color:var(--ink-soft);line-height:1.6;margin:0 0 1rem;}
-  .commons-note__byline{font-family:var(--sans);font-size:.84rem;color:var(--muted);margin-top:auto;}
-  .commons-note__more{font-family:var(--sans);font-size:.84rem;font-weight:600;margin:.65rem 0 0;}
-  .commons-note__more a{color:var(--accent);text-decoration:none;}
-  .commons-note__more a:hover{text-decoration:underline;}
+  /* ========== Reading / info / utility page content (new design tokens) ========== */
+  main{display:block;padding:clamp(1.8rem,3.5vw,3rem) clamp(20px,4vw,40px) clamp(3rem,6vw,5rem);}
+  /* targeted margin reset so content spacing comes only from the rules below */
+  main :where(h1,h2,h3,h4,h5,h6,p,ul,ol,figure,blockquote,dl,dd,dt){margin:0;}
+  main :where(ul,ol){padding:0;}
 
-  /* Reading column for the intro + prose */
-  .commons-prose{max-width:66ch;}
-  .commons-prose h2{
-    font-family:var(--serif);
-    font-weight:500;
-    font-size:clamp(1.3rem,2.2vw,1.6rem);
-    letter-spacing:-.01em;
-    margin:1.8rem 0 .6rem;
-    color:var(--ink);
+  .reading-shell{max-width:680px;margin:0 auto;}
+  .reading-shell > article.post{max-width:none;margin:0;}
+  article.post{max-width:680px;margin:0 auto;}
+
+  .post-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--rule);}
+  .post-header__eyebrow{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:1.5rem;}
+  .post-header__title{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,4.5vw,2.75rem);line-height:1.12;letter-spacing:-.022em;margin-bottom:1.25rem;color:var(--ink);}
+  .post-header__subtitle{font-family:var(--serif);font-size:1.2rem;line-height:1.5;color:var(--muted);font-style:italic;margin-bottom:1.75rem;}
+  .post-header--compact{margin-bottom:1.75rem;padding-bottom:1.3rem;}
+  .post-header--compact .post-header__eyebrow{margin-bottom:.6rem;}
+  .post-header--compact .post-header__title{font-size:clamp(1.7rem,3.2vw,2.1rem);margin-bottom:.55rem;}
+  .post-header--compact .post-header__subtitle{font-size:1.1rem;margin-bottom:0;}
+
+  .post-body{font-family:var(--serif);font-size:1.2rem;line-height:1.65;color:var(--ink);max-width:66ch;margin-left:auto;margin-right:auto;}
+  .post-body p,.post-body ul,.post-body ol,.post-body blockquote{margin-bottom:1.4rem;}
+  .post-body > p:first-of-type::first-line{font-variant:small-caps;letter-spacing:.04em;}
+  .post-body > p:first-of-type::first-letter{font-family:var(--serif);font-weight:600;float:left;font-size:3.3em;line-height:.78;padding:.04em .12em 0 0;color:var(--accent);}
+  .post-body h2{font-family:var(--serif);font-size:1.55rem;font-weight:600;letter-spacing:-.015em;margin-top:3rem;margin-bottom:1rem;line-height:1.25;color:var(--ink);}
+  .post-body h3{font-family:var(--serif);font-size:1.2rem;font-weight:600;margin-top:2.25rem;margin-bottom:.75rem;line-height:1.3;color:var(--ink);}
+  .post-body a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px;transition:text-decoration-color .15s;}
+  .post-body a:hover{text-decoration-color:var(--accent);}
+  .post-body em{font-style:italic;}
+  .post-body strong{font-weight:600;}
+  .post-body blockquote{border-left:3px solid var(--accent);padding-left:1.5rem;margin-left:0;color:var(--muted);font-style:italic;}
+  .post-body ul,.post-body ol{padding-left:1.5rem;}
+  .post-body ul li,.post-body ol li{margin-bottom:.4rem;}
+
+  /* Editorial aside (was .callout in the old stylesheet; renamed so .callout stays the shared Walk promo) */
+  .note{font-family:var(--serif);background:var(--bg-tint);border-left:3px solid var(--accent);padding:1.25rem 1.5rem;margin:2rem 0;font-size:.95rem;line-height:1.55;color:var(--ink);}
+  .note p{margin:0;color:var(--ink-soft);}
+  .note a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px;}
+  .note a:hover{text-decoration-color:var(--accent);}
+  .note__label{display:block;font-family:var(--sans);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.5rem;}
+  .note--summary ul{margin:0;padding-left:1.1rem;}
+  .note--summary li{margin-bottom:.4rem;font-size:.97rem;line-height:1.5;color:var(--ink-soft);}
+
+  .submission-note{font-family:var(--sans);font-size:.9rem;color:var(--muted);margin-top:1rem;}
+  .submission-note a{color:var(--accent);}
+  .submission-note a:hover{color:var(--accent-hover);}
+
+  /* Section heading + start-here helpers */
+  .section-heading{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:2rem;padding-bottom:.75rem;border-bottom:1px solid var(--rule);}
+  .start-heading{margin-top:3rem;}
+  .start-note{max-width:66ch;margin:.2rem auto 1.4rem;color:var(--muted);font-size:1.05rem;line-height:1.55;font-family:var(--serif);}
+
+  /* Post list + cards (start-here, and search results) */
+  .post-list{list-style:none;}
+  .post-card{padding:2.25rem 0;border-bottom:1px solid var(--rule);}
+  .post-card:last-child{border-bottom:0;}
+  .post-card a{display:flex;gap:1.5rem;align-items:center;text-decoration:none;color:inherit;}
+  .post-card a:hover .post-card__title{color:var(--accent);}
+  .post-card__thumb{flex:0 0 168px;aspect-ratio:4/3;background:var(--bg-tint);border:1px solid var(--rule);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .post-card__thumb img{width:100%;height:100%;object-fit:cover;transition:transform .25s ease;}
+  .post-card a:hover .post-card__thumb img{transform:scale(1.04);}
+  .post-card__body{flex:1 1 auto;min-width:0;}
+  .post-card__meta{font-family:var(--sans);font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.75rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem .55rem;}
+  .post-card__meta-type{color:var(--accent);font-weight:600;flex:0 0 100%;margin-bottom:.05rem;}
+  .post-card__meta-type + .post-card__meta-divider{display:none;}
+  .post-card__meta-divider{color:var(--muted);opacity:.5;}
+  .post-card__title{font-family:var(--serif);font-size:1.85rem;font-weight:600;line-height:1.18;letter-spacing:-.018em;margin-bottom:.85rem;transition:color .15s;color:var(--ink);}
+  .post-card__lede{font-family:var(--serif);font-size:1.05rem;line-height:1.6;color:var(--muted);}
+  /* Search results have no thumbnail, so stack the row instead of a flex pair */
+  .search-results .post-card a{display:block;}
+  @media (max-width:620px){
+    .post-card a{flex-direction:column;align-items:stretch;gap:1rem;}
+    .post-card__thumb{width:100%;flex:none;aspect-ratio:16/9;}
+    .post-card__title{font-size:1.5rem;}
   }
-  .commons-prose p{
-    font-family:var(--serif);
-    font-size:1.05rem;
-    line-height:1.65;
-    color:var(--ink-soft);
-    margin:0 0 1rem;
+
+  /* The Paper That Hooked Me entries */
+  .hooked-entry{scroll-margin-top:5rem;}
+  .hooked-entry + .hooked-entry{margin-top:2.75rem;padding-top:1.9rem;border-top:1px solid var(--rule);}
+  .hooked-entry__byline{font-family:var(--sans);font-size:.9rem;color:var(--muted);}
+  .hooked-entry__cite{font-family:var(--sans);font-size:.85rem;line-height:1.5;color:var(--muted);}
+
+  /* 404 hero */
+  .hero{max-width:760px;margin:2rem auto 5rem;}
+  .hero__eyebrow{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:1.25rem;}
+  .hero__title{font-family:var(--serif);font-size:clamp(2.25rem,5.5vw,3.25rem);font-weight:600;line-height:1.12;letter-spacing:-.025em;margin-bottom:1.5rem;color:var(--ink);}
+  .hero__lede{font-family:var(--serif);font-size:1.2rem;line-height:1.55;color:var(--muted);font-style:italic;}
+
+  /* Search page */
+  .search-wrap{max-width:760px;margin:0 auto;}
+  .search-field{margin:0 0 1.1rem;}
+  .search-input{width:100%;font-family:var(--serif);font-size:1.25rem;line-height:1.4;color:var(--ink);background:var(--bg-tint);border:1px solid var(--rule-strong);border-radius:10px;padding:.95rem 1.1rem;-webkit-appearance:none;appearance:none;}
+  .search-input::placeholder{color:var(--muted);}
+  .search-input:focus{border-color:var(--accent);}
+  .search-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent);}
+  .search-status{font-family:var(--sans);font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);min-height:1.1rem;margin:0 0 .5rem;}
+  .search-empty{font-family:var(--serif);font-size:1.08rem;line-height:1.6;color:var(--muted);margin:1.4rem 0 0;}
+  .search-results{margin-top:.4rem;}
+  .search-results:empty{margin-top:0;}
+  @media (prefers-reduced-motion:no-preference){.search-results .post-card{animation:search-fade .28s ease both;}}
+  @keyframes search-fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+  @media (max-width:600px){
+    main{padding:2rem 1.25rem 3rem;}
+    .post-body{font-size:1.1rem;}
+    .hero{margin:1rem auto 3rem;}
   }
-  .commons-prose a{color:var(--accent);text-decoration:underline;}
-  .commons-prose .submission-note{font-family:var(--sans);font-size:.85rem;color:var(--muted);}
 
 </style>
+  <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" title="The Neuroscience Review" href="../feed.xml">
+  <link rel="canonical" href="https://theneuroreview.com/authors/evelyn-nye.html">
+  <meta property="og:type" content="profile">
+  <meta property="og:site_name" content="The Neuroscience Review">
+  <meta property="og:title" content="Evelyn Nye — The Neuroscience Review">
+  <meta property="og:description" content="Evelyn Nye is a contributor to The Commons at The Neuroscience Review, at SUNY Geneseo.">
+  <meta property="og:url" content="https://theneuroreview.com/authors/evelyn-nye.html">
+  <meta property="og:image" content="https://theneuroreview.com/og-cover.png?v=2">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Evelyn Nye — The Neuroscience Review">
+  <meta name="twitter:description" content="Evelyn Nye is a contributor to The Commons at The Neuroscience Review, at SUNY Geneseo.">
+  <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"Evelyn Nye","affiliation":{"@type":"CollegeOrUniversity","name":"SUNY Geneseo"}}
+  </script>
 <style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
@@ -639,7 +619,7 @@
 <header class="masthead">
   <div class="wrap">
     <h1 class="masthead__name">
-      <a href="index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>The Neuroscience Review</a>
+      <a href="../index.html" class="site-logo"><svg class="site-logo__mark" aria-hidden="true" viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M32 32 L16 20"/><path d="M32 32 L26 12"/><path d="M32 32 L48 18"/><path d="M32 32 L44 48"/><path d="M32 32 L20 46"/></g><g fill="currentColor"><circle cx="16" cy="20" r="2.6"/><circle cx="26" cy="12" r="2.6"/><circle cx="48" cy="18" r="2.6"/><circle cx="44" cy="48" r="2.6"/><circle cx="20" cy="46" r="2.6"/></g><circle cx="32" cy="32" r="6.5" fill="currentColor"/></svg>The Neuroscience Review</a>
     </h1>
   </div>
 </header>
@@ -647,33 +627,33 @@
 <!-- Primary navigation (single row; Subscribe now lives in the footer) -->
 <nav class="nav" aria-label="Primary">
   <div class="wrap">
-    <a href="index.html">Home</a>
+    <a href="../index.html">Home</a>
     <button class="nav__trigger" id="articles-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="articles-menu">Articles<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button class="nav__trigger" id="news-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="news-menu">News<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <a href="lab.html">Lab</a>
+    <a href="../lab.html">Lab</a>
     <button class="nav__trigger" id="resources-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="resources-menu">Resources<svg class="nav__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <a href="search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
+    <a href="../search.html" class="nav__search" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.35-4.35"/></svg></a>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾</button>
   </div>
   <div class="nav__menu" id="articles-menu" hidden>
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
         <p class="nav__col-head">Browse</p>
-        <a href="posts.html">All articles</a>
-        <a href="topics.html">Topics</a>
-        <a href="start-here.html">Start here</a>
+        <a href="../posts.html">All articles</a>
+        <a href="../topics.html">Topics</a>
+        <a href="../start-here.html">Start here</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">Formats</p>
-        <a href="topics/first-principles.html">First principles</a>
-        <a href="topics/paper-breakdown.html">Paper breakdowns</a>
-        <a href="topics/myth-busting.html">Myth-busting</a>
-        <a href="the-paper-that-hooked-me.html">The Paper That Hooked Me</a>
+        <a href="../topics/first-principles.html">First principles</a>
+        <a href="../topics/paper-breakdown.html">Paper breakdowns</a>
+        <a href="../topics/myth-busting.html">Myth-busting</a>
+        <a href="../the-paper-that-hooked-me.html">The Paper That Hooked Me</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">Community</p>
-        <a href="commons.html">Latest contributions</a>
-        <a href="contribute.html">Write for us</a>
+        <a href="../commons.html">Latest contributions</a>
+        <a href="../contribute.html">Write for us</a>
       </div>
     </div>
   </div>
@@ -681,17 +661,17 @@
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
         <p class="nav__col-head">Browse</p>
-        <a href="news.html">Latest research briefs</a>
-        <a href="topics/ai-and-the-brain.html">AI &amp; the Brain</a>
+        <a href="../news.html">Latest research briefs</a>
+        <a href="../topics/ai-and-the-brain.html">AI &amp; the Brain</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">By topic</p>
-        <a href="news.html?topic=disease-and-clinic">Disease &amp; clinic</a>
-        <a href="news.html?topic=methods-and-tech">Methods &amp; tech</a>
-        <a href="news.html?topic=senses">Senses</a>
-        <a href="news.html?topic=memory-and-learning">Memory &amp; learning</a>
-        <a href="news.html?topic=mind-and-behavior">Mind &amp; behavior</a>
-        <a href="news.html?topic=cells-and-circuits">Cells &amp; circuits</a>
+        <a href="../news.html?topic=disease-and-clinic">Disease &amp; clinic</a>
+        <a href="../news.html?topic=methods-and-tech">Methods &amp; tech</a>
+        <a href="../news.html?topic=senses">Senses</a>
+        <a href="../news.html?topic=memory-and-learning">Memory &amp; learning</a>
+        <a href="../news.html?topic=mind-and-behavior">Mind &amp; behavior</a>
+        <a href="../news.html?topic=cells-and-circuits">Cells &amp; circuits</a>
       </div>
     </div>
   </div>
@@ -699,96 +679,76 @@
     <div class="wrap nav__menu-inner">
       <div class="nav__col">
         <p class="nav__col-head">Resources</p>
-        <a href="resources.html#books">Books</a>
-        <a href="resources.html#conferences">Conferences</a>
-        <a href="resources.html#podcasts">Podcasts</a>
-        <a href="resources.html#journals">Reading the research</a>
-        <a href="funding.html">Funding finder</a>
-        <a href="resources.html">All resources</a>
+        <a href="../resources.html#books">Books</a>
+        <a href="../resources.html#conferences">Conferences</a>
+        <a href="../resources.html#podcasts">Podcasts</a>
+        <a href="../resources.html#journals">Reading the research</a>
+        <a href="../funding.html">Funding finder</a>
+        <a href="../resources.html">All resources</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">Learn</p>
-        <a href="start-here.html">Start here</a>
-        <a href="topics/first-principles.html">First principles</a>
-        <a href="brain-myths.html">Brain myths</a>
+        <a href="../start-here.html">Start here</a>
+        <a href="../topics/first-principles.html">First principles</a>
+        <a href="../brain-myths.html">Brain myths</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">Explore</p>
-        <a href="lab.html">The Lab</a>
-        <a href="brain.html">Brain</a>
-        <a href="neuron.html">Neuron</a>
-        <a href="synapse.html">Synapse</a>
+        <a href="../lab.html">The Lab</a>
+        <a href="../brain.html">Brain</a>
+        <a href="../neuron.html">Neuron</a>
+        <a href="../synapse.html">Synapse</a>
       </div>
       <div class="nav__col">
         <p class="nav__col-head">About</p>
-        <a href="about.html">About</a>
-        <a href="authors.html">Authors</a>
-        <a href="trust.html">How we work</a>
+        <a href="../about.html">About</a>
+        <a href="../authors.html">Authors</a>
+        <a href="../trust.html">How we work</a>
       </div>
     </div>
   </div>
 </nav>
 
 <main id="main">
-  <div class="wrap">
-    <header class="page-head">
-      <span class="eyebrow">The Commons</span>
-      <h1 class="page-head__title">The Commons.</h1>
-      <p class="page-head__sub">A space for early-career writers in and around neuroscience. A place to work through a real question, pass along something worth knowing, or earn a first byline.</p>
-    </header>
-  </div>
-
-  <section class="commons-section">
-    <div class="wrap">
-      <div class="commons-feed">
-        <div class="commons-feed__head">From the Commons</div>
-        <ul class="commons-list">
-          <li>
-            <article class="commons-note">
-              <div class="commons-note__meta">
-                <span class="commons-note__tag">The Commons</span>
-                <span class="commons-note__date">October 7, 2026</span>
-              </div>
-              <h2 class="commons-note__title"><a href="posts/when-brain-development-and-brain-injury-collide.html">When brain development and brain injury collide</a></h2>
-              <p class="commons-note__body">A concussion is called a &ldquo;mild&rdquo; traumatic brain injury. But what happens when mild injuries repeatedly interrupt a brain that is still building itself?</p>
-              <div class="commons-note__byline">Evelyn Nye &middot; SUNY Geneseo</div>
-              <p class="commons-note__more"><a href="posts/when-brain-development-and-brain-injury-collide.html">Read the piece &rarr;</a></p>
-            </article>
-          </li>
-        </ul>
+    <section class="author-profile">
+      <div class="author-avatar author-avatar--lg" aria-hidden="true">EN</div>
+      <div>
+        <div class="author-profile__eyebrow">Author</div>
+        <h1 class="author-profile__name">Evelyn Nye</h1>
+        <p class="author-profile__role">The Commons contributor</p>
       </div>
+    </section>
 
-      <div class="commons-prose">
-        <p>The features here are careful, edited, and often from working scientists and journalists. The Commons is the other way in. It's the space for students and early-career writers in and around neuroscience, whether that's a short note from the field or a fuller piece that works through the evidence.</p>
-
-        <p>Anyone in the field or learning it can take part, students especially. Every piece is read and edited with the writer before it goes up, so the bar isn't your credentials. It's that it's real, clear, and worth a reader's time.</p>
-
-        <h2>What belongs here</h2>
-        <p>Anything from a few honest paragraphs to a full piece with its sources. A talk that stuck with you, a method you're excited about, a question you're still chewing on, or a careful walk through a paper you can't stop thinking about. If you can make it clear to a curious reader, it belongs here.</p>
-
-        <h2>How to take part</h2>
-        <p>Email us at <a href="mailto:theneuroreview@gmail.com?subject=Commons">theneuroreview@gmail.com</a> with the subject "Commons," and one line about who you are. We read every one, we edit it with you, and if it's a fit it goes up with your name on it.</p>
-        <p class="submission-note">Submissions are read and edited before they appear. By sending one you agree to our <a href="terms.html">submission terms</a>.</p>
+    <div class="author-bio">
+      <p>Evelyn Nye is a contributor to The Commons at The Neuroscience Review, at SUNY Geneseo.</p>
+      <div class="author-links">
+        <a href="../commons.html">The Commons</a>
+        <a href="../about.html">About the Review</a>
       </div>
     </div>
-  </section>
-</main>
 
-<!-- Footer -->
-<footer class="foot">
+    <section class="author-posts">
+      <h2>Posts by Evelyn Nye</h2>
+      <ol class="author-posts__list">
+        <li><a href="../posts/when-brain-development-and-brain-injury-collide.html"><span class="author-posts__type">The Commons</span> When brain development and brain injury collide</a></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="foot">
   <div class="wrap">
     <div class="foot__top">
       <div>
         <p class="foot__name">The Neuroscience Review</p>
         <p class="foot__rule">The rigor of a journal. The readability of a Sunday paper.</p>
         <nav class="foot__nav" aria-label="Footer">
-          <a href="index.html">Home</a>
-          <a href="posts.html">Articles</a>
-          <a href="news.html">News</a>
-          <a href="lab.html">Lab</a>
-          <a href="commons.html">The Commons</a>
+          <a href="../index.html">Home</a>
+          <a href="../posts.html">Articles</a>
+          <a href="../news.html">News</a>
+          <a href="../lab.html">Lab</a>
+          <a href="../commons.html">The Commons</a>
           <a href="#subscribe">Subscribe</a>
-          <a href="search.html">Search</a>
+          <a href="../search.html">Search</a>
         </nav>
       </div>
       <div class="foot__subscribe">
@@ -804,20 +764,20 @@
       </div>
     </div>
     <p class="foot__links">
-      <a href="start-here.html">Start here</a> ·
-      <a href="topics.html">Topics</a> ·
-      <a href="about.html">About</a> ·
-      <a href="contribute.html">Submissions</a> ·
-      <a href="brain-myths.html">Brain myths</a> ·
-      <a href="trust.html">How we fact-check</a> ·
-      <a href="privacy.html">Privacy</a> ·
-      <a href="terms.html">Terms</a> ·
-      <a href="disclaimer.html">Disclaimer</a>
+      <a href="../start-here.html">Start here</a> ·
+      <a href="../topics.html">Topics</a> ·
+      <a href="../about.html">About</a> ·
+      <a href="../contribute.html">Submissions</a> ·
+      <a href="../brain-myths.html">Brain myths</a> ·
+      <a href="../trust.html">How we fact-check</a> ·
+      <a href="../privacy.html">Privacy</a> ·
+      <a href="../terms.html">Terms</a> ·
+      <a href="../disclaimer.html">Disclaimer</a>
     </p>
     <p class="foot__fine">The Neuroscience Review is an independent neuroscience review, written for curious readers who want the actual science. Follow along on <a href="https://bsky.app/profile/theneuroreview.bsky.social" target="_blank" rel="noopener">Bluesky</a> or subscribe by <a href="https://theneuroreview.com/feed.xml">RSS</a>. &copy; 2026 The Neuroscience Review.</p>
+    <p class="foot__fine">Neuron photo by <a href="https://commons.wikimedia.org/wiki/File:Cultured_Rat_Hippocampal_Neuron_(24327909026).jpg" target="_blank" rel="noopener">ZEISS Microscopy</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>. fMRI scan by <a href="https://commons.wikimedia.org/wiki/File:FMRI_BOLD_activation_in_an_emotional_Stroop_task.jpg" target="_blank" rel="noopener">Ovaysikia et al.</a>, <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>.</p>
   </div>
 </footer>
-
 <!-- Theme toggle: reflect the current mode (moon in light, sun in dark) -->
 <script>
 (function(){
@@ -863,7 +823,6 @@
 </script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dfe8876424e460389ff795bbb6140f6"}'></script>
 
-
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
@@ -880,7 +839,7 @@
 </style>
 <div class="privacy-bar" id="privacy-bar" role="region" aria-label="Privacy notice" hidden>
   <div class="privacy-bar__inner">
-    <p class="privacy-bar__text">We store your theme in your browser and use only cookieless, privacy-friendly analytics, with no ads and no tracking cookies. See our <a href="privacy.html">privacy notice</a> for the details.</p>
+    <p class="privacy-bar__text">We store your theme in your browser and use only cookieless, privacy-friendly analytics, with no ads and no tracking cookies. See our <a href="../privacy.html">privacy notice</a> for the details.</p>
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>

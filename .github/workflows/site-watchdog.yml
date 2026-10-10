@@ -63,6 +63,12 @@ jobs:
       - name: News feed reads newest-first
         run: python3 .github/scripts/check_news_order.py
 
+      - name: Author directories and archives stay consistent
+        run: python3 .github/scripts/check_author_consistency.py
+
+      - name: Search index is in sync with site content
+        run: python3 .github/scripts/build_search_index.py --check
+
       - name: Discovery surfaces and key assets are live and valid
         run: |
           BASE="https://theneuroreview.com"

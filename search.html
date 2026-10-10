@@ -19,7 +19,7 @@
     --surface:#ffffff;
     --ink:#15181b;
     --ink-soft:#3b434a;
-    --muted:#6c757c;
+    --muted:#5f666c;
     --rule:#e4e1db;
     --rule-strong:#cbc7bf;
     --accent:#1d4c64;
@@ -445,7 +445,7 @@
     color:var(--muted);
     margin:1.6rem 0 0;
   }
-  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a{color:var(--ink-soft);text-decoration:underline;}
   .foot__links a:hover{color:var(--accent);text-decoration:underline;}
   .foot__fine{
     font-family:var(--sans);
@@ -455,7 +455,7 @@
     margin:1rem 0 0;
     max-width:70ch;
   }
-  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a{color:var(--ink-soft);text-decoration:underline;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
   /* ---------- Shared responsive (shell) ---------- */
@@ -596,12 +596,13 @@
   <meta name="twitter:title" content="Search | The Neuroscience Review">
   <meta name="twitter:description" content="Search The Neuroscience Review. Find any post, interactive Lab tool, or page by typing a word or two.">
   <meta name="twitter:image" content="https://theneuroreview.com/og-cover.png?v=2">
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
 <!-- Utility bar -->
-<div class="utility">
+<div class="utility" role="region" aria-label="Publication information">
   <div class="wrap">
     <span class="utility__date">October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
@@ -756,13 +757,13 @@
       </div>
       <div class="foot__subscribe">
         <div class="subscribe" id="subscribe">
-          <p class="subscribe__h">The Wednesday brief</p>
+          <p class="subscribe__h">Subscribe by email</p>
           <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
             <button type="submit" class="btn">Subscribe free</button>
           </form>
-          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+          <p class="subscribe__note">Brain-science deep dives by email. No hype, unsubscribe anytime.</p>
         </div>
       </div>
     </div>
@@ -792,6 +793,57 @@
     var DEFAULT_HINT = empty.textContent;
     var INDEX = [];
     var loaded = false;
+
+    // Field tiers. A match in the title (and its sibling meta: category,
+    // format, topic, author) outranks a match in the excerpt, which outranks a
+    // curated alias, which outranks a body-only match. This is what keeps
+    // title/excerpt hits above body-only hits.
+    var W = { title: 1000, excerpt: 300, alias: 150, body: 40 };
+
+    // Split a string into lowercased alphanumeric tokens. Punctuation is a
+    // separator, so "EPHX2!" -> ["ephx2"] and "fMRI" -> ["fmri"].
+    function tokenize(s){
+      var raw = (s || '').toLowerCase().split(/[^a-z0-9]+/);
+      var out = [];
+      for(var i = 0; i < raw.length; i++){ if(raw[i]) out.push(raw[i]); }
+      return out;
+    }
+
+    // Precompute per-record haystacks once, so each keystroke is a few indexOf
+    // calls instead of rebuilding strings for every record.
+    function prepare(){
+      for(var i = 0; i < INDEX.length; i++){
+        var it = INDEX[i];
+        it._t = ((it.title || '') + ' ' + (it.category || '') + ' ' +
+                 (it.format || '') + ' ' + (it.topic || '') + ' ' +
+                 (it.author || '')).toLowerCase();
+        it._e = (it.excerpt || '').toLowerCase();
+        it._a = (it.aliases ? it.aliases.join(' ') : '').toLowerCase();
+        it._b = (it.body || '').toLowerCase();
+        it._i = i; // original order, for a stable tie-break
+      }
+    }
+
+    // Score a record against the query tokens. Every token must appear in some
+    // field (AND semantics); the token's weight is its best field. Returns -1
+    // when a token is missing, which drops the record.
+    function scoreItem(it, tokens, phrase){
+      var score = 0;
+      for(var k = 0; k < tokens.length; k++){
+        var t = tokens[k];
+        if(it._t.indexOf(t) !== -1){ score += W.title; }
+        else if(it._e.indexOf(t) !== -1){ score += W.excerpt; }
+        else if(it._a.indexOf(t) !== -1){ score += W.alias; }
+        else if(it._b.indexOf(t) !== -1){ score += W.body; }
+        else { return -1; }
+      }
+      // A full-phrase hit in the title (then excerpt) is the strongest signal.
+      if(phrase && phrase.indexOf(' ') !== -1){
+        if(it._t.indexOf(phrase) !== -1){ score += 1500; }
+        else if(it._e.indexOf(phrase) !== -1){ score += 400; }
+      }
+      return score;
+    }
 
     function buildRow(item){
       var li = document.createElement('li');
@@ -840,11 +892,31 @@
         return;
       }
 
-      var tokens = q.split(/\s+/);
-      var matches = INDEX.filter(function(item){
-        var hay = ((item.title || '') + ' ' + (item.category || '') + ' ' + (item.excerpt || '')).toLowerCase();
-        return tokens.every(function(t){ return hay.indexOf(t) !== -1; });
-      });
+      var tokens = tokenize(q);
+      // Ignore single-character tokens when the query has more than one, so a
+      // stray letter doesn't flood results; keep them if that's all there is.
+      if(tokens.length > 1){
+        var kept = tokens.filter(function(t){ return t.length >= 2; });
+        if(kept.length){ tokens = kept; }
+      }
+      // A query with no searchable characters (e.g. just punctuation) falls
+      // back to the default hint rather than matching everything.
+      if(!tokens.length){
+        empty.hidden = false;
+        empty.textContent = DEFAULT_HINT;
+        status.textContent = '';
+        return;
+      }
+
+      var phrase = tokens.join(' ');
+      var scored = [];
+      for(var i = 0; i < INDEX.length; i++){
+        var s = scoreItem(INDEX[i], tokens, phrase);
+        if(s >= 0){ scored.push({ it: INDEX[i], s: s }); }
+      }
+      // Highest score first; original order breaks ties for stable output.
+      scored.sort(function(a, b){ return (b.s - a.s) || (a.it._i - b.it._i); });
+      var matches = scored.map(function(x){ return x.it; });
 
       if(matches.length === 0){
         empty.hidden = false;
@@ -888,6 +960,7 @@
       .then(function(r){ if(!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(function(data){
         INDEX = Array.isArray(data) ? data : [];
+        prepare();
         loaded = true;
         render(input.value);
       })
@@ -948,6 +1021,7 @@
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  @media(max-width:700px),(max-height:500px){.privacy-bar{position:static;transform:none;box-shadow:none}}
   .privacy-bar.is-visible{transform:translateY(0);}
   .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
   .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
@@ -964,7 +1038,7 @@
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>
-<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=getComputedStyle(bar).position==="fixed"?bar.offsetHeight+"px":"";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
 <!-- /privacy-notice -->
 
 </body>

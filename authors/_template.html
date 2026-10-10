@@ -58,6 +58,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"{{AUTHOR_NAME}}","url":"https://theneuroreview.com/authors/{{AUTHOR_SLUG}}.html","description":"{{AUTHOR_TAGLINE}}","worksFor":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/"}}
   </script>
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -148,6 +149,7 @@
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  @media(max-width:700px),(max-height:500px){.privacy-bar{position:static;transform:none;box-shadow:none}}
   .privacy-bar.is-visible{transform:translateY(0);}
   .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
   .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
@@ -164,7 +166,7 @@
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>
-<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=getComputedStyle(bar).position==="fixed"?bar.offsetHeight+"px":"";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
 <!-- /privacy-notice -->
 
 </body>

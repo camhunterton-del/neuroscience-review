@@ -18,7 +18,7 @@
     --surface:#ffffff;
     --ink:#15181b;
     --ink-soft:#3b434a;
-    --muted:#6c757c;
+    --muted:#5f666c;
     --rule:#e4e1db;
     --rule-strong:#cbc7bf;
     --accent:#1d4c64;
@@ -444,7 +444,7 @@
     color:var(--muted);
     margin:1.6rem 0 0;
   }
-  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a{color:var(--ink-soft);text-decoration:underline;}
   .foot__links a:hover{color:var(--accent);text-decoration:underline;}
   .foot__fine{
     font-family:var(--sans);
@@ -454,7 +454,7 @@
     margin:1rem 0 0;
     max-width:70ch;
   }
-  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a{color:var(--ink-soft);text-decoration:underline;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
   /* ---------- Shared responsive (shell) ---------- */
@@ -598,12 +598,13 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CollectionPage","name":"Resources — The Neuroscience Review","url":"https://theneuroreview.com/resources.html","isPartOf":{"@type":"WebSite","name":"The Neuroscience Review","url":"https://theneuroreview.com/"},"description":"Books, conferences, podcasts, and journals The Neuroscience Review recommends for readers who want to go deeper into brain science."}
   </script>
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
 <!-- Utility bar -->
-<div class="utility">
+<div class="utility" role="region" aria-label="Publication information">
   <div class="wrap">
     <span class="utility__date">October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
@@ -721,7 +722,7 @@
 
         <p><strong>Jump to</strong> <a href="#books">Books</a> &middot; <a href="#conferences">Conferences</a> &middot; <a href="#podcasts">Podcasts</a> &middot; <a href="#journals">Reading the research</a> &middot; <a href="#courses">Courses</a> &middot; <a href="#organizations">Organizations</a></p>
 
-        <h2 id="books" style="scroll-margin-top:5rem;">Books</h2>
+        <h2 id="books">Books</h2>
         <p>Eight we keep coming back to. A mix of accessible popular science and a couple of foundational works for going all the way.</p>
         <p><strong><a href="https://www.penguinrandomhouse.com/books/566315/being-you-by-anil-seth/">Being You</a></strong> by Anil Seth. A working neuroscientist's case that what you experience is the brain's best guess about the world, not a direct readout of it. Accessible without cutting corners.</p>
         <p><strong><a href="https://www.hachettebookgroup.com/titles/matthew-cobb/the-idea-of-the-brain/9781541646858/?lens=basic-books">The Idea of the Brain</a></strong> by Matthew Cobb. A history of how each era pictured the brain in terms of its newest technology, and how often that led thinking astray. Clear about what we still cannot explain.</p>
@@ -732,7 +733,7 @@
         <p><strong><a href="https://www.penguinrandomhouse.com/books/691748/the-man-who-mistook-his-wife-for-a-hat-by-oliver-sacks/">The Man Who Mistook His Wife for a Hat</a></strong> by Oliver Sacks. The classic collection of clinical tales, still the high-water mark for writing about the brain with humanity.</p>
         <p><strong><a href="https://www.mheducation.com/highered/mhp/product/principles-neural-science-sixth-edition.html">Principles of Neural Science</a></strong> edited by Eric Kandel and colleagues. The field's foundational reference textbook, assembled largely at Columbia. Where to turn when you want the full, formal treatment.</p>
 
-        <h2 id="conferences" style="scroll-margin-top:5rem;">Conferences</h2>
+        <h2 id="conferences">Conferences</h2>
         <p>The meetings where neuroscience is argued out in person. Dates shift from year to year, so each name links to the official site for the current schedule.</p>
         <p><strong><a href="https://www.sfn.org/meetings">Society for Neuroscience (SfN) Annual Meeting</a></strong>. The largest neuroscience gathering in the world, spanning every subfield from molecules to behavior. Recurs annually each fall, in a rotating US city.</p>
         <p><strong><a href="https://www.cogneurosociety.org/annual-meeting/">Cognitive Neuroscience Society (CNS) Annual Meeting</a></strong>. Focused on the brain basis of the mind, from attention and memory to language. Recurs annually each spring.</p>
@@ -741,13 +742,13 @@
         <p><strong><a href="https://www.humanbrainmapping.org/">Organization for Human Brain Mapping (OHBM) Annual Meeting</a></strong>. The main meeting for human brain imaging, covering fMRI, EEG, and related methods. Recurs annually each June, rotating among continents.</p>
         <p><strong><a href="https://www.grc.org/">Gordon Research Conferences in Neuroscience</a></strong>. Small, intensive, off-the-record meetings on tightly focused topics, each with its own subject and chair. Most run over the summer.</p>
 
-        <h2 id="podcasts" style="scroll-margin-top:5rem;">Podcasts</h2>
+        <h2 id="podcasts">Podcasts</h2>
         <p>A few shows worth following, each still releasing new episodes.</p>
         <p><strong><a href="https://braininspired.co/">Brain Inspired</a></strong> by Paul Middlebrooks. Long-form interviews at the border of neuroscience and artificial intelligence, for people who want the real arguments rather than a summary.</p>
         <p><strong><a href="https://manyminds.libsyn.com/">Many Minds</a></strong> from the Diverse Intelligences Summer Institute, hosted by Kensy Cooperrider. Conversations on how minds work across humans, other animals, and machines.</p>
         <p><strong><a href="https://www.hubermanlab.com/">Huberman Lab</a></strong> by Andrew Huberman. The most widely heard neuroscience podcast, where a Stanford neurobiologist translates brain and body science into practical takeaways. Strongest on the underlying science, and worth weighing the day-to-day protocols for yourself.</p>
 
-        <h2 id="journals" style="scroll-margin-top:5rem;">Reading the research</h2>
+        <h2 id="journals">Reading the research</h2>
         <p>Where the primary neuroscience actually lives. Most papers sit behind a paywall, but abstracts are free to read, and open-access options keep growing.</p>
         <p><strong><a href="https://www.nature.com/neuro/">Nature Neuroscience</a></strong>. One of the top venues for primary neuroscience research, from molecular to cognitive work.</p>
         <p><strong><a href="https://www.cell.com/neuron/home">Neuron</a></strong>. A leading journal across molecular, cellular, systems, and cognitive neuroscience, published by Cell Press.</p>
@@ -756,7 +757,7 @@
         <p><strong><a href="https://www.nature.com/ncomms/">Nature Communications</a></strong>. A large open-access journal with a deep neuroscience section, much of it free to read.</p>
         <p><strong><a href="https://www.biorxiv.org/collection/neuroscience">bioRxiv</a></strong>, neuroscience preprints. Where a great deal of neuroscience appears first. Read it for what is coming, keeping in mind that preprints have not yet been peer reviewed.</p>
 
-        <h2 id="courses" style="scroll-margin-top:5rem;">Courses and lectures</h2>
+        <h2 id="courses">Courses and lectures</h2>
         <p>Ways to learn the field itself, from full university courses to open teaching resources you can work through at your own pace. Where the material is free to audit or openly posted, we say so. Enrollment windows shift, so each name links to the official page.</p>
         <p><strong><a href="https://www.coursera.org/learn/medical-neuroscience">Medical Neuroscience</a></strong> from Duke University, taught by Leonard White. The same course Duke gives first-year medical students, rebuilt for anyone, running from the single neuron up through the sensory and motor systems to higher function. Demanding and thorough, and the one to pick if you want the full clinical-grade treatment. Free to audit on Coursera, with an optional paid certificate.</p>
         <p><strong><a href="https://ocw.mit.edu/courses/9-13-the-human-brain-spring-2019/">The Human Brain</a></strong>, MIT OpenCourseWare 9.13, taught by Nancy Kanwisher. A full undergraduate cognitive neuroscience course with the lecture videos, notes, and assignments posted free. Especially strong on how imaging and other methods actually let us read the brain, and on what they cannot tell us.</p>
@@ -765,7 +766,7 @@
         <p><strong><a href="https://neuromatch.io/">Neuromatch Academy</a></strong>. An online school for computational neuroscience whose full curriculum, from modeling and machine learning to the dynamics of neural circuits, is posted free and openly licensed. Best for readers with a little Python who want to see how the field actually models the brain.</p>
         <p><strong><a href="https://brain-map.org/">Allen Brain Map</a></strong>, from the Allen Institute. The open data platform behind a great deal of modern neuroscience, with brain atlases, cell-type maps, and free lesson plans and tutorials built on the same datasets its own scientists use. For the hands-on reader who wants to explore real data, not just read about it.</p>
 
-        <h2 id="organizations" style="scroll-margin-top:5rem;">Organizations</h2>
+        <h2 id="organizations">Organizations</h2>
         <p>The institutions that fund the research, run the meetings, and put a surprising amount out for the public. Each one is worth knowing, and each gives a curious reader something to use directly.</p>
         <p><strong><a href="https://www.sfn.org/">Society for Neuroscience (SfN)</a></strong>. The largest neuroscience organization in the world and the body behind the field's biggest annual meeting and its flagship journals. Its free public arm, BrainFacts.org, is one of the best plain-language introductions to the brain anywhere.</p>
         <p><strong><a href="https://alleninstitute.org/division/brain-science/">Allen Institute for Brain Science</a></strong>. A Seattle research institute that maps the brain's cells and wiring at enormous scale and gives every dataset away free. If you have ever wanted to open a real brain atlas and look around, this is where it lives.</p>
@@ -798,13 +799,13 @@
       </div>
       <div class="foot__subscribe">
         <div class="subscribe" id="subscribe">
-          <p class="subscribe__h">The Wednesday brief</p>
+          <p class="subscribe__h">Subscribe by email</p>
           <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
             <button type="submit" class="btn">Subscribe free</button>
           </form>
-          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+          <p class="subscribe__note">Brain-science deep dives by email. No hype, unsubscribe anytime.</p>
         </div>
       </div>
     </div>
@@ -871,6 +872,7 @@
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  @media(max-width:700px),(max-height:500px){.privacy-bar{position:static;transform:none;box-shadow:none}}
   .privacy-bar.is-visible{transform:translateY(0);}
   .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
   .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
@@ -887,7 +889,7 @@
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>
-<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=getComputedStyle(bar).position==="fixed"?bar.offsetHeight+"px":"";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
 <!-- /privacy-notice -->
 
 </body>

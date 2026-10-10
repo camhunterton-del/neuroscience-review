@@ -17,7 +17,7 @@
     --surface:#ffffff;
     --ink:#15181b;
     --ink-soft:#3b434a;
-    --muted:#6c757c;
+    --muted:#5f666c;
     --rule:#e4e1db;
     --rule-strong:#cbc7bf;
     --accent:#1d4c64;
@@ -763,7 +763,7 @@
     color:var(--muted);
     margin:1.6rem 0 0;
   }
-  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a{color:var(--ink-soft);text-decoration:underline;}
   .foot__links a:hover{color:var(--accent);text-decoration:underline;}
   .foot__fine{
     font-family:var(--sans);
@@ -773,7 +773,7 @@
     margin:1rem 0 0;
     max-width:70ch;
   }
-  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a{color:var(--ink-soft);text-decoration:underline;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
   /* ---------- Responsive ---------- */
@@ -889,6 +889,16 @@
     .brain-fallback{ position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:1.5rem; text-align:center; }
     .brain-fallback img{ max-width:min(80%,420px); max-height:60%; height:auto; object-fit:contain; border-radius:12px; filter:drop-shadow(0 14px 30px rgba(0,0,0,.4)); }
     .brain-fallback p{ font-family:var(--sans,Inter); font-size:.9rem; color:var(--brain-glass-mut); margin:0; max-width:40ch; }
+    /* When the 3D fails, the reference list below carries the region/part text. Only ever visible inside the (hidden-on-success) #brain-fallback. */
+    .brain-fallback{ justify-content:flex-start; overflow-y:auto; }
+    .brain-fallback img{ max-height:34%; object-fit:contain; }
+    .brain-fallback-ref{ width:100%; max-width:560px; margin:.4rem auto 0; text-align:left; }
+    .brain-fallback-ref .brain-fallback-group + .brain-fallback-group{ margin-top:.9rem; }
+    .brain-fallback-ref h3{ font-family:var(--sans,Inter); font-size:.64rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--brain-glass-mut); margin:0 0 .35rem; }
+    .brain-fallback-ref dl{ margin:0; }
+    .brain-fallback-ref dt{ font-family:var(--sans,Inter); font-weight:600; font-size:.84rem; color:var(--brain-glass-fg); margin-top:.55rem; }
+    .brain-fallback-ref dt:first-of-type{ margin-top:0; }
+    .brain-fallback-ref dd{ margin:.1rem 0 0; font-family:var(--sans,Inter); font-size:.8rem; line-height:1.45; color:var(--brain-glass-mut); }
     .brain-hint{ position:absolute; left:0; right:0; bottom:.7rem; text-align:center; margin:0; color:var(--brain-glass-mut); font-family:var(--sans,Inter); font-size:.74rem; letter-spacing:.03em; pointer-events:none; opacity:.9; }
     .brain-tooltip{ position:absolute; z-index:6; pointer-events:none; transform:translate(-50%,-140%); background:var(--brain-glass); color:var(--brain-glass-fg); font-family:var(--sans,Inter); font-size:.78rem; font-weight:500; padding:.28rem .58rem; border-radius:7px; border:1px solid var(--brain-glass-bd); white-space:nowrap; opacity:0; transition:opacity .12s; backdrop-filter:blur(6px); }
 
@@ -940,12 +950,13 @@
     .brain-credit{ max-width:min(94vw,1600px); margin:1rem auto 2.4rem; padding:0 1.2rem; font-family:var(--sans,Inter); font-size:.76rem; color:var(--text-faint,#7a756c); }
     .brain-credit a{ color:inherit; }
   </style>
+<style>html{scroll-padding-top:5rem}</style><noscript><style>/* JavaScript off: the interactive 3D can never start, so reveal the baked part text. */#brain-loading,#brain-toolbar,#brain-hint{display:none}#brain-fallback{display:flex}</style></noscript>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
 <!-- Utility bar -->
-<div class="utility">
+<div class="utility" role="region" aria-label="Publication information">
   <div class="wrap">
     <span class="utility__date">October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
@@ -1067,7 +1078,29 @@
         <div id="brain-loading" class="brain-loading">Building the neuron&hellip;</div>
         <div id="brain-fallback" class="brain-fallback">
           <img src="img/neuron-preview.png" alt="A labeled 3D neuron: dendrites, cell body, axon hillock, axon, myelin sheath, nodes of Ranvier, and axon terminals">
-          <p id="brain-fallback-msg">Your browser could not start 3D graphics. You can still read about each part using the buttons above.</p>
+          <p id="brain-fallback-msg">The interactive 3D couldn't load. Here's what each part does:</p>
+          <!-- FALLBACK-REF-START -->
+          <div class="brain-fallback-ref">
+            <dl>
+              <dt>Dendrites</dt>
+              <dd>Dendrites are the branching arms that reach out from the cell body to receive signals from thousands of other neurons.</dd>
+              <dt>Cell body</dt>
+              <dd>The cell body, or soma, is the neuron’s core.</dd>
+              <dt>Nucleus</dt>
+              <dd>The nucleus sits inside the cell body and holds the neuron’s DNA.</dd>
+              <dt>Axon hillock</dt>
+              <dd>The axon hillock is the cone where the axon leaves the cell body.</dd>
+              <dt>Axon</dt>
+              <dd>The axon is the long, thin cable that carries the neuron’s output, the action potential, away from the cell body.</dd>
+              <dt>Myelin sheath</dt>
+              <dd>The myelin sheath is fatty insulation wrapped around the axon in segments.</dd>
+              <dt>Nodes of Ranvier</dt>
+              <dd>The nodes of Ranvier are the small bare gaps between myelin segments.</dd>
+              <dt>Axon terminals</dt>
+              <dd>The axon terminals are the branched endings where the neuron hands its message to the next cell.</dd>
+            </dl>
+          </div>
+          <!-- FALLBACK-REF-END -->
         </div>
         <p class="brain-hint" id="brain-hint">Drag to rotate &middot; scroll to zoom &middot; click a part</p>
       </div>
@@ -1115,13 +1148,13 @@
       </div>
       <div class="foot__subscribe">
         <div class="subscribe" id="subscribe">
-          <p class="subscribe__h">The Wednesday brief</p>
+          <p class="subscribe__h">Subscribe by email</p>
           <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
             <button type="submit" class="btn">Subscribe free</button>
           </form>
-          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+          <p class="subscribe__note">Brain-science deep dives by email. No hype, unsubscribe anytime.</p>
         </div>
       </div>
     </div>
@@ -1159,9 +1192,13 @@
       var loading  = document.getElementById('brain-loading');
       var fallback = document.getElementById('brain-fallback');
       var msg      = document.getElementById('brain-fallback-msg');
-      if(msg)      msg.textContent = 'The interactive 3D could not load. This can happen on networks that block outside scripts, or with a very slow connection. Try another network or reload.';
+      if(msg)      msg.textContent = 'The interactive 3D could not load. Here is what each part does:';
       if(loading)  loading.style.display = 'none';
       if(fallback) fallback.style.display = 'flex';
+      var toolbar = document.getElementById('brain-toolbar');
+      var hint    = document.getElementById('brain-hint');
+      if(toolbar) toolbar.style.display = 'none';
+      if(hint)    hint.style.display = 'none';
     }
     // Backstop: if Three.js never initialised (imports blocked/unreachable), reveal after a grace period.
     setTimeout(function(){ if(!window.__labReady) reveal(); }, 8000);
@@ -1289,7 +1326,7 @@
     const VG_X0 = 5, VG_X1 = 145, VG_YTOP = 7, VG_YBOT = 34, VG_VMAX = 35, VG_VMIN = -85;
     let vgBasePts = null;                      // sampled AP backdrop, built once in initGauge()
 
-    function showFallback(msg){ if(msg) document.getElementById('brain-fallback-msg').textContent = msg; loadingEl.style.display='none'; fallbackEl.style.display='flex'; }
+    function showFallback(msg){ if(msg) document.getElementById('brain-fallback-msg').textContent = msg; loadingEl.style.display='none'; fallbackEl.style.display='flex'; var tb=document.getElementById('brain-toolbar'); if(tb) tb.style.display='none'; var ht=document.getElementById('brain-hint'); if(ht) ht.style.display='none'; }
 
     // must be initialized before buildNeuron/buildSynapse runs (TDZ fix)
     const THICK_PARTS = { soma:1, nucleus:1, myelin:1, hillock:1 };
@@ -2109,6 +2146,7 @@
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  @media(max-width:700px),(max-height:500px){.privacy-bar{position:static;transform:none;box-shadow:none}}
   .privacy-bar.is-visible{transform:translateY(0);}
   .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
   .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
@@ -2125,7 +2163,7 @@
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>
-<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=getComputedStyle(bar).position==="fixed"?bar.offsetHeight+"px":"";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
 <!-- /privacy-notice -->
 
 </body>

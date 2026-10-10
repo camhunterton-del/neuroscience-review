@@ -18,7 +18,7 @@
     --surface:#ffffff;
     --ink:#15181b;
     --ink-soft:#3b434a;
-    --muted:#6c757c;
+    --muted:#5f666c;
     --rule:#e4e1db;
     --rule-strong:#cbc7bf;
     --accent:#1d4c64;
@@ -444,7 +444,7 @@
     color:var(--muted);
     margin:1.6rem 0 0;
   }
-  .foot__links a{color:var(--ink-soft);text-decoration:none;}
+  .foot__links a{color:var(--ink-soft);text-decoration:underline;}
   .foot__links a:hover{color:var(--accent);text-decoration:underline;}
   .foot__fine{
     font-family:var(--sans);
@@ -454,7 +454,7 @@
     margin:1rem 0 0;
     max-width:70ch;
   }
-  .foot__fine a{color:var(--ink-soft);text-decoration:none;}
+  .foot__fine a{color:var(--ink-soft);text-decoration:underline;}
   .foot__fine a:hover{color:var(--accent);text-decoration:underline;}
 
   /* ---------- Shared responsive (shell) ---------- */
@@ -638,6 +638,10 @@
 
   .funding-empty{font-family:var(--serif);font-size:1.08rem;line-height:1.6;color:var(--muted);margin:1.6rem 0;padding:1.4rem;border:1px dashed var(--rule-strong);border-radius:10px;text-align:center;}
   .funding-empty[hidden]{display:none;}
+  .funding-closed{margin:2.4rem 0 0;padding:1.4rem 0 0;border-top:1px solid var(--rule);}
+  .funding-closed__title{font-family:var(--sans);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 .5rem;}
+  .funding-closed__intro{font-family:var(--serif);color:var(--muted);font-size:.95rem;line-height:1.55;margin:0 0 .7rem;}
+  .funding-closed__list{font-family:var(--serif);color:var(--text);font-size:.95rem;line-height:1.65;margin:0;padding-left:1.1rem;}
 
   /* No-JS fallback */
   .funding-fallback{font-family:var(--sans);font-size:.95rem;line-height:1.65;color:var(--ink-soft);margin:1.5rem 0 0;padding-left:1.2rem;}
@@ -668,12 +672,13 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CollectionPage","name":"Neuro Funding Finder","url":"https://theneuroreview.com/funding.html","description":"A curated, searchable directory of neuroscience funding opportunities across career stages.","isPartOf":{"@type":"WebSite","name":"The Neuroscience Review","url":"https://theneuroreview.com/"}}
   </script>
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
 <!-- Utility bar -->
-<div class="utility">
+<div class="utility" role="region" aria-label="Publication information">
   <div class="wrap">
     <span class="utility__date">October 7, 2026</span><script>(function(){var d=document.querySelector(".utility__date");if(d){d.textContent=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}})();</script>
     <span class="utility__right">
@@ -783,7 +788,7 @@
         <div class="post-header__eyebrow">Resources</div>
         <h1 class="post-header__title">Neuro Funding Finder</h1>
         <p class="finder-lede">A curated map of the scholarships, fellowships, and grants that fund a life in neuroscience, from a first undergraduate research summer through an independent lab. Search by name, or filter by where you are in your training and the kind of support you need.</p>
-        <p class="finder-caveat"><strong>One honest caveat.</strong> Deadlines move every year and award amounts are revised, so treat everything here as a starting point, not the fine print. Always confirm the current deadline, amount, and eligibility on the program's official site before you apply.</p>
+        <p class="finder-caveat"><strong>One honest caveat.</strong> Deadlines move every year and award amounts are revised, so treat everything here as a starting point, not the fine print. We have not individually re-verified every listing. Where a program has closed, we label it and leave it out of the active list. Always confirm the current deadline, amount, and eligibility on the program's official site before you apply.</p>
       </header>
 
       <section class="finder" aria-label="Filter funding opportunities">
@@ -821,7 +826,7 @@
           <li><a href="https://grants.nih.gov/funding/activity-codes/F31" target="_blank" rel="noopener">NIH F31 (Predoctoral Fellowship)</a> &mdash; National Institutes of Health. Grad/PhD &middot; Fellowship. Varies (NIH NRSA stipend levels; FY2026 predoctoral ~$29,364/yr) plus tuition. US citizens, nationals &amp; permanent residents; PhD students.</li>
           <li><a href="https://www.hertzfoundation.org/the-fellowship/" target="_blank" rel="noopener">Hertz Fellowship</a> &mdash; Fannie and John Hertz Foundation. Grad/PhD &middot; Fellowship. Up to $250,000 total over up to 5 years. US citizens &amp; permanent residents; first- or second-year PhD students in the applied physical and biological sciences, math or engineering.</li>
           <li><a href="https://www.pdsoros.org/" target="_blank" rel="noopener">Paul &amp; Daisy Soros Fellowships for New Americans</a> &mdash; Paul &amp; Daisy Soros Fellowships for New Americans. Grad/PhD &middot; Fellowship. Up to $25,000/yr stipend plus up to half of tuition (2 years). Immigrants and children of immigrants (New Americans), age 30 or under; graduate or professional study in any field.</li>
-          <li><a href="https://sites.nationalacademies.org/pga/fordfellowships" target="_blank" rel="noopener">Ford Foundation Predoctoral Fellowship</a> &mdash; National Academies, on behalf of the Ford Foundation. Grad/PhD &middot; Fellowship. $27,000/yr for 3 years. US citizens, nationals, permanent residents, DACA recipients and others; PhD/ScD students committed to a faculty career.</li>
+          <li><strong>Closed:</strong> <a href="https://sites.nationalacademies.org/pga/fordfellowships" target="_blank" rel="noopener">Ford Foundation Predoctoral Fellowship</a> &mdash; National Academies, on behalf of the Ford Foundation. This program was wound down and is no longer accepting applications (no new general competitions after 2023; <a href="https://www.fordfoundation.org/news-and-stories/stories/winding-down-ford-fellowships-at-the-national-academies/" target="_blank" rel="noopener">official notice</a>).</li>
           <li><a href="https://www.gatescambridge.org/" target="_blank" rel="noopener">Gates Cambridge Scholarship</a> &mdash; Gates Cambridge Trust, University of Cambridge. Grad/PhD &middot; Scholarship. Full cost of study plus a living stipend, travel and allowances. Citizens of any country outside the UK; full-time postgraduate study at Cambridge.</li>
           <li><a href="https://www.rhodeshouse.ox.ac.uk/office-of-the-american-secretary/" target="_blank" rel="noopener">Rhodes Scholarship (US)</a> &mdash; The Rhodes Trust, University of Oxford. Grad/PhD &middot; Scholarship. Full funding (university and college fees, living stipend and travel). US citizens and long-term permanent residents; graduating seniors or recent graduates.</li>
           <li><a href="https://www.marshallscholarship.org/" target="_blank" rel="noopener">Marshall Scholarship</a> &mdash; Marshall Aid Commemoration Commission (UK government). Grad/PhD &middot; Scholarship. Full funding (fees, living stipend, book and travel grants); 1-2 years. US citizens with a GPA of at least 3.7; graduating seniors or recent graduates for study in the UK.</li>
@@ -889,13 +894,13 @@
       </div>
       <div class="foot__subscribe">
         <div class="subscribe" id="subscribe">
-          <p class="subscribe__h">The Wednesday brief</p>
+          <p class="subscribe__h">Subscribe by email</p>
           <form class="subscribe__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank" aria-label="Subscribe to the newsletter">
             <label for="email">Email address</label>
             <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
             <button type="submit" class="btn">Subscribe free</button>
           </form>
-          <p class="subscribe__note">One brain-science deep dive every Wednesday. No hype, unsubscribe anytime.</p>
+          <p class="subscribe__note">Brain-science deep dives by email. No hype, unsubscribe anytime.</p>
         </div>
       </div>
     </div>
@@ -972,7 +977,7 @@
     { name: "NIH F31 (Predoctoral Fellowship)", sponsor: "National Institutes of Health", url: "https://grants.nih.gov/funding/activity-codes/F31", stage: ["Grad/PhD"], type: "Fellowship", amount: "Varies (NIH NRSA stipend levels; FY2026 predoctoral ~$29,364/yr) plus tuition", eligibility: "US citizens, nationals & permanent residents; PhD students", deadline: "Annual; three standard cycles (typically April / August / December)", desc: "Supports a PhD student's mentored dissertation research and training, with stipend and tuition." },
     { name: "Hertz Fellowship", sponsor: "Fannie and John Hertz Foundation", url: "https://www.hertzfoundation.org/the-fellowship/", stage: ["Grad/PhD"], type: "Fellowship", amount: "Up to $250,000 total over up to 5 years", eligibility: "US citizens & permanent residents; first- or second-year PhD students in the applied physical and biological sciences, math or engineering", deadline: "Annual; applications typically close in late October", desc: "Gives PhD students in the applied sciences broad freedom to pursue their research, for up to five years." },
     { name: "Paul & Daisy Soros Fellowships for New Americans", sponsor: "Paul & Daisy Soros Fellowships for New Americans", url: "https://www.pdsoros.org/", stage: ["Grad/PhD"], type: "Fellowship", amount: "Up to $25,000/yr stipend plus up to half of tuition (2 years)", eligibility: "Immigrants and children of immigrants (New Americans), age 30 or under; graduate or professional study in any field", deadline: "Annual; deadline typically in late October", desc: "Funds graduate or professional study in any field for immigrants and the children of immigrants." },
-    { name: "Ford Foundation Predoctoral Fellowship", sponsor: "National Academies, on behalf of the Ford Foundation", url: "https://sites.nationalacademies.org/pga/fordfellowships", stage: ["Grad/PhD"], type: "Fellowship", amount: "$27,000/yr for 3 years", eligibility: "US citizens, nationals, permanent residents, DACA recipients and others; PhD/ScD students committed to a faculty career", deadline: "Annual; applications typically due in mid-December", desc: "Three years of support for PhD students committed to a career teaching and researching at the university level." },
+    { name: "Ford Foundation Predoctoral Fellowship", sponsor: "National Academies, on behalf of the Ford Foundation", url: "https://sites.nationalacademies.org/pga/fordfellowships", stage: ["Grad/PhD"], type: "Fellowship", amount: "$27,000/yr for 3 years", eligibility: "US citizens, nationals, permanent residents, DACA recipients and others; PhD/ScD students committed to a faculty career", deadline: "Closed. No longer accepting applications.", desc: "Three years of support for PhD students committed to a career teaching and researching at the university level.", status: "closed", statusNote: "The Ford Foundation wound down these fellowships at the National Academies, with no new general competitions after 2023 and a limited final round in 2024.", statusSource: "https://www.fordfoundation.org/news-and-stories/stories/winding-down-ford-fellowships-at-the-national-academies/", verified: "2026-10-09" },
     { name: "Gates Cambridge Scholarship", sponsor: "Gates Cambridge Trust, University of Cambridge", url: "https://www.gatescambridge.org/", stage: ["Grad/PhD"], type: "Scholarship", amount: "Full cost of study plus a living stipend, travel and allowances", eligibility: "Citizens of any country outside the UK; full-time postgraduate study at Cambridge", deadline: "Annual; US applicants typically mid-October, others December-January", desc: "Full-cost postgraduate study at Cambridge for non-UK citizens, chosen for scholarship and leadership." },
     { name: "Rhodes Scholarship (US)", sponsor: "The Rhodes Trust, University of Oxford", url: "https://www.rhodeshouse.ox.ac.uk/office-of-the-american-secretary/", stage: ["Grad/PhD"], type: "Scholarship", amount: "Full funding (university and college fees, living stipend and travel)", eligibility: "US citizens and long-term permanent residents; graduating seniors or recent graduates", deadline: "Annual; national deadline in early October (campus deadlines earlier)", desc: "Fully funded postgraduate study at the University of Oxford for US citizens and permanent residents." },
     { name: "Marshall Scholarship", sponsor: "Marshall Aid Commemoration Commission (UK government)", url: "https://www.marshallscholarship.org/", stage: ["Grad/PhD"], type: "Scholarship", amount: "Full funding (fees, living stipend, book and travel grants); 1-2 years", eligibility: "US citizens with a GPA of at least 3.7; graduating seniors or recent graduates for study in the UK", deadline: "Annual; early autumn (campus deadlines in September)", desc: "UK-government funding for up to three years of graduate study at any British university." },
@@ -1041,8 +1046,13 @@
     });
   }
 
-  // Render every opportunity once, then filtering just toggles .is-hidden.
-  var cards = DATA.map(function(d){
+  // Closed/historical opportunities are excluded from the active finder, its
+  // counts and its filters by default; they are listed separately, labeled.
+  var ACTIVE = DATA.filter(function(d){ return d.status !== 'closed'; });
+  var CLOSED = DATA.filter(function(d){ return d.status === 'closed'; });
+
+  // Render every active opportunity once, then filtering just toggles .is-hidden.
+  var cards = ACTIVE.map(function(d){
     var li = document.createElement('li');
     li.className = 'f-card';
     var stages = d.stage.slice();
@@ -1067,6 +1077,23 @@
       search: (d.name+' '+d.sponsor+' '+d.desc+' '+d.eligibility+' '+stages.join(' ')+' '+d.type).toLowerCase()
     };
   });
+
+  // Closed programs: labeled, kept for the record, never in the active count.
+  if(CLOSED.length){
+    var closedWrap = document.createElement('div');
+    closedWrap.className = 'funding-closed';
+    var closedItems = CLOSED.map(function(d){
+      var src = d.statusSource ? ' <a href="'+esc(d.statusSource)+'" target="_blank" rel="noopener">official notice</a>.' : '';
+      var note = d.statusNote ? ' '+esc(d.statusNote) : '';
+      return '<li><strong>'+esc(d.name)+'</strong> is no longer accepting applications.'+note+src+'</li>';
+    }).join('');
+    closedWrap.innerHTML =
+      '<h2 class="funding-closed__title">No longer accepting applications</h2>'+
+      '<p class="funding-closed__intro">Left out of the active list and counts above, kept here for the record with the source for the change.</p>'+
+      '<ul class="funding-closed__list">'+closedItems+'</ul>';
+    if(emptyEl && emptyEl.parentNode){ emptyEl.parentNode.insertBefore(closedWrap, emptyEl.nextSibling); }
+    else { listEl.parentNode.insertBefore(closedWrap, listEl.nextSibling); }
+  }
 
   function countFor(dim, val){
     var n = 0;
@@ -1134,6 +1161,7 @@
 <!-- privacy-notice -->
 <style>
   .privacy-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--bg);border-top:1px solid var(--rule);box-shadow:0 -2px 16px rgba(0,0,0,.07);transform:translateY(110%);transition:transform .32s ease;}
+  @media(max-width:700px),(max-height:500px){.privacy-bar{position:static;transform:none;box-shadow:none}}
   .privacy-bar.is-visible{transform:translateY(0);}
   .privacy-bar__inner{max-width:72rem;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;gap:1rem 1.4rem;flex-wrap:wrap;justify-content:space-between;}
   .privacy-bar__text{margin:0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--ink-soft);max-width:62ch;}
@@ -1150,7 +1178,7 @@
     <button class="privacy-bar__btn" id="privacy-ok" type="button">Got it</button>
   </div>
 </div>
-<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=bar.offsetHeight+"px";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
+<script>(function(){try{var k="tnr-privacy-ack";var bar=document.getElementById("privacy-bar");if(!bar)return;var ack=null;try{ack=localStorage.getItem(k);}catch(e){}if(!ack){bar.hidden=false;requestAnimationFrame(function(){bar.classList.add("is-visible");try{document.body.style.paddingBottom=getComputedStyle(bar).position==="fixed"?bar.offsetHeight+"px":"";}catch(e){}});}var b=document.getElementById("privacy-ok");if(b){b.addEventListener("click",function(){bar.classList.remove("is-visible");try{document.body.style.paddingBottom="";}catch(e){}try{localStorage.setItem(k,"1");}catch(e){}setTimeout(function(){bar.hidden=true;},340);});}}catch(e){}})();</script>
 <!-- /privacy-notice -->
 
 </body>

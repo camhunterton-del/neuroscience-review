@@ -121,10 +121,12 @@
 .d-blind-spot .bs-controls{ margin:1rem 0 0; display:flex; flex-direction:column; gap:1rem; }
 .d-blind-spot .bs-field label.bs-flabel{
     display:flex; justify-content:space-between; align-items:baseline;
+    gap:.6rem;
     font-family:var(--bs-mono); font-size:.8rem; color:var(--bs-soft);
     margin:0 0 .4rem; font-variant-numeric:tabular-nums;
   }
-.d-blind-spot .bs-field label.bs-flabel span:last-child{ color:var(--bs-ink); }
+.d-blind-spot .bs-field label.bs-flabel span:first-child{ min-width:0; overflow-wrap:anywhere; }
+.d-blind-spot .bs-field label.bs-flabel span:last-child{ color:var(--bs-ink); flex:0 0 auto; white-space:nowrap; }
 .d-blind-spot input[type=range]{
     -webkit-appearance:none; appearance:none; width:100%; height:22px;
     background:transparent; cursor:pointer; margin:0; touch-action:pan-y;
@@ -209,6 +211,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Find your blind spot","description":"A quick blind spot test you run in the page. Cover one eye, stare at the cross, and slide the dot until it drops into the gap where your optic nerve leaves the retina.","url":"https://theneuroreview.com/tools/find-your-blind-spot.html","inLanguage":"en-US","isPartOf":{"@type":"WebSite","name":"The Neuroscience Review","url":"https://theneuroreview.com/"},"publisher":{"@type":"Organization","name":"The Neuroscience Review","url":"https://theneuroreview.com/","logo":{"@type":"ImageObject","url":"https://theneuroreview.com/logo-512.png"}}}
   </script>
+<style>html{scroll-padding-top:5rem}</style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -262,7 +265,7 @@
           <div class="bs-readout">
             <span class="bs-read-main">the dot sits about <b id="blind-spot-angle">12</b>&deg; to the side</span>
             <span class="bs-status" id="blind-spot-status">keep sliding</span>
-            <span class="bs-read-sub" id="blind-spot-sub">on-screen gap 9.6 cm &middot; sitting about 45 cm away</span>
+            <span class="bs-read-sub" id="blind-spot-sub">on-screen gap 9.6 cm &middot; sitting about 30 cm away</span>
             <span class="bs-mark-read" id="blind-spot-markread" hidden aria-live="polite"></span>
           </div>
 
@@ -276,9 +279,9 @@
             </div>
             <div class="bs-field">
               <label class="bs-flabel" for="blind-spot-dist">
-                <span>How far you are sitting from the screen</span><span id="blind-spot-dist-val">45 cm</span>
+                <span>How far you are sitting from the screen</span><span id="blind-spot-dist-val">30 cm</span>
               </label>
-              <input type="range" id="blind-spot-dist" min="20" max="70" value="45" step="1"
+              <input type="range" id="blind-spot-dist" min="20" max="70" value="30" step="1"
                      aria-label="How far you sit from the screen, in centimetres">
             </div>
 
@@ -327,7 +330,7 @@
     </div>
 
     <section class="cta" id="subscribe">
-      <h3>Get one brain-science deep dive every Wednesday.</h3>
+      <h3>Get brain-science deep dives by email.</h3>
       <p>Real research, written to be read. No hype, no fluff, unsubscribe anytime.</p>
       <form class="cta__form" action="https://buttondown.com/api/emails/embed-subscribe/hunterton" method="post" target="_blank">
         <input type="email" name="email" class="cta__input" autocomplete="email" placeholder="your@email.com" required aria-label="Email address">
@@ -384,10 +387,17 @@
     return { dir:dir, crossX:crossX, cy:H/2, maxSepPx:maxSepPx };
   }
 
-  // clamp the millimetre slider so the dot always fits on the current stage
+  var SLIDER_MAX_DEG = 22;   // the slider's top is an angle, so it reaches past the ~15-18° blind-spot band
+  var REACH_DEG = 15;        // below this the stage cannot show the blind spot at the current distance
+  // Cap the millimetre slider at whichever is smaller: the angle target (so the
+  // range is set in degrees and reaches the blind spot), or the stage width (so
+  // the dot always fits). draw() surfaces a "sit closer" note when the stage wins.
   function clampSlider(){
     var g = geom();
-    var maxMm = Math.floor(g.maxSepPx / PX_PER_CM * 10);
+    var fitPx = g.maxSepPx;
+    var wantPx = pxAtAngle(SLIDER_MAX_DEG);
+    var maxPx = Math.min(fitPx, wantPx);
+    var maxMm = Math.max(10, Math.floor(maxPx / PX_PER_CM * 10));
     sep.max = maxMm;
     if(+sep.value > maxMm) sep.value = maxMm;
   }
@@ -490,7 +500,12 @@
     angleEl.textContent = Math.round(deg);
     sepVal.textContent = cm.toFixed(1) + ' cm';
     distVal.textContent = (+dist.value) + ' cm';
-    subEl.textContent = 'on-screen gap ' + cm.toFixed(1) + ' cm · sitting about ' + (+dist.value) + ' cm away';
+    // the most the stage can show at this distance; below REACH_DEG the blind spot
+    // is off the edge, so guide the reader to sit closer instead of dead-ending.
+    var maxReachDeg = angleAt(g.maxSepPx);
+    var tooNarrow = maxReachDeg < REACH_DEG;
+    subEl.textContent = 'on-screen gap ' + cm.toFixed(1) + ' cm · sitting about ' + (+dist.value) + ' cm away' +
+      (tooNarrow ? ' · screen too narrow here, sit closer to reach your blind spot' : '');
     if(inBand){
       statusEl.textContent = 'in the typical blind-spot range';
       statusEl.classList.add('is-in');
@@ -513,15 +528,22 @@
     var sepPx = Math.min(+sep.value/10 * PX_PER_CM, g.maxSepPx);
     marked = { px:sepPx, angle:angleAt(sepPx) };
     var verb = (mode === 'dot') ? 'lost the dot' : 'saw the gap close';
+    var a = Math.round(marked.angle);
+    // one message, consistent with the status band (12-18 = typical blind spot),
+    // so a mark can never read "marked ~9°" next to "not far enough out yet".
+    var where;
+    if(a >= 12 && a <= 18) where = ', right in the typical blind-spot range';
+    else if(a < 12) where = ', short of the typical ~15° blind spot — slide further out, or sit a little closer';
+    else where = ', past where most blind spots sit';
     markRead.hidden = false;
-    markRead.textContent = 'Marked, you ' + verb + ' around ' + Math.round(marked.angle) + '° to the side.';
+    markRead.textContent = 'Marked, you ' + verb + ' around ' + a + '°' + where + '.';
     draw();
   }
 
   function reset(){
     marked = null;
     markRead.hidden = true;
-    sep.value = 96; dist.value = 45;
+    sep.value = 96; dist.value = 30;
     setMode('dot'); setEye('left');
     clampSlider();
     draw();

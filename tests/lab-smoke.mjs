@@ -117,6 +117,111 @@ try {
       await page.close();
     }
   }
+  // Release regression gate: all explorers must retain readable content at
+  // phone width when scripting, CDN imports, or WebGL are unavailable.
+  const expectedParts = { brain: 14, neuron: 8, synapse: 7 };
+  for (const mode of ['no-js', 'cdn-blocked', 'no-webgl', 'normal']) {
+    const faultCtx = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      javaScriptEnabled: mode !== 'no-js',
+    });
+    if (mode === 'no-webgl') {
+      await faultCtx.addInitScript(() => {
+        const original = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function(type, ...args) {
+          if (/webgl/i.test(type)) return null;
+          return original.call(this, type, ...args);
+        };
+      });
+    }
+    try {
+      for (const ex of EXPLORERS) {
+        const page = await faultCtx.newPage();
+        if (mode === 'cdn-blocked') await page.route(/cdn\.jsdelivr\.net/, r => r.abort());
+        try {
+          await page.goto(`${BASE}/${ex.file}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+          if (mode === 'normal') {
+            await page.waitForFunction(() => window.__labReady === true && getComputedStyle(document.getElementById('brain-fallback')).display === 'none', null, { timeout: 25000 });
+          } else {
+            await page.locator('#brain-fallback').waitFor({ state: 'visible', timeout: 20000 });
+          }
+          const state = await page.evaluate(() => {
+            const display = id => {
+              const e = document.getElementById(id);
+              return e ? getComputedStyle(e).display : 'absent';
+            };
+            return {
+              fallback: display('brain-fallback'), loading: display('brain-loading'),
+              toolbar: display('brain-toolbar'), hint: display('brain-hint'),
+              parts: document.querySelectorAll('#brain-fallback dt').length,
+              descriptions: [...document.querySelectorAll('#brain-fallback dd')].every(e => e.textContent.trim().length > 20),
+              width: document.documentElement.scrollWidth, viewport: innerWidth,
+            };
+          });
+          if (mode === 'normal') {
+            check(`${mode}/${ex.slug}: working 3D controls at phone width`, state.fallback === 'none' && state.loading === 'none' && state.toolbar !== 'none', JSON.stringify(state));
+          } else {
+            check(`${mode}/${ex.slug}: readable static explanations`, state.fallback !== 'none' && state.parts === expectedParts[ex.slug] && state.descriptions, JSON.stringify(state));
+            check(`${mode}/${ex.slug}: no loader or inert 3D controls`, ['loading','toolbar','hint'].every(k => ['none','absent'].includes(state[k])), JSON.stringify(state));
+          }
+          check(`${mode}/${ex.slug}: 390px page fits`, state.width <= state.viewport + 1, JSON.stringify(state));
+        } catch (e) {
+          check(`${mode}/${ex.slug}: failure path works`, false, String(e));
+        } finally { await page.close(); }
+      }
+    } finally { await faultCtx.close(); }
+  }
+  // Independently exercise user-visible release behavior on the real pages.
+  const release = await browser.newContext({viewport:{width:1280,height:900},colorScheme:'light'});
+  const page = await release.newPage();
+  try {
+    for (const query of ['dopamine','ssri']) {
+      await page.goto(`${BASE}/search.html?q=${query}`);
+      await page.waitForFunction(() => document.querySelectorAll('#search-results a, .post-card a').length > 0);
+      const links = await page.locator('a[href^="lab.html#"]').count();
+      check(`search: ${query} finds a Lab demo`,links>0,`demo links=${links}`);
+    }
+    await page.goto(`${BASE}/lab.html#dopamine-rpe-canvas`);
+    await page.waitForFunction(() => document.querySelector('[data-labdemo="dopamine-rpe"]').classList.contains('is-open'));
+    check('Lab: search anchor opens dopamine demo',true);
+    const names=await page.locator('.demo-toggle').evaluateAll(es=>es.map(e=>e.getAttribute('aria-label')));
+    check('Lab: demo controls have unique accessible names',names.every(Boolean)&&new Set(names).size===names.length,`${names.length} controls`);
+    await page.locator('#lif-current').evaluate(e=>{e.value='30';e.dispatchEvent(new Event('input',{bubbles:true}));});
+    await page.waitForTimeout(4500);
+    await page.locator('#lif-current').evaluate(e=>{e.value='0';e.dispatchEvent(new Event('input',{bubbles:true}));});
+    await page.waitForTimeout(700);
+    check('Lab: zero current clears stale firing rate',(await page.locator('#lif-rate').textContent()).trim()==='0');
+    await page.goto(`${BASE}/tools/stroop-test.html`);
+    await page.locator('#stroop-start').click();
+    for(let i=0;i<20;i++){
+      await page.waitForTimeout(170);
+      await page.evaluate(()=>{
+        const w=document.getElementById('stroop-word');
+        const color=getComputedStyle(w).color;
+        const root=getComputedStyle(document.documentElement);
+        const colors=['red','blue','green','orange'];
+        const correct=colors.find(n=>{const p=document.createElement('span');p.style.color=root.getPropertyValue('--ink-'+n).trim();document.body.append(p);const equal=getComputedStyle(p).color===color;p.remove();return equal;});
+        if(!correct)throw Error('Could not identify stimulus ink');
+        [...document.querySelectorAll('#stroop-keys button')].find(b=>b.textContent.toLowerCase()!==correct).click();
+      });
+    }
+    check('Stroop: all-error run is not interpreted',await page.locator('#stroop-stage').textContent().then(t=>t.includes('cannot be scored')&&!t.includes('exactly the reflex winning')));
+    for(const file of ['index.html','lab.html','funding.html']){
+      await page.goto(`${BASE}/${file}`);
+      const ratio=await page.evaluate(()=>{
+        const s=getComputedStyle(document.documentElement);
+        const rgb=h=>h.trim().replace('#','').match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+        const lum=h=>rgb(h).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);
+        const a=lum(s.getPropertyValue('--muted')),b=lum(s.getPropertyValue('--bg'));
+        return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+      });
+      check(`${file}: muted text exceeds 4.5:1 on page background`,ratio>=4.5,ratio.toFixed(2));
+    }
+    await page.setViewportSize({width:390,height:844});
+    await page.goto(`${BASE}/index.html`);
+    check('privacy notice scrolls with narrow page',await page.locator('#privacy-bar').evaluate(e=>getComputedStyle(e).position==='static'));
+  } catch(e){check('release behavior checks complete',false,String(e));}
+  finally{await release.close();}
 } finally {
   await browser.close();
 }
