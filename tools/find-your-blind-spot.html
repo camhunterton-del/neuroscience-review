@@ -532,8 +532,8 @@
     // one message, consistent with the status band (12-18 = typical blind spot),
     // so a mark can never read "marked ~9°" next to "not far enough out yet".
     var where;
-    if(a >= 12 && a <= 18) where = ', right in the typical blind-spot range';
-    else if(a < 12) where = ', short of the typical ~15° blind spot — slide further out, or sit a little closer';
+    if(marked.angle >= 12 && marked.angle <= 18) where = ', right in the typical blind-spot range';
+    else if(marked.angle < 12) where = ', short of the typical ~15° blind spot — slide further out, or sit a little closer';
     else where = ', past where most blind spots sit';
     markRead.hidden = false;
     markRead.textContent = 'Marked, you ' + verb + ' around ' + a + '°' + where + '.';
