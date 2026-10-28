@@ -2974,7 +2974,7 @@
     var cn=CATS[best].name.toLowerCase();
     html+='<div class="amyg-cell"><span class="amyg-cell__flag">Simulated &middot; not your brain</span>'+
       '<p class="amyg-cell__title">A pretend amygdala cell that prefers '+cn+'</p>'+
-      '<p class="amyg-cell__sub">You remembered '+cn+' best, so we gave this toy cell that preference. Bars show how hard it would fire while you studied each kind of scene, sorted by what you later remembered. Nothing here was measured from you.</p>'+
+      '<p class="amyg-cell__sub">For illustration, we gave this toy cell a favorite category, the one you remembered best ('+cn+'). Real cells&rsquo; favorites were defined by how strongly they fired, not by what patients remembered. Bars show how hard it would fire while you studied each kind of scene, sorted by what you later remembered. Nothing here was measured from you.</p>'+
       '<div class="amyg-bars">'+
         bar('Remembered, sure',CATS[best].name+' &middot; '+nSure+' scene'+(nSure===1?'':'s'),nSure,lv.sure,'')+
         bar('Remembered, not sure',CATS[best].name+' &middot; '+nUnsure+' scene'+(nUnsure===1?'':'s'),nUnsure,lv.unsure,'amyg-bar__fill--mid')+
