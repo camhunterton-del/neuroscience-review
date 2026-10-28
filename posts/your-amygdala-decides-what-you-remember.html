@@ -769,6 +769,35 @@
 
         <p>It's Halloween week, which makes it the amygdala's week. The almond-shaped amygdala, one buried deep in each temporal lobe, is widely called the brain's fear center. The label is a simplification, but decades of work do trace threat and fear circuits straight through it. The most striking human evidence comes from a woman known as SM, whose amygdalae on both sides were damaged by a rare disease. A University of Iowa team took her to an exotic pet store with snakes and spiders, walked her through a haunted house one Halloween, and showed her emotionally charged film clips. As their 2011 paper reports, "On no occasion did SM exhibit fear." Even that has a footnote. A 2013 follow-up found that SM and two other patients with the same damage felt real panic when they breathed air heavy with carbon dioxide, so the amygdala isn't needed for every kind of fear.</p>
 
+<style>
+  .amyg-fig{--rem:#2a78d6;--forg:#eb6834;margin:2.25rem 0}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .amyg-fig{--rem:#3987e5;--forg:#d95926}}
+  :root[data-theme="dark"] .amyg-fig{--rem:#3987e5;--forg:#d95926}
+  .amyg-fig figcaption{margin-top:.75rem}
+  .amyg-steps{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.6rem;align-items:stretch;font-family:var(--sans,Inter,system-ui,sans-serif)}
+  .amyg-step{border:1px solid var(--rule-strong);border-radius:10px;padding:.9rem 1rem;background:var(--surface)}
+  .amyg-step__k{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .amyg-step__t{font-size:1.02rem;font-weight:600;color:var(--ink);margin:.2rem 0 .35rem}
+  .amyg-step__d{font-size:.88rem;line-height:1.45;color:var(--ink-soft)}
+  .amyg-step--wait{border-style:dashed;background:transparent}
+  .amyg-arrow{align-self:center;color:var(--muted);font-size:1.2rem}
+  @media (max-width:640px){.amyg-steps{grid-template-columns:1fr}.amyg-arrow{transform:rotate(90deg);justify-self:center}}
+  .amyg-chart{display:grid;grid-template-columns:1fr;gap:1.5rem;max-width:620px}
+  @media (max-width:640px){.amyg-chart{grid-template-columns:1fr}}
+  .amyg-chart svg{width:100%;height:auto;display:block;overflow:visible}
+  .amyg-chart text{font-family:var(--sans,Inter,system-ui,sans-serif);fill:var(--muted)}
+  .amyg-chart .t-ink{fill:var(--ink);font-weight:600}
+  .amyg-legend{display:flex;gap:1.25rem;flex-wrap:wrap;font-family:var(--sans,Inter,system-ui,sans-serif);font-size:.85rem;color:var(--ink-soft);margin:0 0 .6rem}
+  .amyg-legend span{display:inline-flex;align-items:center;gap:.45rem}
+  .amyg-key{display:inline-block;width:22px;height:0;border-top:2px solid var(--rem)}
+  .amyg-key--f{border-top:2px dashed var(--forg)}
+  .amyg-fig details{margin-top:.6rem;font-size:.85rem;color:var(--muted)}
+</style>
+        <figure class="pc-fig amyg-fig">
+          <img src="../img/amygdala-cunningham-1914.jpg" width="1400" height="1021" loading="lazy" style="max-width:100%;height:auto;border-radius:10px;background:#f4efe4" alt="A hand-colored 1914 anatomy drawing of the inner face of one half of the brain, with labels including Nucleus amygdalae near the bottom and Hippocampus beside it.">
+          <figcaption>The inner face of one half of the brain, from a 1914 anatomy textbook. The amygdala, labeled &ldquo;nucleus amygdalae&rdquo; near the bottom, sits just in front of the hippocampus, deep in the temporal lobe. There is one on each side of the brain.</figcaption>
+        </figure>
+
         <p>The amygdala also has a second job description. Scary and exciting moments tend to stick, and a long line of research credits the amygdala with stamping emotional experiences into memory more firmly. That's part of why you can probably still recall the jump scare from a movie you saw years ago.</p>
 
         <p>But most of what you remember isn't scary at all. You remember the face of the barista from this morning, a dog you passed on the walk to class, what you ate for lunch. And most of what you see, you forget. As the new study puts it, "typically only a small and select subset of this experience is transformed into long-lasting episodic memories." So what picks the subset? A study published October 27 in <em>Nature Neuroscience</em> points straight back at the amygdala, and emotion doesn't seem to explain it.</p>
@@ -779,6 +808,17 @@
 
         <p>The task came in two parts. First, across 140 rounds of a quick memory game, patients saw one or three brand-new photos at a time, each a person, a food, an animal, a car or a landscape, and then said whether a test picture matched one they'd just seen. Ten to thirty minutes later came the real test. They saw 400 pictures, half of them old and half new, and for each one said whether they'd seen it before and how sure they were. On average they got 70.3 percent right, well above the 50 percent you'd get by guessing.</p>
 
+        <figure class="amyg-fig" aria-label="Diagram of the study's memory task">
+          <div class="amyg-steps">
+            <div class="amyg-step"><div class="amyg-step__k">Step 1</div><div class="amyg-step__t">See new pictures</div><div class="amyg-step__d">140 rounds of a quick memory game, each showing one or three never-seen photos of people, food, animals, cars or landscapes</div></div>
+            <div class="amyg-arrow" aria-hidden="true">&rarr;</div>
+            <div class="amyg-step amyg-step--wait"><div class="amyg-step__k">Step 2</div><div class="amyg-step__t">Wait</div><div class="amyg-step__d">10 to 30 minutes</div></div>
+            <div class="amyg-arrow" aria-hidden="true">&rarr;</div>
+            <div class="amyg-step"><div class="amyg-step__k">Step 3</div><div class="amyg-step__t">The real test</div><div class="amyg-step__d">400 photos, 200 seen before and 200 new. For each, &ldquo;seen it?&rdquo; plus how sure</div></div>
+          </div>
+          <figcaption>The design. Because every picture was new in step 1, the researchers could look back at how each neuron fired the first time a picture appeared, then sort those moments by whether the patient recognized that picture in step 3.</figcaption>
+        </figure>
+
         <p>That design let the researchers run a classic comparison. In 1998, two landmark brain-scanning studies showed that activity while people first see a picture or a word can predict whether they will remember it later. Here, the team could ask the same question one neuron at a time.</p>
 
         <h2>Cells with a favorite category</h2>
@@ -788,6 +828,35 @@
         <p>Here's the key result. On average, when category cells saw a new picture from their favorite category, they fired more strongly if that picture would later be remembered than if it would be forgotten. For pictures outside their favorite category, there was no reliable difference. Among cells that preferred animals, for example, firing was stronger on average for the animal pictures patients later recognized.</p>
 
         <p>The signal was fast. The extra firing showed up about 350 milliseconds after a picture appeared, roughly when such cells start telling categories apart, according to earlier studies. In the authors' words, "the selective recruitment of cells for memory encoding is nearly instantaneous with the sensory response." Category cells in the hippocampus, the region best known for memory, showed a similar but weaker effect that didn't start until about 1,300 milliseconds. Cells in the fusiform gyrus, a visual area on the underside of the temporal lobe, responded even more strongly to categories, yet their firing didn't reliably tell later-remembered pictures from forgotten ones.</p>
+
+        <figure class="amyg-fig" aria-label="Schematic of when remembered and forgotten pictures diverge">
+          <div class="amyg-legend"><span><i class="amyg-key"></i>Pictures later remembered</span><span><i class="amyg-key amyg-key--f"></i>Pictures later forgotten</span></div>
+          <div class="amyg-chart">
+            <svg viewBox="0 0 520 280" role="img" aria-label="Amygdala schematic. Firing for later-remembered and later-forgotten pictures of a cell’s favorite category separates at about 350 milliseconds, with a clear gap.">
+              <text x="44" y="22" font-size="18" class="t-ink">Amygdala category cells</text>
+              <line x1="44" y1="230" x2="504" y2="230" stroke="var(--rule-strong)"/>
+              <line x1="44.0" y1="230" x2="44.0" y2="235" stroke="var(--rule-strong)"/><text x="44.0" y="252" font-size="15" text-anchor="middle">0</text><line x1="159.0" y1="230" x2="159.0" y2="235" stroke="var(--rule-strong)"/><text x="159.0" y="252" font-size="15" text-anchor="middle">500</text><line x1="274.0" y1="230" x2="274.0" y2="235" stroke="var(--rule-strong)"/><text x="274.0" y="252" font-size="15" text-anchor="middle">1,000</text><line x1="389.0" y1="230" x2="389.0" y2="235" stroke="var(--rule-strong)"/><text x="389.0" y="252" font-size="15" text-anchor="middle">1,500</text><line x1="504.0" y1="230" x2="504.0" y2="235" stroke="var(--rule-strong)"/><text x="504.0" y="252" font-size="15" text-anchor="middle">2,000</text>
+              <text x="274" y="272" font-size="15" text-anchor="middle">ms after the picture appears</text>
+              <text x="14" y="135" font-size="15" text-anchor="middle" transform="rotate(-90 14 135)">firing</text>
+              <line x1="124.5" y1="40" x2="124.5" y2="230" stroke="var(--muted)" stroke-dasharray="3 4"/>
+              <text x="130.5" y="54" font-size="15" class="t-ink">split at ~350 ms</text>
+              <path d="M44.0,213.1 L48.6,213.1 L53.2,213.1 L57.8,213.1 L62.4,213.1 L67.0,213.1 L71.6,213.1 L76.2,213.1 L80.8,213.1 L85.4,213.1 L90.0,197.5 L94.6,183.3 L99.2,170.5 L103.8,158.9 L108.4,148.5 L113.0,139.2 L117.6,130.9 L122.2,123.5 L126.8,117.0 L131.4,111.3 L136.0,106.3 L140.6,102.0 L145.2,98.3 L149.8,95.3 L154.4,92.7 L159.0,90.7 L163.6,89.1 L168.2,87.9 L172.8,87.1 L177.4,86.6 L182.0,86.4 L186.6,86.6 L191.2,87.0 L195.8,87.6 L200.4,88.5 L205.0,89.5 L209.6,90.7 L214.2,92.1 L218.8,93.6 L223.4,95.2 L228.0,97.0 L232.6,98.8 L237.2,100.7 L241.8,102.7 L246.4,104.7 L251.0,106.8 L255.6,108.9 L260.2,111.1 L264.8,113.3 L269.4,115.5 L274.0,117.7 L278.6,119.9 L283.2,122.1 L287.8,124.3 L292.4,126.6 L297.0,128.7 L301.6,130.9 L306.2,133.1 L310.8,135.2 L315.4,137.3 L320.0,139.4 L324.6,141.4 L329.2,143.5 L333.8,145.4 L338.4,147.4 L343.0,149.3 L347.6,151.2 L352.2,153.0 L356.8,154.8 L361.4,156.6 L366.0,158.3 L370.6,160.0 L375.2,161.7 L379.8,163.3 L384.4,164.9 L389.0,166.4 L393.6,167.9 L398.2,169.4 L402.8,170.8 L407.4,172.2 L412.0,173.5 L416.6,174.8 L421.2,176.1 L425.8,177.3 L430.4,178.5 L435.0,179.7 L439.6,180.8 L444.2,181.9 L448.8,183.0 L453.4,184.0 L458.0,185.1 L462.6,186.0 L467.2,187.0 L471.8,187.9 L476.4,188.8 L481.0,189.6 L485.6,190.5 L490.2,191.3 L494.8,192.0 L499.4,192.8 L504.0,193.5" fill="none" stroke="var(--forg)" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round"><title>Later forgotten</title></path>
+              <path d="M44.0,213.1 L48.6,213.1 L53.2,213.1 L57.8,213.1 L62.4,213.1 L67.0,213.1 L71.6,213.1 L76.2,213.1 L80.8,213.1 L85.4,213.1 L90.0,197.5 L94.6,183.3 L99.2,170.5 L103.8,158.9 L108.4,148.5 L113.0,139.2 L117.6,130.9 L122.2,123.5 L126.8,115.9 L131.4,108.2 L136.0,101.3 L140.6,95.3 L145.2,90.0 L149.8,85.4 L154.4,81.5 L159.0,78.2 L163.6,75.4 L168.2,73.1 L172.8,71.2 L177.4,69.8 L182.0,68.8 L186.6,68.2 L191.2,67.8 L195.8,67.8 L200.4,68.0 L205.0,68.5 L209.6,69.2 L214.2,70.1 L218.8,71.2 L223.4,72.5 L228.0,73.8 L232.6,75.4 L237.2,77.0 L241.8,78.7 L246.4,80.5 L251.0,82.4 L255.6,84.4 L260.2,86.4 L264.8,88.5 L269.4,90.6 L274.0,92.7 L278.6,94.9 L283.2,97.0 L287.8,99.2 L292.4,101.4 L297.0,103.6 L301.6,105.8 L306.2,108.0 L310.8,110.1 L315.4,112.3 L320.0,114.4 L324.6,116.5 L329.2,118.6 L333.8,120.7 L338.4,122.7 L343.0,124.7 L347.6,126.7 L352.2,128.6 L356.8,130.5 L361.4,132.4 L366.0,134.2 L370.6,136.0 L375.2,137.8 L379.8,139.5 L384.4,141.2 L389.0,142.9 L393.6,144.5 L398.2,146.1 L402.8,147.7 L407.4,149.2 L412.0,150.7 L416.6,152.1 L421.2,153.5 L425.8,154.9 L430.4,156.3 L435.0,157.6 L439.6,158.9 L444.2,160.1 L448.8,161.3 L453.4,162.5 L458.0,163.6 L462.6,164.8 L467.2,165.8 L471.8,166.9 L476.4,167.9 L481.0,168.9 L485.6,169.9 L490.2,170.9 L494.8,171.8 L499.4,172.7 L504.0,173.6" fill="none" stroke="var(--rem)" stroke-width="2" stroke-linecap="round"><title>Later remembered</title></path>
+            </svg>
+            <svg viewBox="0 0 520 280" role="img" aria-label="Hippocampus schematic. The two lines separate much later, at about 1,300 milliseconds, with a smaller gap.">
+              <text x="44" y="22" font-size="18" class="t-ink">Hippocampus category cells</text>
+              <line x1="44" y1="230" x2="504" y2="230" stroke="var(--rule-strong)"/>
+              <line x1="44.0" y1="230" x2="44.0" y2="235" stroke="var(--rule-strong)"/><text x="44.0" y="252" font-size="15" text-anchor="middle">0</text><line x1="159.0" y1="230" x2="159.0" y2="235" stroke="var(--rule-strong)"/><text x="159.0" y="252" font-size="15" text-anchor="middle">500</text><line x1="274.0" y1="230" x2="274.0" y2="235" stroke="var(--rule-strong)"/><text x="274.0" y="252" font-size="15" text-anchor="middle">1,000</text><line x1="389.0" y1="230" x2="389.0" y2="235" stroke="var(--rule-strong)"/><text x="389.0" y="252" font-size="15" text-anchor="middle">1,500</text><line x1="504.0" y1="230" x2="504.0" y2="235" stroke="var(--rule-strong)"/><text x="504.0" y="252" font-size="15" text-anchor="middle">2,000</text>
+              <text x="274" y="272" font-size="15" text-anchor="middle">ms after the picture appears</text>
+              <text x="14" y="135" font-size="15" text-anchor="middle" transform="rotate(-90 14 135)">firing</text>
+              <line x1="343.0" y1="40" x2="343.0" y2="230" stroke="var(--muted)" stroke-dasharray="3 4"/>
+              <text x="349.0" y="54" font-size="15" class="t-ink">split at ~1,300 ms</text>
+              <path d="M44.0,213.1 L48.6,213.1 L53.2,213.1 L57.8,213.1 L62.4,213.1 L67.0,213.1 L71.6,213.1 L76.2,213.1 L80.8,213.1 L85.4,213.1 L90.0,197.5 L94.6,183.3 L99.2,170.5 L103.8,158.9 L108.4,148.5 L113.0,139.2 L117.6,130.9 L122.2,123.5 L126.8,117.0 L131.4,111.3 L136.0,106.3 L140.6,102.0 L145.2,98.3 L149.8,95.3 L154.4,92.7 L159.0,90.7 L163.6,89.1 L168.2,87.9 L172.8,87.1 L177.4,86.6 L182.0,86.4 L186.6,86.6 L191.2,87.0 L195.8,87.6 L200.4,88.5 L205.0,89.5 L209.6,90.7 L214.2,92.1 L218.8,93.6 L223.4,95.2 L228.0,97.0 L232.6,98.8 L237.2,100.7 L241.8,102.7 L246.4,104.7 L251.0,106.8 L255.6,108.9 L260.2,111.1 L264.8,113.3 L269.4,115.5 L274.0,117.7 L278.6,119.9 L283.2,122.1 L287.8,124.3 L292.4,126.6 L297.0,128.7 L301.6,130.9 L306.2,133.1 L310.8,135.2 L315.4,137.3 L320.0,139.4 L324.6,141.4 L329.2,143.5 L333.8,145.4 L338.4,147.4 L343.0,149.3 L347.6,151.2 L352.2,153.0 L356.8,154.8 L361.4,156.6 L366.0,158.3 L370.6,160.0 L375.2,161.7 L379.8,163.3 L384.4,164.9 L389.0,166.4 L393.6,167.9 L398.2,169.4 L402.8,170.8 L407.4,172.2 L412.0,173.5 L416.6,174.8 L421.2,176.1 L425.8,177.3 L430.4,178.5 L435.0,179.7 L439.6,180.8 L444.2,181.9 L448.8,183.0 L453.4,184.0 L458.0,185.1 L462.6,186.0 L467.2,187.0 L471.8,187.9 L476.4,188.8 L481.0,189.6 L485.6,190.5 L490.2,191.3 L494.8,192.0 L499.4,192.8 L504.0,193.5" fill="none" stroke="var(--forg)" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round"><title>Later forgotten</title></path>
+              <path d="M44.0,213.1 L48.6,213.1 L53.2,213.1 L57.8,213.1 L62.4,213.1 L67.0,213.1 L71.6,213.1 L76.2,213.1 L80.8,213.1 L85.4,213.1 L90.0,197.5 L94.6,183.3 L99.2,170.5 L103.8,158.9 L108.4,148.5 L113.0,139.2 L117.6,130.9 L122.2,123.5 L126.8,117.0 L131.4,111.3 L136.0,106.3 L140.6,102.0 L145.2,98.3 L149.8,95.3 L154.4,92.7 L159.0,90.7 L163.6,89.1 L168.2,87.9 L172.8,87.1 L177.4,86.6 L182.0,86.4 L186.6,86.6 L191.2,87.0 L195.8,87.6 L200.4,88.5 L205.0,89.5 L209.6,90.7 L214.2,92.1 L218.8,93.6 L223.4,95.2 L228.0,97.0 L232.6,98.8 L237.2,100.7 L241.8,102.7 L246.4,104.7 L251.0,106.8 L255.6,108.9 L260.2,111.1 L264.8,113.3 L269.4,115.5 L274.0,117.7 L278.6,119.9 L283.2,122.1 L287.8,124.3 L292.4,126.6 L297.0,128.7 L301.6,130.9 L306.2,133.1 L310.8,135.2 L315.4,137.3 L320.0,139.4 L324.6,141.4 L329.2,143.5 L333.8,145.4 L338.4,147.4 L343.0,149.3 L347.6,150.3 L352.2,151.2 L356.8,152.2 L361.4,153.3 L366.0,154.3 L370.6,155.4 L375.2,156.4 L379.8,157.5 L384.4,158.5 L389.0,159.6 L393.6,160.7 L398.2,161.7 L402.8,162.8 L407.4,163.8 L412.0,164.9 L416.6,165.9 L421.2,166.9 L425.8,167.9 L430.4,168.9 L435.0,169.8 L439.6,170.8 L444.2,171.7 L448.8,172.7 L453.4,173.6 L458.0,174.5 L462.6,175.3 L467.2,176.2 L471.8,177.0 L476.4,177.8 L481.0,178.6 L485.6,179.4 L490.2,180.2 L494.8,180.9 L499.4,181.7 L504.0,182.4" fill="none" stroke="var(--rem)" stroke-width="2" stroke-linecap="round"><title>Later remembered</title></path>
+            </svg>
+          </div>
+          <figcaption>A simplified sketch, not the measured data. For pictures from a cell&rsquo;s favorite category, average firing split by later memory at about 350 milliseconds in the amygdala and about 1,300 in the hippocampus, and the amygdala&rsquo;s split was bigger. The timings come from Xiao et al. 2026, while the curve shapes are illustrative.</figcaption>
+        </figure>
 
         <p>The firing also tracked how well a picture would be remembered, not just whether. Activity was highest for pictures later recognized with high confidence, lower for low-confidence hits, and lowest for pictures that were forgotten. A model of the patients' recognition answers also linked the firing pattern to recollection, the kind of memory that brings back the specific moment, while its link to a plain sense of familiarity didn't reach significance.</p>
 
@@ -862,7 +931,7 @@
           <p class="cite-this__text">Hunterton, C. (2026). Your amygdala isn't just about fear. Its neurons help predict what you'll remember. <em>The Neuroscience Review</em>. https://theneuroreview.com/posts/your-amygdala-decides-what-you-remember.html</p>
           <button type="button" class="cite-this__copy" onclick="var b=this,el=b.previousElementSibling,txt=(el.textContent||'').trim(),ok=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy citation';},1500);},no=function(){b.textContent='Press Cmd+C';try{var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r);}catch(e){}setTimeout(function(){b.textContent='Copy citation';},2500);};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok,no);}else{no();}">Copy citation</button>
         </div>
-              <p class="post-disclaimer">Thumbnail: a wall of photographs at the Bryantsev Youth Theatre, Saint Petersburg, by Andrew Krizhanovsky, <a href="https://commons.wikimedia.org/wiki/File:Wall_photos_in_Bryantsev_Youth_Theatre_2019.jpg" target="_blank" rel="noopener">public domain</a>, via Wikimedia Commons.</p>
+              <p class="post-disclaimer">Anatomy illustration: <em>Cunningham&rsquo;s Text-book of Anatomy</em> (1914), public domain, via <a href="https://commons.wikimedia.org/wiki/File:Image_from_page_665_of_%22Cunningham%27s_Text-book_of_anatomy%22_(1914).jpg" target="_blank" rel="noopener">Wikimedia Commons</a>. Thumbnail: a wall of photographs at the Bryantsev Youth Theatre, Saint Petersburg, by Andrew Krizhanovsky, <a href="https://commons.wikimedia.org/wiki/File:Wall_photos_in_Bryantsev_Youth_Theatre_2019.jpg" target="_blank" rel="noopener">public domain</a>, via Wikimedia Commons.</p>
               <p class="post-disclaimer">Educational content, not medical advice. <a href="../disclaimer.html">Read the full disclaimer</a>.</p>
 </footer>
     </article>
