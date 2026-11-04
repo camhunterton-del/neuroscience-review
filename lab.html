@@ -2704,7 +2704,7 @@
             .resil-presets button:hover,.resil-presets button:focus-visible{border-color:var(--teal,#2d5d7b);}
             .resil-caveat{font-size:.85rem;line-height:1.5;color:var(--text-muted,#6b7178);margin:.9rem 0 0;}
             .resil-caveat b{color:var(--text,#232b2f);}
-            @media (max-width:560px){.resil-row label{min-width:5.6rem;font-size:.82rem}.resil-ends{margin-left:6.35rem;padding-right:5.95rem}}
+            @media (max-width:560px){.resil-row{display:grid;grid-template-columns:1fr auto;gap:.2rem .5rem}.resil-row label{min-width:0;font-size:.85rem}.resil-row input[type=range]{grid-column:1 / -1;grid-row:2;width:100%}.resil-ends{margin-left:0;padding-right:0}}
           </style>
           <section id="resilience-risk" class="demo-card demo-card--wide reveal" aria-label="Pathology versus resilience, an interactive risk map, deep-dive companion">
             <div class="demo-card__head">
@@ -2795,7 +2795,7 @@
     var need=p*LP/(-LR);
     var msg;
     if(p>0){
-      msg='On this simplified map, someone with this much pathology would need about '+need.toFixed(1)+' standard deviations more resilience than the middle to land at the middle-on-both hazard'+(need>2?', which is off the edge of this map.':'.');
+      msg='On this simplified map, which assumes the two scores don\'t interact, someone with this much pathology would need about '+need.toFixed(1)+' standard deviations more resilience than the middle to land at the middle-on-both hazard'+(need>2?', which is off the edge of this map.':'.');
     } else if(p<0){
       msg='Less pathology than the middle lowers the hazard on its own. Each full one-SD step up in resilience lowers it further, by about half.';
     } else {
