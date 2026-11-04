@@ -2673,8 +2673,152 @@
     <!-- ============ EDITORIAL GRID ============ -->
     <section class="bench-grid-wrap" aria-label="Experiments on the bench">
       <div class="bench-inner">
-      <div class="bench-group" id="amyg-group">
+      <div class="bench-group" id="resil-group">
         <h2 class="bench-section-kicker">Newest deep-dive companion</h2>
+        <div class="bench-grid">
+          <style>
+            .resil-demo{max-width:660px;margin:1rem auto 0;font-family:'Inter',system-ui,sans-serif;color:var(--text,#232b2f);
+              --rs-lo:#4c9be0;--rs-mid:#3a3f44;--rs-hi:#e4703a;--rs-ring:#f4f2ec;}
+            .resil-demo *{box-sizing:border-box;}
+            .resil-demo__wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;}
+            .resil-map{position:relative;background:var(--panel2,rgba(45,93,123,.05));border:1px solid var(--teal-dim,rgba(45,93,123,.35));border-radius:10px;padding:clamp(10px,2.5vw,18px);}
+            .resil-map svg{width:100%;height:auto;display:block;overflow:visible;touch-action:manipulation;}
+            .resil-map text{font-family:'Inter',system-ui,sans-serif;fill:var(--text-muted,#6b7178);}
+            .resil-map .rs-cell{cursor:pointer;}
+            .resil-map .rs-cell:focus{outline:none;}
+            .resil-tip{position:absolute;pointer-events:none;background:var(--bg,#fff);color:var(--text,#232b2f);border:1px solid var(--line,rgba(0,0,0,.15));border-radius:6px;padding:.35rem .55rem;font-size:.8rem;line-height:1.35;box-shadow:0 4px 14px rgba(0,0,0,.12);white-space:nowrap;transform:translate(-50%,-115%);}
+            .resil-tip[hidden]{display:none;}
+            .resil-row{display:flex;align-items:center;gap:.75rem;margin:.55rem 0 0;}
+            .resil-row label{font-size:.9rem;font-weight:600;min-width:7.2rem;}
+            .resil-row input[type=range]{flex:1;accent-color:var(--teal,#2d5d7b);height:22px;cursor:pointer;}
+            .resil-row output{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:.82rem;color:var(--text-muted,#6b7178);min-width:5.2rem;text-align:right;}
+            .resil-ends{display:flex;justify-content:space-between;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted,#6b7178);margin:.1rem 0 0 7.95rem;padding-right:5.95rem;}
+            .resil-read{border:1px solid var(--line,rgba(0,0,0,.12));border-radius:10px;padding:.9rem 1rem;text-align:center;}
+            .resil-read__num{font-family:'Newsreader',Georgia,serif;font-size:2.1rem;line-height:1.1;font-weight:500;color:var(--text,#232b2f);display:block;}
+            .resil-read__lab{font-size:.85rem;color:var(--text-muted,#6b7178);display:block;margin-top:.2rem;}
+            .resil-read__note{font-size:.9rem;line-height:1.5;color:var(--text,#232b2f);margin:.7rem 0 0;}
+            .resil-legend{display:flex;align-items:center;gap:.6rem;justify-content:center;font-size:.76rem;color:var(--text-muted,#6b7178);margin:.6rem 0 0;}
+            .resil-legend i{display:block;width:150px;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--rs-lo),var(--rs-mid),var(--rs-hi));}
+            .resil-presets{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;margin-top:.8rem;}
+            .resil-presets button{font:inherit;font-size:.8rem;padding:.38rem .7rem;border-radius:999px;border:1px solid var(--teal-dim,rgba(45,93,123,.35));background:transparent;color:var(--text,#232b2f);cursor:pointer;}
+            .resil-presets button:hover,.resil-presets button:focus-visible{border-color:var(--teal,#2d5d7b);}
+            .resil-caveat{font-size:.85rem;line-height:1.5;color:var(--text-muted,#6b7178);margin:.9rem 0 0;}
+            .resil-caveat b{color:var(--text,#232b2f);}
+            @media (max-width:560px){.resil-row label{min-width:5.6rem;font-size:.82rem}.resil-ends{margin-left:6.35rem;padding-right:5.95rem}}
+          </style>
+          <section id="resilience-risk" class="demo-card demo-card--wide reveal" aria-label="Pathology versus resilience, an interactive risk map, deep-dive companion">
+            <div class="demo-card__head">
+              <p class="demo-card__kicker">Alzheimer's &middot; deep-dive companion</p>
+              <h3 class="demo-card__title">Pathology versus resilience</h3>
+              <p class="demo-card__note">A study of 3,119 older adults scored each person on two things, how much Alzheimer's chemistry was in their spinal fluid and how much better or worse their thinking held up than that chemistry predicted. Move both and watch the hazard of dementia change on a map built from the paper's two headline numbers. Pairs with the article <a href="posts/resilience-alzheimers.html">Plaques aren't the whole story. A brain's resilience explains a big share of Alzheimer's risk too.</a></p>
+            </div>
+            <div class="resil-demo" id="resil-demo">
+              <div class="resil-demo__wrap">
+                <div class="resil-map" id="resil-map">
+                  <svg id="resil-svg" viewBox="0 0 460 440" role="group" aria-label="Risk map. Rows are pathology from low at the bottom to high at the top. Columns are resilience from low at the left to high at the right. Each cell is colored by hazard of dementia relative to an average person."></svg>
+                  <div class="resil-tip" id="resil-tip" hidden></div>
+                </div>
+                <div>
+                  <div class="resil-row"><label for="resil-p">Pathology</label><input type="range" id="resil-p" min="-2" max="2" step="0.5" value="0"><output id="resil-p-out" for="resil-p">average</output></div>
+                  <div class="resil-row"><label for="resil-r">Resilience</label><input type="range" id="resil-r" min="-2" max="2" step="0.5" value="0"><output id="resil-r-out" for="resil-r">average</output></div>
+                  <div class="resil-presets" role="group" aria-label="Example combinations">
+                    <button type="button" data-p="1.5" data-r="-1">Heavy pathology, low resilience</button>
+                    <button type="button" data-p="1.5" data-r="2">Heavy pathology, high resilience</button>
+                    <button type="button" data-p="0" data-r="0">Average on both</button>
+                  </div>
+                </div>
+                <div class="resil-read" aria-live="polite">
+                  <span class="resil-read__num" id="resil-num">1.0&times;</span>
+                  <span class="resil-read__lab" id="resil-lab">the hazard of an average person in the study</span>
+                  <p class="resil-read__note" id="resil-note"></p>
+                </div>
+              </div>
+              <div class="resil-legend" aria-hidden="true"><span>lower hazard</span><i></i><span>higher hazard</span></div>
+              <p class="resil-caveat"><b>What this leaves out.</b> The map uses only the two headline hazard ratios, 2.50 for each standard deviation of pathology and 0.51 for each standard deviation of resilience, and assumes each holds steadily across the range. The paper also found that the two interact, meaning the effect of one depends on the level of the other, but the abstract doesn't give the size of that effect, so it's left out. Resilience is linked to dementia here, not shown to cause less of it. These are group-level hazards relative to an average participant, not anyone's personal odds, and resilience here is measured from how a person's thinking actually changed.</p>
+            </div>
+            <p class="demo-card__cite">Hazard ratios from Wang et al., Jia lab, <em>Nature Medicine</em> 2026 &middot; a simplified model for illustration, not a risk calculator.</p>
+          </section>
+          <script>
+(function(){
+  var root=document.getElementById('resil-demo'); if(!root) return;
+  var HRP=2.50, HRR=0.51, LP=Math.log(HRP), LR=Math.log(HRR);
+  var svg=document.getElementById('resil-svg'), tip=document.getElementById('resil-tip'), map=document.getElementById('resil-map');
+  var ip=document.getElementById('resil-p'), ir=document.getElementById('resil-r');
+  var op=document.getElementById('resil-p-out'), or_=document.getElementById('resil-r-out');
+  var num=document.getElementById('resil-num'), lab=document.getElementById('resil-lab'), note=document.getElementById('resil-note');
+  var NS='http://www.w3.org/2000/svg', steps=[-2,-1.5,-1,-0.5,0,0.5,1,1.5,2];
+  var X0=70, Y0=16, CS=40, GAP=2, N=steps.length;
+  function hz(p,r){ return Math.exp(p*LP + r*LR); }
+  function fmt(h){ return h>=10? Math.round(h)+'' : h>=1? h.toFixed(1) : h>=0.1? h.toFixed(2) : h.toFixed(2); }
+  function sdLab(v){ if(v===0) return 'average'; return (v>0?'+':'−')+Math.abs(v)+' SD'; }
+  function cssVar(n){ return getComputedStyle(root).getPropertyValue(n).trim(); }
+  function hex(c){ c=c.replace('#',''); if(c.length===3){c=c.split('').map(function(x){return x+x;}).join('');} return [parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)]; }
+  function mix(a,b,t){ return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t);}).join(',')+')'; }
+  var MAXL=Math.log(hz(2,-2));
+  function color(h){
+    var lo=hex(cssVar('--rs-lo')||'#1f6aa5'), mid=hex(cssVar('--rs-mid')||'#e3e0d9'), hi=hex(cssVar('--rs-hi')||'#c4501c');
+    var t=Math.max(-1,Math.min(1,Math.log(h)/MAXL));
+    t=Math.sign(t)*Math.pow(Math.abs(t),0.75);
+    return t<0? mix(mid,lo,-t) : mix(mid,hi,t);
+  }
+  function el(n,a){ var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); return e; }
+  var cells=[], ring;
+  function build(){
+    svg.textContent='';
+    for(var i=0;i<N;i++){ for(var j=0;j<N;j++){
+      var p=steps[N-1-i], r=steps[j], h=hz(p,r);
+      var c=el('rect',{x:X0+j*CS+GAP/2,y:Y0+i*CS+GAP/2,width:CS-GAP,height:CS-GAP,rx:4,'class':'rs-cell',tabindex:'-1'});
+      c.dataset.p=p; c.dataset.r=r; c.dataset.h=h;
+      var t=el('title',{}); t.textContent='Pathology '+sdLab(p)+', resilience '+sdLab(r)+': '+fmt(h)+'× average hazard'; c.appendChild(t);
+      svg.appendChild(c); cells.push(c);
+    }}
+    ring=el('rect',{width:CS+2,height:CS+2,rx:6,fill:'none','stroke-width':2.5,'pointer-events':'none'}); svg.appendChild(ring);
+    var gx=X0+N*CS;
+    var xl=el('text',{x:X0+N*CS/2,y:Y0+N*CS+34,'font-size':15,'text-anchor':'middle'}); xl.textContent='Resilience →'; svg.appendChild(xl);
+    var xa=el('text',{x:X0,y:Y0+N*CS+16,'font-size':12}); xa.textContent='low'; svg.appendChild(xa);
+    var xb=el('text',{x:gx,y:Y0+N*CS+16,'font-size':12,'text-anchor':'end'}); xb.textContent='high'; svg.appendChild(xb);
+    var yl=el('text',{x:22,y:Y0+N*CS/2,'font-size':15,'text-anchor':'middle',transform:'rotate(-90 22 '+(Y0+N*CS/2)+')'}); yl.textContent='Pathology →'; svg.appendChild(yl);
+    var ya=el('text',{x:X0-8,y:Y0+N*CS-4,'font-size':12,'text-anchor':'end'}); ya.textContent='low'; svg.appendChild(ya);
+    var yb=el('text',{x:X0-8,y:Y0+14,'font-size':12,'text-anchor':'end'}); yb.textContent='high'; svg.appendChild(yb);
+    paint();
+  }
+  function paint(){ cells.forEach(function(c){ c.setAttribute('fill',color(+c.dataset.h)); }); ring.setAttribute('stroke',cssVar('--rs-ring')||'#15181b'); }
+  function update(){
+    var p=+ip.value, r=+ir.value, h=hz(p,r);
+    op.textContent=sdLab(p); or_.textContent=sdLab(r);
+    var i=steps.indexOf(p), j=steps.indexOf(r);
+    ring.setAttribute('x',X0+j*CS-1); ring.setAttribute('y',Y0+(N-1-i)*CS-1);
+    num.textContent=fmt(h)+'×';
+    lab.textContent= Math.abs(h-1)<0.005? 'the hazard of an average person in the study' : (h>1? 'the hazard of an average person in the study' : 'the hazard of an average person, '+Math.round((1-h)*100)+' percent lower');
+    var need=p*LP/(-LR);
+    var msg;
+    if(p>0){
+      msg='On this simplified map, someone with this much pathology would need about '+need.toFixed(1)+' standard deviations more resilience than average to land at an average hazard.';
+    } else if(p<0){
+      msg='Less pathology than average lowers the hazard on its own. Each step of resilience lowers it further, by about half.';
+    } else {
+      msg='Each one-SD step up in resilience roughly halves the hazard. Each step up in pathology multiplies it by 2.5.';
+    }
+    note.textContent=msg;
+  }
+  svg.addEventListener('click',function(e){ var c=e.target.closest&&e.target.closest('.rs-cell'); if(!c) return; ip.value=c.dataset.p; ir.value=c.dataset.r; update(); });
+  svg.addEventListener('mousemove',function(e){ var c=e.target.closest&&e.target.closest('.rs-cell'); if(!c){ tip.hidden=true; return; }
+    var b=map.getBoundingClientRect(), cb=c.getBoundingClientRect();
+    tip.innerHTML='<b>'+fmt(+c.dataset.h)+'×</b> average hazard<br>Pathology '+sdLab(+c.dataset.p)+' &middot; resilience '+sdLab(+c.dataset.r);
+    tip.style.left=(cb.left-b.left+cb.width/2)+'px'; tip.style.top=(cb.top-b.top)+'px'; tip.hidden=false; });
+  svg.addEventListener('mouseleave',function(){ tip.hidden=true; });
+  ip.addEventListener('input',update); ir.addEventListener('input',update);
+  root.querySelectorAll('.resil-presets button').forEach(function(b){ b.addEventListener('click',function(){ ip.value=b.dataset.p; ir.value=b.dataset.r; update(); }); });
+  var mo=new MutationObserver(paint); mo.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  if(window.matchMedia){ var mq=matchMedia('(prefers-color-scheme: dark)'); if(mq.addEventListener) mq.addEventListener('change',paint); }
+  build(); update();
+})();
+          </script>
+        </div>
+      </div>
+
+      <div class="bench-group" id="amyg-group">
+        <h2 class="bench-section-kicker">Memory and the amygdala</h2>
         <div class="bench-grid">
           <style>
             .amyg-demo{max-width:660px;margin:1rem auto 0;font-family:'Inter',system-ui,sans-serif;color:var(--text,#232b2f);}
