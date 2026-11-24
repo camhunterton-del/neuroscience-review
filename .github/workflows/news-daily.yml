@@ -1,8 +1,12 @@
 name: Daily news pipeline
 
 on:
-  schedule:
-    - cron: '43 13 * * *'   # daily ~9:43am ET (13:43 UTC)
+  # Scheduled auto-run RETIRED 2026-11-24. The daily news is now a manual catch-up
+  # done by hand in Claude Code, so it never spends a paid Anthropic API key. The
+  # key-backed cron had also been silently publishing nothing since late Oct once
+  # that key ran out of credits. Re-enable by uncommenting the schedule below.
+  # schedule:
+  #   - cron: '43 13 * * *'   # daily ~9:43am ET (13:43 UTC)
   workflow_dispatch: {}
 
 permissions:
